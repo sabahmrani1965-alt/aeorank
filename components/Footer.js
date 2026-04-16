@@ -6,20 +6,20 @@ export default function Footer() {
     {
       title: 'Services',
       links: [
-        { label: 'AEO Management', href: '/services' },
-        { label: 'AEO Consulting', href: '/services' },
-        { label: 'Citation Building', href: '/services' },
-        { label: 'Entity Optimization', href: '/services' },
-        { label: 'AI Visibility Audit', href: '/services' },
+        { label: 'AEO Management', href: '/services/aeo-management' },
+        { label: 'AEO Consulting', href: '/services/aeo-consulting' },
+        { label: 'Citation Building', href: '/services/citation-building' },
+        { label: 'Entity Optimization', href: '/services/entity-optimization' },
+        { label: 'AI Visibility Audit', href: '/services/ai-visibility-audit' },
       ],
     },
     {
       title: 'We Work With',
       links: [
-        { label: 'SaaS Companies', href: '/services' },
-        { label: 'Startup Companies', href: '/services' },
-        { label: 'Tech & IT Companies', href: '/services' },
-        { label: 'Software Companies', href: '/services' },
+        { label: 'SaaS Companies', href: '/industries/saas' },
+        { label: 'Startup Companies', href: '/industries/startups' },
+        { label: 'Tech & IT Companies', href: '/industries/tech-it' },
+        { label: 'Software Companies', href: '/industries/software' },
       ],
     },
     {
@@ -35,11 +35,11 @@ export default function Footer() {
     {
       title: 'AEO Guides',
       links: [
-        { label: 'AEO for SaaS', href: '/blog' },
-        { label: 'ChatGPT Optimization', href: '/blog' },
-        { label: 'Perplexity SEO', href: '/blog' },
-        { label: 'Google AI Overviews', href: '/blog' },
-        { label: 'Entity SEO Guide', href: '/blog' },
+        { label: 'AEO for SaaS', href: '/industries/saas' },
+        { label: 'ChatGPT Optimization', href: '/blog/how-to-get-cited-by-chatgpt' },
+        { label: 'Perplexity SEO', href: '/blog/optimize-for-perplexity' },
+        { label: 'Google AI Overviews', href: '/blog/google-ai-overviews-guide' },
+        { label: 'Entity SEO Guide', href: '/blog/entity-authority-ai-citation' },
       ],
     },
   ]

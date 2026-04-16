@@ -9,6 +9,16 @@ const blogSlugs = [
   'google-ai-overviews-guide',
 ]
 
+const serviceSlugs = [
+  'aeo-management',
+  'aeo-consulting',
+  'citation-building',
+  'entity-optimization',
+  'ai-visibility-audit',
+]
+
+const industrySlugs = ['saas', 'startups', 'tech-it', 'software']
+
 export default function sitemap() {
   const staticPages = [
     { url: BASE_URL, lastModified: '2026-04-16', changeFrequency: 'weekly', priority: 1.0 },
@@ -29,5 +39,19 @@ export default function sitemap() {
     priority: 0.7,
   }))
 
-  return [...staticPages, ...blogPages]
+  const servicePages = serviceSlugs.map(slug => ({
+    url: `${BASE_URL}/services/${slug}`,
+    lastModified: '2026-04-16',
+    changeFrequency: 'monthly',
+    priority: 0.85,
+  }))
+
+  const industryPages = industrySlugs.map(slug => ({
+    url: `${BASE_URL}/industries/${slug}`,
+    lastModified: '2026-04-16',
+    changeFrequency: 'monthly',
+    priority: 0.75,
+  }))
+
+  return [...staticPages, ...servicePages, ...industryPages, ...blogPages]
 }
