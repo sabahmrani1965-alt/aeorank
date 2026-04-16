@@ -16,10 +16,39 @@ export const metadata = {
   },
 }
 
+const organizationLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'AEOrank',
+  url: 'https://aeorank.tech',
+  logo: 'https://aeorank.tech/logo.svg',
+  description: 'AEOrank is the leading Answer Engine Optimization (AEO) agency for B2B SaaS companies. We help brands get cited by ChatGPT, Perplexity, and Google AI.',
+  foundingDate: '2024',
+  sameAs: [],
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'sales',
+    url: 'https://aeorank.tech/contact',
+  },
+  areaServed: 'Worldwide',
+  serviceType: 'Answer Engine Optimization',
+}
+
+const websiteLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'AEOrank',
+  url: 'https://aeorank.tech',
+  description: 'Get your SaaS brand cited by ChatGPT, Perplexity & Google AI.',
+  publisher: { '@type': 'Organization', name: 'AEOrank', url: 'https://aeorank.tech' },
+}
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }} />
         <Nav />
         <main>{children}</main>
         <Footer />

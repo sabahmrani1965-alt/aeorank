@@ -1,6 +1,10 @@
 import Link from 'next/link'
 
-export const metadata = { title: 'Pricing', description: 'Transparent AEO pricing for B2B SaaS companies. From one-time audits to full-service monthly retainers.' }
+export const metadata = {
+  title: 'Pricing',
+  description: 'Transparent AEO pricing for B2B SaaS companies. From one-time audits to full-service monthly retainers.',
+  alternates: { canonical: 'https://aeorank.tech/pricing' },
+}
 
 const plans = [
   {
@@ -39,8 +43,19 @@ const faqs = [
 ]
 
 export default function Pricing() {
+  const faqLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(f => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  }
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
       <section className="page-hero">
         <div className="page-hero-glow" />
         <div style={{ position: 'relative', maxWidth: '640px', margin: '0 auto', textAlign: 'center' }}>

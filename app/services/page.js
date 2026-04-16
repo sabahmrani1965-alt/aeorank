@@ -1,6 +1,10 @@
 import Link from 'next/link'
 
-export const metadata = { title: 'Services', description: 'Full-stack AEO services for B2B SaaS companies. Entity optimization, citation building, schema, content strategy and more.' }
+export const metadata = {
+  title: 'Services',
+  description: 'Full-stack AEO services for B2B SaaS companies. Entity optimization, citation building, schema, content strategy and more.',
+  alternates: { canonical: 'https://aeorank.tech/services' },
+}
 
 const services = [
   { icon: '🧠', title: 'AEO Management', price: 'From $3,000/mo', desc: 'Full-service AEO management. We handle everything — strategy, execution, monitoring, and reporting. You focus on closing deals.', features: ['Monthly citation audits', 'Entity authority building', 'Citation source placement', 'Weekly reporting dashboard', 'Dedicated AEO strategist'] },

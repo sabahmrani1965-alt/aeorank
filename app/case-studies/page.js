@@ -1,6 +1,10 @@
 import Link from 'next/link'
 
-export const metadata = { title: 'Case Studies', description: 'Real AEO results for real SaaS companies. See how AEOrank helped B2B SaaS brands get cited by ChatGPT, Perplexity and Google AI.' }
+export const metadata = {
+  title: 'Case Studies',
+  description: 'Real AEO results for real SaaS companies. See how AEOrank helped B2B SaaS brands get cited by ChatGPT, Perplexity and Google AI.',
+  alternates: { canonical: 'https://aeorank.tech/case-studies' },
+}
 
 const cases = [
   { tag: 'Cybersecurity SaaS', duration: '9 months', title: 'From Invisible to #1 Cited Brand in Category', summary: 'A cybersecurity SaaS had zero presence in AI-generated answers despite strong Google SEO. Within 9 months of our AEO program, they became the most cited vendor across ChatGPT and Perplexity for their core category queries.', challenge: 'The company ranked well on Google but was completely absent from AI answers. Their competitors were being cited regularly, and buyers were increasingly using ChatGPT to research security tools before ever visiting a website.', solution: 'We built a comprehensive entity authority profile, secured citations in 40+ security-focused publications, implemented answer-first content for the top 25 buyer questions, and deployed full schema coverage across product pages.', m1: '+312%', l1: 'AI Citations', m2: '+189%', l2: 'MQLs from AI', m3: '9mo', l3: 'Timeline' },

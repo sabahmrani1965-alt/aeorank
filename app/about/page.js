@@ -1,6 +1,10 @@
 import Link from 'next/link'
 
-export const metadata = { title: 'About', description: 'Learn about AEOrank — the AEO agency helping B2B SaaS companies get cited by ChatGPT, Perplexity and Google AI.' }
+export const metadata = {
+  title: 'About',
+  description: 'Learn about AEOrank — the AEO agency helping B2B SaaS companies get cited by ChatGPT, Perplexity and Google AI.',
+  alternates: { canonical: 'https://aeorank.tech/about' },
+}
 
 const values = [
   { icon: '🎯', title: 'Results First', desc: 'We measure success in citations, pipeline, and revenue — not vanity metrics. Every action we take is tied to a business outcome.' },
