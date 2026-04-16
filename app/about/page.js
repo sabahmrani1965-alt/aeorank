@@ -2,127 +2,91 @@ import Link from 'next/link'
 
 export const metadata = {
   title: 'About',
-  description: 'Learn about AEOrank — the AEO agency helping B2B SaaS companies get cited by ChatGPT, Perplexity and Google AI.',
+  description: 'AEOrank is an independent Answer Engine Optimization agency focused on B2B SaaS. Built to help brands get cited by ChatGPT, Perplexity, and Google AI.',
   alternates: { canonical: 'https://aeorank.tech/about' },
 }
-
-const values = [
-  { icon: '🎯', title: 'Results First', desc: 'We measure success in citations, pipeline, and revenue — not vanity metrics. Every action we take is tied to a business outcome.' },
-  { icon: '🔬', title: 'Research-Driven', desc: 'AEO is new. We stay ahead by running our own research, testing what actually works, and sharing what we learn.' },
-  { icon: '🤝', title: 'Transparent', desc: 'You always know what we\'re doing and why. Weekly reports, honest updates, and no smoke-and-mirrors.' },
-  { icon: '🚀', title: 'Founder-Led', desc: 'We work with founders and CMOs — not just marketing teams. We understand what it means to be accountable to growth targets.' },
-]
-
-const team = [
-  { name: 'Ilyas', role: 'Founder & AEO Strategist', bio: 'Founder of AEOrank and SaaSOffers.tech. Building at the intersection of AI and B2B growth.', init: 'IL', color: 'linear-gradient(135deg,#F2A83B,#FBBF24)' },
-]
 
 export default function About() {
   return (
     <>
       <section className="page-hero">
         <div className="page-hero-glow" />
-        <div style={{ position: 'relative', maxWidth: '720px', margin: '0 auto', textAlign: 'center' }}>
+        <div style={{ position: 'relative', maxWidth: '700px', margin: '0 auto', textAlign: 'center' }}>
           <span className="badge">About AEOrank</span>
-          <h1 className="section-title fade-up" style={{ fontSize: 'clamp(2.5rem,5vw,4rem)', marginBottom: '20px' }}>
-            We Help SaaS Brands Win <em className="gold-text">the AI Era</em>
+          <h1 className="section-title fade-up" style={{ fontSize: 'clamp(2.4rem,5vw,3.6rem)', marginBottom: '20px' }}>
+            A small, focused agency for <em className="gold-text">a specific problem</em>
           </h1>
           <p className="section-sub fade-up delay-1" style={{ margin: '0 auto' }}>
-            AEOrank was built because we saw a massive shift happening — buyers were moving from Google to AI. Most SaaS companies had no strategy for it. We built one.
+            AEOrank exists because Answer Engine Optimization needs specialists, not generalists bolting it onto SEO retainers. This page explains who we are and how we think about the work.
           </p>
         </div>
       </section>
 
-      {/* Mission */}
-      <section className="section" style={{ background: 'var(--navy2)' }}>
-        <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '72px', alignItems: 'center' }} className="two-col">
-            <div>
-              <span className="section-tag">Our Mission</span>
-              <h2 className="section-title" style={{ marginBottom: '20px' }}>
-                Make Every SaaS Brand <em className="gold-text">Visible to AI</em>
-              </h2>
-              <p style={{ color: 'var(--muted)', lineHeight: 1.78, fontWeight: 300, marginBottom: '20px' }}>
-                AI answer engines are becoming the first stop for B2B buyers researching software. ChatGPT, Perplexity, and Google AI don't rank websites — they cite sources. If your brand isn't one of those sources, you're invisible at the moment of intent.
-              </p>
-              <p style={{ color: 'var(--muted)', lineHeight: 1.78, fontWeight: 300, marginBottom: '32px' }}>
-                We exist to fix that. AEOrank gives B2B SaaS companies the strategy, execution, and infrastructure to become the brand AI recommends — consistently, credibly, and at scale.
-              </p>
-              <Link href="/contact" className="btn-gold">Work With Us →</Link>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-              {[['50+','SaaS brands optimized'],['3×','Avg. citation increase'],['90%','Pipeline boost'],['4.9★','Client rating']].map(([n,l]) => (
-                <div key={l} style={{ background: 'var(--navy)', border: '1px solid var(--border)', borderRadius: '12px', padding: '28px', textAlign: 'center' }}>
-                  <div style={{ fontFamily: 'Fraunces, serif', fontSize: '2.2rem', fontWeight: 700, letterSpacing: '-0.04em', background: 'linear-gradient(135deg,#F2A83B,#FDE68A)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', marginBottom: '8px' }}>{n}</div>
-                  <div style={{ fontSize: '0.78rem', color: 'var(--muted)', fontWeight: 300 }}>{l}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Values */}
       <section className="section">
-        <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '56px' }}>
-            <span className="section-tag">How We Work</span>
-            <h2 className="section-title">Our <em className="gold-text">Values</em></h2>
+        <div className="container" style={{ maxWidth: '780px' }}>
+          <div style={{ fontSize: '1.05rem', color: 'var(--text)', lineHeight: 1.85, fontWeight: 300 }}>
+            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.8rem', color: '#fff', marginBottom: '20px', letterSpacing: '-0.02em' }}>Why this exists</h2>
+            <p style={{ marginBottom: '20px' }}>
+              Watch how B2B buyers research software today. They don\'t start with a Google search. They open ChatGPT or Perplexity, describe their problem in plain language, and get a short list — often with three specific product names. The brands on that short list get evaluated. The brands that aren\'t, don\'t.
+            </p>
+            <p style={{ marginBottom: '20px' }}>
+              That shift is already happening across every technical B2B category, and it\'s accelerating. SEO agencies are mostly still solving the old problem: get the blue link to rank. That still matters. But it\'s no longer sufficient, and in some categories it\'s no longer the point.
+            </p>
+            <p style={{ marginBottom: '40px' }}>
+              AEOrank is built around the new problem: showing up when AI engines answer the question. That\'s a different discipline — different levers, different measurement, different content strategy. We built a team and a method around it.
+            </p>
+
+            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.8rem', color: '#fff', marginBottom: '20px', letterSpacing: '-0.02em' }}>How we work</h2>
+            <p style={{ marginBottom: '16px' }}>
+              A few principles shape every engagement:
+            </p>
+
+            <div style={{ borderLeft: '2px solid rgba(242,168,59,0.3)', paddingLeft: '20px', marginBottom: '20px' }}>
+              <p style={{ color: '#fff', fontWeight: 500, marginBottom: '6px' }}>We measure against pipeline, not citations.</p>
+              <p style={{ color: 'var(--muted)', fontSize: '0.95rem' }}>Citations are the leading indicator. Qualified pipeline is the real scoreboard. If the work isn\'t connecting to pipeline within 6–9 months, something\'s wrong with the plan.</p>
+            </div>
+
+            <div style={{ borderLeft: '2px solid rgba(242,168,59,0.3)', paddingLeft: '20px', marginBottom: '20px' }}>
+              <p style={{ color: '#fff', fontWeight: 500, marginBottom: '6px' }}>We say no to clients we can\'t help.</p>
+              <p style={{ color: 'var(--muted)', fontSize: '0.95rem' }}>Some companies aren\'t ready for AEO yet. Some categories aren\'t mature enough in AI answers. We tell people that on the first call instead of taking a retainer we don\'t deserve.</p>
+            </div>
+
+            <div style={{ borderLeft: '2px solid rgba(242,168,59,0.3)', paddingLeft: '20px', marginBottom: '20px' }}>
+              <p style={{ color: '#fff', fontWeight: 500, marginBottom: '6px' }}>We write our own playbook as we go.</p>
+              <p style={{ color: 'var(--muted)', fontSize: '0.95rem' }}>AEO is new. The best practices aren\'t settled. We run our own experiments, track what moves, and share what we learn — on the blog and with clients. No rented wisdom.</p>
+            </div>
+
+            <div style={{ borderLeft: '2px solid rgba(242,168,59,0.3)', paddingLeft: '20px', marginBottom: '40px' }}>
+              <p style={{ color: '#fff', fontWeight: 500, marginBottom: '6px' }}>We keep the team small on purpose.</p>
+              <p style={{ color: 'var(--muted)', fontSize: '0.95rem' }}>Most AEO work is senior work. We don\'t pass engagements to juniors. The strategist you meet in the first call is the strategist who runs your account.</p>
+            </div>
+
+            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.8rem', color: '#fff', marginBottom: '20px', letterSpacing: '-0.02em' }}>Who we work with</h2>
+            <p style={{ marginBottom: '20px' }}>
+              Best fit: B2B SaaS companies past product-market fit, with a clear ICP, actively competing in a category where buyers research with AI. That usually means DevOps, cybersecurity, data tooling, vertical SaaS, and PLG companies in technical spaces.
+            </p>
+            <p style={{ marginBottom: '40px' }}>
+              Not a fit: Pre-PMF startups, companies whose buyers don\'t use AI (some niches still aren\'t there), or teams looking for paid-link SEO. We won\'t take that work.
+            </p>
+
+            <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.8rem', color: '#fff', marginBottom: '20px', letterSpacing: '-0.02em' }}>Who\'s behind it</h2>
+            <p style={{ marginBottom: '12px' }}>
+              AEOrank is founded and run by <strong style={{ color: '#fff', fontWeight: 500 }}>Ilyas Mrani</strong>, who also runs SaaSOffers.tech. Background in B2B growth, SEO, and distribution — with the last two years focused almost entirely on how AI answer engines are rewriting the discovery layer for SaaS.
+            </p>
+            <p style={{ marginBottom: '40px' }}>
+              If you\'re going to work with an agency, it should be one where you know exactly who you\'re talking to. That\'s the whole reason this page exists.
+            </p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '20px' }} className="four-col">
-            {values.map((v, i) => (
-              <div key={i} className="card" style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '2rem', marginBottom: '16px' }}>{v.icon}</div>
-                <h4 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.1rem', color: '#fff', marginBottom: '10px' }}>{v.title}</h4>
-                <p style={{ fontSize: '0.85rem', color: 'var(--muted)', lineHeight: 1.68, fontWeight: 300 }}>{v.desc}</p>
-              </div>
-            ))}
+
+          <div style={{ textAlign: 'center', padding: '48px 32px', background: 'var(--navy2)', border: '1px solid var(--border)', borderRadius: '14px' }}>
+            <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.6rem', color: '#fff', marginBottom: '14px', letterSpacing: '-0.02em' }}>Want to talk?</h3>
+            <p style={{ color: 'var(--muted)', fontWeight: 300, lineHeight: 1.7, marginBottom: '24px' }}>
+              45-minute call. We\'ll look at your category, run a live AI citation test on your top queries, and be honest about whether AEO is worth doing right now.
+            </p>
+            <Link href="/contact" className="btn-gold">Book a Free Audit Call →</Link>
           </div>
         </div>
       </section>
-
-      {/* Team */}
-      <section className="section" style={{ background: 'var(--navy2)' }}>
-        <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '56px' }}>
-            <span className="section-tag">The Team</span>
-            <h2 className="section-title">Who's Behind <em className="gold-text">AEOrank</em></h2>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            {team.map((t, i) => (
-              <div key={i} className="card" style={{ maxWidth: '320px', textAlign: 'center' }}>
-                <div style={{ width: 80, height: 80, borderRadius: '50%', background: t.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Fraunces, serif', fontSize: '1.5rem', fontWeight: 700, color: '#06112A', margin: '0 auto 20px' }}>{t.init}</div>
-                <h4 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.2rem', color: '#fff', marginBottom: '6px' }}>{t.name}</h4>
-                <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--gold)', marginBottom: '14px', letterSpacing: '0.04em' }}>{t.role}</div>
-                <p style={{ fontSize: '0.85rem', color: 'var(--muted)', lineHeight: 1.68, fontWeight: 300 }}>{t.bio}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section style={{ padding: '80px 24px', textAlign: 'center' }}>
-        <span className="section-tag" style={{ display: 'block', marginBottom: '16px' }}>Let's Work Together</span>
-        <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: 'clamp(2rem,4vw,3rem)', color: '#fff', marginBottom: '16px', letterSpacing: '-0.03em' }}>
-          Ready to Get <em className="gold-text">Cited by AI?</em>
-        </h2>
-        <p style={{ color: 'var(--muted)', maxWidth: '420px', margin: '0 auto 32px', fontWeight: 300, lineHeight: 1.7 }}>Book a free strategy session and let's talk about what AEO can do for your business.</p>
-        <div style={{ display: 'flex', gap: '14px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link href="/contact" className="btn-gold">Book a Free AEO Session →</Link>
-          <Link href="/case-studies" className="btn-ghost">See Our Results</Link>
-        </div>
-      </section>
-
-      <style>{`
-        @media (max-width: 900px) {
-          .two-col { grid-template-columns: 1fr !important; }
-          .four-col { grid-template-columns: repeat(2,1fr) !important; }
-        }
-        @media (max-width: 560px) {
-          .four-col { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </>
   )
 }

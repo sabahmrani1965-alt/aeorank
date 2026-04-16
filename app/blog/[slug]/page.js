@@ -4,216 +4,256 @@ import { notFound } from 'next/navigation'
 const posts = {
   'how-to-get-cited-by-chatgpt': {
     tag: 'AEO · Strategy',
-    title: 'How to Get Your SaaS Brand Cited by ChatGPT in 2026',
-    description: 'A step-by-step guide to building entity authority, creating answer-first content, and securing the citations that make ChatGPT recommend your product.',
+    title: 'Getting Your SaaS Cited by ChatGPT: What Actually Works in 2026',
+    description: 'After six months of testing what moves AI citations and what doesn\'t, here\'s the honest version. Entity work matters more than content volume. Third-party citations matter more than either.',
     date: 'April 10, 2026',
     updated: '2026-04-10',
-    readTime: '8 min read',
-    author: 'AEOrank Team',
+    readTime: '9 min read',
+    author: 'Ilyas Mrani',
     sections: [
       {
-        heading: 'Why ChatGPT Citations Matter for SaaS',
-        content: `ChatGPT processes over 200 million queries per week, and a growing share of those come from B2B buyers researching software solutions. When ChatGPT recommends your product by name, it carries an implicit endorsement — one that bypasses ad fatigue and lands with far more trust than a paid placement.\n\nUnlike traditional search where you compete for ten blue links, AI citation is binary: you're either mentioned or you're not. And the brands that get cited aren't always the biggest — they're the ones AI engines trust the most. That trust is built through entity authority, structured data, and strategic content placement.`
+        heading: null,
+        content: `Most articles on "how to get cited by ChatGPT" are recycled SEO advice with the keyword swapped. They tell you to write "helpful, authoritative content," build backlinks, and implement schema — the same playbook that was written for Google in 2019.\n\nThat advice isn\'t wrong, exactly. It\'s just missing the point. AI citation doesn\'t work like ranking.\n\nOver the last year we\'ve tested what actually moves citations for B2B SaaS brands — entity work, content rewrites, different citation sources, schema variations, outreach patterns. A lot of things that feel important don\'t move the needle. A few things that feel unglamorous move it a lot. This is the honest version.`
       },
       {
-        heading: 'Step 1: Build Your Entity Authority Profile',
-        content: `Entity authority is the foundation of every AI citation. AI engines don't rank pages — they evaluate entities (brands, products, people) based on how well-established and trustworthy they appear across the web.\n\nTo build entity authority:\n\n• Claim and optimize your knowledge panel on Google.\n• Ensure consistent NAP (Name, Address, Phone) data across all directories.\n• Get listed on high-authority industry directories and comparison platforms (G2, Capterra, TrustRadius).\n• Build a Wikipedia-style presence through notable third-party coverage.\n• Create a robust "About" page with structured data that clearly defines your brand as an entity.`
+        heading: 'The one thing nobody tells you about ChatGPT citations',
+        content: `ChatGPT doesn\'t "rank" your page. It doesn\'t pick the best-written article. What it does is retrieve a set of source snippets based on its search and internal knowledge, then synthesize an answer that reflects the consensus across those snippets.\n\nThe brands cited aren\'t the ones with the best blog posts. They\'re the brands AI has built a strong internal representation of — because they appear consistently across many trusted sources, described in compatible ways.\n\nThis matters because it means publishing more content isn\'t the fix. If the underlying entity is weak, great content just sits there. Fix the entity first.`
       },
       {
-        heading: 'Step 2: Create Answer-First Content',
-        content: `AI engines pull from content that directly answers user questions in a clear, authoritative format. This means restructuring your content strategy around the questions your buyers actually ask.\n\nThe answer-first content framework:\n\n1. Research the top 50 questions buyers ask about your category using tools like AlsoAsked, AnswerThePublic, and ChatGPT itself.\n2. Create dedicated pages or sections that answer each question in the first 2–3 sentences.\n3. Follow the answer with supporting evidence, data, and examples.\n4. Use clear headings (H2/H3) that match the question format.\n5. Include comparison content ("X vs Y") since these are among the most common AI queries.`
+        heading: 'Start with the knowledge graph, not the blog',
+        content: `When we audit new clients, we almost always find the same thing: the company is invisible or barely visible in Google\'s Knowledge Graph. No panel. Sparse Wikidata. Inconsistent descriptions across directories. Google doesn\'t really know what they are.\n\nThat matters because ChatGPT, Perplexity, and Google AI all lean on structured entity data during retrieval and synthesis. If you\'re not a clean entity, you\'re a weak candidate for citation — no matter how many backlinks you have.\n\nThe fix isn\'t dramatic. It\'s mostly unsexy cleanup:\n\n• Audit every place your brand appears (crunchbase, LinkedIn, G2, product databases, Wikidata) and make sure the descriptions are consistent and current.\n• Implement Organization schema with accurate sameAs links to every canonical profile.\n• File a Wikidata entry if you qualify (most Series A+ SaaS do).\n• Optimize your Google Business Profile even if you\'re SaaS — it feeds the knowledge panel.\n\nNone of this feels like marketing. But it\'s the highest-leverage work we do, by a wide margin.`
       },
       {
-        heading: 'Step 3: Secure Third-Party Citations',
-        content: `AI engines weight third-party mentions heavily. If trusted publications reference your brand in the context of solving a specific problem, AI tools are far more likely to cite you.\n\nEffective citation building strategies:\n\n• Contribute expert commentary to industry publications.\n• Publish original research and data that others will reference.\n• Secure product reviews on high-DA technology publications.\n• Build relationships with analysts who influence AI training data.\n• Create "best of" and comparison content on neutral domains that includes your brand.`
+        heading: 'Answer the specific questions, not the category',
+        content: `Here\'s the mistake most content teams make: they write for the category. "The Ultimate Guide to Data Observability." "Everything You Need to Know About CI/CD."\n\nChatGPT doesn\'t want your guide. It wants the answer to the exact question the user asked. And the user didn\'t ask "tell me about CI/CD." They asked something like "what\'s the best CI tool for a small team using a monorepo."\n\nSo the content that gets cited isn\'t the comprehensive overview. It\'s the specific-question page that answers a specific buyer question in the first paragraph, then gives the supporting reasoning.\n\nRewrite your top 20 buyer questions as standalone pages, each with the answer in the first 2–3 sentences. Yes, this feels weird. It\'s supposed to. That\'s the format AI engines reward.`
       },
       {
-        heading: 'Step 4: Implement Comprehensive Schema Markup',
-        content: `Structured data helps AI crawlers understand exactly what your product does, who it's for, and how it compares to alternatives.\n\nEssential schema types for SaaS AEO:\n\n• Organization schema with full brand details.\n• Product schema with features, pricing, and reviews.\n• FAQ schema on every page with common questions.\n• HowTo schema for tutorial and guide content.\n• Review and AggregateRating schema from real customer feedback.\n• BreadcrumbList for clear site hierarchy.`
+        heading: 'Third-party citations do more work than you think',
+        content: `Here\'s something counterintuitive: a single mention of your brand in a well-regarded third-party publication often outperforms ten blog posts on your own site for AI citation purposes.\n\nAI engines don\'t just read your content. They build their picture of your brand from everywhere your brand is discussed. If Dark Reading, TechCrunch, or InfoWorld describes your product in a specific way, that description weights heavily when the AI decides whether and how to cite you.\n\nThis is why earned media matters so much for AEO, and why most SaaS companies are underinvesting in it. A thoughtful expert-contribution program or a piece of original research that gets referenced externally is worth more than a huge internal content output.`
       },
       {
-        heading: 'Step 5: Monitor and Optimize Your AI Presence',
-        content: `AEO is not a set-it-and-forget-it strategy. AI engines update their models and sources regularly, so continuous monitoring is essential.\n\nKey metrics to track:\n\n• Citation frequency: How often your brand appears in AI-generated answers.\n• Citation accuracy: Whether AI engines describe your product correctly.\n• Share of voice: Your citation rate vs. competitors for target queries.\n• Referral traffic: Visits from AI-powered search and chat interfaces.\n• Pipeline attribution: Leads and demos that originate from AI-sourced traffic.`
+        heading: 'Schema is table stakes, not a growth lever',
+        content: `People ask us about schema a lot. The honest answer: you need it, but it\'s not going to move citations by itself.\n\nOrganization schema, Product schema, FAQ schema — implement them properly and you\'re giving AI crawlers a cleaner signal. But if your entity is weak and your citations are thin, adding schema won\'t rescue you. It\'ll just make the weak signals slightly cleaner.\n\nTreat schema like plumbing. Get it right, forget about it, move on to what actually moves the metric.`
+      },
+      {
+        heading: 'What to measure',
+        content: `You need two numbers, tracked weekly:\n\nFirst, citation frequency across your top 30–50 buyer queries. Run them manually (or with tooling — there are options now) against ChatGPT, Perplexity, and Google AI. Track how often your brand appears.\n\nSecond, share-of-voice versus your top 3 competitors. This matters more than absolute count, because AEO is a relative game. You\'re trying to displace somebody.\n\nEverything else — referral traffic from AI, pipeline attribution, downstream revenue — is useful but noisy. Citation frequency and share-of-voice are the leading indicators that give you something real to optimize against.`
+      },
+      {
+        heading: 'Timeline: be realistic',
+        content: `The best case we\'ve seen is meaningful citation gains within 60 days, and that\'s when everything was already primed (good content, decent entity setup, just needed citation-building push). More typical is 3–4 months to see the needle move.\n\nFor companies starting from a weak entity baseline, expect 6+ months before the work really compounds. That\'s not pessimistic — it\'s realistic. AI engines update their internal representations slowly, and the work is cumulative.\n\nIf someone promises faster results, ask what they\'re actually measuring. "Appearing in Perplexity once" is not the same as "being consistently cited across major AI engines for your highest-intent queries."`
+      },
+      {
+        heading: null,
+        content: `AEO is new enough that a lot of what\'s being written about it is speculation. What we\'ve laid out here is based on actual client work and actual citation tracking over the last year — which is not a long time, but it\'s what we have. The landscape will keep shifting. What works today may not work as well in 12 months.\n\nIf you\'re trying to figure out whether to invest in this for your brand, the first step isn\'t reading more articles. It\'s auditing where you stand right now, with real queries your buyers actually type. That\'s what our free audit does. We\'re happy to run one for you.`
       },
     ],
   },
 
   'measure-ai-citation-roi': {
     tag: 'AEO · Measurement',
-    title: 'How to Measure AI Citation ROI: A Framework for SaaS Marketers',
-    description: 'AI citations are worthless if you can\'t measure their business impact. Here\'s the exact framework we use to tie AEO directly to pipeline and revenue.',
+    title: 'Measuring AEO ROI Without Lying to Yourself',
+    description: 'Most AI attribution is guesswork dressed up as data. Here\'s the honest framework we use to figure out whether AEO is actually working, what it\'s worth, and when to stop.',
     date: 'April 3, 2026',
     updated: '2026-04-03',
-    readTime: '6 min read',
-    author: 'AEOrank Team',
+    readTime: '7 min read',
+    author: 'Ilyas Mrani',
     sections: [
       {
-        heading: 'The AI Attribution Challenge',
-        content: `Most SaaS marketers know AI citations are valuable, but few can quantify that value. The challenge is that AI-sourced traffic doesn't always show up cleanly in your analytics — users might see your brand in ChatGPT, then Google you directly, making attribution murky.\n\nThis framework solves that problem by combining direct measurement with proxy signals to build a complete picture of AEO ROI.`
+        heading: null,
+        content: `A client asked us last month: "how do I know AEO is actually driving pipeline versus just showing up in reports because it sounds good?"\n\nThat\'s the right question. And the honest answer is that most AI citation attribution right now is guesswork — some of it reasonable, some of it wishful thinking. If you\'re going to invest in AEO, you need to know the difference.\n\nHere\'s the framework we\'ve been using to measure it honestly, including what it does measure, what it doesn\'t, and where you\'ll have to accept some fuzzy data.`
       },
       {
-        heading: 'Layer 1: Direct Traffic Measurement',
-        content: `Start with what you can measure directly:\n\n• Referral traffic from chat.openai.com, perplexity.ai, bing.com/chat, and google.com AI Overviews.\n• UTM-tagged links from AI platforms that support them.\n• "How did you hear about us?" survey responses mentioning AI assistants.\n• Branded search volume increases that correlate with AI citation campaigns.\n• Direct traffic spikes following new AI citation appearances.`
+        heading: 'The attribution problem is real',
+        content: `AI-sourced traffic is harder to attribute than almost any other channel. A buyer can see your brand name in ChatGPT, remember it, and Google you three days later. Your analytics will say "organic search." Your CRM will say "unknown source." The AI gets no credit.\n\nThis is worse than social, worse than podcast — at least those channels sometimes leave a UTM or a referral. AI citations often leave nothing. And they\'re the highest-intent moment in the buyer\'s research, so the invisible attribution hurts the most.\n\nYou can\'t solve this problem completely. You can get pretty close with the right combination of direct and proxy measurement. That\'s what this framework is.`
       },
       {
-        heading: 'Layer 2: Citation Scoring Model',
-        content: `Not all citations are equal. Build a scoring model that weights citations by:\n\n• Query intent (high-intent buyer queries score higher than informational).\n• Citation position (primary recommendation vs. mentioned in a list).\n• Platform reach (ChatGPT citations typically drive more impact than niche AI tools).\n• Accuracy (correct product descriptions convert better than generic mentions).\n• Frequency (consistent citation across multiple queries indicates strong entity authority).`
+        heading: 'What you can measure directly',
+        content: `Start with the data that\'s actually unambiguous:\n\nReferral traffic. Filter Google Analytics or your analytics tool for referrers from chat.openai.com, perplexity.ai, bing.com (for Copilot), and specific AI-adjacent domains. This undercounts but it\'s real data.\n\nSurvey responses. Add "how did you find us?" to your signup or demo request form with AI assistants as an option. People will tell you. You\'ll be surprised how quickly this number grows.\n\nDirect traffic patterns. If direct traffic (people typing your URL) spikes after a citation campaign, that\'s often AI doing its work — buyers seeing you in AI and typing your domain later. Correlation isn\'t proof, but it\'s signal.\n\nBranded search volume. Same idea. If branded searches for your company increase month-over-month while nothing else changed, AI exposure is often the cause.`
       },
       {
-        heading: 'Layer 3: Pipeline Attribution',
-        content: `Connect citation data to revenue:\n\n1. Tag leads that arrive through AI-sourced channels in your CRM.\n2. Track conversion rates of AI-sourced leads vs. other channels.\n3. Measure time-to-close for AI-attributed opportunities.\n4. Calculate customer lifetime value by acquisition source.\n5. Build a monthly report comparing AEO investment to attributed pipeline.\n\nMost of our clients see AI-sourced leads converting 30–40% better than paid channels, with shorter sales cycles and higher average contract values.`
+        heading: 'Citation tracking is your leading indicator',
+        content: `Before you can measure revenue impact, you need to measure whether you\'re actually getting cited more. This is the input metric. If this isn\'t moving, nothing downstream will move either.\n\nPick 30–50 queries that represent high-intent buyer questions in your category. Run them weekly against ChatGPT, Perplexity, Google AI Overviews, Bing Copilot, Claude. Track:\n\nWhether your brand appears at all. Position if cited (primary recommendation vs. mentioned in a list). Accuracy of how you\'re described. Share-of-voice versus your top 3 competitors.\n\nThis is tedious work, but it\'s real. Automate where you can, but don\'t skip it. This is the closest thing AEO has to a clean performance metric.`
       },
       {
-        heading: 'Layer 4: Competitive Share of Voice',
-        content: `Track your citation share relative to competitors across your target query set:\n\n• Monitor 50–100 high-intent queries weekly across ChatGPT, Perplexity, and Google AI.\n• Calculate your share of voice (citations for your brand / total citations in category).\n• Track share of voice trends month-over-month.\n• Identify queries where competitors are cited but you're not — these are your gaps.\n• Prioritize gap-closing based on query intent and volume.`
+        heading: 'Connecting citations to pipeline',
+        content: `The hard part. Here\'s what we\'ve found actually works:\n\nTag AI-suspected leads in the CRM. When a lead comes in via "unknown" source but branded search volume just jumped, or referral traffic from AI platforms spiked the same week, flag those leads for tracking. Over 90 days, you\'ll have a cohort.\n\nLook at the conversion behavior. Leads influenced by AI research typically convert faster and ask more specific product questions on demo calls. Sales will notice before you do — ask them "are you hearing buyers mention ChatGPT or Perplexity more?" That qualitative data is almost as valuable as the quantitative.\n\nMatch timing. If AEO campaigns started in January and your unattributed-but-converting pipeline starts climbing in March, that\'s the fingerprint of AI attribution.\n\nIt\'s not airtight. But combined with citation tracking moving in the right direction, it\'s enough signal to make budget decisions.`
       },
       {
-        heading: 'Building Your ROI Dashboard',
-        content: `Combine all four layers into a single dashboard:\n\n• Monthly AI-sourced traffic and leads.\n• Citation score trend (weighted across all tracked queries).\n• Pipeline attributed to AI channels.\n• Share of voice vs. top 3 competitors.\n• Cost per AI-sourced lead vs. other acquisition channels.\n• Projected ROI based on current trajectory.\n\nThis dashboard becomes the single source of truth for your AEO investment decisions.`
+        heading: 'What NOT to measure',
+        content: `A few vanity metrics that show up in AEO reporting and shouldn\'t drive decisions:\n\n"Number of AI platforms we\'re cited on." Appearing once on Perplexity doesn\'t mean you\'re winning AEO. Consistency and share-of-voice matter more than breadth.\n\n"Total AI-sourced impressions." Nobody knows what this number actually is. Any tool claiming to give it to you is guessing.\n\n"AI citation volume." Raw count doesn\'t mean much without context. Ten citations for a long-tail query nobody asks is worth less than one citation for your category\'s top buyer query.\n\nIf a metric sounds impressive and you can\'t connect it to a business decision, it\'s a vanity metric.`
+      },
+      {
+        heading: 'When to keep spending, when to stop',
+        content: `The decision framework: if citation frequency and share-of-voice are climbing after 90 days, keep going. If they\'re flat, something\'s wrong with the plan — either execution is off or the category isn\'t ready for AEO yet.\n\nIf after 6 months you have rising citations but no pipeline impact showing up anywhere (direct, branded search, sales-reported mentions), you may have an attribution infrastructure problem, or your ICP isn\'t using AI for research as much as you thought. Both are fixable, but worth diagnosing honestly.\n\nIf after 12 months you have citations AND pipeline lift, you\'re in the compounding zone. This is where AEO economics start looking very good compared to paid.`
+      },
+      {
+        heading: null,
+        content: `AEO measurement will get cleaner as tooling matures. Right now it\'s a mix of hard data, reasonable proxies, and honest qualitative signal from sales. Use all three.\n\nThe companies winning at AEO right now aren\'t the ones with the most sophisticated attribution models. They\'re the ones taking their best honest read of the data and making decisions from it. Perfect attribution isn\'t on the menu. Directional honesty is.`
       },
     ],
   },
 
   'entity-authority-ai-citation': {
     tag: 'Entity SEO · AEO',
-    title: 'Entity Authority: The Hidden Driver Behind Every AI Citation',
-    description: 'Why some brands get cited constantly by AI engines while others never appear — and what you can do to build the entity authority that makes the difference.',
+    title: 'The Real Reason Some SaaS Brands Get Cited by AI and Others Don\'t',
+    description: 'Spoiler: it\'s almost never the content. It\'s entity authority. Here\'s what that actually means and why most SaaS companies are bad at it.',
     date: 'March 27, 2026',
     updated: '2026-03-27',
-    readTime: '10 min read',
-    author: 'AEOrank Team',
+    readTime: '11 min read',
+    author: 'Ilyas Mrani',
     sections: [
       {
-        heading: 'What Is Entity Authority and Why Does It Matter?',
-        content: `Entity authority is how AI engines evaluate the trustworthiness, relevance, and prominence of a brand or product. Unlike traditional SEO where domain authority and backlinks drive rankings, AI citation is driven by how well-established your brand is as a recognized entity in the knowledge graph.\n\nThink of it this way: when a human expert recommends a product, they draw on their knowledge of the brand's reputation, track record, and industry presence. AI engines work similarly — they assess your entity's "reputation" across the entire web before deciding whether to cite you.`
+        heading: null,
+        content: `When a client comes to us frustrated that ChatGPT keeps citing their competitor and not them, the first thing we check isn\'t their content. It\'s the knowledge graph.\n\nNine times out of ten, the answer is there. The competitor has a clean entity profile — Google knows what they are, Wikidata recognizes them, their description is consistent across every platform. The frustrated client has none of that. They\'re invisible to AI at the entity level, and no amount of great content fixes that.\n\nEntity authority is the single most misunderstood concept in AEO. People hear it and assume it\'s a vague marketing term. It\'s not. It\'s a specific, technical thing — and it\'s the main reason some brands dominate AI answers while equivalent-quality competitors don\'t.`
       },
       {
-        heading: 'The Three Pillars of Entity Authority',
-        content: `Entity authority is built on three pillars:\n\n1. Recognition — Does the AI engine know your brand exists? This requires consistent, widespread mentions across authoritative sources.\n\n2. Relevance — Does the AI engine associate your brand with the right topics, categories, and solutions? This requires targeted content and third-party context.\n\n3. Trust — Does the AI engine consider your brand a reliable source? This requires social proof, expert endorsements, and factual accuracy across all your content.`
+        heading: 'What "entity" actually means',
+        content: `When AI engines read the web, they don\'t just process text. They try to identify entities — specific things like companies, products, people, concepts — and build an internal representation of each one. Think of it as a profile the AI maintains about your brand.\n\nThat profile is built from thousands of signals: your website, your knowledge graph entry, third-party mentions, directory listings, Wikidata data, Wikipedia, the consistent (or inconsistent) way your brand gets described everywhere it appears.\n\nA strong entity is one AI has confident information about. A weak entity is one AI is fuzzy on, mixes up with competitors, or has contradictory data about.\n\nWhen an AI decides whether to cite you, it\'s pulling from that profile. Strong profile = more likely to be cited, more accurately described. Weak profile = rare citations, often wrong.`
       },
       {
-        heading: 'How AI Engines Evaluate Entities',
-        content: `AI large language models build internal representations of entities during training and through retrieval-augmented generation (RAG). They evaluate:\n\n• Frequency of mentions across training data and indexed sources.\n• Context of mentions — are you mentioned as a leader, alternative, or negative example?\n• Consistency of information — do all sources agree on what your product does?\n• Authority of sources — are you mentioned by trusted publications, analysts, and experts?\n• Recency — how current are the mentions and data about your brand?`
+        heading: 'How to tell if your entity is weak',
+        content: `Quick diagnostic. Google your exact brand name.\n\nDo you get a knowledge panel on the right side? If yes, is it accurate and complete — logo, description, founding year, key people?\n\nNow search your brand name in Wikidata. Do you have an entry? If yes, does it link to your website, LinkedIn, key people?\n\nSearch your brand in ChatGPT: "what is [your brand]?" Does it know what you do? Is the description accurate?\n\nIf the answer to any of these is "no" or "kind of", you have an entity problem. Most SaaS companies under 100 employees do. Even many Series B+ companies have weaker entity profiles than they think.`
       },
       {
-        heading: 'Building Entity Authority: A Practical Roadmap',
-        content: `Phase 1 (Month 1–2): Foundation\n• Audit your current entity presence across Google Knowledge Graph, Wikidata, and major directories.\n• Fix inconsistencies in brand descriptions, founding details, and product categorization.\n• Implement Organization and Product schema across your website.\n• Claim and optimize all relevant business profiles.\n\nPhase 2 (Month 3–4): Amplification\n• Secure mentions in 10–20 high-authority industry publications.\n• Publish 3–5 pieces of original research that establish thought leadership.\n• Build comparison and alternative pages that define your category position.\n• Launch a digital PR campaign targeting AI training source publications.\n\nPhase 3 (Month 5–6): Optimization\n• Monitor AI citation frequency and accuracy.\n• Identify and fill entity gaps where competitors are better represented.\n• Scale citation-building efforts based on what's working.\n• Begin measuring ROI through pipeline attribution.`
+        heading: 'Three pillars that make an entity strong',
+        content: `Recognition, relevance, trust. Simple framework, and each pillar takes different work.\n\nRecognition is about existing. Are you in the databases AI engines train on? Knowledge graph, Wikidata, major industry directories, Crunchbase, LinkedIn, G2, comparable platforms. If you\'re missing from these, you\'re not going to be cited — AI doesn\'t know you exist in any structured way.\n\nRelevance is about being described correctly. When sources describe what you do, do they describe it consistently? If five different articles describe your product in five different ways, AI gets confused. It\'s not sure what to cite you for.\n\nTrust is about external validation. Being mentioned by publications AI engines treat as authoritative. Expert quotes in industry coverage. Analyst reports. Academic references. This is what separates "known entity" from "authoritative entity that AI will confidently cite."`
       },
       {
-        heading: 'Common Entity Authority Mistakes',
-        content: `Avoid these pitfalls that undermine entity authority:\n\n• Inconsistent branding across platforms (different names, descriptions, or categorizations).\n• Thin or generic product descriptions that don't differentiate your offering.\n• Lack of third-party validation — self-published content alone isn't enough.\n• Ignoring structured data — AI crawlers rely heavily on schema markup.\n• Focusing only on Google — entity authority needs to span all AI platforms.\n• Neglecting negative or incorrect mentions that confuse AI models about your brand.`
+        heading: 'The work, ranked by impact',
+        content: `If you\'re building entity authority from scratch, here\'s the order that gives you the most leverage for the least effort:\n\nFirst, fix inconsistencies. Audit every major platform where your brand appears. Make sure your name, description, founding date, and categorization are identical. This sounds trivial. It\'s not. Inconsistencies across five platforms are actively hurting you.\n\nSecond, claim and optimize your knowledge panel. Request editing access via Google Business Profile. Update the description. Add sameAs links to every canonical profile you own. This single move often unlocks meaningful improvement.\n\nThird, file a Wikidata entry if you qualify. Wikidata feeds a lot of AI training data. Most SaaS companies with any press coverage can qualify. The effort is a few hours and the return is long-term.\n\nFourth, build the citation foundation. Start earning mentions in industry publications that AI engines actually use as sources. This is slower work, but it\'s where trust comes from.\n\nFifth and last, Wikipedia. Wikipedia has strict notability requirements and you usually can\'t directly edit your own page. But if you build enough third-party coverage, a Wikipedia page becomes possible. It\'s a long game, and it\'s a massive signal when it lands.`
+      },
+      {
+        heading: 'Why SaaS companies are uniquely bad at this',
+        content: `SaaS companies — especially B2B ones — tend to neglect entity work because they don\'t feel like they need it. They\'re not going viral. They\'re not trying to rank for consumer queries. Their buyers are "already in market."\n\nThat was true until AI answer engines started shifting the discovery layer. Now entity authority is table stakes. The B2B SaaS companies winning in ChatGPT right now are almost always the ones that quietly did this work early — either intentionally or as a byproduct of being older and more established.\n\nThe ones losing are usually the opposite: newer, scrappier, better products, but AI doesn\'t know them well enough to recommend them confidently.\n\nIf that\'s you, fixing the entity problem is the highest-ROI move you can make. It\'s not exciting. It won\'t show up in a Twitter thread. But it\'s the foundation everything else in AEO builds on.`
+      },
+      {
+        heading: null,
+        content: `Most of what you read about AEO focuses on content and citations. Those matter. But they\'re second-order effects of a strong entity. Without the entity foundation, great content gets read and forgotten, not cited.\n\nIf you remember one thing from this article: audit your entity presence before you audit anything else. It\'s probably where the gap is.`
       },
     ],
   },
 
   'optimize-for-perplexity': {
     tag: 'AEO · Perplexity',
-    title: 'How to Optimize for Perplexity AI: A B2B SaaS Guide',
-    description: 'Perplexity is becoming the preferred research tool for technical buyers. Here\'s how to make sure your brand shows up when they search for solutions like yours.',
+    title: 'Perplexity Is Different. Here\'s What It Actually Wants.',
+    description: 'Everyone is optimizing for ChatGPT, but Perplexity is where the highest-intent technical buyers actually research. It retrieves differently. It weights differently. Here\'s what matters.',
     date: 'March 20, 2026',
     updated: '2026-03-20',
     readTime: '7 min read',
-    author: 'AEOrank Team',
+    author: 'Ilyas Mrani',
     sections: [
       {
-        heading: 'Why Perplexity Matters for B2B SaaS',
-        content: `Perplexity AI has become the research tool of choice for technical buyers and decision-makers. Unlike ChatGPT, Perplexity performs real-time web searches and cites its sources directly — making it a hybrid between a search engine and an AI assistant.\n\nFor B2B SaaS, this means Perplexity users are often in active research mode: comparing solutions, reading reviews, and making shortlist decisions. If your brand appears in Perplexity's answers during this phase, you're reaching buyers at the highest-intent moment possible.`
+        heading: null,
+        content: `Perplexity doesn\'t get the same attention as ChatGPT in AEO conversations, which is a mistake. For technical B2B categories — DevOps, data, cybersecurity, developer tools — Perplexity is where the highest-intent research actually happens.\n\nThe buyers using Perplexity are disproportionately the ones who cite sources, verify claims, and make purchase recommendations. They\'re often further along in the buying cycle than ChatGPT users. If your ICP is technical, you cannot ignore Perplexity.\n\nBut Perplexity isn\'t ChatGPT with a different name. It works differently. What gets cited on one platform often doesn\'t on the other. Here\'s what Perplexity actually rewards.`
       },
       {
-        heading: 'How Perplexity Selects Sources',
-        content: `Perplexity's answer engine works differently from ChatGPT:\n\n• It performs live web searches for every query, so fresh content matters.\n• It prioritizes authoritative, well-structured pages that directly answer the query.\n• It cites sources with clickable links, driving actual referral traffic.\n• It favors content with clear headings, concise answers, and supporting data.\n• It pulls from a wide range of sources but weights established publications and comparison sites heavily.`
+        heading: 'Live search changes everything',
+        content: `The biggest functional difference: Perplexity does real web searches for basically every query. It\'s not just drawing on trained knowledge — it\'s pulling fresh results and synthesizing them on the fly.\n\nWhat this means for you:\n\nRecency matters way more than on ChatGPT. If your content is three years old and the competitor\'s is six months old, guess who gets cited. Keep important pages refreshed.\n\nTraditional SEO performance leaks into Perplexity citations. Pages that rank well on Google for a query are more likely to surface in Perplexity\'s search layer and therefore more likely to be cited. Your SEO work isn\'t wasted — it\'s an input.\n\nCrawl accessibility matters. If your content is slow, behind JS that doesn\'t render cleanly, or blocks crawlers, Perplexity may not pick it up.`
       },
       {
-        heading: 'Content Strategy for Perplexity Optimization',
-        content: `Optimize your content specifically for how Perplexity retrieves and presents information:\n\n1. Answer questions directly in the first paragraph — Perplexity extracts concise answers.\n2. Use structured headings (H2/H3) that match common query patterns.\n3. Include data, statistics, and concrete examples that Perplexity can reference.\n4. Create comprehensive comparison pages (your product vs. alternatives).\n5. Publish pricing pages with clear, structured pricing information.\n6. Maintain an updated FAQ that covers the most common buyer questions.\n7. Keep content fresh — Perplexity's real-time search favors recently updated pages.`
+        heading: 'Perplexity actually drives clicks',
+        content: `Worth calling out: Perplexity cites its sources with clickable links. When it cites you, you get a referral. That\'s not true of ChatGPT (at least not to the same degree).\n\nThis makes Perplexity citations economically measurable in a way other AI citations aren\'t yet. If your Perplexity citations go up, you\'ll see referral traffic from perplexity.ai climb in your analytics. It\'s the cleanest feedback loop in current AEO work.\n\nIt also means content format matters more for Perplexity. People see the citation, click through, and evaluate. A page that\'s great for AI extraction but terrible for human reading will get cited but fail to convert. Optimize for both.`
       },
       {
-        heading: 'Technical Optimization for Perplexity',
-        content: `Technical SEO elements that influence Perplexity visibility:\n\n• Fast page load times — Perplexity's crawler has limited patience for slow pages.\n• Clean HTML structure with semantic markup.\n• Comprehensive schema.org structured data.\n• Mobile-responsive design (Perplexity indexes mobile-first).\n• No content behind login walls or paywalls.\n• XML sitemap with accurate last-modified dates.\n• Proper canonical tags to avoid duplicate content issues.`
+        heading: 'What Perplexity actually extracts',
+        content: `We\'ve watched Perplexity results on hundreds of queries over the last six months. A few consistent patterns:\n\nLeading with a direct answer works. The first sentence or two of your page often gets extracted verbatim. If your page starts with "Let me tell you a story about..." — too bad, Perplexity wanted the answer.\n\nStructured lists get pulled heavily. Numbered steps, bullet points, comparison tables. Perplexity likes clean structure because it\'s easy to extract and easy to present.\n\nSpecific numbers and data earn citations. A page that says "our benchmark showed 42% faster queries" is more likely to be cited than one that says "noticeably faster." Perplexity prefers sources that add hard information.\n\nBalanced content outperforms promotional content. If your page reads like a sales page, Perplexity tends to favor neutral comparison sources over you. Write like a researcher, not a marketer.`
       },
       {
-        heading: 'Building Off-Site Authority for Perplexity',
-        content: `Perplexity relies heavily on third-party sources, so your off-site presence matters:\n\n• Get featured in industry roundup articles and "best of" lists.\n• Secure product reviews on technology publications that Perplexity trusts.\n• Contribute expert content to platforms like HackerNoon, Dev.to, and industry-specific publications.\n• Maintain active and detailed profiles on G2, Capterra, and TrustRadius.\n• Publish case studies and data that other publications want to reference.\n• Engage in community discussions on platforms Perplexity indexes (Reddit, Stack Overflow, relevant forums).`
+        heading: 'The publications Perplexity leans on',
+        content: `Perplexity draws heavily from high-authority, content-dense sites in technical spaces. A non-exhaustive list of sources we see cited frequently:\n\nPrimary technical media: The Register, InfoWorld, Dark Reading, TechCrunch (selective), The Information.\n\nCommunity and practitioner content: Hacker News discussions, Dev.to, Stack Overflow, relevant Reddit subs (yes, really).\n\nReference and comparison platforms: G2, Capterra, TrustRadius — Perplexity pulls review content heavily.\n\nOriginal research and benchmarks: If you\'ve ever wondered why some brand keeps getting cited in Perplexity despite a smaller footprint, it\'s often because they\'ve published something other people reference.\n\nIf you want to show up in Perplexity, earning placements or mentions in these kinds of sources is higher-leverage than publishing more on your own blog.`
       },
       {
-        heading: 'Monitoring Your Perplexity Presence',
-        content: `Track your Perplexity performance systematically:\n\n• Weekly manual checks: search your target queries on Perplexity and document results.\n• Track referral traffic from perplexity.ai in your analytics.\n• Monitor which of your pages Perplexity cites most frequently.\n• Compare your citation rate against competitors for the same queries.\n• Test different content formats to see which get cited more often.\n• Track the accuracy of how Perplexity describes your product — incorrect descriptions need fixing at the source.`
+        heading: 'A tactical Perplexity audit you can do today',
+        content: `Spend 30 minutes and you\'ll learn a lot:\n\nPick 10 queries your buyers actually ask. Type each into Perplexity. Note: does your brand show up? If yes, where? What sources does it cite instead? How accurately does it describe your category position?\n\nNow look at the sources Perplexity IS citing. Can you get your content or expert commentary placed there? That\'s your highest-ROI Perplexity work for the next 90 days.\n\nCheck if your pages are cleanly crawlable. If your main pages require JavaScript to render, Perplexity may not index them well. Test with view-source.\n\nFinally, look at how you\'re described. If the description is inaccurate or generic, the problem is usually that the sources Perplexity trusts describe you that way. Fix it at the source — update Wikipedia, Wikidata, G2 profile, whatever\'s feeding the wrong description.`
+      },
+      {
+        heading: null,
+        content: `Perplexity is going to keep growing in technical B2B circles. The buyers using it most are the ones you most want reaching you — senior engineers, CTOs, technical buyers with real decision authority. Getting cited here is disproportionately valuable.\n\nAnd because Perplexity leaks back measurable traffic, it\'s often the easiest platform to show ROI on — making it a good first target when you\'re building the business case internally for AEO work.`
       },
     ],
   },
 
   'aeo-vs-seo': {
     tag: 'AEO vs SEO',
-    title: 'AEO vs SEO: What\'s Different and Why You Need Both',
-    description: 'AEO and SEO aren\'t competitors — they\'re complements. But they require different strategies. Here\'s how to think about balancing both for maximum visibility.',
+    title: 'AEO vs SEO: Stop Pretending They\'re the Same Job',
+    description: 'Most agencies selling AEO are just rebranding SEO services. They\'re not the same discipline. Here\'s how they actually differ and why both still matter.',
     date: 'March 13, 2026',
     updated: '2026-03-13',
-    readTime: '9 min read',
-    author: 'AEOrank Team',
+    readTime: '8 min read',
+    author: 'Ilyas Mrani',
     sections: [
       {
-        heading: 'The Fundamental Difference Between AEO and SEO',
-        content: `SEO optimizes for search engine results pages — the ten blue links. AEO optimizes for AI-generated answers — the direct responses from ChatGPT, Perplexity, Google AI Overviews, and other AI assistants.\n\nThe key distinction: SEO drives clicks to your website. AEO drives brand mentions and recommendations in AI conversations. Both ultimately generate pipeline, but through different mechanisms.\n\nSEO says: "Here are ten results — click one." AEO says: "Based on everything I know, I recommend X." That implicit endorsement from an AI engine is fundamentally more powerful than a search ranking.`
+        heading: null,
+        content: `A lot of SEO agencies pivoted to "AEO services" in 2024–2025. Most of what they\'re selling is SEO with a new label. Better schema, faster pages, more comprehensive content — all useful, none of it specific to AEO.\n\nThat\'s caused a useful but misleading framing: AEO is "just SEO 2.0." It isn\'t. There\'s overlap, but the disciplines optimize for fundamentally different things and the work doesn\'t fully transfer.\n\nIf you\'re deciding where to invest budget, or evaluating an agency, you need to understand what\'s actually different — and what isn\'t.`
       },
       {
-        heading: 'Where SEO and AEO Overlap',
-        content: `Despite their differences, SEO and AEO share significant common ground:\n\n• Both reward high-quality, authoritative content.\n• Both benefit from strong backlink profiles and domain authority.\n• Both require technical excellence (fast loading, clean markup, structured data).\n• Both favor brands with strong entity recognition across the web.\n• Both are influenced by E-E-A-T signals (Experience, Expertise, Authoritativeness, Trustworthiness).\n\nInvesting in SEO lays the groundwork for AEO success. A strong SEO foundation gives AI engines more data points to evaluate your brand.`
+        heading: 'The fundamental difference',
+        content: `SEO optimizes for ranking. AEO optimizes for citation.\n\nSEO wins when your page appears in the top ten search results. You get a click. The user lands on your site. You own the next interaction.\n\nAEO wins when the AI recommends your brand. The user doesn\'t necessarily click anything. You never own the interaction. What you get is an implicit endorsement in the AI\'s answer — which either lives with the user or doesn\'t.\n\nBoth are valuable, but the leverage is different. SEO gives you direct traffic. AEO gives you mindshare in the moment of recommendation, which later converts into branded search or direct traffic.\n\nOne channel is measured in clicks. The other in mindshare. Pretending they\'re the same metric means measuring the wrong thing.`
       },
       {
-        heading: 'Where AEO Requires a Different Approach',
-        content: `AEO diverges from SEO in several critical ways:\n\n1. Content format — AEO content needs to directly answer questions, not just target keywords. AI engines extract answers, not rank pages.\n\n2. Third-party presence — While SEO focuses on your own site, AEO requires a strong presence across third-party publications that AI engines use as sources.\n\n3. Entity optimization — AEO requires explicit work on your brand's entity profile across knowledge graphs and databases.\n\n4. Answer accuracy — AI engines penalize brands associated with inaccurate or contradictory information. Consistency across all sources is critical.\n\n5. Conversational intent — AEO targets how people ask questions in conversation ("What's the best CI/CD tool for a startup?") rather than keyword strings ("ci cd tool startup").`
+        heading: 'Where the overlap is real',
+        content: `The honest version: a lot of work benefits both channels.\n\nStrong technical SEO helps AEO. Fast pages, clean markup, good internal linking — AI engines crawl these the same way search engines do. If your site is a mess technically, fixing it helps both.\n\nHigh-quality content helps both. A comprehensive, well-structured answer page can rank on Google AND get cited by Perplexity. No contradiction.\n\nBacklinks still matter. AI engines weight trusted third-party mentions, and backlinks from authoritative domains are a proxy signal for that trust.\n\nSchema markup helps both. Cleaner data for crawlers is cleaner data for everything.\n\nSo if you\'re doing good SEO, maybe 40–50% of that work directly supports AEO. That\'s real. That\'s useful.`
       },
       {
-        heading: 'The Combined Strategy: SEO + AEO',
-        content: `The most effective approach combines both strategies:\n\n• Use SEO to build foundational domain authority and organic traffic.\n• Layer AEO tactics on top: entity optimization, citation building, answer-first content.\n• Create content that serves both: well-structured pages that rank on Google AND get cited by AI.\n• Invest in technical SEO (schema, site speed, structure) that benefits both channels.\n• Build thought leadership content that earns backlinks AND third-party citations.\n\nThe brands that win in 2026 and beyond won't choose between SEO and AEO — they'll build integrated strategies that capture traffic from every channel where buyers research.`
+        heading: 'Where the disciplines diverge',
+        content: `The other 50–60% is genuinely different work. This is where most "AEO services from SEO agencies" fall short.\n\nEntity authority is an AEO-specific discipline. Knowledge graph, Wikidata, structured entity data — SEO cares about some of this, but AEO cares about it intensely. This is where most SaaS companies have the biggest gap and where SEO-trained teams usually aren\'t strong.\n\nAnswer formatting is different. SEO writers have been trained to write for featured snippets (which are related) but the answer-first format AEO rewards is tighter, less meandering, and often uncomfortable to write. Many SEO writers over-write it.\n\nThird-party citation building is fundamentally different from link building. You\'re not trying to get a link. You\'re trying to get a specific kind of mention, in a specific kind of publication, that AI engines use as training or retrieval data. Different outreach, different targeting.\n\nMeasurement is totally different. SEO measures rankings, traffic, conversions. AEO measures citation frequency, share-of-voice, accuracy of description, AI-sourced referral. Most SEO dashboards can\'t show you any of this.`
       },
       {
-        heading: 'Budget Allocation: How to Split Between SEO and AEO',
-        content: `For B2B SaaS companies just starting with AEO, we recommend:\n\n• Year 1: 70% SEO / 30% AEO — Build the foundation while starting entity authority work.\n• Year 2: 50% SEO / 50% AEO — Shift investment as AI channels grow.\n• Year 3+: 40% SEO / 60% AEO — AI-first approach as AI becomes the primary research channel.\n\nThese ratios vary based on your current SEO maturity, competitive landscape, and buyer behavior. Companies in technical categories (DevOps, cybersecurity, data engineering) are seeing faster AEO adoption and should shift budget sooner.`
+        heading: 'Should you do both?',
+        content: `Yes, basically always. Here\'s why:\n\nSEO still works for a huge chunk of buyer discovery. Most buyers aren\'t exclusively using AI yet. You need the SEO foundation to capture traditional organic traffic.\n\nSEO feeds AEO. Pages that rank well give Perplexity and other AI engines more signal about your brand. Good SEO makes AEO easier.\n\nAEO captures what SEO is starting to lose. As more research shifts to AI, a pure SEO strategy slowly leaks relevance. AEO covers the gap.\n\nThe companies that will win over the next few years aren\'t choosing between SEO and AEO. They\'re running both, coordinated, with different specialists handling each.`
       },
       {
-        heading: 'Measuring Success Across Both Channels',
-        content: `Track SEO and AEO metrics together for a complete picture:\n\n• SEO metrics: organic traffic, keyword rankings, domain authority, organic conversions.\n• AEO metrics: AI citation frequency, share of voice, AI-sourced referral traffic, citation accuracy.\n• Combined metrics: total addressable visibility, blended cost per lead, pipeline by source, revenue attribution.\n\nThe goal isn't to make AEO replace SEO — it's to ensure your brand is visible everywhere your buyers look, whether that's a Google search, a ChatGPT conversation, or a Perplexity research session.`
+        heading: 'How to allocate budget',
+        content: `Rough rule of thumb based on what we see with clients:\n\nIf you have no SEO foundation yet: invest 70/30 SEO/AEO. Build the foundation first. Layer AEO on top.\n\nIf you have mature SEO with strong rankings: flip it. 30/70 SEO maintenance vs. AEO investment. Defensive SEO work and aggressive AEO growth work.\n\nIf you\'re in a highly technical B2B space (DevOps, data, cybersecurity, developer tooling): shift earlier toward AEO. Your buyers are using AI more. The behavioral shift is faster.\n\nIf your buyers are non-technical and older-demographic: shift slower. Google still dominates some buyer groups and probably will for another few years.\n\nThere\'s no single right answer. But "50/50 split across the board" is almost never right either. Your allocation should reflect your specific buyer behavior, which you can see in your analytics and sales conversations if you look.`
+      },
+      {
+        heading: null,
+        content: `The agencies quietly winning in 2026 are the ones treating AEO as a distinct discipline with its own practitioners, not as an SEO add-on. If you\'re evaluating a partner, the easiest tell is: ask them to describe what they\'d do that\'s specifically different from SEO. If they can\'t answer cleanly, they\'re selling rebrand, not practice.`
       },
     ],
   },
 
   'google-ai-overviews-guide': {
     tag: 'Google AI · AEO',
-    title: 'Google AI Overviews: How to Get Featured in SGE Answers',
-    description: 'Google AI Overviews are reshaping organic search. This guide covers exactly what signals Google looks for and how to position your content to get featured.',
+    title: 'Google AI Overviews: What We\'ve Learned After a Year of Optimization',
+    description: 'AI Overviews went from annoying feature to dominant placement. Here\'s what gets featured, what doesn\'t, and what\'s changed since launch.',
     date: 'March 6, 2026',
     updated: '2026-03-06',
-    readTime: '11 min read',
-    author: 'AEOrank Team',
+    readTime: '10 min read',
+    author: 'Ilyas Mrani',
     sections: [
       {
-        heading: 'What Are Google AI Overviews?',
-        content: `Google AI Overviews (formerly Search Generative Experience / SGE) are AI-generated summaries that appear at the top of Google search results for many queries. They synthesize information from multiple sources to provide a direct answer, often pushing traditional organic results below the fold.\n\nFor B2B SaaS, AI Overviews are appearing on an increasing number of product research queries — "best project management software," "how to choose a CRM," "DevOps tool comparison." If your brand isn't represented in these overviews, you're invisible for a growing share of buyer searches.`
+        heading: null,
+        content: `Google AI Overviews had a rough launch. Incorrect answers. Moments of comedy (glue on pizza). A lot of content marketers writing it off as temporary.\n\nA year later, it\'s not temporary. AI Overviews now appear on a large and growing share of B2B queries, and for many commercial categories they sit above the traditional results. If you\'re not showing up in them, Position 1 means less than it used to.\n\nWe\'ve been tracking client AI Overview performance closely since they became meaningful. Here\'s what\'s actually changed, what works, and where the traps are.`
       },
       {
-        heading: 'How Google AI Overviews Select Sources',
-        content: `Google AI Overviews pull from a combination of signals:\n\n• Existing organic search rankings — pages that rank well are more likely to be cited.\n• Content quality and comprehensiveness — thorough, well-structured content wins.\n• E-E-A-T signals — demonstrated expertise, experience, and authority.\n• Schema markup — structured data helps Google understand and extract information.\n• Source diversity — Google prefers to cite multiple authoritative sources, not just one.\n• Freshness — recently updated content is favored, especially for evolving topics.`
+        heading: 'What AI Overviews actually do',
+        content: `When AI Overviews appear, Google generates a synthesized answer from multiple sources, with inline citations. Users can expand the answer, click source links, or scroll past to traditional results.\n\nCritically: the sources cited in the AI Overview aren\'t always the top-ranking pages. Google is explicitly picking which sources to synthesize from, often prioritizing pages with specific formatting characteristics (direct answers, structured content) over pages that simply rank highest organically.\n\nThis matters because it means a new game is being played on top of traditional SEO. You can rank well and still not get cited in the AI Overview. You can rank less well and still get featured. The rules are adjacent to SEO, but not identical.`
       },
       {
-        heading: 'Content Optimization for AI Overviews',
-        content: `Structure your content to be easily extracted by Google's AI:\n\n1. Lead with a concise, direct answer to the query (2–3 sentences).\n2. Follow with structured supporting details using clear H2/H3 headings.\n3. Include bullet points and numbered lists — these are frequently extracted verbatim.\n4. Add data, statistics, and specific numbers that add credibility.\n5. Create comprehensive "ultimate guide" content for your core topics.\n6. Update existing content regularly with new data and insights.\n7. Include expert quotes and original perspectives that differentiate your content.`
+        heading: 'What we\'ve seen work',
+        content: `Across our client work and testing over the past year, a few patterns keep repeating:\n\nContent that directly answers the query in the first paragraph gets extracted most often. This is the biggest single tactical change. If your article spends 300 words on setup, Google\'s AI often skips you for a more direct competitor.\n\nSpecific numerical data gets pulled heavily. "Our benchmark shows X" performs better than "in our experience, this is fast." AI Overviews love quantifiable claims they can cite.\n\nRecent content outperforms older content, all else equal. Google appears to weight freshness more in AI Overview selection than in traditional rankings. Update your high-value pages.\n\nSchema markup helps, especially FAQ and HowTo schema. We\'ve seen meaningful lift from implementing comprehensive schema on pages that were already ranking.\n\nContent that cites multiple third-party sources gets favored. Pages that function as research syntheses (linking out to other authoritative sources within the content) often outperform pure first-party content. Counterintuitive, but real.`
       },
       {
-        heading: 'Technical Requirements for AI Overview Inclusion',
-        content: `Technical SEO is crucial for AI Overview inclusion:\n\n• Implement comprehensive schema markup (FAQ, HowTo, Product, Organization).\n• Ensure fast Core Web Vitals scores (LCP under 2.5s, CLS under 0.1).\n• Use semantic HTML with proper heading hierarchy.\n• Build a clear internal linking structure that establishes topical authority.\n• Maintain an updated XML sitemap with correct last-modified dates.\n• Implement proper canonical tags and avoid content duplication.\n• Ensure mobile-first design (Google indexes mobile versions first).`
+        heading: 'What doesn\'t work (but feels like it should)',
+        content: `Some things we\'ve tested that produced surprisingly little lift:\n\nAggressive content expansion. Writing a 6,000-word mega-guide for every topic. Google does not appear to systematically favor length for AI Overview selection. In some cases, concise pages win.\n\nPure keyword targeting. Writing explicitly for "AI Overview inclusion keywords" (yes, people sell these) doesn\'t consistently work. Google\'s selection process weights utility more than keyword match.\n\nE-E-A-T signals in isolation. Author bios and expertise credentials help, but don\'t move the needle alone. They\'re part of a broader trust picture — necessary, not sufficient.\n\nSchema without content quality. Putting FAQ schema on thin content doesn\'t rescue it. Schema amplifies good content, it doesn\'t create it.`
       },
       {
-        heading: 'Building Topical Authority for AI Overviews',
-        content: `Google AI Overviews favor sources with demonstrated topical authority:\n\n• Create content clusters around your core topics (pillar pages + supporting articles).\n• Cover every angle of your topic: beginner guides, advanced techniques, comparisons, case studies.\n• Earn links from authoritative sites in your niche.\n• Demonstrate real-world experience through case studies, original data, and expert commentary.\n• Build author profiles with credible bios and linked expertise.\n• Cross-reference your own content to build internal topical authority signals.`
+        heading: 'The traffic question',
+        content: `A real tension: AI Overview inclusion is prestigious, but does it actually drive traffic? The honest answer: less than traditional Position 1, but more than expected.\n\nWhat we\'ve observed: when clients get cited in AI Overviews for commercial queries, traffic from those queries typically drops 15–30% vs. what Position 1 would have gotten pre-AI-Overview. Some users get their answer from the overview and don\'t click. Some do — especially for complex or commercial queries where they want to verify.\n\nBut — and this matters — cited brands in AI Overviews appear to get stronger branded search lift. The implicit endorsement of being the AI-cited source seems to feed into how buyers remember the brand.\n\nSo the real calculation isn\'t "AI Overview citation vs. Position 1 clicks." It\'s "AI Overview citation plus reduced-but-still-meaningful clicks plus brand lift" versus "Position 1 clicks but no AI citation." The former usually wins for B2B, especially for considered purchases.`
       },
       {
-        heading: 'Monitoring Your AI Overview Presence',
-        content: `Track your visibility in Google AI Overviews:\n\n• Search your target queries regularly and document whether AI Overviews appear and what sources are cited.\n• Use rank tracking tools that support AI Overview monitoring.\n• Track which of your pages get cited and which competitor pages appear.\n• Monitor Google Search Console for impressions and clicks from AI Overview features.\n• Test content updates: after refreshing a page, check if AI Overview inclusion changes.\n• Pay attention to which content formats get extracted most (lists, definitions, how-to steps).`
+        heading: 'Practical optimization workflow',
+        content: `If you\'re trying to improve AI Overview performance on specific queries, here\'s the approach that\'s working for us:\n\nIdentify queries where AI Overview appears. Use Google Search Console\'s AI Overview filter (available in 2025 and improved in 2026) to see which of your pages are being shown in AI Overview results.\n\nFor each query, inspect the AI Overview. See what\'s being cited. See how your page compares.\n\nRewrite to lead with the direct answer. If your current page buries the answer, move it to the first paragraph. This alone often produces movement.\n\nAdd specific data where possible. Benchmarks. Percentages. Version numbers. Concrete specifics that an AI can quote.\n\nUpdate freshness. Change your page\'s updated date. Refresh stats. Add recent context.\n\nAdd or improve FAQ schema for the key questions around the topic.\n\nThen wait 2–6 weeks. Google\'s AI Overview selection updates on its own cadence. Don\'t expect overnight changes.`
       },
       {
-        heading: 'AI Overviews and the Future of Organic Search',
-        content: `AI Overviews represent a fundamental shift in how Google presents search results. For B2B SaaS brands, the implications are clear:\n\n• Traditional Position 1 rankings are less valuable if an AI Overview sits above them.\n• Brands that appear in AI Overviews get an implicit Google endorsement.\n• Content strategies must evolve from "rank for keywords" to "be the source AI trusts."\n• Investment in entity authority and structured data pays increasing dividends.\n• The line between SEO and AEO blurs most in Google AI Overviews — optimize for both simultaneously.\n\nCompanies that adapt their strategies now will have a significant competitive advantage as AI Overviews expand across more query types.`
+        heading: 'Where this is headed',
+        content: `AI Overviews aren\'t going to stay as they are. Google has been shipping rapid changes — expanded query coverage, new content types (video, product comparisons), richer citation formats. By late 2026 the feature will look meaningfully different from today.\n\nBut the underlying direction is stable: Google is making AI-synthesized answers more prominent, and traditional organic listings less prominent, for more query types. The brands preparing for that world — optimizing for citation and entity authority, not just ranking — will be dramatically better positioned than brands running a pure 2023 SEO playbook.\n\nMost of our client work in this area pays for itself through the brand lift and still-meaningful referral traffic. Almost nobody regrets starting early. Many companies waiting to see if AI Overviews "stick" are now playing catch-up on the same fundamentals we\'ve been implementing for a year.`
+      },
+      {
+        heading: null,
+        content: `If you\'re on the fence about investing in AI Overview optimization: the fundamentals are the same fundamentals that help ChatGPT and Perplexity citation. Any work you do here compounds across AEO broadly. You\'re not optimizing for one feature — you\'re building capability that applies across every AI answer surface, which is where search is going.`
       },
     ],
   },
@@ -257,7 +297,7 @@ export default function BlogPost({ params }) {
     description: post.description,
     datePublished: post.updated,
     dateModified: post.updated,
-    author: { '@type': 'Organization', name: 'AEOrank', url: 'https://aeorank.tech' },
+    author: { '@type': 'Person', name: post.author },
     publisher: { '@type': 'Organization', name: 'AEOrank', url: 'https://aeorank.tech' },
     mainEntityOfPage: { '@type': 'WebPage', '@id': `https://aeorank.tech/blog/${params.slug}` },
   }
@@ -287,7 +327,7 @@ export default function BlogPost({ params }) {
             {post.title}
           </h1>
           <div className="fade-up delay-1" style={{ display: 'flex', gap: '16px', justifyContent: 'center', alignItems: 'center', color: 'var(--muted)', fontSize: '0.85rem' }}>
-            <span>{post.author}</span>
+            <span>By {post.author}</span>
             <span style={{ opacity: 0.4 }}>|</span>
             <span>{post.date}</span>
             <span style={{ opacity: 0.4 }}>|</span>
@@ -297,7 +337,7 @@ export default function BlogPost({ params }) {
       </section>
 
       <section className="section" style={{ paddingTop: '40px' }}>
-        <div className="container" style={{ maxWidth: '760px' }}>
+        <div className="container" style={{ maxWidth: '720px' }}>
           <nav style={{ fontSize: '0.82rem', color: 'var(--muted)', marginBottom: '40px' }}>
             <Link href="/" style={{ color: 'var(--muted)', textDecoration: 'none' }}>Home</Link>
             <span style={{ margin: '0 8px', opacity: 0.4 }}>/</span>
@@ -308,24 +348,22 @@ export default function BlogPost({ params }) {
 
           <article>
             {post.sections.map((section, i) => (
-              <div key={i} style={{ marginBottom: '48px' }}>
-                <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.3rem,2.5vw,1.75rem)', color: '#fff', marginBottom: '18px', letterSpacing: '-0.02em', lineHeight: 1.3 }}>{section.heading}</h2>
+              <div key={i} style={{ marginBottom: '40px' }}>
+                {section.heading && (
+                  <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.3rem,2.5vw,1.7rem)', color: '#fff', marginBottom: '18px', letterSpacing: '-0.02em', lineHeight: 1.3 }}>{section.heading}</h2>
+                )}
                 {section.content.split('\n\n').map((para, j) => (
-                  <p key={j} style={{ fontSize: '1rem', color: 'var(--text)', lineHeight: 1.85, marginBottom: '18px', fontWeight: 300 }}>{para}</p>
+                  <p key={j} style={{ fontSize: '1.02rem', color: 'var(--text)', lineHeight: 1.85, marginBottom: '18px', fontWeight: 300 }}>{para}</p>
                 ))}
               </div>
             ))}
           </article>
 
-          <div style={{ borderTop: '1px solid var(--border)', paddingTop: '48px', marginTop: '48px', textAlign: 'center' }}>
-            <span className="section-tag" style={{ display: 'block', marginBottom: '14px' }}>Ready to Get Started?</span>
-            <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem,3vw,2.2rem)', color: '#fff', marginBottom: '16px', letterSpacing: '-0.02em' }}>
-              Want These Results for <em className="gold-text">Your Brand?</em>
-            </h3>
-            <p style={{ color: 'var(--muted)', maxWidth: '440px', margin: '0 auto 28px', fontWeight: 300, lineHeight: 1.7 }}>
-              Book a free AEO audit and see exactly where your brand stands in AI-generated answers.
+          <div style={{ borderTop: '1px solid var(--border)', paddingTop: '40px', marginTop: '40px', background: 'var(--navy2)', padding: '32px', borderRadius: '12px', textAlign: 'center' }}>
+            <p style={{ color: 'var(--text)', fontSize: '0.95rem', lineHeight: 1.7, fontWeight: 300, marginBottom: '20px' }}>
+              If your brand\'s citation presence in AI engines is weaker than it should be — or you\'re not sure where you stand — we run a free audit that tests your top buyer queries live across ChatGPT, Perplexity, and Google AI.
             </p>
-            <Link href="/contact" className="btn-gold">Book a Free AEO Audit →</Link>
+            <Link href="/contact" className="btn-gold">Book a Free Audit →</Link>
           </div>
         </div>
       </section>
@@ -333,7 +371,7 @@ export default function BlogPost({ params }) {
       {related.length > 0 && (
         <section className="section" style={{ background: 'var(--navy2)' }}>
           <div className="container">
-            <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', color: '#fff', marginBottom: '32px', letterSpacing: '-0.02em' }}>Related Articles</h3>
+            <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '1.5rem', color: '#fff', marginBottom: '32px', letterSpacing: '-0.02em' }}>More reading</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '20px' }} className="three-col">
               {related.map(r => (
                 <Link key={r.slug} href={`/blog/${r.slug}`} style={{ textDecoration: 'none' }}>

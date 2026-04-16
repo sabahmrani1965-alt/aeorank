@@ -14,7 +14,7 @@ const plans = [
     cta: 'Get Started', highlight: false,
   },
   {
-    name: 'Growth', price: '$3,500', period: '/month', tag: '🏆 Most Popular',
+    name: 'Growth', price: '$3,500', period: '/month', tag: 'Recommended',
     desc: 'The full AEO program. Everything you need to dominate AI answers in your category and turn citations into pipeline.',
     features: ['Everything in Starter', 'Citation building (10/mo)', 'Answer-first content (4/mo)', 'Competitor benchmarking', 'Dedicated AEO strategist', 'Weekly reporting', 'Weekly strategy calls', 'Slack channel access'],
     cta: 'Start Growing', highlight: true,
@@ -35,11 +35,12 @@ const addons = [
 ]
 
 const faqs = [
-  { q: 'Is there a minimum contract length?', a: 'We start with a 2-month agreement so we can show real progress, then roll into a flexible monthly arrangement. No lock-in after that.' },
-  { q: 'When will I see results?', a: 'Most clients see initial citation improvements within 60–90 days. Significant share-of-voice gains typically take 4–6 months of consistent work.' },
-  { q: 'Can I switch plans?', a: 'Absolutely. You can upgrade or downgrade at the end of any billing month. We\'ll help you pick the right plan as your needs evolve.' },
-  { q: 'Do you offer custom pricing?', a: 'Yes. Enterprise companies with complex needs or multiple products can get a custom quote. Book a call and we\'ll scope it out together.' },
-  { q: 'What\'s included in the free audit?', a: 'We run live AI citation checks across ChatGPT, Perplexity, and Google AI, benchmark you against 3 competitors, and give you a prioritized action plan — all before you commit to anything.' },
+  { q: 'Is there a minimum contract length?', a: 'Two months to start, then month-to-month. The two-month minimum exists because AEO work genuinely needs that long to start showing signal — anything shorter and we\'d both be guessing. After month two, you can leave anytime.' },
+  { q: 'When should I expect to see results?', a: 'Initial citation movement in 60–90 days if the baseline work is clean. Meaningful share-of-voice gains typically 4–6 months in. Anyone promising faster is selling you something. Entity work compounds — the longer you run it, the more it pays off.' },
+  { q: 'Can I switch plans?', a: 'Yes, at the end of any billing month. Most clients move up (more ambitious goals), occasionally down (when in-house capability grows). No penalties either way.' },
+  { q: 'Do you offer custom pricing?', a: 'For multi-product companies or complex enterprise scopes, yes. Book a call and we\'ll scope it honestly — sometimes custom pricing is just a higher number, and we\'ll tell you if that\'s the case.' },
+  { q: 'What\'s in the free audit?', a: 'Live citation tests across ChatGPT, Perplexity, and Google AI on 30–50 of your top buyer queries, benchmarked against three competitors, with a prioritized list of what to fix first. Takes about 45 minutes to walk through. No obligation to buy anything after.' },
+  { q: 'What if AEO isn\'t the right fit for us right now?', a: 'We\'ll tell you on the audit call. Some categories aren\'t mature enough in AI answers yet. Some companies should nail SEO basics first. We\'d rather send you away with good advice than sign a retainer we can\'t justify.' },
 ]
 
 export default function Pricing() {

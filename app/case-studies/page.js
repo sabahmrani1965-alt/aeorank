@@ -1,16 +1,67 @@
 import Link from 'next/link'
 
 export const metadata = {
-  title: 'Case Studies',
-  description: 'Real AEO results for real SaaS companies. See how AEOrank helped B2B SaaS brands get cited by ChatGPT, Perplexity and Google AI.',
+  title: 'Case Studies & Engagement Scenarios',
+  description: 'How AEOrank approaches real AEO engagements for B2B SaaS companies. Scenarios, methodologies, and the questions we answer for every new client.',
   alternates: { canonical: 'https://aeorank.tech/case-studies' },
 }
 
-const cases = [
-  { tag: 'Cybersecurity SaaS', duration: '9 months', title: 'From Invisible to #1 Cited Brand in Category', summary: 'A cybersecurity SaaS had zero presence in AI-generated answers despite strong Google SEO. Within 9 months of our AEO program, they became the most cited vendor across ChatGPT and Perplexity for their core category queries.', challenge: 'The company ranked well on Google but was completely absent from AI answers. Their competitors were being cited regularly, and buyers were increasingly using ChatGPT to research security tools before ever visiting a website.', solution: 'We built a comprehensive entity authority profile, secured citations in 40+ security-focused publications, implemented answer-first content for the top 25 buyer questions, and deployed full schema coverage across product pages.', m1: '+312%', l1: 'AI Citations', m2: '+189%', l2: 'MQLs from AI', m3: '9mo', l3: 'Timeline' },
-  { tag: 'DevOps Platform', duration: '6 months', title: 'Dominating AI Answers in a Crowded Market', summary: 'A DevOps platform used our entity authority program to outrank larger, better-funded competitors in Google AI Overviews and Bing Copilot responses — at a fraction of their marketing spend.', challenge: 'Competing against enterprise vendors with 10× the marketing budget. AI engines were defaulting to well-known brands, even when the client had a superior product.', solution: 'We focused on answer-gap analysis — finding the specific questions buyers asked where competitors had weak or no AI presence. We then created targeted authority content and citation placements for those exact queries.', m1: '+241%', l1: 'AI Citations', m2: '+130%', l2: 'Demo Requests', m3: '6mo', l3: 'Timeline' },
-  { tag: 'IoT Analytics', duration: '12 months', title: 'Category Leader in an Emerging Niche', summary: 'An IoT analytics company became the default AI recommendation for their category, driving a 5× increase in pipeline from AI-sourced traffic and establishing unassailable category leadership.', challenge: 'The IoT analytics space was fragmented with no clear leader. The client needed to establish category authority before competitors caught on to AEO.', solution: 'We executed a full category ownership strategy — creating the definitive guides for IoT analytics, building entity authority, and establishing the brand as the go-to source across every major AI platform.', m1: '+417%', l1: 'AI Citations', m2: '+560%', l2: 'AI-Sourced Leads', m3: '12mo', l3: 'Timeline' },
-  { tag: 'HR Tech SaaS', duration: '8 months', title: 'Turning AI into a Top Acquisition Channel', summary: 'An HR software company transformed AEO into their fastest-growing acquisition channel — with AI-sourced leads now accounting for 35% of all inbound pipeline and converting 40% better than other channels.', challenge: 'Heavy reliance on paid ads with rising CAC. The team needed a scalable, lower-cost acquisition channel that could grow organically over time.', solution: 'We built a 12-month AEO roadmap focused on the highest-intent HR software queries, secured placements in the top HR publications AI engines trust, and created a buyer journey content library optimized for AI citation.', m1: '+198%', l1: 'AI Citations', m2: '+95%', l2: 'Trial Sign-ups', m3: '8mo', l3: 'Timeline' },
+const scenarios = [
+  {
+    tag: 'Cybersecurity SaaS',
+    situation: 'Ranks well on Google, invisible in ChatGPT',
+    body: `A mid-market security vendor ranks on page one for their core keywords but cannot get cited by ChatGPT or Perplexity for queries like "best EDR tools for a mid-size team." Their buyers are researching with AI first. Their pipeline from organic is flat while category search volume is up.`,
+    diagnosis: `The brand has strong on-site SEO but weak entity authority. The knowledge graph barely knows them. Third-party citations are thin — they\'re mentioned in two industry publications, versus 18+ for the incumbent they\'re trying to displace. AI engines have no reason to surface them.`,
+    plan: [
+      'Entity profile rebuild: knowledge panel, Wikidata draft, consistent brand data across every platform AI engines train on.',
+      'Targeted citation campaign — 10–15 placements over 90 days in the specific security publications that regularly get cited by AI assistants.',
+      'Answer-first content refresh on the 20 highest-intent category queries, restructured for AI extraction.',
+      'Weekly citation tracking with share-of-voice benchmarking against the top three incumbents.',
+    ],
+    expected: 'By month 6, meaningful citation share in ChatGPT and Perplexity for core category queries. By month 12, competitive parity with category incumbents in AI-generated answers.',
+  },
+
+  {
+    tag: 'DevOps Platform',
+    situation: 'Outspent by incumbents, needs a different lever',
+    body: `A DevOps platform competing against enterprise incumbents with 10× their marketing budget. They cannot outbid competitors on paid. They need organic channels that reward expertise over spend — and AEO is that channel.`,
+    diagnosis: `Big enterprise incumbents often neglect AEO. They already have brand recognition, so they don\'t invest in entity authority work. That leaves an opening for smaller, more technical brands that execute well on AI citation — especially for specific, high-intent technical queries where incumbents give generic answers.`,
+    plan: [
+      'Gap analysis across 200 technical buyer queries to find the specific questions where incumbents have weak AI presence.',
+      'Deep technical content at the bottom of the funnel: migration guides, architecture comparisons, tooling benchmarks.',
+      'Placement in technical communities and publications that AI engines treat as authoritative sources.',
+      'Developer-audience citation building in places like CNCF blogs, DZone, Dev.to, and specialized technical newsletters.',
+    ],
+    expected: 'Competitive AI citation rate for specific technical queries within 4–6 months, even against incumbents. This is the quickest-win profile for AEO work.',
+  },
+
+  {
+    tag: 'Vertical SaaS',
+    situation: 'New category, no definition yet',
+    body: `A SaaS company defining a new category. The term doesn\'t exist in AI answers yet. Competitors are fragmented. First-mover advantage is real and shrinking — whoever establishes the category in AI minds owns the default recommendation.`,
+    diagnosis: `Brand-new categories are AEO\'s biggest opportunity. AI engines are actively building their understanding of the space. Whichever brand shows up consistently as the authority now gets cemented as the reference point. Miss the window and you\'re fighting uphill forever.`,
+    plan: [
+      'Category ownership content: definitive guides, category frameworks, and comparison pages that define the space.',
+      'PR and analyst outreach focused on establishing the category, not just the company.',
+      'Original research and data reports that other publications will reference — the single highest-leverage citation-building move for new categories.',
+      'Schema work that explicitly defines the category taxonomy for AI crawlers.',
+    ],
+    expected: 'Category-defining citation position in 6–9 months. These engagements compound the hardest because early entity work becomes the foundation AI engines keep citing.',
+  },
+
+  {
+    tag: 'Product-Led SaaS',
+    situation: 'Self-serve motion, AI is top-of-funnel',
+    body: `A product-led SaaS company where most buyers sign up without ever talking to sales. Their marketing funnel starts and often ends with discovery — and AI answer engines are rapidly becoming the dominant discovery channel for their ICP.`,
+    diagnosis: `PLG companies feel AEO shifts faster than most. When AI becomes the discovery layer, self-serve funnels either expand or contract depending on AI presence. These companies need to show up not just in consideration queries, but in "tools I can start using today" queries — and those require specific optimization.`,
+    plan: [
+      'Intent mapping across signup-adjacent queries ("best free [category] tool", "[category] with API", "quick [category] setup").',
+      'Free-tier positioning throughout content so AI engines understand the self-serve motion.',
+      'Integration and comparison content for every major platform in the buyer\'s existing stack.',
+      'Continuous monitoring tied directly to signup attribution — AI-sourced traffic gets flagged in the CRM so the ROI picture is real.',
+    ],
+    expected: 'AI-sourced signup volume becoming a measurable channel within 3 months. PLG motion means AEO impact shows up in the funnel fastest.',
+  },
 ]
 
 export default function CaseStudies() {
@@ -18,84 +69,73 @@ export default function CaseStudies() {
     <>
       <section className="page-hero">
         <div className="page-hero-glow" />
-        <div style={{ position: 'relative', maxWidth: '680px', margin: '0 auto', textAlign: 'center' }}>
-          <span className="badge">Success Stories</span>
+        <div style={{ position: 'relative', maxWidth: '720px', margin: '0 auto', textAlign: 'center' }}>
+          <span className="badge">Engagement Scenarios</span>
           <h1 className="section-title fade-up" style={{ fontSize: 'clamp(2.5rem,5vw,4rem)', marginBottom: '20px' }}>
-            Real Results for <em className="gold-text">Real Companies</em>
+            What We\'d Actually Do <em className="gold-text">For a Company Like Yours</em>
           </h1>
           <p className="section-sub fade-up delay-1" style={{ margin: '0 auto' }}>
-            See how we've helped B2B SaaS companies earn AI citations, grow pipeline, and build category authority with AEO.
+            Most agency case studies are marketing fiction. Instead, here are the real scenarios we see most — the diagnosis, the plan, and what to expect. If one of these looks like your company, we can talk specifics.
           </p>
         </div>
       </section>
 
-      <div className="stats-band">
-        <div className="stats-grid">
-          {[['50+','SaaS brands optimized'],['3×','Avg. AI citation increase'],['90%','Avg. pipeline boost'],['4.9★','Client satisfaction']].map(([n,l]) => (
-            <div key={n} className="stat-cell"><div className="stat-num">{n}</div><div className="stat-label">{l}</div></div>
-          ))}
-        </div>
-      </div>
-
       <section className="section">
-        <div className="container">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '60px' }}>
-            {cases.map((c, i) => (
-              <div key={i} style={{ background: 'var(--navy2)', border: '1px solid var(--border)', borderRadius: '16px', overflow: 'hidden' }}>
-                <div style={{ padding: '48px', display: 'grid', gridTemplateColumns: '1fr 380px', gap: '48px', alignItems: 'start' }} className="case-inner">
-                  <div>
-                    <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--gold)', background: 'rgba(242,168,59,0.1)', border: '1px solid rgba(242,168,59,0.2)', padding: '4px 12px', borderRadius: '100px' }}>{c.tag}</span>
-                      <span style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--muted)', background: 'var(--card)', border: '1px solid var(--border)', padding: '4px 12px', borderRadius: '100px' }}>{c.duration}</span>
-                    </div>
-                    <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem,3vw,2rem)', color: '#fff', marginBottom: '16px', letterSpacing: '-0.025em', lineHeight: 1.2 }}>{c.title}</h2>
-                    <p style={{ fontSize: '0.95rem', color: 'var(--text)', lineHeight: 1.75, marginBottom: '28px', fontWeight: 300 }}>{c.summary}</p>
+        <div className="container" style={{ maxWidth: '920px' }}>
+          <div style={{ color: 'var(--text)', fontSize: '1rem', lineHeight: 1.8, fontWeight: 300, background: 'var(--navy2)', border: '1px solid var(--border)', borderRadius: '12px', padding: '28px 32px', marginBottom: '60px' }}>
+            <p style={{ color: 'var(--muted)', fontSize: '0.85rem', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 600, marginBottom: '12px' }}>A note on this page</p>
+            <p>
+              AEOrank is a focused, early-stage agency. We\'re not going to pretend we have 50 signed logos to show you. What we do have is a clear, repeatable approach to AEO — and we\'d rather show you the actual thinking than lean on vanity claims. Below are the four engagement types we see most often. Yours probably looks like one of them.
+            </p>
+          </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '28px' }}>
-                      <div>
-                        <h5 style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '10px' }}>The Challenge</h5>
-                        <p style={{ fontSize: '0.85rem', color: 'var(--muted)', lineHeight: 1.65, fontWeight: 300 }}>{c.challenge}</p>
-                      </div>
-                      <div>
-                        <h5 style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '10px' }}>Our Solution</h5>
-                        <p style={{ fontSize: '0.85rem', color: 'var(--muted)', lineHeight: 1.65, fontWeight: 300 }}>{c.solution}</p>
-                      </div>
-                    </div>
-                    <Link href="/contact" className="btn-gold" style={{ fontSize: '0.875rem', padding: '11px 22px' }}>Get Similar Results →</Link>
-                  </div>
-
-                  <div style={{ background: 'var(--navy)', border: '1px solid var(--border)', borderRadius: '12px', padding: '32px' }}>
-                    <h5 style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '24px' }}>Results</h5>
-                    {[[c.m1,c.l1],[c.m2,c.l2],[c.m3,c.l3]].map(([v,l]) => (
-                      <div key={l} style={{ marginBottom: '24px', paddingBottom: '24px', borderBottom: '1px solid var(--border)' }}>
-                        <div style={{ fontFamily: 'Fraunces, serif', fontSize: '2.5rem', fontWeight: 700, lineHeight: 1, letterSpacing: '-0.04em', background: 'linear-gradient(135deg,#F2A83B,#FDE68A)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', marginBottom: '6px' }}>{v}</div>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--muted)', fontWeight: 300 }}>{l}</div>
-                      </div>
-                    ))}
-                  </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
+            {scenarios.map((s, i) => (
+              <article key={i} style={{ background: 'var(--navy2)', border: '1px solid var(--border)', borderRadius: '16px', padding: '40px' }}>
+                <div style={{ display: 'flex', gap: '10px', marginBottom: '18px', flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--gold)', background: 'rgba(242,168,59,0.1)', border: '1px solid rgba(242,168,59,0.2)', padding: '4px 12px', borderRadius: '100px' }}>{s.tag}</span>
                 </div>
-              </div>
+                <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: 'clamp(1.5rem,3vw,2rem)', color: '#fff', marginBottom: '20px', letterSpacing: '-0.025em', lineHeight: 1.25 }}>{s.situation}</h2>
+                <p style={{ fontSize: '0.98rem', color: 'var(--text)', lineHeight: 1.8, fontWeight: 300, marginBottom: '28px' }}>{s.body}</p>
+
+                <div style={{ borderLeft: '2px solid rgba(242,168,59,0.3)', paddingLeft: '20px', marginBottom: '28px' }}>
+                  <h5 style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '10px' }}>The diagnosis</h5>
+                  <p style={{ fontSize: '0.92rem', color: 'var(--muted)', lineHeight: 1.75, fontWeight: 300 }}>{s.diagnosis}</p>
+                </div>
+
+                <div style={{ marginBottom: '24px' }}>
+                  <h5 style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '14px' }}>What we\'d do</h5>
+                  <ul style={{ listStyle: 'none' }}>
+                    {s.plan.map((item, j) => (
+                      <li key={j} style={{ display: 'flex', gap: '12px', padding: '10px 0', alignItems: 'flex-start' }}>
+                        <span style={{ color: 'var(--gold)', flexShrink: 0, fontSize: '0.85rem', marginTop: '4px' }}>•</span>
+                        <span style={{ fontSize: '0.9rem', color: 'var(--text)', lineHeight: 1.7, fontWeight: 300 }}>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div style={{ borderTop: '1px solid var(--border)', paddingTop: '20px' }}>
+                  <h5 style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '10px' }}>Realistic expectation</h5>
+                  <p style={{ fontSize: '0.9rem', color: 'var(--text)', lineHeight: 1.75, fontWeight: 300 }}>{s.expected}</p>
+                </div>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section style={{ padding: '80px 24px', textAlign: 'center', background: 'var(--navy2)' }}>
-        <span className="section-tag" style={{ display: 'block', marginBottom: '16px' }}>Your Company Next</span>
-        <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: 'clamp(2rem,4vw,3rem)', color: '#fff', marginBottom: '16px', letterSpacing: '-0.03em' }}>
-          Ready to Build Your <em className="gold-text">Success Story?</em>
-        </h2>
-        <p style={{ color: 'var(--muted)', maxWidth: '440px', margin: '0 auto 32px', fontWeight: 300, lineHeight: 1.7 }}>
-          Book a free AEO audit and see exactly where you stand — and what's possible.
-        </p>
-        <Link href="/contact" className="btn-gold">Book a Free AEO Audit →</Link>
+      <section style={{ padding: '90px 24px', textAlign: 'center', background: 'var(--navy2)' }}>
+        <div style={{ maxWidth: '560px', margin: '0 auto' }}>
+          <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: 'clamp(2rem,4vw,3rem)', color: '#fff', marginBottom: '16px', letterSpacing: '-0.03em' }}>
+            Which one sounds like <em className="gold-text">your company?</em>
+          </h2>
+          <p style={{ color: 'var(--muted)', margin: '0 auto 32px', fontWeight: 300, lineHeight: 1.75 }}>
+            Book a 45-minute call. We\'ll look at your specific category, run a live AI citation test on your top queries, and tell you honestly whether we think AEO is worth the investment for you right now.
+          </p>
+          <Link href="/contact" className="btn-gold">Book the Call →</Link>
+        </div>
       </section>
-
-      <style>{`
-        @media (max-width: 900px) {
-          .case-inner { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </>
   )
 }
