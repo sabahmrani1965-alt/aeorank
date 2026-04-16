@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 
 export default function Nav() {
@@ -32,13 +33,8 @@ export default function Nav() {
       borderBottom: '1px solid rgba(255,255,255,0.08)',
       transition: 'background 0.3s',
     }}>
-      <Link href="/" style={{
-        fontFamily: 'Fraunces, serif', fontSize: '1.3rem', fontWeight: 700,
-        color: '#fff', textDecoration: 'none', letterSpacing: '-0.02em',
-        display: 'flex', alignItems: 'center', gap: '10px',
-      }}>
-        <div className="logo-mark">AR</div>
-        AEOrank
+      <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+        <Image src="/logo.svg" alt="AEOrank" width={180} height={40} priority />
       </Link>
 
       {/* Desktop links */}

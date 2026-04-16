@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 80" width="360" height="80" role="img">
+  <title>AEOrank</title>
+  <desc>AEOrank - Answer Engine Optimization agency logo</desc>
+
+  <rect x="0" y="10" width="60" height="60" rx="14" fill="#F2A83B"/>
+  <rect x="12" y="23" width="5" height="34" rx="2" fill="#FFFFFF"/>
+  <rect x="43" y="23" width="5" height="34" rx="2" fill="#FFFFFF"/>
+  <line x1="30" y1="54" x2="30" y2="32" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round"/>
+  <polyline points="23,32 30,24 37,32" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <text x="76" y="57" font-family="Fraunces, Georgia, serif" font-size="50" letter-spacing="-1">
+    <tspan font-weight="700" fill="#F2A83B">AEO</tspan><tspan font-weight="400" fill="#FFFFFF">rank</tspan>
+  </text>
+
+  <text x="77" y="73" font-family="system-ui, sans-serif" font-size="10" letter-spacing="2.5" fill="rgba(255,255,255,0.4)">ANSWER ENGINE OPTIMIZATION</text>
+</svg>

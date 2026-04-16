@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Footer() {
   const cols = [
@@ -57,13 +58,8 @@ export default function Footer() {
           marginBottom: '56px',
         }} className="footer-grid">
           <div>
-            <Link href="/" style={{
-              fontFamily: 'Fraunces, serif', fontSize: '1.2rem', fontWeight: 700,
-              color: '#fff', textDecoration: 'none', letterSpacing: '-0.02em',
-              display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px',
-            }}>
-              <div className="logo-mark">AR</div>
-              AEOrank
+            <Link href="/" style={{ textDecoration: 'none', display: 'inline-flex', marginBottom: '16px' }}>
+              <Image src="/logo.svg" alt="AEOrank" width={160} height={36} />
             </Link>
             <p style={{ fontSize: '0.84rem', color: '#8A96B0', lineHeight: 1.72, fontWeight: 300, maxWidth: '280px' }}>
               AEOrank helps B2B SaaS companies get cited by ChatGPT, Perplexity, and Google AI — turning AI engines into your top acquisition channel.
