@@ -101,7 +101,7 @@ export default function Footer() {
           flexWrap: 'wrap', gap: '12px',
         }}>
           <p style={{ fontSize: '0.78rem', color: '#8A96B0', fontWeight: 300 }}>
-            © 2025 AEOrank — AEO Agency for SaaS & Technology Companies. All Rights Reserved.
+            © 2026 AEOrank — AEO Agency for SaaS & Technology Companies. All Rights Reserved.
           </p>
           <div style={{ display: 'flex', gap: '20px' }}>
             <Link href="/privacy" style={{ fontSize: '0.78rem', color: '#8A96B0', textDecoration: 'none' }}>Privacy Policy</Link>
