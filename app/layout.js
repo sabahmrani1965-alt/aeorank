@@ -6,6 +6,7 @@ export const metadata = {
   title: { default: 'AEOrank – #1 AEO Agency for B2B SaaS', template: '%s | AEOrank' },
   description: 'Get your SaaS brand cited by ChatGPT, Perplexity & Google AI. AEOrank is the leading Answer Engine Optimization agency for B2B SaaS companies.',
   metadataBase: new URL('https://aeorank.tech'),
+  icons: { icon: '/icon.svg', apple: '/icon.svg' },
   openGraph: {
     title: 'AEOrank – #1 AEO Agency for B2B SaaS',
     description: 'Get your SaaS brand cited by ChatGPT, Perplexity & Google AI.',
