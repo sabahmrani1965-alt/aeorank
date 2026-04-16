@@ -1,6 +1,5 @@
+'use client'
 import Link from 'next/link'
-
-export const metadata = { title: 'Blog', description: 'AEO insights, strategies, and guides for B2B SaaS companies. Learn how to get cited by ChatGPT, Perplexity, and Google AI.' }
 
 const posts = [
   { tag: 'AEO · Strategy', emoji: '🤖', title: 'How to Get Your SaaS Brand Cited by ChatGPT in 2025', excerpt: 'A step-by-step guide to building entity authority, creating answer-first content, and securing the citations that make ChatGPT recommend your product.', date: 'April 10, 2025', readTime: '8 min read', slug: 'how-to-get-cited-by-chatgpt' },
