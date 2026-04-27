@@ -1,63 +1,110 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
+// Pretty-print a slug like "saasoffers" → "SaaSOffers". Mirrors the
+// server-side helper in lib/site.js but kept local so this file stays a pure
+// client component without server imports.
+function prettyBrand(slug) {
+  if (!slug) return "your brand";
+  const s = slug.toLowerCase();
+  if (s.length >= 2 && s.length <= 5 && !/[aeiouy]/.test(s)) return s.toUpperCase();
+  if (s.startsWith("saas")) {
+    return "SaaS" + (s[4] ? s[4].toUpperCase() + s.slice(5) : "");
+  }
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+const STEPS = [
+  { label: (b) => `Understanding what ${b} does`, duration: 3000 },
+  { label: () => `Reviewing relevant keywords`, duration: 5000 },
+  { label: () => `Researching Reddit communities`, duration: 9000 },
+  { label: () => `Analyzing AI overview presence`, duration: 8000 },
+];
+
+const TOTAL = STEPS.reduce((s, x) => s + x.duration, 0);
+
 export default function Loading() {
+  const pathname = usePathname();
+  const slug = (pathname || "").split("/report/")[1]?.split(/[?#/]/)[0] || "";
+  const brand = prettyBrand(slug);
+
+  const [progress, setProgress] = useState(0);
+  const [stepIdx, setStepIdx] = useState(0);
+
+  useEffect(() => {
+    const start = Date.now();
+    const tick = setInterval(() => {
+      const elapsed = Date.now() - start;
+      // Fill to 95% over TOTAL ms; the last 5% appears when the real page mounts.
+      const pct = Math.min(95, (elapsed / TOTAL) * 95);
+      setProgress(pct);
+
+      let cum = 0;
+      let idx = STEPS.length;
+      for (let i = 0; i < STEPS.length; i++) {
+        cum += STEPS[i].duration;
+        if (elapsed < cum) {
+          idx = i;
+          break;
+        }
+      }
+      setStepIdx(idx);
+    }, 80);
+    return () => clearInterval(tick);
+  }, []);
+
+  const activeLabel =
+    stepIdx < STEPS.length ? STEPS[stepIdx].label(brand) : "Finalizing your report";
+
   return (
     <>
       <Header />
+      <div className="loading-wrap">
+        <div className="loading-card">
+          <h1 className="loading-title">Analyzing AI Visibility</h1>
+          <p className="loading-subtitle">
+            Generating insights for <span className="accent">{brand}</span>
+          </p>
 
-      {/* Hero skeleton */}
-      <section className="report-hero">
-        <div className="container" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 18 }}>
-          <div className="hero-pill">
-            <span className="dot" /> Scanning Reddit for relevant communities…
+          <div className="loading-status-row">
+            <span className="loading-status-label">{activeLabel}…</span>
+            <span className="loading-pct">{Math.round(progress)}%</span>
           </div>
-          <div className="skeleton" style={{ height: 52, width: "60%", maxWidth: 600 }} />
-          <div className="skeleton" style={{ height: 52, width: "45%", maxWidth: 480 }} />
-          <div className="skeleton" style={{ height: 18, width: "70%", maxWidth: 700, marginTop: 12 }} />
-        </div>
-      </section>
 
-      {/* Keywords skeleton */}
-      <section className="section" style={{ paddingTop: 20 }}>
-        <div className="container">
-          <div className="section-icon">
-            <span className="icon-box">⚿</span>
-            <h3>Top Keyword Opportunities</h3>
+          <div className="loading-bar">
+            <div
+              className="loading-bar-fill"
+              style={{ width: `${Math.max(2, progress)}%` }}
+            />
           </div>
-          <div className="chart-card">
-            <div className="skeleton" style={{ height: 280 }} />
-          </div>
-          <div className="kpi-row">
-            <div className="kpi"><div className="skeleton" style={{ height: 50 }} /></div>
-            <div className="kpi"><div className="skeleton" style={{ height: 50 }} /></div>
-            <div className="kpi"><div className="skeleton" style={{ height: 50 }} /></div>
-          </div>
-        </div>
-      </section>
 
-      {/* Subreddit skeletons */}
-      <section className="section section-alt">
-        <div className="container">
-          <div className="section-icon">
-            <span className="icon-box">★</span>
-            <h3>Top Subreddit Opportunities</h3>
-          </div>
-          <div className="sub-grid">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div className="sub-card" key={i}>
-                <div className="sub-head">
-                  <div className="skeleton" style={{ width: 40, height: 40, borderRadius: "50%" }} />
-                  <div className="skeleton" style={{ height: 18, flex: 1 }} />
+          <div className="loading-steps">
+            <h3 className="loading-steps-heading">Pipeline</h3>
+            {STEPS.map((step, i) => {
+              const state = i < stepIdx ? "done" : i === stepIdx ? "active" : "pending";
+              return (
+                <div key={i} className={`loading-step ${state}`}>
+                  <span className="loading-step-icon">
+                    {state === "done" && "✓"}
+                    {state === "active" && <span className="loading-spinner-small" />}
+                    {state === "pending" && <span className="loading-dot" />}
+                  </span>
+                  <span className="loading-step-label">{step.label(brand)}</span>
                 </div>
-                <div className="skeleton" style={{ height: 14, width: "100%" }} />
-                <div className="skeleton" style={{ height: 14, width: "60%" }} />
-              </div>
-            ))}
+              );
+            })}
           </div>
-        </div>
-      </section>
 
+          <p className="loading-tip">
+            This usually takes 20–30 seconds. We're scanning Reddit and running
+            the report through our AI engine — feel free to keep this tab open.
+          </p>
+        </div>
+      </div>
       <Footer />
     </>
   );
