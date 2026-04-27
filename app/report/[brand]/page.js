@@ -60,26 +60,22 @@ export default async function ReportPage({ params, searchParams }) {
 
   const llmEnabled = isLlmConfigured();
 
-  // Brand-specific post search. For obscure brands this returns nothing, in
-  // which case we follow up with a category-only search so the visitor
-  // sees actionable "opportunity threads" instead of an empty card. The
-  // fallback only fires when needed, so popular brands still cost just 1
-  // post-actor run.
-  const [subreddits, brandPosts, llmKeywords] = await Promise.all([
+  // Run brand-specific search AND category fallback in parallel. We need
+  // them parallel (not sequential) because each Apify call can take up to
+  // ~28s, and the page function only has 30s before Vercel kills it. After
+  // both return we pick: brand-specific posts if any came back, otherwise
+  // the category fallback rendered as "engagement opportunities".
+  const [subreddits, brandPosts, opportunityPosts, llmKeywords] = await Promise.all([
     searchSubreddits(categoryQuery, 12),
-    searchPosts(postQuery, 12),
+    searchPosts(postQuery, 8),
+    searchPosts(categoryQuery, 6),
     llmEnabled
       ? generateKeywordsFromLlm(brand, description, 20)
       : Promise.resolve(null),
   ]);
 
-  let postsRaw = brandPosts;
-  let postsAreOpportunities = false;
-  if (!brandPosts || brandPosts.length === 0) {
-    const fallback = await searchPosts(categoryQuery, 10);
-    postsRaw = fallback;
-    postsAreOpportunities = true;
-  }
+  const postsAreOpportunities = !brandPosts || brandPosts.length === 0;
+  const postsRaw = postsAreOpportunities ? opportunityPosts : brandPosts;
 
   // Build the keyword rows: prefer Claude phrases, fall back to heuristics.
   const keywordPhrases = llmKeywords && llmKeywords.length >= 5
