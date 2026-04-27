@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import KeywordChart from "@/components/KeywordChart";
 import LlmMock from "@/components/LlmMock";
 import PricingTiers from "@/components/PricingTiers";
+import StepsSection from "@/components/StepsSection";
 import { fetchSiteMeta, prettyBrand, extractBrandFromTitle } from "@/lib/site";
 import {
   heuristicKeywords,
@@ -335,6 +336,22 @@ export default async function ReportPage({ params, searchParams }) {
           </p>
         </div>
       </section>
+
+      {/* STEPS — personalised to the brand from the report */}
+      <StepsSection
+        brand={brand}
+        brandUrl={enteredUrl || `https://${brand.toLowerCase().replace(/\s+/g, "")}.com`}
+        brandHost={(() => {
+          try {
+            return new URL(enteredUrl).hostname.replace(/^www\./, "");
+          } catch {
+            return `${brand.toLowerCase().replace(/\s+/g, "")}.com`;
+          }
+        })()}
+        description={description}
+        categoryQuery={categoryQuery}
+        topSub={subreddits[0]?.name || "r/general"}
+      />
 
       {/* PRICING */}
       <section className="section" id="pricing">
