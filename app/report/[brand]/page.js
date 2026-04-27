@@ -14,8 +14,7 @@ export const revalidate = 0;
 export async function generateMetadata({ params }) {
   const brand = prettyBrand(params.brand);
   return {
-    title: `${brand} — Reddit Growth Report (Educational Prototype)`,
-    robots: { index: false, follow: false },
+    title: `${brand} — Reddit & AI Visibility Report | AEOrank`,
   };
 }
 

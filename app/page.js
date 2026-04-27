@@ -275,8 +275,9 @@ export default function Home() {
               <summary>Where does the Reddit data in the report come from?</summary>
               <div className="faq-body">
                 Reddit's public JSON endpoints (the same data Reddit's own
-                search uses). We don't post, vote, or modify anything — the
-                report is purely read-only research on what's already public.
+                search uses). The free report is purely read-only — we don't
+                post, vote, or modify anything in your name without explicit
+                approval on a paid plan.
               </div>
             </details>
             <details>

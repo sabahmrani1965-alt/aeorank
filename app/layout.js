@@ -16,11 +16,10 @@ const caveat = Caveat({
 });
 
 export const metadata = {
-  title: "AEOrank — Reddit & AI Visibility Report (Educational Prototype)",
+  title: "AEOrank — Reddit & AI Visibility Report",
   description:
-    "An academic prototype that generates a Reddit + AI visibility report from any URL. Built strictly for doctoral research and educational purposes.",
+    "Help your brand show up in ChatGPT, Claude, and Gemini answers through measurable Reddit engagement. Free report from any URL.",
   icons: { icon: "/icon.svg" },
-  robots: { index: false, follow: false },
 };
 
 export default function RootLayout({ children }) {
