@@ -15,7 +15,6 @@ export default function Header() {
       </Link>
       <div className="header-actions">
         <Link href="/about" className="header-link">About</Link>
-        <Link href="/#pricing" className="header-link">Pricing</Link>
         <Link href="/contact" className="btn btn-primary">
           Get Started →
         </Link>
