@@ -63,8 +63,12 @@ export async function POST(req) {
   };
   console.log(`[lead/report] ${lead.createdAt} | ${email} | url=${url} | ${reportUrl}`);
 
-  // Sync to Resend Audience (fire-and-forget, doesn't block the response).
-  addToAudience({ email }).catch(() => {});
+  // Sync to Resend Audience in parallel with the rest of the work. We
+  // include it under the same Promise.race timer below so Vercel doesn't
+  // suspend the function before the POST completes.
+  const audienceSync = addToAudience({ email }).catch((e) => {
+    console.error("[lead/report] audience sync failed:", e?.message || e);
+  });
 
   // Generate report data + send email in the background. We respond fast.
   // The user is already navigating to the report page, so the email is async.
@@ -134,9 +138,13 @@ export async function POST(req) {
   })();
 
   // On Vercel, after returning a response Node may suspend the function
-  // before background promises finish. Wait briefly so the email has a chance
-  // to send before serverless tear-down — capped to ~12s.
-  await Promise.race([work, new Promise((r) => setTimeout(r, 12000))]);
+  // before background promises finish. Wait briefly so the email + audience
+  // sync have a chance to complete before serverless tear-down — capped
+  // to ~12s.
+  await Promise.race([
+    Promise.all([work, audienceSync]),
+    new Promise((r) => setTimeout(r, 12000)),
+  ]);
 
   return NextResponse.json({ ok: true, id: lead.id, reportUrl });
 }
