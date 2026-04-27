@@ -363,7 +363,7 @@ export default async function ReportPage({ params, searchParams }) {
           <p className="section-sub">
             Choose a plan that fits your stage. Cancel any time.
           </p>
-          <PricingTiers />
+          <PricingTiers brand={brand} />
         </div>
       </section>
 
