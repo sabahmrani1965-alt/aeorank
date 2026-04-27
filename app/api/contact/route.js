@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
+import { addToAudience } from "@/lib/email";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 const FILE = path.join(DATA_DIR, "leads.json");
@@ -92,8 +93,12 @@ export async function POST(req) {
     `[lead] ${lead.createdAt} | ${lead.email} | plan=${lead.plan} | name=${lead.name} | company=${lead.company || "-"} | message=${(lead.message || "").replace(/\s+/g, " ").slice(0, 200)}`
   );
 
-  // Persist + email (best-effort, both safe to skip).
-  await Promise.all([persistLocally(lead), emailViaResend(lead)]);
+  // Persist + email + audience sync (best-effort, all three safe to skip).
+  await Promise.all([
+    persistLocally(lead),
+    emailViaResend(lead),
+    addToAudience({ email: lead.email, name: lead.name }),
+  ]);
 
   return NextResponse.json({ ok: true, id: lead.id });
 }

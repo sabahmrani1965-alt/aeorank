@@ -3,7 +3,7 @@ import { fetchSiteMeta, prettyBrand, extractBrandFromTitle } from "@/lib/site";
 import { pickCategoryQuery } from "@/lib/keywords";
 import { searchSubreddits, searchPosts } from "@/lib/reddit";
 import { generateBrandAnswers, isLlmConfigured } from "@/lib/llm";
-import { sendEmail, isEmailConfigured } from "@/lib/email";
+import { sendEmail, isEmailConfigured, addToAudience } from "@/lib/email";
 import { renderReportEmail } from "@/lib/reportEmail";
 
 export const dynamic = "force-dynamic";
@@ -62,6 +62,9 @@ export async function POST(req) {
     ip: req.headers.get("x-forwarded-for") || "unknown",
   };
   console.log(`[lead/report] ${lead.createdAt} | ${email} | url=${url} | ${reportUrl}`);
+
+  // Sync to Resend Audience (fire-and-forget, doesn't block the response).
+  addToAudience({ email }).catch(() => {});
 
   // Generate report data + send email in the background. We respond fast.
   // The user is already navigating to the report page, so the email is async.

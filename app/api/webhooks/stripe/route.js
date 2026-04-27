@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { stripe, isStripeConfigured } from "@/lib/stripe";
-import { sendEmail, esc, isEmailConfigured } from "@/lib/email";
+import { sendEmail, esc, isEmailConfigured, addToAudience } from "@/lib/email";
 
 // Stripe needs the *raw* request body to verify the signature, so we read
 // it as text and pass it untouched into stripe.webhooks.constructEvent.
@@ -96,7 +96,13 @@ export async function POST(req) {
       console.log(
         `[stripe webhook] checkout completed plan=${session.metadata?.plan || "-"} amount=${session.amount_total} mode=${session.mode}`
       );
-      await notifyAdmin(session);
+      const customerEmail =
+        session.customer_details?.email || session.customer_email || "";
+      const customerName = session.customer_details?.name || "";
+      await Promise.all([
+        notifyAdmin(session),
+        addToAudience({ email: customerEmail, name: customerName }),
+      ]);
     } else {
       // Other events ignored — Stripe will still get a 200.
       console.log(`[stripe webhook] ignoring event type=${event.type}`);
