@@ -8,6 +8,9 @@
     },
     "app/api/contact/route.js": {
       "maxDuration": 10
+    },
+    "app/api/generate-report/route.js": {
+      "maxDuration": 30
     }
   }
 }
