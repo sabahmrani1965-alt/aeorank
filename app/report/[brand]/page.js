@@ -60,15 +60,16 @@ export default async function ReportPage({ params, searchParams }) {
 
   const llmEnabled = isLlmConfigured();
 
-  const [subA, postsA, postsB, llmKeywords] = await Promise.all([
+  // Single post search (brand + category). We used to fan out a second
+  // category-only search to backfill, but that doubled Apify spend for
+  // marginal quality gains.
+  const [subreddits, postsRaw, llmKeywords] = await Promise.all([
     searchSubreddits(categoryQuery, 12),
-    searchPosts(postQuery, 8),
-    searchPosts(categoryQuery, 6),
+    searchPosts(postQuery, 12),
     llmEnabled
       ? generateKeywordsFromLlm(brand, description, 20)
       : Promise.resolve(null),
   ]);
-  const subB = [];
 
   // Build the keyword rows: prefer Claude phrases, fall back to heuristics.
   const keywordPhrases = llmKeywords && llmKeywords.length >= 5
@@ -77,14 +78,7 @@ export default async function ReportPage({ params, searchParams }) {
   const keywords = enrichKeywordsWithVolumes(brand, keywordPhrases);
   const totals = totalsFromKeywords(keywords);
 
-  // Dedupe + cap
-  const subreddits = [...new Map(
-    [...subA, ...subB].map((s) => [s.name, s])
-  ).values()].slice(0, 12);
-
-  const posts = [...new Map(
-    [...postsA, ...postsB].map((p) => [p.permalink, p])
-  ).values()]
+  const posts = [...new Map(postsRaw.map((p) => [p.permalink, p])).values()]
     .sort((a, b) => b.ups - a.ups)
     .slice(0, 10);
 
