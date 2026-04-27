@@ -4,9 +4,14 @@ import KeywordChart from "@/components/KeywordChart";
 import LlmMock from "@/components/LlmMock";
 import PricingTiers from "@/components/PricingTiers";
 import { fetchSiteMeta, prettyBrand, extractBrandFromTitle } from "@/lib/site";
-import { generateKeywords, totalsFromKeywords, pickCategoryQuery } from "@/lib/keywords";
+import {
+  heuristicKeywords,
+  enrichKeywordsWithVolumes,
+  totalsFromKeywords,
+  pickCategoryQuery,
+} from "@/lib/keywords";
 import { searchSubreddits, searchPosts, formatMembers, timeAgo } from "@/lib/reddit";
-import { generateBrandAnswers, isLlmConfigured } from "@/lib/llm";
+import { generateBrandAnswers, generateKeywordsFromLlm, isLlmConfigured } from "@/lib/llm";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -45,10 +50,7 @@ export default async function ReportPage({ params, searchParams }) {
   const brand = extractBrandFromTitle(meta.title) || prettyBrand(params.brand);
   const description = meta.description || meta.title || `${brand} platform`;
 
-  // 2. Keywords
-  const keywords = generateKeywords(brand, description, 7);
-  const totals = totalsFromKeywords(keywords);
-
+  // 2. Keywords — try Claude first (real, brand-specific), fall back to heuristics.
   // 3. Reddit data — use a category query (e.g. "SaaS startup") for community
   //    search and brand + category for post search. This avoids generic single
   //    words ("access", "tools") pulling political subreddits.
@@ -57,15 +59,25 @@ export default async function ReportPage({ params, searchParams }) {
 
   const llmEnabled = isLlmConfigured();
 
-  const [subA, postsA, postsB, realAnswers] = await Promise.all([
+  const [subA, postsA, postsB, realAnswers, llmKeywords] = await Promise.all([
     searchSubreddits(categoryQuery, 12),
     searchPosts(postQuery, 8),
     searchPosts(categoryQuery, 6),
     llmEnabled
       ? generateBrandAnswers(brand, description, categoryQuery)
       : Promise.resolve([]),
+    llmEnabled
+      ? generateKeywordsFromLlm(brand, description, 20)
+      : Promise.resolve(null),
   ]);
   const subB = [];
+
+  // Build the keyword rows: prefer Claude phrases, fall back to heuristics.
+  const keywordPhrases = llmKeywords && llmKeywords.length >= 5
+    ? llmKeywords
+    : heuristicKeywords(brand, description, 20);
+  const keywords = enrichKeywordsWithVolumes(brand, keywordPhrases);
+  const totals = totalsFromKeywords(keywords);
 
   // Dedupe + cap
   const subreddits = [...new Map(
