@@ -1,40 +1,37 @@
-# AEOrank — Next.js Website
+# AEOrank — Educational Research Project
 
-Full Next.js website for [aeorank.tech](https://aeorank.tech)
+A working prototype that generates a Reddit + AI visibility report from any URL. Replicates the LaunchClub.ai report-generation funnel under the AEOrank brand for academic study.
 
-## Pages
-- `/` — Homepage
-- `/services` — AEO Services
-- `/case-studies` — Case Studies
-- `/pricing` — Pricing Plans
-- `/blog` — Blog
-- `/about` — About
-- `/contact` — Contact / Book a Session
+## Purpose
 
-## Deploy to Vercel (3 steps)
+This project is built **strictly for educational and research purposes** as part of a doctoral study analyzing:
+- Lead-magnet funnel design in marketing-tech SaaS
+- Reddit data accessibility via public APIs
+- Claims around LLM training data and "AI visibility" services
 
-### Option A — GitHub + Vercel (recommended)
-1. Push this folder to a GitHub repo
-2. Go to [vercel.com](https://vercel.com) → New Project → Import your repo
-3. Vercel auto-detects Next.js → click Deploy ✓
+## What it does
 
-### Option B — Vercel CLI
-```bash
-npm install -g vercel
-cd aeorank
-vercel
-```
+Visitor enters a website URL → the prototype:
+1. Fetches the site's public meta tags
+2. Extracts a brand name and category keywords
+3. Queries Reddit's public JSON API for relevant subreddits and posts
+4. Renders a personalized report
 
-## Run locally
+## What it does NOT do
+
+- No real Reddit posting, account creation, or vote manipulation
+- No payment processing
+- LLM citation screenshots in the report are clearly labeled as illustrative mockups
+
+## Run
+
 ```bash
 npm install
 npm run dev
-# → http://localhost:3000
 ```
 
-## Connect your domain
-1. In Vercel dashboard → Project → Settings → Domains
-2. Add `aeorank.tech` and `www.aeorank.tech`
-3. Update your DNS at your registrar:
-   - A record: `76.76.21.21`
-   - CNAME www: `cname.vercel-dns.com`
+Then open http://localhost:3001
+
+## Disclaimer
+
+See `/research` for the full educational disclaimer.
