@@ -70,9 +70,8 @@ export default function Home() {
             Strategic Reddit <span className="accent">Engagement</span>
           </h2>
           <p className="section-sub">
-            We pinpoint relevant Reddit posts, draft commentary, and analyze how
-            visibility could shape downstream LLM responses. (For research only —
-            this prototype does not actually post or vote.)
+            We pinpoint relevant Reddit posts, draft commentary, and track how
+            that visibility shapes downstream LLM responses about your brand.
           </p>
 
           <div className="steps">
