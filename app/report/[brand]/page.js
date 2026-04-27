@@ -60,16 +60,26 @@ export default async function ReportPage({ params, searchParams }) {
 
   const llmEnabled = isLlmConfigured();
 
-  // Single post search (brand + category). We used to fan out a second
-  // category-only search to backfill, but that doubled Apify spend for
-  // marginal quality gains.
-  const [subreddits, postsRaw, llmKeywords] = await Promise.all([
+  // Brand-specific post search. For obscure brands this returns nothing, in
+  // which case we follow up with a category-only search so the visitor
+  // sees actionable "opportunity threads" instead of an empty card. The
+  // fallback only fires when needed, so popular brands still cost just 1
+  // post-actor run.
+  const [subreddits, brandPosts, llmKeywords] = await Promise.all([
     searchSubreddits(categoryQuery, 12),
     searchPosts(postQuery, 12),
     llmEnabled
       ? generateKeywordsFromLlm(brand, description, 20)
       : Promise.resolve(null),
   ]);
+
+  let postsRaw = brandPosts;
+  let postsAreOpportunities = false;
+  if (!brandPosts || brandPosts.length === 0) {
+    const fallback = await searchPosts(categoryQuery, 10);
+    postsRaw = fallback;
+    postsAreOpportunities = true;
+  }
 
   // Build the keyword rows: prefer Claude phrases, fall back to heuristics.
   const keywordPhrases = llmKeywords && llmKeywords.length >= 5
@@ -212,16 +222,30 @@ export default async function ReportPage({ params, searchParams }) {
       {/* Posts */}
       <section className="section">
         <div className="container">
-          <span className="section-tag">( Relevant Posts )</span>
-          <h2>Top Reddit Posts About {brand}</h2>
-          <p className="section-sub">
-            Live results from Reddit's public search API for queries related to{" "}
-            <strong>{brand}</strong>. Click a post to read it on Reddit.
-          </p>
+          {postsAreOpportunities ? (
+            <>
+              <span className="section-tag">( engagement opportunities )</span>
+              <h2>
+                Threads where <span className="accent">{brand}</span> can win attention
+              </h2>
+              <p className="section-sub">
+                No one's mentioning <strong>{brand}</strong> on Reddit yet — that's the gap. These are popular threads in your category right now: prime targets to <strong>reply with value</strong>, or to inspire <strong>posts of your own</strong> that own the same topic.
+              </p>
+            </>
+          ) : (
+            <>
+              <span className="section-tag">( Relevant Posts )</span>
+              <h2>Top Reddit Posts About {brand}</h2>
+              <p className="section-sub">
+                Live results from Reddit's public search API for queries related to{" "}
+                <strong>{brand}</strong>. Click a post to read it on Reddit.
+              </p>
+            </>
+          )}
 
           {posts.length === 0 ? (
             <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
-              No matching posts found in the last month.
+              No relevant threads found in the last month for this category.
             </div>
           ) : (
             <div className="post-grid">
