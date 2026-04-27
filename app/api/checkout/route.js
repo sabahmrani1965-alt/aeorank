@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { stripe, PLANS, isStripeConfigured } from "@/lib/stripe";
+import {
+  stripe,
+  PLANS,
+  isStripeConfigured,
+  priceDataForPlan,
+} from "@/lib/stripe";
 
 export const runtime = "nodejs";
 
@@ -32,21 +37,13 @@ export async function POST(req) {
     return NextResponse.json({ error: "Unknown plan." }, { status: 400 });
   }
 
-  const priceId = process.env[planConfig.priceEnv];
-  if (!priceId) {
-    console.error(`[checkout] missing env ${planConfig.priceEnv}`);
-    return NextResponse.json(
-      { error: "Plan is temporarily unavailable." },
-      { status: 500 }
-    );
-  }
-
+  const price_data = priceDataForPlan(plan);
   const origin = siteOrigin(req);
 
   try {
     const session = await stripe().checkout.sessions.create({
       mode: planConfig.mode,
-      line_items: [{ price: priceId, quantity: 1 }],
+      line_items: [{ price_data, quantity: 1 }],
       success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/checkout/cancel`,
       allow_promotion_codes: true,
@@ -55,7 +52,6 @@ export async function POST(req) {
         plan,
         brand: brand || "",
       },
-      // For subscriptions, also surface metadata on the subscription itself
       ...(planConfig.mode === "subscription"
         ? { subscription_data: { metadata: { plan, brand: brand || "" } } }
         : {}),
