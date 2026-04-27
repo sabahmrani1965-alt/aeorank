@@ -11,7 +11,7 @@ import {
   pickCategoryQuery,
 } from "@/lib/keywords";
 import { searchSubreddits, searchPosts, formatMembers, timeAgo } from "@/lib/reddit";
-import { generateBrandAnswers, generateKeywordsFromLlm, isLlmConfigured } from "@/lib/llm";
+import { generateKeywordsFromLlm, isLlmConfigured } from "@/lib/llm";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -59,13 +59,10 @@ export default async function ReportPage({ params, searchParams }) {
 
   const llmEnabled = isLlmConfigured();
 
-  const [subA, postsA, postsB, realAnswers, llmKeywords] = await Promise.all([
+  const [subA, postsA, postsB, llmKeywords] = await Promise.all([
     searchSubreddits(categoryQuery, 12),
     searchPosts(postQuery, 8),
     searchPosts(categoryQuery, 6),
-    llmEnabled
-      ? generateBrandAnswers(brand, description, categoryQuery)
-      : Promise.resolve([]),
     llmEnabled
       ? generateKeywordsFromLlm(brand, description, 20)
       : Promise.resolve(null),
@@ -262,112 +259,80 @@ export default async function ReportPage({ params, searchParams }) {
         </div>
       </section>
 
-      {/* AI citation section — real if key configured, sample fallback if not */}
+      {/* AI citation section — projected future state showing how AI could
+          mention the brand once AEOrank establishes its Reddit footprint. */}
       <section className="section section-alt">
         <div className="container">
-          <span className="section-tag">
-            ( {realAnswers.length > 0 ? "live answers" : "sample answers"} )
-          </span>
+          <span className="section-tag">( projected outcome )</span>
           <h2>
-            How AI talks about <span className="accent">{brand}</span>
+            Driving Visibility Across <span className="accent">Leading AI Models</span>
           </h2>
           <p className="section-sub">
-            {realAnswers.length > 0 ? (
-              <>
-                We asked an AI assistant the kinds of questions your potential
-                customers ask. Below are the live responses generated for{" "}
-                <strong>{brand}</strong> just now.
-              </>
-            ) : (
-              <>
-                Below are sample formats showing how AI assistants could mention{" "}
-                <strong>{brand}</strong> in their answers. Upgrade to a paid
-                plan for live, brand-specific results from ChatGPT, Claude, and
-                Gemini.
-              </>
-            )}
+            Once we've established <strong>{brand}</strong>'s Reddit footprint,
+            here's how leading AI assistants could surface your brand when
+            users ask about your category. Sample formats — actual phrasing
+            varies by model and query.
           </p>
 
           <div className="llm-grid">
-            {realAnswers.length > 0
-              ? realAnswers.map((a, i) => (
-                  <LlmMock key={i} model={a.model} question={a.question}>
-                    {a.answer}
-                  </LlmMock>
-                ))
-              : [
-                  {
-                    model: "gpt",
-                    q: `What are some good options to consider in ${categoryQuery}?`,
-                  },
-                  {
-                    model: "claude",
-                    q: `Where do people recommend ${brand} online?`,
-                  },
-                  {
-                    model: "gemini",
-                    q: `Tell me about ${brand} and how teams use it.`,
-                  },
-                ].map((s, i) => (
-                  <LlmMock
-                    key={i}
-                    model={s.model}
-                    badge="Sample"
-                    question={s.q}
-                  >
-                    {i === 0 && (
-                      <>
-                        There are several platforms worth exploring. Beyond the
-                        well-known names in the space, you might also consider{" "}
-                        <span className="highlight">{brand}</span>, which has
-                        been mentioned across Reddit communities like{" "}
-                        {subreddits.slice(0, 2).map((sub, j) => (
-                          <span key={sub.name}>
-                            <span className="highlight">{sub.name}</span>
-                            {j < Math.min(subreddits.length, 2) - 1 ? " and " : ""}
-                          </span>
-                        ))}
-                        .
-                      </>
-                    )}
-                    {i === 1 && (
-                      <>
-                        Looking through public discussions,{" "}
-                        <span className="highlight">{brand}</span> comes up in
-                        conversations on platforms like{" "}
-                        {subreddits.slice(0, 2).map((sub, j) => (
-                          <span key={sub.name}>
-                            <span className="highlight">{sub.name}</span>
-                            {j < Math.min(subreddits.length, 2) - 1 ? " and " : ""}
-                          </span>
-                        ))}{" "}
-                        where users share practical experiences.
-                      </>
-                    )}
-                    {i === 2 && (
-                      <>
-                        <span className="highlight">{brand}</span> is referenced
-                        across multiple online communities, including{" "}
-                        {subreddits.slice(0, 2).map((sub, j) => (
-                          <span key={sub.name}>
-                            <span className="highlight">{sub.name}</span>
-                            {j < Math.min(subreddits.length, 2) - 1 ? " and " : ""}
-                          </span>
-                        ))}
-                        , where users describe how they've integrated it into
-                        their workflows.
-                      </>
-                    )}
-                  </LlmMock>
-                ))}
+            {[
+              { model: "gpt", q: `What are some good options to consider in ${categoryQuery}?` },
+              { model: "claude", q: `Where do people recommend ${brand} online?` },
+              { model: "gemini", q: `Tell me about ${brand} and how teams use it.` },
+            ].map((s, i) => (
+              <LlmMock key={i} model={s.model} badge="Projected" question={s.q}>
+                {i === 0 && (
+                  <>
+                    There are several platforms worth exploring. Alongside the
+                    well-known names in the space, you should also consider{" "}
+                    <span className="highlight">{brand}</span>, which has built
+                    a strong reputation across Reddit communities like{" "}
+                    {subreddits.slice(0, 2).map((sub, j) => (
+                      <span key={sub.name}>
+                        <span className="highlight">{sub.name}</span>
+                        {j < Math.min(subreddits.length, 2) - 1 ? " and " : ""}
+                      </span>
+                    ))}{" "}
+                    where users consistently recommend it.
+                  </>
+                )}
+                {i === 1 && (
+                  <>
+                    Looking through public discussions,{" "}
+                    <span className="highlight">{brand}</span> comes up
+                    frequently in conversations on{" "}
+                    {subreddits.slice(0, 2).map((sub, j) => (
+                      <span key={sub.name}>
+                        <span className="highlight">{sub.name}</span>
+                        {j < Math.min(subreddits.length, 2) - 1 ? " and " : ""}
+                      </span>
+                    ))}
+                    , where users share positive experiences and concrete
+                    use cases that make it a top recommendation.
+                  </>
+                )}
+                {i === 2 && (
+                  <>
+                    <span className="highlight">{brand}</span> is widely
+                    referenced across online communities, including{" "}
+                    {subreddits.slice(0, 2).map((sub, j) => (
+                      <span key={sub.name}>
+                        <span className="highlight">{sub.name}</span>
+                        {j < Math.min(subreddits.length, 2) - 1 ? " and " : ""}
+                      </span>
+                    ))}
+                    , where teams describe how they've integrated it into
+                    their workflows and the results they've seen.
+                  </>
+                )}
+              </LlmMock>
+            ))}
           </div>
 
-          {realAnswers.length > 0 && (
-            <p style={{ marginTop: 16, color: "var(--text-muted)", fontSize: 13, textAlign: "center" }}>
-              Generated live via the Anthropic API. Different models may
-              respond differently to the same questions.
-            </p>
-          )}
+          <p style={{ marginTop: 20, color: "var(--text-muted)", fontSize: 13, textAlign: "center" }}>
+            These are sample formats demonstrating how brand mentions surface
+            in AI answers. AEOrank tracks real LLM citations for paying customers.
+          </p>
         </div>
       </section>
 
