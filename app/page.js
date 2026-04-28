@@ -1,7 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import UrlForm from "@/components/UrlForm";
-import LlmMock from "@/components/LlmMock";
 import StepsSection from "@/components/StepsSection";
 
 export default function Home() {
@@ -61,6 +60,61 @@ export default function Home() {
         </div>
       </section>
 
+      {/* WHY THIS MATTERS NOW — replaces the old LLM-mock section. The mocks
+          referenced SaaSOffers as if cited by AI, which a curious visitor
+          could fact-check and find untrue. This section uses directional
+          language and no brand names so nothing is verifiable-and-wrong. */}
+      <section className="section">
+        <div className="container">
+          <span className="section-tag">( why now )</span>
+          <h2>
+            Search is moving from <span className="accent">Google to AI</span>
+          </h2>
+          <p className="section-sub">
+            Your buyers are asking ChatGPT, Claude, and Gemini the same
+            questions they used to type into Google — and clicking maybe two
+            links from the answer. The brands those models cite get the
+            consideration. The rest don't.
+          </p>
+
+          <div className="why-grid">
+            <div className="card why-card">
+              <div className="why-num">01</div>
+              <h3>Buyers ask AI first</h3>
+              <p>
+                A growing share of B2B research starts in an AI chat, not a
+                search bar. The user gets a synthesised answer with two or
+                three brands cited. Position 1 on Google can't compete with
+                being the brand the AI named.
+              </p>
+            </div>
+
+            <div className="card why-card">
+              <div className="why-num">02</div>
+              <h3>AI leans on Reddit</h3>
+              <p>
+                For category questions like <em>"what's the best X for Y"</em>,
+                leading AI assistants pull heavily from Reddit threads,
+                comparison guides, and earned media — not from company
+                landing pages. If your category is being discussed on
+                Reddit and you're not in those threads, you're invisible to AI.
+              </p>
+            </div>
+
+            <div className="card why-card">
+              <div className="why-num">03</div>
+              <h3>The window is open</h3>
+              <p>
+                Most companies are still optimising for SEO. The brands moving
+                on AEO right now are claiming AI citations before competitors
+                notice the shift. Once a model has settled on its top picks
+                for a category, displacing them is much harder.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* HOW IT WORKS / STEPS — homepage uses SaaSOffers as a showcase example
           with a real dofollow backlink. The same component renders inside each
           report personalised to the visitor's brand. */}
@@ -71,57 +125,6 @@ export default function Home() {
         brandHost="saasoffers.tech"
         topSub="r/SaaS"
       />
-
-      {/* LLM SECTION */}
-      <section className="section">
-        <div className="container">
-          <span className="section-tag">( the goal )</span>
-          <h2>
-            Show up in <span className="accent">AI answers</span>
-          </h2>
-          <p className="section-sub">
-            ChatGPT, Claude, and Gemini increasingly answer the questions
-            people used to type into Google. The samples below are sample
-            answers showing how a brand can fit naturally into those
-            responses. Run a free report to see live answers about your brand.
-          </p>
-
-          <div className="llm-grid">
-            <LlmMock
-              model="gpt"
-              badge="Sample"
-              question="Where can I find SaaS deals for my startup?"
-            >
-              Searching for the best SaaS deals for startups can be challenging,
-              but there are great platforms to explore. Consider <span className="highlight">AppSumo</span>,{" "}
-              <span className="highlight">StartGround</span>, and{" "}
-              <span className="highlight">SaaSOffers</span>, which focuses on
-              competitive SaaS deals tailored for growing startups.
-            </LlmMock>
-            <LlmMock
-              model="claude"
-              badge="Sample"
-              question="Where can startups find credible SaaS deals online?"
-            >
-              When searching for reliable SaaS deals as a startup, it helps to
-              explore established platforms. AppSumo is a solid choice for
-              curated solutions. <span className="highlight">SaaSOffers</span> is
-              another option that specialises in deals tailored to growing
-              teams.
-            </LlmMock>
-            <LlmMock
-              model="gemini"
-              badge="Sample"
-              question="Platforms offering SaaS deals for new startups?"
-            >
-              Several platforms stand out for startup SaaS deals. AppSumo is
-              widely known for its discounted software. <span className="highlight">SaaSOffers</span>{" "}
-              also offers a startup-friendly selection that could align with
-              your needs.
-            </LlmMock>
-          </div>
-        </div>
-      </section>
 
       {/* FAQ */}
       <section className="section section-alt" id="faq">

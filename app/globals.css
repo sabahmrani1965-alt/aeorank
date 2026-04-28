@@ -628,6 +628,42 @@ button { font-family: inherit; }
 }
 .audience-label { margin-top: 12px; font-weight: 700; font-size: 16px; }
 
+/* ----------------- "Why now" grid (homepage) ----------------- */
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 32px;
+}
+.why-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 26px 24px;
+}
+.why-card h3 {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+.why-card p {
+  font-size: 14.5px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  margin: 0;
+}
+.why-num {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+@media (max-width: 1000px) {
+  .why-grid { grid-template-columns: 1fr; }
+}
+
 /* ----------------- LLM mock cards ----------------- */
 .llm-grid {
   display: grid;
