@@ -1,10 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 
-// Trial / Growth / Boost route through Stripe Checkout via /api/checkout.
-// Enterprise stays a contact link — those deals are scoped on a call.
+// All four tiers (Starter pack, 1-month trial, Growth, Boost) route through
+// Stripe Checkout via /api/checkout. The Starter pack is the low-friction
+// entry point; subscriptions are differentiated by AEO strategy guidance
+// and reporting on top of the raw post/comment volume.
 export default function PricingTiers({ brand = "" }) {
   const [loading, setLoading] = useState(""); // which plan key is in-flight
   const [error, setError] = useState("");
@@ -50,6 +51,26 @@ export default function PricingTiers({ brand = "" }) {
     <>
       <div className="pricing-grid">
         <div className="pricing-card">
+          <div className="pricing-name">Pay as you go</div>
+          <div className="pricing-price">$250</div>
+          <div className="pricing-divider" />
+          <p className="pricing-desc">
+            Test the waters with credits. No monthly commitment, use them when you want.
+          </p>
+          <ul className="pricing-features">
+            <li>$30 per Reddit post</li>
+            <li>$15 per comment</li>
+            <li>Every output approved by you before going live</li>
+            <li>Use over 30 days, top up any time</li>
+          </ul>
+          <div className="pricing-actions">
+            <CheckoutButton plan="starter" className="btn btn-ghost">
+              Buy Starter Pack
+            </CheckoutButton>
+          </div>
+        </div>
+
+        <div className="pricing-card">
           <div className="pricing-name">1-month trial</div>
           <div className="pricing-price">$1,000</div>
           <div className="pricing-divider" />
@@ -78,8 +99,8 @@ export default function PricingTiers({ brand = "" }) {
             Consistent visibility with full control and clear measurement.
           </p>
           <ul className="pricing-features">
-            <li>10 strategic posts in relevant subreddits</li>
-            <li>60 comments reviewed and approved by you</li>
+            <li>10 strategic posts + 60 comments per month</li>
+            <li>AEO strategy: what to post, what to skip, when to push back</li>
             <li>Live AI Visibility tracking (ChatGPT, Claude, Gemini)</li>
             <li>Weekly activity and performance reports</li>
           </ul>
@@ -101,35 +122,15 @@ export default function PricingTiers({ brand = "" }) {
             Aggressive expansion for brands ready to scale attention and trust.
           </p>
           <ul className="pricing-features">
-            <li>20 strategic posts in relevant subreddits</li>
-            <li>100 comments reviewed and approved by you</li>
-            <li>Live AI Visibility tracking</li>
+            <li>20 strategic posts + 100 comments per month</li>
+            <li>Hands-on AEO playbook: I tell you what to post and what not to</li>
+            <li>Live AI Visibility tracking, weekly reports</li>
             <li>Monthly strategy call</li>
           </ul>
           <div className="pricing-actions">
             <CheckoutButton plan="boost" className="btn btn-ghost">
               Get Started
             </CheckoutButton>
-          </div>
-        </div>
-
-        <div className="pricing-card">
-          <div className="pricing-name">Enterprise</div>
-          <div className="pricing-price" style={{ fontSize: 24 }}>Custom</div>
-          <div className="pricing-divider" />
-          <p className="pricing-desc">
-            Built for companies that want control, presence, and long-term leverage.
-          </p>
-          <ul className="pricing-features">
-            <li>30+ strategic posts in relevant subreddits</li>
-            <li>150+ comments reviewed and approved</li>
-            <li>Branded subreddit creation and management</li>
-            <li>Designed for serious growth 🚀</li>
-          </ul>
-          <div className="pricing-actions">
-            <Link href="/contact?plan=enterprise" className="btn btn-ghost">
-              Book a Call
-            </Link>
           </div>
         </div>
       </div>
