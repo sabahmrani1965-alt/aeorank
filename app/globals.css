@@ -551,10 +551,26 @@ button { font-family: inherit; }
 }
 .sub-icon img { width: 100%; height: 100%; object-fit: cover; }
 .sub-name { font-weight: 700; font-size: 16px; }
-.sub-desc { color: var(--text-dim); font-size: 13.5px; line-height: 1.45; min-height: 40px; }
+.sub-desc { color: var(--text-dim); font-size: 13.5px; line-height: 1.45; }
 .sub-members {
   color: var(--text-muted); font-size: 13px; margin-top: auto;
-  display: flex; align-items: center; gap: 5px;
+  display: flex; align-items: center; gap: 6px;
+}
+.sub-members-active {
+  color: #6ee7a7;
+  font-weight: 500;
+}
+.sub-active-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #34d39a;
+  box-shadow: 0 0 0 0 rgba(52, 211, 154, 0.7);
+  animation: aeorank-pulse 2s infinite;
+}
+@keyframes aeorank-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(52, 211, 154, 0.55); }
+  70%  { box-shadow: 0 0 0 8px rgba(52, 211, 154, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(52, 211, 154, 0); }
 }
 
 /* Posts grid */

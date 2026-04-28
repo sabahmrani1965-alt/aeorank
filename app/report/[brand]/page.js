@@ -197,12 +197,17 @@ export default async function ReportPage({ params, searchParams }) {
                       <SubIcon name={s.name} icon={s.icon} />
                       <div className="sub-name">{s.name}</div>
                     </div>
-                    <div className="sub-desc">{s.desc || "—"}</div>
-                    <div className="sub-members">
-                      {s.members > 0
-                        ? `${formatMembers(s.members)} members`
-                        : "active community"}
-                    </div>
+                    {s.desc ? <div className="sub-desc">{s.desc}</div> : null}
+                    {s.members > 0 ? (
+                      <div className="sub-members">
+                        {formatMembers(s.members)} members
+                      </div>
+                    ) : (
+                      <div className="sub-members sub-members-active">
+                        <span className="sub-active-dot" />
+                        Active community
+                      </div>
+                    )}
                   </a>
                 ))}
               </div>
