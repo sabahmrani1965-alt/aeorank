@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { stripe, isStripeConfigured } from "@/lib/stripe";
+import { CALENDLY_URL } from "@/lib/links";
 
 export const metadata = {
   title: "Welcome aboard — AEOrank",
@@ -45,12 +46,36 @@ export default async function CheckoutSuccess({ searchParams }) {
             Thanks for joining AEOrank{plan ? ` on the ${plan} plan` : ""}. We'll be in touch within one business day to kick off onboarding.
           </p>
 
+          <div
+            className="card"
+            style={{
+              marginBottom: 24,
+              borderColor: "rgba(242, 168, 59, 0.4)",
+              padding: 28,
+              textAlign: "center",
+            }}
+          >
+            <h3 style={{ marginBottom: 8 }}>Book your kickoff call</h3>
+            <p style={{ color: "var(--text-dim)", marginBottom: 18 }}>
+              Pick a 30-minute slot that works for you. We'll align on tone,
+              target subreddits, and your first batch of drafts on the call.
+            </p>
+            <a
+              href={CALENDLY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary"
+            >
+              Book a Call →
+            </a>
+          </div>
+
           <div className="card" style={{ marginBottom: 24 }}>
             <h3 style={{ marginBottom: 12 }}>What happens next</h3>
             <ol style={{ color: "var(--text-dim)", paddingLeft: 18, lineHeight: 1.7 }}>
               <li>You'll get a welcome email{email ? ` at ${email}` : ""} within minutes confirming the charge.</li>
-              <li>A short intake form lands in your inbox the same day so we can map your audience and tone.</li>
-              <li>We'll share your first batch of post and comment drafts within 48 hours, ready for your approval before anything goes live.</li>
+              <li>Book the kickoff call above (or reply to the welcome email if you prefer async).</li>
+              <li>We'll share your first batch of post and comment drafts within 48 hours of the call, ready for your approval before anything goes live.</li>
             </ol>
           </div>
 

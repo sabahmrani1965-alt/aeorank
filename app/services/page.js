@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import { CALENDLY_URL } from "@/lib/links";
 
 export const metadata = {
   title: "Services — AEOrank",
@@ -238,9 +239,14 @@ export default function Services() {
               rarely as high-leverage as doing the work together.
             </p>
             <div style={{ textAlign: "center" }}>
-              <Link href="/contact" className="btn btn-primary">
+              <a
+                href={CALENDLY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-primary"
+              >
                 Book a Call to Talk It Through →
-              </Link>
+              </a>
             </div>
           </div>
         </div>

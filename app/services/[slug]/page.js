@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CALENDLY_URL } from "@/lib/links";
 
 const services = {
   'aeo-management': {
@@ -212,9 +213,14 @@ export default function ServicePage({ params }) {
               flexWrap: "wrap",
             }}
           >
-            <Link href="/contact" className="btn btn-primary">
+            <a
+              href={CALENDLY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary"
+            >
               Book a Free Strategy Call →
-            </Link>
+            </a>
             <Link href="/" className="btn btn-ghost">
               Run a Free Report
             </Link>
@@ -343,9 +349,14 @@ export default function ServicePage({ params }) {
             45 minutes with a senior AEO strategist. Real insights, custom roadmap, zero sales pressure.
           </p>
           <div style={{ marginTop: 28, display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <Link href="/contact" className="btn btn-primary">
+            <a
+              href={CALENDLY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary"
+            >
               Book a Strategy Call →
-            </Link>
+            </a>
             <Link href="/" className="btn btn-ghost">
               Run a Free Report
             </Link>
