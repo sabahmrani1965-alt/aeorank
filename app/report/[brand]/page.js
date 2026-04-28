@@ -199,17 +199,21 @@ export default async function ReportPage({ params, searchParams }) {
                     </div>
                     <div className="sub-desc">{s.desc || "—"}</div>
                     <div className="sub-members">
-                      {formatMembers(s.members)} members
+                      {s.members > 0
+                        ? `${formatMembers(s.members)} members`
+                        : "active community"}
                     </div>
                   </a>
                 ))}
               </div>
-              <div className="audience-block" style={{ marginTop: 24 }}>
-                <div className="audience-num">
-                  {formatMembers(subreddits.reduce((s, x) => s + x.members, 0))}+
+              {subreddits.some((s) => s.members > 0) && (
+                <div className="audience-block" style={{ marginTop: 24 }}>
+                  <div className="audience-num">
+                    {formatMembers(subreddits.reduce((s, x) => s + x.members, 0))}+
+                  </div>
+                  <div className="audience-label">Combined audience reachable</div>
                 </div>
-                <div className="audience-label">Combined audience reachable</div>
-              </div>
+              )}
             </>
           )}
         </div>
