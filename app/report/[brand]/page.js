@@ -262,15 +262,25 @@ export default async function ReportPage({ params, searchParams }) {
                     <span>{p.sub}</span>
                     <span>·</span>
                     <span>{timeAgo(p.created)}</span>
-                    <span>·</span>
-                    <span>u/{p.author}</span>
+                    {p.author ? (
+                      <>
+                        <span>·</span>
+                        <span>u/{p.author}</span>
+                      </>
+                    ) : null}
                   </div>
                   <div className="post-title">{p.title}</div>
                   {p.snippet && <div className="post-snippet">{p.snippet}…</div>}
-                  <div className="post-stats">
-                    <span className="post-stat">↑ {p.ups.toLocaleString()}</span>
-                    <span className="post-stat">💬 {p.comments.toLocaleString()}</span>
-                  </div>
+                  {(p.ups > 0 || p.comments > 0) && (
+                    <div className="post-stats">
+                      {p.ups > 0 && (
+                        <span className="post-stat">↑ {p.ups.toLocaleString()}</span>
+                      )}
+                      {p.comments > 0 && (
+                        <span className="post-stat">💬 {p.comments.toLocaleString()}</span>
+                      )}
+                    </div>
+                  )}
                 </a>
               ))}
             </div>
