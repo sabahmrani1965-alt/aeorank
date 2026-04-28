@@ -80,17 +80,36 @@ export default function StepsSection({
   return (
     <section className="section section-alt">
       <div className="container">
-        <span className="section-tag">( steps to grow )</span>
-        <h2>
-          Boost <span className="accent">{brand}</span>'s Visibility Through
-          <br />
-          Strategic Reddit Engagement
-        </h2>
-        <p className="section-sub">
-          We pinpoint relevant Reddit threads, write helpful posts and
-          comments on your behalf with proper disclosure, and track how that
-          visibility shapes downstream answers in ChatGPT, Claude, and Gemini.
-        </p>
+        <span className="section-tag">
+          {showcase ? "( live case study )" : "( steps to grow )"}
+        </span>
+        {showcase ? (
+          <>
+            <h2>
+              How we grow brands on Reddit — using{" "}
+              <span className="accent">{brand}</span> as the live example
+            </h2>
+            <p className="section-sub">
+              The playbook below is what we'd run for your brand. We're
+              showing it applied to <a href={brandUrl} rel="dofollow" target="_blank" style={{ color: "inherit", borderBottom: "1px dashed var(--text-dim)" }}>{brandHost}</a> — our sister product — because real
+              examples beat fake "Acme Corp" mockups. Same playbook, your
+              brand in the slots.
+            </p>
+          </>
+        ) : (
+          <>
+            <h2>
+              Boost <span className="accent">{brand}</span>'s Visibility Through
+              <br />
+              Strategic Reddit Engagement
+            </h2>
+            <p className="section-sub">
+              We pinpoint relevant Reddit threads, write helpful posts and
+              comments on your behalf with proper disclosure, and track how that
+              visibility shapes downstream answers in ChatGPT, Claude, and Gemini.
+            </p>
+          </>
+        )}
 
         {/* Step 1 — Create posts and comments */}
         <div className="steps">
@@ -128,7 +147,7 @@ export default function StepsSection({
           <div className="card">
             <div className="reddit-mock">
               <div className="reddit-mock-meta">
-                AI Visibility Score · Last 30 days
+                AI Visibility Score · {showcase ? "Sample dashboard" : "Last 30 days"}
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
                 <div style={{
