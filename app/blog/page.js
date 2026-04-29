@@ -11,6 +11,24 @@ export const metadata = {
 
 const posts = [
   {
+    tag: "AEO · Schema",
+    title: "AEO Schema Markup: The Tags That Actually Move AI Citations",
+    excerpt:
+      "Most schema advice is recycled SEO with 'AEO' stamped on top. The schema types that actually move AI citations for B2B SaaS, ranked by impact.",
+    date: "April 24, 2026",
+    readTime: "9 min read",
+    slug: "aeo-schema-markup-guide",
+  },
+  {
+    tag: "AEO · Multi-LLM",
+    title: "ChatGPT vs Claude vs Gemini: Why Your Brand Shows Up Differently in Each",
+    excerpt:
+      "Same query, different brands cited. ChatGPT, Claude, and Gemini build their answers from different signals. How each one actually behaves and what to do about it.",
+    date: "April 17, 2026",
+    readTime: "10 min read",
+    slug: "chatgpt-vs-claude-vs-gemini-citations",
+  },
+  {
     tag: "AEO · Strategy",
     title: "Getting Your SaaS Cited by ChatGPT: What Actually Works in 2026",
     excerpt:

@@ -1,6 +1,8 @@
 const BASE_URL = "https://aeorank.tech";
 
 const blogSlugs = [
+  "aeo-schema-markup-guide",
+  "chatgpt-vs-claude-vs-gemini-citations",
   "how-to-get-cited-by-chatgpt",
   "measure-ai-citation-roi",
   "entity-authority-ai-citation",

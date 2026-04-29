@@ -14,7 +14,7 @@ function getBaseUrl(req) {
   const proto = req.headers.get("x-forwarded-proto") || "https";
   const host = req.headers.get("host");
   if (host) return `${proto}://${host}`;
-  return "https://aeorank.com";
+  return "https://aeorank.tech";
 }
 
 function emailLooksValid(s) {

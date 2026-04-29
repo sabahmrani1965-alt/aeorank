@@ -26,7 +26,7 @@ async function persistLocally(lead) {
 async function emailViaResend(lead) {
   const key = process.env.RESEND_API_KEY;
   const to = process.env.LEAD_EMAIL_TO;
-  const from = process.env.LEAD_EMAIL_FROM || "leads@aeorank.com";
+  const from = process.env.LEAD_EMAIL_FROM || "AEOrank <leads@aeorank.tech>";
   if (!key || !to) return;
   try {
     await fetch("https://api.resend.com/emails", {
