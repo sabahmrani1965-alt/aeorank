@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 
-// All four tiers (Starter pack, 1-month trial, Growth, Boost) route through
-// Stripe Checkout via /api/checkout. The Starter pack is the low-friction
-// entry point; subscriptions are differentiated by AEO strategy guidance
-// and reporting on top of the raw post/comment volume.
+// Three monthly partnership tiers (Starter, Growth, Scale) route through
+// Stripe Checkout via /api/checkout. Differentiation is on volume (posts,
+// comments, blog placements) and surface (LinkedIn, case study). AEO
+// structuring across ChatGPT / Perplexity / Claude is included in every tier.
 export default function PricingTiers({ brand = "" }) {
   const [loading, setLoading] = useState(""); // which plan key is in-flight
   const [error, setError] = useState("");
@@ -51,39 +51,22 @@ export default function PricingTiers({ brand = "" }) {
     <>
       <div className="pricing-grid">
         <div className="pricing-card">
-          <div className="pricing-name">Pay as you go</div>
-          <div className="pricing-price">$250</div>
+          <div className="pricing-name">Starter</div>
+          <div className="pricing-price">
+            $2,000 <span className="per">/ month</span>
+          </div>
           <div className="pricing-divider" />
           <p className="pricing-desc">
-            Test the waters with credits. No monthly commitment, use them when you want.
+            Consistent monthly presence across Reddit and AI answers — built to start moving the needle.
           </p>
           <ul className="pricing-features">
-            <li>$30 per Reddit post</li>
-            <li>$15 per comment</li>
-            <li>Every output approved by you before going live</li>
-            <li>Use over 30 days, top up any time</li>
+            <li>5 Reddit posts from established accounts</li>
+            <li>15 strategic comments with natural brand mentions</li>
+            <li>1 thought-leadership blog post on aeorank.tech featuring your brand</li>
+            <li>AEO structuring across ChatGPT, Perplexity & Claude</li>
           </ul>
           <div className="pricing-actions">
             <CheckoutButton plan="starter" className="btn btn-ghost">
-              Buy Starter Pack
-            </CheckoutButton>
-          </div>
-        </div>
-
-        <div className="pricing-card">
-          <div className="pricing-name">1-month trial</div>
-          <div className="pricing-price">$1,000</div>
-          <div className="pricing-divider" />
-          <p className="pricing-desc">
-            A one-month proof run built to show traction fast, not theory.
-          </p>
-          <ul className="pricing-features">
-            <li>40 Reddit comments with brand mentions</li>
-            <li>Placement in threads already getting search traffic</li>
-            <li>Built to validate Reddit as a channel</li>
-          </ul>
-          <div className="pricing-actions">
-            <CheckoutButton plan="trial" className="btn btn-ghost">
               Get Started
             </CheckoutButton>
           </div>
@@ -92,17 +75,19 @@ export default function PricingTiers({ brand = "" }) {
         <div className="pricing-card popular">
           <div className="pricing-name">Growth</div>
           <div className="pricing-price">
-            $2,000 <span className="per">/ month</span>
+            $3,500 <span className="per">/ month</span>
           </div>
+          <div className="pricing-badge">Recommended</div>
           <div className="pricing-divider" />
           <p className="pricing-desc">
-            Consistent visibility with full control and clear measurement.
+            Compounding presence with LinkedIn amplification — the sweet spot for most B2B SaaS brands.
           </p>
           <ul className="pricing-features">
-            <li>10 strategic posts + 60 comments per month</li>
-            <li>AEO strategy: what to post, what to skip, when to push back</li>
-            <li>Live AI Visibility tracking (ChatGPT, Claude, Gemini)</li>
-            <li>Weekly activity and performance reports</li>
+            <li>9 Reddit posts from established accounts</li>
+            <li>25 strategic comments with natural brand mentions</li>
+            <li>2 thought-leadership blog posts on aeorank.tech featuring your brand</li>
+            <li>LinkedIn amplification on the AEOrank company page</li>
+            <li>AEO structuring across ChatGPT, Perplexity & Claude</li>
           </ul>
           <div className="pricing-actions">
             <CheckoutButton plan="growth" className="btn btn-primary">
@@ -112,23 +97,24 @@ export default function PricingTiers({ brand = "" }) {
         </div>
 
         <div className="pricing-card">
-          <div className="pricing-name">Full Boost</div>
+          <div className="pricing-name">Scale</div>
           <div className="pricing-price">
-            $3,500 <span className="per">/ month</span>
+            $6,500 <span className="per">/ month</span>
           </div>
-          <div className="pricing-badge">🚀 Highest Growth</div>
           <div className="pricing-divider" />
           <p className="pricing-desc">
-            Aggressive expansion for brands ready to scale attention and trust.
+            Aggressive expansion with permanent placement — built for brands ready to dominate their category in AI answers.
           </p>
           <ul className="pricing-features">
-            <li>20 strategic posts + 100 comments per month</li>
-            <li>Hands-on AEO playbook: I tell you what to post and what not to</li>
-            <li>Live AI Visibility tracking, weekly reports</li>
-            <li>Monthly strategy call</li>
+            <li>18 Reddit posts from established accounts</li>
+            <li>50 strategic comments with natural brand mentions</li>
+            <li>4 thought-leadership blog posts on aeorank.tech featuring your brand</li>
+            <li>LinkedIn amplification on the AEOrank company page</li>
+            <li>Featured case study — permanent placement on aeorank.tech</li>
+            <li>AEO structuring across ChatGPT, Perplexity & Claude</li>
           </ul>
           <div className="pricing-actions">
-            <CheckoutButton plan="boost" className="btn btn-ghost">
+            <CheckoutButton plan="scale" className="btn btn-ghost">
               Get Started
             </CheckoutButton>
           </div>

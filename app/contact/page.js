@@ -9,9 +9,9 @@ export const metadata = {
 };
 
 const PLANS = {
-  trial: { label: "1-month trial", price: "$1,000" },
-  growth: { label: "Growth", price: "$2,000/mo" },
-  boost: { label: "Full Boost", price: "$3,500/mo" },
+  starter: { label: "Starter", price: "$2,000/mo" },
+  growth: { label: "Growth", price: "$3,500/mo" },
+  scale: { label: "Scale", price: "$6,500/mo" },
   enterprise: { label: "Enterprise", price: "Custom" },
   general: { label: "General inquiry" },
 };
