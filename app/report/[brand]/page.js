@@ -1,7 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import KeywordChart from "@/components/KeywordChart";
-import LlmMock from "@/components/LlmMock";
 import PricingTiers from "@/components/PricingTiers";
 import StepsSection from "@/components/StepsSection";
 import { fetchSiteMeta, prettyBrand, extractBrandFromTitle } from "@/lib/site";
@@ -13,6 +12,7 @@ import {
 } from "@/lib/keywords";
 import { searchSubreddits, searchPosts, formatMembers, timeAgo } from "@/lib/reddit";
 import { generateKeywordsFromLlm, isLlmConfigured } from "@/lib/llm";
+import { analyzeBrandVisibility, isAiVisibilityConfigured } from "@/lib/aivisibility";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -65,14 +65,18 @@ export default async function ReportPage({ params, searchParams }) {
   // ~28s, and the page function only has 30s before Vercel kills it. After
   // both return we pick: brand-specific posts if any came back, otherwise
   // the category fallback rendered as "engagement opportunities".
-  const [subreddits, brandPosts, opportunityPosts, llmKeywords] = await Promise.all([
-    searchSubreddits(categoryQuery, 12),
-    searchPosts(postQuery, 8),
-    searchPosts(categoryQuery, 6),
-    llmEnabled
-      ? generateKeywordsFromLlm(brand, description, 20)
-      : Promise.resolve(null),
-  ]);
+  const [subreddits, brandPosts, opportunityPosts, llmKeywords, aiVisibility] =
+    await Promise.all([
+      searchSubreddits(categoryQuery, 12),
+      searchPosts(postQuery, 8),
+      searchPosts(categoryQuery, 6),
+      llmEnabled
+        ? generateKeywordsFromLlm(brand, description, 20)
+        : Promise.resolve(null),
+      isAiVisibilityConfigured()
+        ? analyzeBrandVisibility(brand, categoryQuery)
+        : Promise.resolve({ score: null, total: 0, hits: 0, rows: [] }),
+    ]);
 
   const postsAreOpportunities = !brandPosts || brandPosts.length === 0;
   const postsRaw = postsAreOpportunities ? opportunityPosts : brandPosts;
@@ -293,82 +297,128 @@ export default async function ReportPage({ params, searchParams }) {
         </div>
       </section>
 
-      {/* AI citation section — projected future state showing how AI could
-          mention the brand once AEOrank establishes its Reddit footprint. */}
-      <section className="section section-alt">
-        <div className="container">
-          <span className="section-tag">( projected outcome )</span>
-          <h2>
-            Driving Visibility Across <span className="accent">Leading AI Models</span>
-          </h2>
-          <p className="section-sub">
-            Once we've established <strong>{brand}</strong>'s Reddit footprint,
-            here's how leading AI assistants could surface your brand when
-            users ask about your category. Sample formats — actual phrasing
-            varies by model and query.
-          </p>
+      {/* LIVE AI visibility check — we actually query Perplexity (live web)
+          and Claude right now and report, honestly, whether the brand shows
+          up. Nothing here is simulated. The gap is the sales argument. */}
+      {aiVisibility.rows.length > 0 && (
+        <section className="section section-alt">
+          <div className="container">
+            <span className="section-tag">( live AI visibility check )</span>
+            <h2>
+              How AI Answers About Your Category —{" "}
+              <span className="accent">Right Now</span>
+            </h2>
+            <p className="section-sub">
+              We just asked Gemini (with live Google Search grounding) and
+              Claude the questions your buyers actually ask. These are their{" "}
+              <strong>real, unedited answers</strong> — run them yourself and
+              you'll get the same. Here's whether <strong>{brand}</strong>{" "}
+              showed up.
+            </p>
 
-          <div className="llm-grid">
-            {[
-              { model: "gpt", q: `What are some good options to consider in ${categoryQuery}?` },
-              { model: "claude", q: `Where do people recommend ${brand} online?` },
-              { model: "gemini", q: `Tell me about ${brand} and how teams use it.` },
-            ].map((s, i) => (
-              <LlmMock key={i} model={s.model} badge="Projected" question={s.q}>
-                {i === 0 && (
-                  <>
-                    There are several platforms worth exploring. Alongside the
-                    well-known names in the space, you should also consider{" "}
-                    <span className="highlight">{brand}</span>, which has built
-                    a strong reputation across Reddit communities like{" "}
-                    {subreddits.slice(0, 2).map((sub, j) => (
-                      <span key={sub.name}>
-                        <span className="highlight">{sub.name}</span>
-                        {j < Math.min(subreddits.length, 2) - 1 ? " and " : ""}
+            {/* Score card */}
+            <div
+              className="card"
+              style={{
+                textAlign: "center",
+                padding: 32,
+                marginBottom: 24,
+                borderColor:
+                  aiVisibility.score >= 50
+                    ? "rgba(110, 231, 183, 0.4)"
+                    : "rgba(242, 168, 59, 0.4)",
+              }}
+            >
+              <div style={{ fontSize: 13, color: "var(--text-muted)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8 }}>
+                AI Visibility Score
+              </div>
+              <div
+                style={{
+                  fontSize: 56,
+                  fontWeight: 800,
+                  lineHeight: 1,
+                  color: aiVisibility.score >= 50 ? "#6EE7B7" : "var(--accent)",
+                }}
+              >
+                {aiVisibility.score}%
+              </div>
+              <div style={{ marginTop: 10, color: "var(--text-dim)", fontSize: 15 }}>
+                <strong>{brand}</strong> appeared in{" "}
+                <strong>{aiVisibility.hits}</strong> of{" "}
+                <strong>{aiVisibility.total}</strong> real AI answers about your
+                category.
+              </div>
+              <p style={{ marginTop: 14, color: "var(--text-muted)", fontSize: 14, maxWidth: 560, margin: "14px auto 0" }}>
+                {aiVisibility.score === 0
+                  ? `AI is recommending other brands to your buyers — and not naming ${brand} at all. That's the gap we close.`
+                  : aiVisibility.score < 50
+                  ? `AI mentions ${brand} occasionally, but your competitors are getting named more often. There's clear room to dominate.`
+                  : `${brand} already shows up in AI answers. The work now is defending that position and widening the lead before competitors catch up.`}
+              </p>
+            </div>
+
+            {/* Per-answer breakdown */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              {aiVisibility.rows.map((r, i) => (
+                <div key={i} className="card" style={{ padding: 20 }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      gap: 12,
+                      flexWrap: "wrap",
+                      marginBottom: 10,
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                      <span
+                        style={{
+                          fontSize: 12,
+                          fontWeight: 700,
+                          color: "var(--accent)",
+                          letterSpacing: "0.04em",
+                        }}
+                      >
+                        {r.model}
                       </span>
-                    ))}{" "}
-                    where users consistently recommend it.
-                  </>
-                )}
-                {i === 1 && (
-                  <>
-                    Looking through public discussions,{" "}
-                    <span className="highlight">{brand}</span> comes up
-                    frequently in conversations on{" "}
-                    {subreddits.slice(0, 2).map((sub, j) => (
-                      <span key={sub.name}>
-                        <span className="highlight">{sub.name}</span>
-                        {j < Math.min(subreddits.length, 2) - 1 ? " and " : ""}
+                      <span style={{ fontSize: 11, color: "var(--text-muted)" }}>
+                        · {r.live ? "live web" : "model knowledge"}
                       </span>
-                    ))}
-                    , where users share positive experiences and concrete
-                    use cases that make it a top recommendation.
-                  </>
-                )}
-                {i === 2 && (
-                  <>
-                    <span className="highlight">{brand}</span> is widely
-                    referenced across online communities, including{" "}
-                    {subreddits.slice(0, 2).map((sub, j) => (
-                      <span key={sub.name}>
-                        <span className="highlight">{sub.name}</span>
-                        {j < Math.min(subreddits.length, 2) - 1 ? " and " : ""}
-                      </span>
-                    ))}
-                    , where teams describe how they've integrated it into
-                    their workflows and the results they've seen.
-                  </>
-                )}
-              </LlmMock>
-            ))}
+                    </div>
+                    <span
+                      style={{
+                        fontSize: 12,
+                        fontWeight: 700,
+                        padding: "4px 10px",
+                        borderRadius: 999,
+                        background: r.mentioned
+                          ? "rgba(110, 231, 183, 0.15)"
+                          : "rgba(255, 120, 120, 0.12)",
+                        color: r.mentioned ? "#6EE7B7" : "#ff8a8a",
+                      }}
+                    >
+                      {r.mentioned ? `✓ ${brand} mentioned` : `✗ ${brand} not mentioned`}
+                    </span>
+                  </div>
+                  <div style={{ fontSize: 14, color: "var(--text)", fontWeight: 600, marginBottom: 6 }}>
+                    “{r.query}”
+                  </div>
+                  <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.65, margin: 0 }}>
+                    {r.answer.length > 360 ? r.answer.slice(0, 360).trim() + "…" : r.answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <p style={{ marginTop: 20, color: "var(--text-muted)", fontSize: 13, textAlign: "center" }}>
+              Live answers from Gemini (Google Search–grounded) and Claude,
+              generated when this report loaded. AEOrank tracks these across
+              every major AI engine for paying customers.
+            </p>
           </div>
-
-          <p style={{ marginTop: 20, color: "var(--text-muted)", fontSize: 13, textAlign: "center" }}>
-            These are sample formats demonstrating how brand mentions surface
-            in AI answers. AEOrank tracks real LLM citations for paying customers.
-          </p>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* STEPS — personalised to the brand from the report */}
       <StepsSection

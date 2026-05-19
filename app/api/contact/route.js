@@ -23,40 +23,6 @@ async function persistLocally(lead) {
   }
 }
 
-async function emailViaResend(lead) {
-  const key = process.env.RESEND_API_KEY;
-  const to = process.env.LEAD_EMAIL_TO;
-  const from = process.env.LEAD_EMAIL_FROM || "AEOrank <leads@aeorank.tech>";
-  if (!key || !to) return;
-  try {
-    await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${key}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from,
-        to,
-        subject: `[AEOrank lead] ${lead.name} — ${lead.plan}`,
-        text: [
-          `Name: ${lead.name}`,
-          `Email: ${lead.email}`,
-          `Company: ${lead.company || "(none)"}`,
-          `Plan: ${lead.plan}`,
-          ``,
-          `Message:`,
-          lead.message || "(none)",
-          ``,
-          `— received ${lead.createdAt}`,
-        ].join("\n"),
-      }),
-    });
-  } catch (e) {
-    console.error("[lead] resend failed:", e?.message || e);
-  }
-}
-
 export async function POST(req) {
   let body = {};
   try { body = await req.json(); } catch {}
@@ -93,10 +59,10 @@ export async function POST(req) {
     `[lead] ${lead.createdAt} | ${lead.email} | plan=${lead.plan} | name=${lead.name} | company=${lead.company || "-"} | message=${(lead.message || "").replace(/\s+/g, " ").slice(0, 200)}`
   );
 
-  // Persist + email + audience sync (best-effort, all three safe to skip).
+  // Persist + audience sync (best-effort, both safe to skip). Leads are
+  // tracked via the Resend Audience — no admin notification email is sent.
   await Promise.all([
     persistLocally(lead),
-    emailViaResend(lead),
     addToAudience({ email: lead.email, name: lead.name }),
   ]);
 

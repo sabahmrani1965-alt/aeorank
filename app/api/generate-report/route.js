@@ -92,27 +92,8 @@ export async function POST(req) {
         .sort((a, b) => b.ups - a.ups)
         .slice(0, 5);
 
-      // Forward an admin notification first (quick, even if user email fails).
-      const adminTo = process.env.LEAD_EMAIL_TO;
-      if (adminTo && isEmailConfigured()) {
-        await sendEmail({
-          to: adminTo,
-          subject: `[AEOrank lead] ${email} — ${brand}`,
-          text: [
-            `New free-report request`,
-            ``,
-            `Email: ${email}`,
-            `URL: ${url}`,
-            `Brand: ${brand}`,
-            `Report: ${reportUrl}`,
-            ``,
-            `IP: ${lead.ip}`,
-            `When: ${lead.createdAt}`,
-          ].join("\n"),
-        });
-      }
-
-      // Send the user-facing report email
+      // Send the user-facing report email. We do NOT cc/notify an admin
+      // address — leads are tracked via the Resend Audience instead.
       if (isEmailConfigured()) {
         const { html, text } = renderReportEmail({
           brand,
@@ -129,7 +110,7 @@ export async function POST(req) {
           subject: `Your AEOrank report for ${brand}`,
           html,
           text,
-          replyTo: adminTo || undefined,
+          replyTo: process.env.LEAD_EMAIL_TO || undefined,
         });
       }
     } catch (e) {
