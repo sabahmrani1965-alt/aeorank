@@ -62,7 +62,7 @@ export default function PricingTiers({ brand = "" }) {
           <ul className="pricing-features">
             <li>5 Reddit posts from established accounts</li>
             <li>15 strategic comments with natural brand mentions</li>
-            <li>1 thought-leadership blog post on aeorank.tech featuring your brand</li>
+            <li>1 blog post published on saasoffers.tech (our sister marketplace)</li>
             <li>AEO structuring across ChatGPT, Perplexity & Claude</li>
           </ul>
           <div className="pricing-actions">
@@ -80,13 +80,13 @@ export default function PricingTiers({ brand = "" }) {
           <div className="pricing-badge">Recommended</div>
           <div className="pricing-divider" />
           <p className="pricing-desc">
-            Compounding presence with LinkedIn amplification — the sweet spot for most B2B SaaS brands.
+            Compounding presence with newsletter reach — the sweet spot for most B2B SaaS brands.
           </p>
           <ul className="pricing-features">
             <li>9 Reddit posts from established accounts</li>
             <li>25 strategic comments with natural brand mentions</li>
-            <li>2 thought-leadership blog posts on aeorank.tech featuring your brand</li>
-            <li>LinkedIn amplification on the AEOrank company page</li>
+            <li>2 blog posts published on saasoffers.tech (our sister marketplace)</li>
+            <li>Newsletter mention — direct email to the SaaSOffers founder audience</li>
             <li>AEO structuring across ChatGPT, Perplexity & Claude</li>
           </ul>
           <div className="pricing-actions">
@@ -108,9 +108,9 @@ export default function PricingTiers({ brand = "" }) {
           <ul className="pricing-features">
             <li>18 Reddit posts from established accounts</li>
             <li>50 strategic comments with natural brand mentions</li>
-            <li>4 thought-leadership blog posts on aeorank.tech featuring your brand</li>
-            <li>LinkedIn amplification on the AEOrank company page</li>
-            <li>Featured case study — permanent placement on aeorank.tech</li>
+            <li>4 blog posts published on saasoffers.tech (our sister marketplace)</li>
+            <li>Newsletter mention — direct email to the SaaSOffers founder audience</li>
+            <li>Permanent featured listing on saasoffers.tech</li>
             <li>AEO structuring across ChatGPT, Perplexity & Claude</li>
           </ul>
           <div className="pricing-actions">
