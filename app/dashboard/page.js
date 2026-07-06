@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import DashboardAnalyzeForm from "@/components/DashboardAnalyzeForm";
 
 export const dynamic = "force-dynamic";
 
@@ -49,6 +50,8 @@ export default async function DashboardOverviewPage() {
         <p className="section-sub">
           Signed in as <strong>{user.email}</strong>
         </p>
+
+        <DashboardAnalyzeForm />
 
         <div className="kpi-row">
           <div className="kpi">

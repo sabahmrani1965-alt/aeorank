@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import DashboardAnalyzeForm from "@/components/DashboardAnalyzeForm";
 
 export const dynamic = "force-dynamic";
 
@@ -24,9 +25,11 @@ export default async function DashboardReportsPage() {
           Every AI-visibility report generated while you were logged in.
         </p>
 
+        <DashboardAnalyzeForm />
+
         {!reports || reports.length === 0 ? (
           <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
-            No reports yet — generate one from the homepage while logged in.
+            No reports yet — analyze a website above to generate your first one.
           </div>
         ) : (
           <div className="post-grid">

@@ -2,20 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
-function urlToSlug(input) {
-  let url = input.trim();
-  if (!url) return "";
-  if (!/^https?:\/\//i.test(url)) url = "https://" + url;
-  try {
-    const u = new URL(url);
-    const host = u.hostname.replace(/^www\./, "");
-    const base = host.split(".")[0];
-    return base.toLowerCase().replace(/[^a-z0-9]/g, "");
-  } catch {
-    return input.toLowerCase().replace(/[^a-z0-9]/g, "");
-  }
-}
+import { urlToSlug } from "@/lib/site";
 
 function isValidEmail(s) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
