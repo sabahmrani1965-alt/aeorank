@@ -2,6 +2,8 @@
 // Used on the homepage with SaaSOffers as a showcase example, and on the
 // report page personalised to whichever brand the visitor entered.
 
+import PostDraftActions from "@/components/PostDraftActions";
+
 function asUserHandle(brand) {
   // Build a plausible-looking official-account handle: "Notion" → "Notion_Official"
   const cleaned = String(brand || "Brand").replace(/\s+/g, "");
@@ -34,12 +36,21 @@ export default function StepsSection({
   // Stat numbers for the AI Visibility card. Defaults are an illustrative
   // showcase; the report page passes its own brand-stable seeded numbers.
   stats = { lift: "+247%", chatgpt: 18, claude: 15, gemini: 11, max: 24 },
+  // Real AI-drafted post for the top subreddit this brand's report actually
+  // found — { subreddit, title, body }. When present, it replaces the
+  // generic template below with brand-specific, guidance-only copy.
+  suggestedPost = null,
+  // Set only when the visitor is logged in and the draft was persisted —
+  // lets PostDraftActions save "posted" status instead of local-only state.
+  draftId = null,
 }) {
   const topic = pickTopic(description, categoryQuery, brand);
   const handle = asUserHandle(brand);
+  const draftSub = suggestedPost?.subreddit || topSub;
 
   // Step-1 mock body: showcase has a polished hand-written example,
-  // personalised version uses a generic template that works for any brand.
+  // personalised version uses the AI-drafted suggestion when available,
+  // otherwise a generic template that works for any brand.
   const step1Body = showcase ? (
     <>
       Hey r/SaaS — sharing a breakdown of how we approach SaaS costs at{" "}
@@ -55,6 +66,8 @@ export default function StepsSection({
       and 500+ tools, and figured the breakdown might be useful here. Happy
       to answer questions in the comments.
     </>
+  ) : suggestedPost ? (
+    <>{suggestedPost.body}</>
   ) : (
     <>
       Hey {topSub} — sharing some context on how we think about {topic} at{" "}
@@ -75,6 +88,8 @@ export default function StepsSection({
 
   const step1Title = showcase
     ? `How we cut our startup's SaaS bill by 40% (and the tools that helped)`
+    : suggestedPost
+    ? suggestedPost.title
     : `How we approach ${topic} at ${brand}`;
 
   return (
@@ -121,23 +136,33 @@ export default function StepsSection({
             <ul className="step">
               <li>Find high-traffic threads in subreddits relevant to your category</li>
               <li>Draft helpful, value-adding content tailored to each community</li>
-              <li>Publish from your verified brand account, or from our disclosed agency account where the subreddit allows it</li>
-              <li>Every piece is reviewed and approved by you before going live</li>
+              <li>You review, edit, and publish it yourself from your own account</li>
+              <li>Nothing is posted automatically — every piece goes live only when you post it</li>
             </ul>
           </div>
 
           <div className="card">
             <div className="reddit-mock">
               <div className="reddit-mock-meta">
-                {topSub} · Posted by u/{handle} · 3 days ago
+                {!showcase && suggestedPost
+                  ? `${draftSub} · Draft — not posted yet`
+                  : `${topSub} · Posted by u/${handle} · 3 days ago`}
               </div>
               <div className="reddit-mock-title">{step1Title}</div>
               <div className="reddit-mock-body">{step1Body}</div>
-              <div className="reddit-mock-actions">
-                <span>↑ 142 ↓</span>
-                <span>💬 38 Reply</span>
-                <span>🔗 Share</span>
-              </div>
+              {!showcase && suggestedPost ? (
+                <PostDraftActions
+                  title={suggestedPost.title}
+                  body={suggestedPost.body}
+                  draftId={draftId}
+                />
+              ) : (
+                <div className="reddit-mock-actions">
+                  <span>↑ 142 ↓</span>
+                  <span>💬 38 Reply</span>
+                  <span>🔗 Share</span>
+                </div>
+              )}
             </div>
           </div>
         </div>

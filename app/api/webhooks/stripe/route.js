@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { stripe, isStripeConfigured } from "@/lib/stripe";
 import { sendEmail, esc, isEmailConfigured, addToAudience } from "@/lib/email";
+import { createAdminClient, ensureUserId } from "@/lib/supabase/admin";
 
 // Stripe needs the *raw* request body to verify the signature, so we read
 // it as text and pass it untouched into stripe.webhooks.constructEvent.
@@ -66,6 +67,61 @@ async function notifyAdmin(session) {
   await sendEmail({ to, subject, html, text, replyTo: email });
 }
 
+// Provisions (or reuses) an account for the buyer and records the
+// subscription — this is the durable source of truth the dashboard reads
+// from; today's account.metadata.plan on the Stripe session is the only
+// signal that existed before this, and it's not queryable outside Stripe.
+async function provisionSubscription(session) {
+  const admin = createAdminClient();
+  if (!admin) {
+    console.warn("[stripe webhook] Supabase not configured — skipping subscription provisioning");
+    return;
+  }
+  const email = session.customer_details?.email || session.customer_email;
+  if (!email || !session.subscription) return;
+
+  const userId = await ensureUserId(admin, email);
+
+  await admin
+    .from("users")
+    .update({ stripe_customer_id: session.customer })
+    .eq("id", userId);
+
+  const subscription = await stripe().subscriptions.retrieve(session.subscription);
+
+  await admin.from("subscriptions").upsert(
+    {
+      user_id: userId,
+      stripe_customer_id: session.customer,
+      stripe_subscription_id: session.subscription,
+      plan: session.metadata?.plan,
+      status: subscription.status,
+      brand: session.metadata?.brand || null,
+      current_period_end: subscription.current_period_end
+        ? new Date(subscription.current_period_end * 1000).toISOString()
+        : null,
+      cancel_at_period_end: subscription.cancel_at_period_end,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "stripe_subscription_id" }
+  );
+}
+
+// Keeps an existing subscriptions row in sync for the rest of its
+// lifecycle — cancellations, renewals, and failed payments were previously
+// silently ignored entirely.
+async function syncSubscriptionStatus(stripeSubscriptionId, patch) {
+  const admin = createAdminClient();
+  if (!admin) return;
+  const { error } = await admin
+    .from("subscriptions")
+    .update({ ...patch, updated_at: new Date().toISOString() })
+    .eq("stripe_subscription_id", stripeSubscriptionId);
+  if (error) {
+    console.error("[stripe webhook] subscription sync failed:", error.message);
+  }
+}
+
 export async function POST(req) {
   if (!isStripeConfigured()) {
     return NextResponse.json({ error: "stripe not configured" }, { status: 500 });
@@ -102,7 +158,25 @@ export async function POST(req) {
       await Promise.all([
         notifyAdmin(session),
         addToAudience({ email: customerEmail, name: customerName }),
+        provisionSubscription(session),
       ]);
+    } else if (event.type === "customer.subscription.updated") {
+      const subscription = event.data.object;
+      await syncSubscriptionStatus(subscription.id, {
+        status: subscription.status,
+        current_period_end: subscription.current_period_end
+          ? new Date(subscription.current_period_end * 1000).toISOString()
+          : null,
+        cancel_at_period_end: subscription.cancel_at_period_end,
+      });
+    } else if (event.type === "customer.subscription.deleted") {
+      const subscription = event.data.object;
+      await syncSubscriptionStatus(subscription.id, { status: "canceled" });
+    } else if (event.type === "invoice.payment_failed") {
+      const invoice = event.data.object;
+      if (invoice.subscription) {
+        await syncSubscriptionStatus(invoice.subscription, { status: "past_due" });
+      }
     } else {
       // Other events ignored — Stripe will still get a 200.
       console.log(`[stripe webhook] ignoring event type=${event.type}`);

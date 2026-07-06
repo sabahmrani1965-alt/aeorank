@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import HeaderAuthLink from "@/components/HeaderAuthLink";
 
 export default function Header() {
   return (
@@ -15,6 +16,7 @@ export default function Header() {
       </Link>
       <div className="header-actions">
         <Link href="/about" className="header-link">About</Link>
+        <HeaderAuthLink />
         <Link href="/contact" className="btn btn-primary">
           Get Started →
         </Link>
