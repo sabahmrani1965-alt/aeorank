@@ -1,9 +1,8 @@
 import { redirect } from "next/navigation";
-import Link from "next/link";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import DashboardShell from "@/components/DashboardShell";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { isAdminEmail } from "@/lib/adminAuth";
 
 // Defense in depth on top of middleware.js — never renders dashboard
 // content for a logged-out visitor even if the middleware matcher drifts.
@@ -18,25 +17,15 @@ export default async function DashboardLayout({ children }) {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
+  const { data: balanceRow } = await supabase
+    .from("credit_balances")
+    .select("balance")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
   return (
-    <>
-      <Header />
-      <section className="section" style={{ paddingBottom: 0 }}>
-        <div className="container">
-          <div style={{ display: "flex", gap: 20, flexWrap: "wrap", marginBottom: 8 }}>
-            <Link href="/dashboard" className="header-link">Overview</Link>
-            <Link href="/dashboard/credits" className="header-link">Credits</Link>
-            <Link href="/dashboard/opportunities" className="header-link">Opportunities</Link>
-            <Link href="/dashboard/mentions" className="header-link">Mentions</Link>
-            <Link href="/dashboard/reports" className="header-link">Reports</Link>
-            <Link href="/dashboard/drafts" className="header-link">Drafts</Link>
-            <Link href="/dashboard/tasks" className="header-link">Track Tasks</Link>
-            <Link href="/dashboard/billing" className="header-link">Billing</Link>
-          </div>
-        </div>
-      </section>
+    <DashboardShell email={user.email} isAdmin={isAdminEmail(user.email)} creditBalance={balanceRow?.balance ?? 0}>
       {children}
-      <Footer />
-    </>
+    </DashboardShell>
   );
 }

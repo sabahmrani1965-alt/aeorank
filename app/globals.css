@@ -118,6 +118,7 @@ button { font-family: inherit; }
 }
 .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
 .btn-large { padding: 16px 30px; font-size: 16.5px; border-radius: 14px; }
+.btn-sm { padding: 8px 14px; font-size: 13.5px; border-radius: 10px; gap: 6px; }
 
 /* ----------------- Hero ----------------- */
 .hero {
@@ -1126,12 +1127,241 @@ button { font-family: inherit; }
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ----------------- Dashboard app shell ----------------- */
+.app-shell { display: flex; min-height: 100vh; align-items: stretch; }
+
+.app-sidebar {
+  width: 248px;
+  flex-shrink: 0;
+  background: var(--bg-2);
+  border-right: 1px solid var(--card-border-soft);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.app-sidebar-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; letter-spacing: -.01em; padding: 0 8px; }
+
+.app-sidebar-group { display: flex; flex-direction: column; gap: 2px; }
+.app-sidebar-group-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 10px 10px 4px;
+}
+
+.app-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-dim);
+  transition: background .15s, color .15s;
+}
+.app-sidebar-link:hover { background: var(--card); color: var(--text); }
+.app-sidebar-link.is-active { background: var(--accent-dim); color: var(--accent); font-weight: 600; }
+
+.app-sidebar-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.app-sidebar-backdrop { display: none; }
+
+.app-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+
+.app-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  padding: 14px 28px;
+  background: rgba(6, 17, 42, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--card-border-soft);
+}
+.app-topbar-left { display: none; align-items: center; gap: 12px; margin-right: auto; }
+
+/* No padding here on purpose — pages still using the marketing .section/
+   .container classes (their own 100px vertical padding) render unchanged;
+   new app-shell pages use .dashboard-page below for shell-appropriate
+   spacing instead of stacking padding on top of padding. */
+.app-content { flex: 1; padding: 0; }
+
+.dashboard-page { max-width: 1120px; margin: 0 auto; padding: 32px 28px 60px; }
+
+.credit-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+.credit-badge:hover { border-color: var(--accent); color: var(--accent); }
+.credit-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+.account-menu { position: relative; }
+.account-menu-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+.account-menu-trigger:hover { border-color: var(--accent); }
+.account-menu-avatar {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-3) 100%);
+  color: var(--accent-ink);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 11.5px;
+  flex-shrink: 0;
+}
+.account-menu-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 220px;
+  background: var(--card-2);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 8px;
+  box-shadow: 0 20px 48px -12px rgba(0,0,0,.55);
+  z-index: 60;
+}
+.account-menu-email {
+  padding: 8px 10px 10px;
+  font-size: 13px;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--card-border-soft);
+  margin-bottom: 6px;
+  word-break: break-all;
+}
+.account-menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: var(--text);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.account-menu-item:hover { background: var(--card); color: var(--accent); }
+
+/* ----------------- Command center (dashboard home) ----------------- */
+.command-greeting { font-size: clamp(22px, 3vw, 30px); font-weight: 800; letter-spacing: -.02em; margin-bottom: 4px; }
+.command-greeting-sub { color: var(--text-dim); font-size: 15px; margin-bottom: 28px; }
+
+.command-summary-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 32px; }
+.command-summary-grid .kpi { padding: 18px; }
+.command-summary-grid .kpi-value { font-size: 26px; }
+
+.quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 32px; }
+.quick-action {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 18px;
+  transition: border-color .2s, transform .15s;
+}
+.quick-action:hover { border-color: rgba(242, 168, 59, 0.3); transform: translateY(-2px); color: inherit; }
+.quick-action-icon {
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+.quick-action-label { font-weight: 600; font-size: 14.5px; }
+
+.opportunity-spotlight {
+  background: linear-gradient(135deg, var(--card) 0%, var(--card-2) 100%);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 26px;
+  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.opportunity-spotlight-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  font-size: 12.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.opportunity-spotlight-title { font-size: 19px; font-weight: 700; line-height: 1.35; }
+.opportunity-spotlight-meta { color: var(--text-muted); font-size: 13px; }
+.opportunity-spotlight-reason { color: var(--text-dim); font-size: 14.5px; line-height: 1.55; }
+.opportunity-spotlight-actions { display: flex; gap: 12px; margin-top: 6px; }
+
 /* ----------------- Responsive ----------------- */
 @media (max-width: 980px) {
   .pricing-grid { grid-template-columns: 1fr 1fr; }
   .testimonial-grid { grid-template-columns: 1fr 1fr; }
   .stats-strip { grid-template-columns: 1fr 1fr; }
   .steps { grid-template-columns: 1fr; }
+}
+@media (max-width: 900px) {
+  .app-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 70;
+    transform: translateX(-100%);
+    transition: transform .22s ease;
+    box-shadow: 20px 0 48px -16px rgba(0, 0, 0, 0.5);
+  }
+  .app-sidebar.is-open { transform: translateX(0); }
+  .app-sidebar-toggle { display: flex; }
+  .app-sidebar-backdrop { display: block; position: fixed; inset: 0; background: rgba(4, 9, 22, 0.6); z-index: 65; }
+  .app-topbar-left { display: flex; }
+  .command-summary-grid { grid-template-columns: repeat(3, 1fr); }
+  .quick-actions { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 720px) {
   .sub-grid { grid-template-columns: 1fr 1fr; }
@@ -1140,6 +1370,10 @@ button { font-family: inherit; }
   .testimonial-grid { grid-template-columns: 1fr; }
   .header-link { display: none; }
   .section { padding: 70px 0; }
+  .command-summary-grid { grid-template-columns: 1fr 1fr; }
+  .quick-actions { grid-template-columns: 1fr; }
+  .dashboard-page { padding: 24px 16px 48px; }
+  .app-topbar { padding: 12px 16px; }
 }
 @media (max-width: 480px) {
   .pricing-grid { grid-template-columns: 1fr; }
@@ -1148,4 +1382,5 @@ button { font-family: inherit; }
   .url-form-row { flex-direction: column; padding: 12px; }
   .url-form-row .btn { width: 100%; }
   .header { padding: 12px 16px; margin: 8px 12px 0; }
+  .command-summary-grid { grid-template-columns: 1fr; }
 }

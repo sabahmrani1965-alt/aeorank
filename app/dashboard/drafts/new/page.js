@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const TYPES = [
   { key: "comment", label: "Post a Comment" },
@@ -26,11 +26,20 @@ const selectStyle = {
 };
 
 export default function NewDraftPage() {
+  return (
+    <Suspense fallback={null}>
+      <NewDraftForm />
+    </Suspense>
+  );
+}
+
+function NewDraftForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [type, setType] = useState("comment");
-  const [subreddit, setSubreddit] = useState("");
+  const [subreddit, setSubreddit] = useState(searchParams.get("subreddit") || "");
   const [threadUrl, setThreadUrl] = useState("");
-  const [threadContext, setThreadContext] = useState("");
+  const [threadContext, setThreadContext] = useState(searchParams.get("context") || "");
   const [tone, setTone] = useState("Helpful");
   const [length, setLength] = useState("medium");
   const [title, setTitle] = useState("");
