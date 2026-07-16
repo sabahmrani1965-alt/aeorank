@@ -93,15 +93,21 @@ export async function POST(req) {
   const analysis = outcome.result;
   const analyzedAt = new Date().toISOString();
 
+  const update = {
+    analysis_summary: analysis.summary,
+    analysis_pain_points: analysis.painPoints,
+    analysis_competitors_mentioned: analysis.competitorsMentioned,
+    analysis_response_angle: analysis.responseAngle,
+    analyzed_at: analyzedAt,
+  };
+  // The deep analysis has the full thread text, so its buying-intent read is
+  // strictly better-grounded than the shallow batch guess from
+  // scoreOpportunities — overwrite only when it actually returned one.
+  if (analysis.buyingIntent) update.buying_intent = analysis.buyingIntent;
+
   const { error: updateError } = await admin
     .from("opportunities")
-    .update({
-      analysis_summary: analysis.summary,
-      analysis_pain_points: analysis.painPoints,
-      analysis_competitors_mentioned: analysis.competitorsMentioned,
-      analysis_response_angle: analysis.responseAngle,
-      analyzed_at: analyzedAt,
-    })
+    .update(update)
     .eq("id", opportunityId);
   if (updateError) {
     console.error("[opportunities/analyze] save failed:", updateError.message);

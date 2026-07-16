@@ -2,6 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { CREDIT_COSTS } from "@/lib/credits";
 
 const TYPES = [
   { key: "comment", label: "Post a Comment" },
@@ -25,6 +26,24 @@ const selectStyle = {
   fontFamily: "inherit",
 };
 
+const labelStyle = {
+  fontSize: 12.5,
+  fontWeight: 700,
+  textTransform: "uppercase",
+  letterSpacing: ".04em",
+  color: "var(--text-muted)",
+  marginBottom: 4,
+};
+
+function intentColor(intent) {
+  if (intent === "high") return { bg: "rgba(110, 231, 183, 0.15)", fg: "#6EE7B7" };
+  if (intent === "medium") return { bg: "rgba(242, 168, 59, 0.15)", fg: "var(--accent)" };
+  if (intent === "low") return { bg: "rgba(255,255,255,.06)", fg: "var(--text-dim)" };
+  return null;
+}
+
+const ANALYZE_COST = CREDIT_COSTS.thread_analysis;
+
 export default function NewDraftPage() {
   return (
     <Suspense fallback={null}>
@@ -47,6 +66,35 @@ function NewDraftForm() {
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analyzeError, setAnalyzeError] = useState("");
+  const [analysis, setAnalysis] = useState(null);
+
+  async function analyzeUrl() {
+    setAnalyzeError("");
+    setAnalyzing(true);
+    try {
+      const res = await fetch("/api/drafts/analyze-thread", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: threadUrl }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || "Could not analyze this thread.");
+      setAnalysis(data.analysis);
+      if (data.sub && !subreddit.trim()) setSubreddit(data.sub);
+      // Auto-fills the existing context field — transparent and still
+      // editable, not a hidden hand-off — so what's fed to the draft
+      // generator below is exactly what's visible here.
+      const synthesized = [data.analysis?.summary, data.analysis?.responseAngle].filter(Boolean).join(" ");
+      if (synthesized) setThreadContext(synthesized.slice(0, 400));
+    } catch (e) {
+      setAnalyzeError(e?.message || "Something went wrong.");
+    } finally {
+      setAnalyzing(false);
+    }
+  }
 
   async function generate() {
     setError("");
@@ -104,10 +152,12 @@ function NewDraftForm() {
     }
   }
 
+  const intent = intentColor(analysis?.buyingIntent);
+
   return (
     <section className="section">
       <div className="container" style={{ maxWidth: 720 }}>
-        <span className="section-tag">( new draft )</span>
+        <span className="section-tag">( draft studio )</span>
         <h2>Compose a Reddit draft</h2>
         <p className="section-sub">
           AI-assisted drafting to help you write, nothing here posts for
@@ -154,14 +204,85 @@ function NewDraftForm() {
           ) : (
             <>
               <label className="auth-field">
-                <span>Thread URL (reference only, not fetched automatically)</span>
-                <input
-                  type="text"
-                  placeholder="https://reddit.com/r/.../comments/..."
-                  value={threadUrl}
-                  onChange={(e) => setThreadUrl(e.target.value)}
-                />
+                <span>Reddit thread URL</span>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <input
+                    type="text"
+                    placeholder="https://reddit.com/r/.../comments/..."
+                    value={threadUrl}
+                    onChange={(e) => setThreadUrl(e.target.value)}
+                    style={{ flex: 1 }}
+                  />
+                  <button
+                    type="button"
+                    onClick={analyzeUrl}
+                    className="btn btn-ghost btn-sm"
+                    disabled={analyzing || !threadUrl.trim()}
+                    style={{ whiteSpace: "nowrap" }}
+                  >
+                    {analyzing ? (
+                      <>
+                        <span className="loader" /> Analyzing…
+                      </>
+                    ) : (
+                      `Analyze thread (${ANALYZE_COST} credits)`
+                    )}
+                  </button>
+                </div>
               </label>
+
+              {analyzeError && (
+                <p role="alert" style={{ color: "#ff8a8a", fontSize: 13.5, marginBottom: 14 }}>
+                  {analyzeError}
+                </p>
+              )}
+
+              {analysis && (
+                <div
+                  className="card"
+                  style={{ background: "var(--bg-3)", padding: 18, marginBottom: 18, display: "flex", flexDirection: "column", gap: 12 }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div style={labelStyle}>AI thread analysis</div>
+                    {intent && (
+                      <span
+                        style={{
+                          fontSize: 12,
+                          fontWeight: 700,
+                          padding: "3px 9px",
+                          borderRadius: 999,
+                          background: intent.bg,
+                          color: intent.fg,
+                          textTransform: "capitalize",
+                        }}
+                      >
+                        {analysis.buyingIntent} buying intent
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <div style={labelStyle}>Summary</div>
+                    <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.55, margin: 0 }}>{analysis.summary}</p>
+                  </div>
+                  {analysis.painPoints?.length > 0 && (
+                    <div>
+                      <div style={labelStyle}>Pain points</div>
+                      <ul style={{ margin: 0, paddingLeft: 18, fontSize: 14, color: "var(--text-dim)", lineHeight: 1.6 }}>
+                        {analysis.painPoints.map((p, i) => (
+                          <li key={i}>{p}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {analysis.responseAngle && (
+                    <div>
+                      <div style={labelStyle}>Recommended strategy</div>
+                      <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.55, margin: 0 }}>{analysis.responseAngle}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <label className="auth-field">
                 <span>What's the thread/comment about?</span>
                 <input
@@ -196,7 +317,7 @@ function NewDraftForm() {
             disabled={generating || !subreddit.trim()}
             style={{ marginBottom: 14 }}
           >
-            {generating ? "Generating…" : body ? "Regenerate with AI ✨" : "Generate with AI ✨"}
+            {generating ? "Generating…" : body ? "Improve with AI ✨" : "Generate with AI ✨"}
           </button>
 
           <label className="auth-field">

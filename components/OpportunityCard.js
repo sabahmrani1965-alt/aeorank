@@ -42,9 +42,13 @@ export default function OpportunityCard({ opportunity: o, competitorMatch, fresh
         }
       : null
   );
+  // The deep "Analyze thread" call can return a better-grounded buying
+  // intent than the shallow batch guess — kept in state so the pill
+  // updates immediately rather than needing a page reload.
+  const [buyingIntent, setBuyingIntent] = useState(o.buying_intent);
 
   const colors = scoreColor(o.relevance_score);
-  const intent = intentColor(o.buying_intent);
+  const intent = intentColor(buyingIntent);
   const draftHref = `/dashboard/drafts/new?subreddit=${encodeURIComponent(o.sub || "")}&context=${encodeURIComponent(o.title || "")}`;
 
   async function toggleSaved() {
@@ -77,6 +81,7 @@ export default function OpportunityCard({ opportunity: o, competitorMatch, fresh
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data?.error || "Could not analyze this thread.");
       setAnalysis(data.analysis);
+      if (data.analysis?.buyingIntent) setBuyingIntent(data.analysis.buyingIntent);
       setExpanded(true);
     } catch (e) {
       setAnalyzeError(e?.message || "Something went wrong.");
@@ -105,7 +110,7 @@ export default function OpportunityCard({ opportunity: o, competitorMatch, fresh
           )}
           {intent && (
             <span style={{ fontSize: 12, fontWeight: 700, padding: "4px 10px", borderRadius: 999, background: intent.bg, color: intent.fg, whiteSpace: "nowrap", textTransform: "capitalize" }}>
-              {o.buying_intent} intent
+              {buyingIntent} intent
             </span>
           )}
         </div>
