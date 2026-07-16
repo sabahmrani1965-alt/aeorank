@@ -127,6 +127,43 @@ CREATE POLICY "Service role can do anything on report_drafts"
   ON public.report_drafts FOR ALL
   USING (auth.role() = 'service_role');
 
+-- ── COMPANY PROFILES ─────────────────────────────────────────
+-- One row per user, filled in by the post-signup onboarding wizard
+-- (website, company details, competitors). Reference data only for now —
+-- not yet wired into report generation. `completed` is set whether the
+-- user finishes the wizard or hits "Skip onboarding", so we don't
+-- re-prompt either way.
+CREATE TABLE IF NOT EXISTS public.company_profiles (
+  user_id           UUID PRIMARY KEY REFERENCES public.users(id) ON DELETE CASCADE,
+  website           TEXT,
+  company_name      TEXT,
+  target_location   TEXT,
+  brand_variations  TEXT[] NOT NULL DEFAULT '{}',
+  description       TEXT,
+  competitors       TEXT[] NOT NULL DEFAULT '{}',
+  completed         BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE public.company_profiles ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can read own company profile"
+  ON public.company_profiles FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own company profile"
+  ON public.company_profiles FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own company profile"
+  ON public.company_profiles FOR UPDATE
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Service role can do anything on company_profiles"
+  ON public.company_profiles FOR ALL
+  USING (auth.role() = 'service_role');
+
 -- ── AUTO-CREATE USER PROFILE ON SIGNUP ───────────────────────
 -- Fires for every auth.users insert, whether from a real magic-link login
 -- OR from admin.auth.admin.createUser() called by the Stripe webhook to
