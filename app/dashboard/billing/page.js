@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import BillingPortalButton from "@/components/BillingPortalButton";
+import RedeemCodeForm from "@/components/RedeemCodeForm";
 
 export const dynamic = "force-dynamic";
 
@@ -24,9 +25,12 @@ export default async function DashboardBillingPage() {
         <h2>Plan &amp; billing</h2>
 
         {!sub ? (
-          <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
-            No active subscription on this account.
-          </div>
+          <>
+            <div className="card" style={{ textAlign: "center", color: "var(--text-dim)", marginBottom: 20 }}>
+              No active subscription on this account.
+            </div>
+            <RedeemCodeForm />
+          </>
         ) : (
           <div className="card" style={{ padding: 24, maxWidth: 480 }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
@@ -46,7 +50,13 @@ export default async function DashboardBillingPage() {
               </div>
             )}
             <div style={{ marginTop: 20 }}>
-              <BillingPortalButton />
+              {sub.plan === "comp" ? (
+                <p style={{ fontSize: 13.5, color: "var(--text-muted)" }}>
+                  Complimentary access — no billing attached to this plan.
+                </p>
+              ) : (
+                <BillingPortalButton />
+              )}
             </div>
           </div>
         )}

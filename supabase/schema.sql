@@ -34,7 +34,9 @@ CREATE TABLE IF NOT EXISTS public.subscriptions (
   user_id                UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
   stripe_customer_id     TEXT NOT NULL,
   stripe_subscription_id TEXT NOT NULL UNIQUE,
-  plan                   TEXT NOT NULL CHECK (plan IN ('starter', 'growth', 'scale')),
+  -- 'comp' = granted via a redeem code (see redeem_codes below), no real
+  -- Stripe subscription behind it.
+  plan                   TEXT NOT NULL CHECK (plan IN ('starter', 'growth', 'scale', 'comp')),
   status                 TEXT NOT NULL, -- trialing/active/past_due/canceled/unpaid/incomplete/incomplete_expired
   brand                  TEXT,
   current_period_end     TIMESTAMPTZ,
@@ -53,6 +55,27 @@ CREATE POLICY "Users can read own subscriptions"
 
 CREATE POLICY "Service role can do anything on subscriptions"
   ON public.subscriptions FOR ALL
+  USING (auth.role() = 'service_role');
+
+-- ── REDEEM CODES ─────────────────────────────────────────────
+-- Grants free ('comp') access without going through Stripe at all.
+-- Redemption (lookup + use-count increment + inserting the resulting
+-- subscriptions row) always goes through the service-role admin client in
+-- app/api/redeem-code/route.js — no user-facing policies, this table isn't
+-- user-scoped so the usual "own row" RLS pattern doesn't apply.
+CREATE TABLE IF NOT EXISTS public.redeem_codes (
+  code        TEXT PRIMARY KEY,
+  plan        TEXT NOT NULL DEFAULT 'comp',
+  max_uses    INTEGER, -- NULL = unlimited
+  uses_count  INTEGER NOT NULL DEFAULT 0,
+  expires_at  TIMESTAMPTZ,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE public.redeem_codes ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Service role can do anything on redeem_codes"
+  ON public.redeem_codes FOR ALL
   USING (auth.role() = 'service_role');
 
 -- ── REPORTS ──────────────────────────────────────────────────

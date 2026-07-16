@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PricingTiers from "@/components/PricingTiers";
+import RedeemCodeForm from "@/components/RedeemCodeForm";
 import { createClient } from "@/lib/supabase/client";
 
 const LOCATIONS = [
@@ -328,6 +329,10 @@ export default function OnboardingPage() {
               </p>
 
               <PricingTiers brand={companyName} />
+
+              <div style={{ marginTop: 20 }}>
+                <RedeemCodeForm />
+              </div>
 
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: 24 }}>
                 <button type="button" className="btn btn-ghost" onClick={() => setStep(3)}>

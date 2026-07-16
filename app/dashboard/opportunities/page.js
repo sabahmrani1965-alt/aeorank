@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { timeAgo } from "@/lib/reddit";
+import { hasActiveSubscription } from "@/lib/subscription";
 import OpportunityRefreshButton from "@/components/OpportunityRefreshButton";
+import RedeemCodeForm from "@/components/RedeemCodeForm";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +19,29 @@ export default async function OpportunitiesPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  const hasPlan = await hasActiveSubscription(supabase, user.id);
+  if (!hasPlan) {
+    return (
+      <section className="section">
+        <div className="container">
+          <span className="section-tag">( new opportunities )</span>
+          <h2>Reddit threads worth engaging with</h2>
+          <div className="card" style={{ textAlign: "center", padding: 32 }}>
+            <p style={{ color: "var(--text-dim)", marginBottom: 16 }}>
+              This is available on any active plan.
+            </p>
+            <div style={{ display: "flex", gap: 14, justifyContent: "center", alignItems: "center", flexWrap: "wrap" }}>
+              <Link href="/dashboard/billing" className="btn btn-primary">
+                View plans →
+              </Link>
+              <RedeemCodeForm />
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   const { data: profile } = await supabase
     .from("company_profiles")

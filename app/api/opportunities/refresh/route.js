@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { searchPosts } from "@/lib/reddit";
 import { pickCategoryQuery } from "@/lib/keywords";
 import { scoreOpportunities, isLlmConfigured } from "@/lib/llm";
+import { hasActiveSubscription } from "@/lib/subscription";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -14,6 +15,10 @@ export async function POST() {
   } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
+  }
+
+  if (!(await hasActiveSubscription(supabase, user.id))) {
+    return NextResponse.json({ error: "This requires an active plan." }, { status: 403 });
   }
 
   const { data: profile } = await supabase
