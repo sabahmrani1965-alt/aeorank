@@ -7,7 +7,7 @@ export async function GET() {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("credit_packages")
-    .select("id, name, credits, price_cents, currency")
+    .select("id, name, credits, bonus_credits, price_cents, currency, badge, description")
     .eq("active", true)
     .order("price_cents", { ascending: true });
 

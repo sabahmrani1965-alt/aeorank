@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function BuyCreditsButton({ packageId, className, children }) {
+export default function BuyCreditsButton({ packageId, className, children, style }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -31,7 +31,7 @@ export default function BuyCreditsButton({ packageId, className, children }) {
         onClick={buy}
         disabled={loading}
         className={className || "btn btn-secondary"}
-        style={loading ? { opacity: 0.7, cursor: "not-allowed" } : undefined}
+        style={loading ? { ...style, opacity: 0.7, cursor: "not-allowed" } : style}
       >
         {loading ? "Redirecting…" : children || "Buy"}
       </button>

@@ -26,7 +26,7 @@ export default async function AdminCreditsPage() {
     admin.from("credit_balances").select("balance"),
     admin
       .from("credit_packages")
-      .select("id, name, credits, price_cents, currency, active, created_at")
+      .select("id, name, credits, bonus_credits, price_cents, currency, active, badge, description, created_at")
       .order("price_cents", { ascending: true }),
   ]);
 

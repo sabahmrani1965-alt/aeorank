@@ -51,13 +51,20 @@ export async function POST(req) {
 
     const { data: pkg } = await supabase
       .from("credit_packages")
-      .select("id, name, credits, price_cents, currency")
+      .select("id, name, credits, bonus_credits, price_cents, currency")
       .eq("id", packageId)
       .eq("active", true)
       .maybeSingle();
     if (!pkg) {
       return NextResponse.json({ error: "Unknown credit package." }, { status: 400 });
     }
+
+    // Total granted includes any bonus credits — the webhook just grants
+    // whatever number is in metadata.credits, so it needs no change itself.
+    const totalCredits = pkg.credits + (pkg.bonus_credits || 0);
+    const description = pkg.bonus_credits
+      ? `${pkg.credits} + ${pkg.bonus_credits} bonus AEOrank credits`
+      : `${pkg.credits} AEOrank credits`;
 
     try {
       const session = await stripe().checkout.sessions.create({
@@ -67,7 +74,7 @@ export async function POST(req) {
             price_data: {
               currency: pkg.currency,
               unit_amount: pkg.price_cents,
-              product_data: { name: pkg.name, description: `${pkg.credits} AEOrank credits` },
+              product_data: { name: pkg.name, description },
             },
             quantity: 1,
           },
@@ -75,7 +82,13 @@ export async function POST(req) {
         success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${origin}/checkout/cancel`,
         allow_promotion_codes: true,
-        metadata: { packageId: pkg.id, credits: String(pkg.credits), userId: user.id },
+        metadata: {
+          packageId: pkg.id,
+          credits: String(totalCredits),
+          baseCredits: String(pkg.credits),
+          bonusCredits: String(pkg.bonus_credits || 0),
+          userId: user.id,
+        },
       });
       console.log(`[checkout] credit-pack session created package=${pkg.id} user=${user.id} id=${session.id}`);
       return NextResponse.json({ url: session.url });

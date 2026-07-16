@@ -357,13 +357,19 @@ CREATE POLICY "Service role can do anything on credit_transactions"
 -- anonymous visitors, just DB-driven instead of code-driven so admin can
 -- add packages without a deploy.
 CREATE TABLE IF NOT EXISTS public.credit_packages (
-  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  name        TEXT NOT NULL,
-  credits     INTEGER NOT NULL,
-  price_cents INTEGER NOT NULL,
-  currency    TEXT NOT NULL DEFAULT 'usd',
-  active      BOOLEAN NOT NULL DEFAULT TRUE,
-  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name           TEXT NOT NULL,
+  credits        INTEGER NOT NULL,
+  price_cents    INTEGER NOT NULL,
+  currency       TEXT NOT NULL DEFAULT 'usd',
+  active         BOOLEAN NOT NULL DEFAULT TRUE,
+  -- Extra credits on top of `credits` — total granted on purchase is
+  -- credits + bonus_credits (see app/api/checkout/route.js).
+  bonus_credits  INTEGER NOT NULL DEFAULT 0,
+  -- Admin-set marketing pill, e.g. "Most Popular" / "Best Value". NULL = none.
+  badge          TEXT,
+  description    TEXT,
+  created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 ALTER TABLE public.credit_packages ENABLE ROW LEVEL SECURITY;

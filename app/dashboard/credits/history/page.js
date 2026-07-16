@@ -1,10 +1,17 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { actionLabel, transactionType } from "@/lib/credits";
+import { actionLabel, transactionType, buildTransactionQuery } from "@/lib/credits";
+import TransactionFilters from "@/components/TransactionFilters";
 
 export const dynamic = "force-dynamic";
 
 const PAGE_SIZE = 25;
+
+function pageHref(params, page) {
+  const p = new URLSearchParams(params);
+  p.set("page", String(page));
+  return `/dashboard/credits/history?${p.toString()}`;
+}
 
 export default async function CreditHistoryPage({ searchParams }) {
   const supabase = createClient();
@@ -16,14 +23,23 @@ export default async function CreditHistoryPage({ searchParams }) {
   const from = (page - 1) * PAGE_SIZE;
   const to = from + PAGE_SIZE - 1;
 
-  const { data: transactions, count } = await supabase
-    .from("credit_transactions")
-    .select("id, amount, action, description, created_at", { count: "exact" })
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false })
-    .range(from, to);
+  const filters = {
+    q: searchParams?.q || "",
+    type: searchParams?.type || "",
+    from: searchParams?.from || "",
+    to: searchParams?.to || "",
+  };
+
+  const { data: transactions, count } = await buildTransactionQuery(supabase, user.id, filters).range(from, to);
 
   const totalPages = Math.max(1, Math.ceil((count || 0) / PAGE_SIZE));
+
+  const linkParams = {};
+  if (filters.q) linkParams.q = filters.q;
+  if (filters.type) linkParams.type = filters.type;
+  if (filters.from) linkParams.from = filters.from;
+  if (filters.to) linkParams.to = filters.to;
+  const exportHref = `/api/credits/history/export?${new URLSearchParams(linkParams).toString()}`;
 
   return (
     <section className="section">
@@ -34,9 +50,13 @@ export default async function CreditHistoryPage({ searchParams }) {
           <Link href="/dashboard/credits" className="header-link">← Back to credits</Link>
         </p>
 
+        <TransactionFilters exportHref={exportHref} />
+
         {!transactions || transactions.length === 0 ? (
           <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
-            No credit activity yet.
+            {count === 0 && !filters.q && !filters.type && !filters.from && !filters.to
+              ? "No credit activity yet."
+              : "No transactions match these filters."}
           </div>
         ) : (
           <>
@@ -79,7 +99,7 @@ export default async function CreditHistoryPage({ searchParams }) {
             {totalPages > 1 && (
               <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 20 }}>
                 {page > 1 && (
-                  <Link href={`/dashboard/credits/history?page=${page - 1}`} className="btn btn-ghost">
+                  <Link href={pageHref(linkParams, page - 1)} className="btn btn-ghost">
                     ← Newer
                   </Link>
                 )}
@@ -87,7 +107,7 @@ export default async function CreditHistoryPage({ searchParams }) {
                   Page {page} of {totalPages}
                 </span>
                 {page < totalPages && (
-                  <Link href={`/dashboard/credits/history?page=${page + 1}`} className="btn btn-ghost">
+                  <Link href={pageHref(linkParams, page + 1)} className="btn btn-ghost">
                     Older →
                   </Link>
                 )}
