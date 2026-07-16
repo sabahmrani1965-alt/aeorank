@@ -21,6 +21,7 @@ export default async function AdminLayout({ children }) {
           <div style={{ display: "flex", gap: 20, flexWrap: "wrap", marginBottom: 8 }}>
             <Link href="/admin" className="header-link">Overview</Link>
             <Link href="/admin/users" className="header-link">Users</Link>
+            <Link href="/admin/credits" className="header-link">Credits</Link>
           </div>
         </div>
       </section>

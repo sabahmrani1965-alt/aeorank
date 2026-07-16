@@ -5,6 +5,7 @@ import {
   isStripeConfigured,
   priceDataForPlan,
 } from "@/lib/stripe";
+import { createClient } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 
@@ -30,6 +31,60 @@ export async function POST(req) {
     return NextResponse.json({ error: "Invalid JSON." }, { status: 400 });
   }
 
+  const origin = siteOrigin(req);
+
+  // One-time credit-pack purchase — separate branch from the plan-
+  // subscription flow below. Unlike plans (which can be bought anonymously
+  // and get linked to an account by email afterward), a credit top-up only
+  // makes sense for an existing account, so we require login here and
+  // stamp the exact user_id into metadata rather than resolving by email
+  // later.
+  const packageId = String(body?.packageId || "").trim();
+  if (packageId) {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: "Please log in to buy credits." }, { status: 401 });
+    }
+
+    const { data: pkg } = await supabase
+      .from("credit_packages")
+      .select("id, name, credits, price_cents, currency")
+      .eq("id", packageId)
+      .eq("active", true)
+      .maybeSingle();
+    if (!pkg) {
+      return NextResponse.json({ error: "Unknown credit package." }, { status: 400 });
+    }
+
+    try {
+      const session = await stripe().checkout.sessions.create({
+        mode: "payment",
+        line_items: [
+          {
+            price_data: {
+              currency: pkg.currency,
+              unit_amount: pkg.price_cents,
+              product_data: { name: pkg.name, description: `${pkg.credits} AEOrank credits` },
+            },
+            quantity: 1,
+          },
+        ],
+        success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${origin}/checkout/cancel`,
+        allow_promotion_codes: true,
+        metadata: { packageId: pkg.id, credits: String(pkg.credits), userId: user.id },
+      });
+      console.log(`[checkout] credit-pack session created package=${pkg.id} user=${user.id} id=${session.id}`);
+      return NextResponse.json({ url: session.url });
+    } catch (e) {
+      console.error("[checkout] stripe error (credit pack):", e?.message || e);
+      return NextResponse.json({ error: "Could not start checkout. Please try again." }, { status: 500 });
+    }
+  }
+
   const plan = String(body?.plan || "").toLowerCase();
   const brand = String(body?.brand || "").slice(0, 80);
   const planConfig = PLANS[plan];
@@ -38,7 +93,6 @@ export async function POST(req) {
   }
 
   const price_data = priceDataForPlan(plan);
-  const origin = siteOrigin(req);
 
   try {
     const session = await stripe().checkout.sessions.create({

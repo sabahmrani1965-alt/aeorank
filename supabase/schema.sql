@@ -69,6 +69,9 @@ CREATE TABLE IF NOT EXISTS public.redeem_codes (
   max_uses    INTEGER, -- NULL = unlimited
   uses_count  INTEGER NOT NULL DEFAULT 0,
   expires_at  TIMESTAMPTZ,
+  -- Bonus credits granted alongside (or instead of) plan access — see the
+  -- credit system section below. NULL = no credits attached to this code.
+  credits     INTEGER,
   created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -273,6 +276,120 @@ CREATE POLICY "Users can update own company profile"
 CREATE POLICY "Service role can do anything on company_profiles"
   ON public.company_profiles FOR ALL
   USING (auth.role() = 'service_role');
+
+-- ── CREDIT BALANCES ──────────────────────────────────────────
+-- One row per user. Every mutation goes through the deduct_credits/
+-- grant_credits functions below (never a direct UPDATE), so there is no
+-- user-facing INSERT/UPDATE policy here — reads only.
+CREATE TABLE IF NOT EXISTS public.credit_balances (
+  user_id             UUID PRIMARY KEY REFERENCES public.users(id) ON DELETE CASCADE,
+  balance             INTEGER NOT NULL DEFAULT 0,
+  monthly_allowance   INTEGER NOT NULL DEFAULT 0,
+  allowance_reset_at  TIMESTAMPTZ,
+  updated_at          TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE public.credit_balances ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can read own balance"
+  ON public.credit_balances FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Service role can do anything on credit_balances"
+  ON public.credit_balances FOR ALL
+  USING (auth.role() = 'service_role');
+
+-- ── CREDIT TRANSACTIONS ──────────────────────────────────────
+-- Single immutable ledger — a negative amount is a usage record, a
+-- positive amount is a grant/purchase/refund/renewal. Balance is always
+-- reconcilable by summing this table, so there's no separate "usage"
+-- table duplicating it. No user-facing write policy; all writes happen
+-- via the service-role client in lib/credits.js.
+CREATE TABLE IF NOT EXISTS public.credit_transactions (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id     UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  amount      INTEGER NOT NULL,
+  action      TEXT NOT NULL,
+  description TEXT,
+  metadata    JSONB,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS credit_transactions_user_id_idx ON public.credit_transactions(user_id, created_at DESC);
+
+ALTER TABLE public.credit_transactions ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can read own transactions"
+  ON public.credit_transactions FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Service role can do anything on credit_transactions"
+  ON public.credit_transactions FOR ALL
+  USING (auth.role() = 'service_role');
+
+-- ── CREDIT PACKAGES ──────────────────────────────────────────
+-- Admin-managed one-time purchase options. Publicly readable (active
+-- ones only) — same visibility as the PLANS pricing already shown to
+-- anonymous visitors, just DB-driven instead of code-driven so admin can
+-- add packages without a deploy.
+CREATE TABLE IF NOT EXISTS public.credit_packages (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        TEXT NOT NULL,
+  credits     INTEGER NOT NULL,
+  price_cents INTEGER NOT NULL,
+  currency    TEXT NOT NULL DEFAULT 'usd',
+  active      BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE public.credit_packages ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Packages are publicly readable"
+  ON public.credit_packages FOR SELECT
+  USING (active = true);
+
+CREATE POLICY "Service role can do anything on credit_packages"
+  ON public.credit_packages FOR ALL
+  USING (auth.role() = 'service_role');
+
+-- ── ATOMIC CREDIT FUNCTIONS ───────────────────────────────────
+-- SECURITY DEFINER + explicitly REVOKEd from anon/authenticated: these
+-- must only ever be called via the service-role admin client from server
+-- code (lib/credits.js). A client-callable grant_credits would let anyone
+-- mint their own credits. The atomic UPDATE...RETURNING avoids the
+-- classic read-balance-then-write-separately race condition under
+-- concurrent requests.
+CREATE OR REPLACE FUNCTION public.deduct_credits(p_user_id UUID, p_amount INTEGER)
+RETURNS INTEGER LANGUAGE plpgsql SECURITY DEFINER AS $$
+DECLARE
+  v_new_balance INTEGER;
+BEGIN
+  UPDATE public.credit_balances
+  SET balance = balance - p_amount, updated_at = NOW()
+  WHERE user_id = p_user_id AND balance >= p_amount
+  RETURNING balance INTO v_new_balance;
+  RETURN v_new_balance; -- NULL = insufficient balance (or no balance row yet)
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION public.grant_credits(p_user_id UUID, p_amount INTEGER)
+RETURNS INTEGER LANGUAGE plpgsql SECURITY DEFINER AS $$
+DECLARE
+  v_new_balance INTEGER;
+BEGIN
+  INSERT INTO public.credit_balances (user_id, balance)
+  VALUES (p_user_id, p_amount)
+  ON CONFLICT (user_id) DO UPDATE
+    SET balance = public.credit_balances.balance + p_amount, updated_at = NOW()
+  RETURNING balance INTO v_new_balance;
+  RETURN v_new_balance;
+END;
+$$;
+
+REVOKE EXECUTE ON FUNCTION public.deduct_credits(UUID, INTEGER) FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.grant_credits(UUID, INTEGER) FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.deduct_credits(UUID, INTEGER) TO service_role;
+GRANT EXECUTE ON FUNCTION public.grant_credits(UUID, INTEGER) TO service_role;
 
 -- ── AUTO-CREATE USER PROFILE ON SIGNUP ───────────────────────
 -- Fires for every auth.users insert, whether from a real magic-link login

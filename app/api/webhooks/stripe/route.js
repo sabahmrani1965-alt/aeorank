@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { stripe, isStripeConfigured } from "@/lib/stripe";
 import { sendEmail, esc, isEmailConfigured, addToAudience } from "@/lib/email";
 import { createAdminClient, ensureUserId } from "@/lib/supabase/admin";
+import { grantCredits, PLAN_MONTHLY_CREDITS } from "@/lib/credits";
 
 // Stripe needs the *raw* request body to verify the signature, so we read
 // it as text and pass it untouched into stripe.webhooks.constructEvent.
@@ -88,13 +89,14 @@ async function provisionSubscription(session) {
     .eq("id", userId);
 
   const subscription = await stripe().subscriptions.retrieve(session.subscription);
+  const plan = session.metadata?.plan;
 
   await admin.from("subscriptions").upsert(
     {
       user_id: userId,
       stripe_customer_id: session.customer,
       stripe_subscription_id: session.subscription,
-      plan: session.metadata?.plan,
+      plan,
       status: subscription.status,
       brand: session.metadata?.brand || null,
       current_period_end: subscription.current_period_end
@@ -105,6 +107,24 @@ async function provisionSubscription(session) {
     },
     { onConflict: "stripe_subscription_id" }
   );
+
+  await grantMonthlyCredits(admin, userId, plan);
+}
+
+// Grants a plan's monthly credit allowance and bumps the reset date one
+// month out. Called on initial signup and on every successful renewal
+// invoice — grant_credits' upsert-on-conflict means the credit_balances
+// row always exists after this, even for a brand-new user.
+async function grantMonthlyCredits(admin, userId, plan) {
+  const amount = PLAN_MONTHLY_CREDITS[plan];
+  if (!amount) return;
+  await grantCredits(admin, userId, amount, "monthly_renewal", `Monthly ${plan} plan credits`, { plan });
+  const resetAt = new Date();
+  resetAt.setMonth(resetAt.getMonth() + 1);
+  await admin
+    .from("credit_balances")
+    .update({ monthly_allowance: amount, allowance_reset_at: resetAt.toISOString() })
+    .eq("user_id", userId);
 }
 
 // Keeps an existing subscriptions row in sync for the rest of its
@@ -120,6 +140,36 @@ async function syncSubscriptionStatus(stripeSubscriptionId, patch) {
   if (error) {
     console.error("[stripe webhook] subscription sync failed:", error.message);
   }
+}
+
+// invoice.paid fires on every renewal (and the very first invoice) — looks
+// up which user/plan this subscription belongs to via our own table, since
+// the invoice itself doesn't carry our metadata.
+async function grantRenewalCredits(stripeSubscriptionId) {
+  const admin = createAdminClient();
+  if (!admin) return;
+  const { data: sub } = await admin
+    .from("subscriptions")
+    .select("user_id, plan")
+    .eq("stripe_subscription_id", stripeSubscriptionId)
+    .maybeSingle();
+  if (!sub) return;
+  await grantMonthlyCredits(admin, sub.user_id, sub.plan);
+}
+
+// One-time credit-pack purchase — session.metadata carries the exact
+// user_id (stamped at checkout creation, see app/api/checkout/route.js),
+// so no email-based user resolution is needed here.
+async function grantPackageCredits(session) {
+  const admin = createAdminClient();
+  if (!admin) return;
+  const userId = session.metadata?.userId;
+  const credits = Number(session.metadata?.credits || 0);
+  if (!userId || !credits) return;
+  await grantCredits(admin, userId, credits, "purchase", "Credit pack purchase", {
+    packageId: session.metadata?.packageId,
+    sessionId: session.id,
+  });
 }
 
 export async function POST(req) {
@@ -158,8 +208,20 @@ export async function POST(req) {
       await Promise.all([
         notifyAdmin(session),
         addToAudience({ email: customerEmail, name: customerName }),
-        provisionSubscription(session),
+        session.mode === "payment" && session.metadata?.packageId
+          ? grantPackageCredits(session)
+          : provisionSubscription(session),
       ]);
+    } else if (event.type === "invoice.paid") {
+      const invoice = event.data.object;
+      // "subscription_create" is the very first invoice — that period's
+      // credits are already granted by provisionSubscription() above, in
+      // the same checkout.session.completed event. Only actual renewals
+      // ("subscription_cycle") should grant again here, or the first
+      // month would be double-credited.
+      if (invoice.subscription && invoice.billing_reason === "subscription_cycle") {
+        await grantRenewalCredits(invoice.subscription);
+      }
     } else if (event.type === "customer.subscription.updated") {
       const subscription = event.data.object;
       await syncSubscriptionStatus(subscription.id, {

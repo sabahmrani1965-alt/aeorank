@@ -19,7 +19,7 @@ export default async function AdminUsersPage() {
     );
   }
 
-  const [{ data: users }, { data: subs }, { data: reports }, { data: drafts }] =
+  const [{ data: users }, { data: subs }, { data: reports }, { data: drafts }, { data: balances }] =
     await Promise.all([
       admin.from("users").select("id, email, created_at").order("created_at", { ascending: false }),
       admin
@@ -28,7 +28,10 @@ export default async function AdminUsersPage() {
         .order("created_at", { ascending: false }),
       admin.from("reports").select("user_id"),
       admin.from("report_drafts").select("user_id, posted"),
+      admin.from("credit_balances").select("user_id, balance"),
     ]);
+
+  const balanceByUser = new Map((balances || []).map((b) => [b.user_id, b.balance]));
 
   const latestSubByUser = new Map();
   for (const s of subs || []) {
@@ -69,6 +72,7 @@ export default async function AdminUsersPage() {
                   <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Status</th>
                   <th style={{ textAlign: "right", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Reports</th>
                   <th style={{ textAlign: "right", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Drafts</th>
+                  <th style={{ textAlign: "right", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Credits</th>
                 </tr>
               </thead>
               <tbody>
@@ -92,6 +96,9 @@ export default async function AdminUsersPage() {
                       </td>
                       <td style={{ padding: "10px 12px", textAlign: "right" }}>
                         {draftInfo.posted}/{draftInfo.total}
+                      </td>
+                      <td style={{ padding: "10px 12px", textAlign: "right" }}>
+                        {balanceByUser.get(u.id) ?? 0}
                       </td>
                     </tr>
                   );

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import DashboardAnalyzeForm from "@/components/DashboardAnalyzeForm";
+import AiVisibilityRecheckButton from "@/components/AiVisibilityRecheckButton";
+import { CREDIT_COSTS } from "@/lib/credits";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +28,10 @@ export default async function DashboardReportsPage() {
         </p>
 
         <DashboardAnalyzeForm />
+
+        <div style={{ margin: "20px 0" }}>
+          <AiVisibilityRecheckButton cost={CREDIT_COSTS.ai_visibility_report} />
+        </div>
 
         {!reports || reports.length === 0 ? (
           <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
