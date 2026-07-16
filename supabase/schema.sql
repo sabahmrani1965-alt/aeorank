@@ -127,6 +127,12 @@ CREATE TABLE IF NOT EXISTS public.report_drafts (
   body       TEXT NOT NULL,
   posted     BOOLEAN NOT NULL DEFAULT FALSE,
   posted_at  TIMESTAMPTZ,
+  -- Self-reported link to the live post, once the customer has actually
+  -- posted it themselves — lets Track Tasks show a "view live" link. We
+  -- don't auto-fetch upvotes/removal status here (Reddit blocks direct
+  -- fetches from cloud IPs, same constraint documented in lib/reddit.js),
+  -- so this stays a self-reported reference, not a scraped metric.
+  permalink  TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 

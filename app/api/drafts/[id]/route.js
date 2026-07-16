@@ -19,13 +19,26 @@ export async function PATCH(req, { params }) {
     return NextResponse.json({ error: "Invalid JSON." }, { status: 400 });
   }
 
-  const posted = Boolean(body?.posted);
+  const updates = {};
+  if ("posted" in body) {
+    const posted = Boolean(body.posted);
+    updates.posted = posted;
+    updates.posted_at = posted ? new Date().toISOString() : null;
+  }
+  if ("permalink" in body) {
+    // Self-reported link to the live post — not verified against Reddit,
+    // same reasoning as the schema comment on report_drafts.permalink.
+    updates.permalink = String(body.permalink || "").trim().slice(0, 500) || null;
+  }
+  if (Object.keys(updates).length === 0) {
+    return NextResponse.json({ error: "Nothing to update." }, { status: 400 });
+  }
 
   // RLS ("Users can update own drafts") already scopes this to the caller's
   // own rows — the explicit .eq("user_id", ...) is belt-and-suspenders.
   const { error } = await supabase
     .from("report_drafts")
-    .update({ posted, posted_at: posted ? new Date().toISOString() : null })
+    .update(updates)
     .eq("id", params.id)
     .eq("user_id", user.id);
 

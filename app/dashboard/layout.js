@@ -29,6 +29,7 @@ export default async function DashboardLayout({ children }) {
             <Link href="/dashboard/mentions" className="header-link">Mentions</Link>
             <Link href="/dashboard/reports" className="header-link">Reports</Link>
             <Link href="/dashboard/drafts" className="header-link">Drafts</Link>
+            <Link href="/dashboard/tasks" className="header-link">Track Tasks</Link>
             <Link href="/dashboard/billing" className="header-link">Billing</Link>
           </div>
         </div>
