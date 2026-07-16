@@ -22,6 +22,8 @@ export async function POST(req) {
   const subreddit = String(body?.subreddit || "").trim().slice(0, 80);
   const title = String(body?.title || "").trim().slice(0, 200);
   const bodyText = String(body?.body || "").trim().slice(0, 2000);
+  const TYPES = new Set(["comment", "post", "reply"]);
+  const type = TYPES.has(body?.type) ? body.type : null;
 
   if (!subreddit || !bodyText) {
     return NextResponse.json({ error: "Subreddit and content are required." }, { status: 400 });
@@ -32,6 +34,7 @@ export async function POST(req) {
     .insert({
       user_id: user.id,
       report_id: null,
+      type,
       subreddit,
       title: title || subreddit,
       body: bodyText,

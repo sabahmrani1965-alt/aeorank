@@ -125,6 +125,9 @@ CREATE TABLE IF NOT EXISTS public.report_drafts (
   id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id    UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
   report_id  UUID REFERENCES public.reports(id) ON DELETE CASCADE,
+  -- 'comment' | 'post' | 'reply' — which Draft Studio type this came from.
+  -- NULL on rows saved before this column existed.
+  type       TEXT,
   subreddit  TEXT NOT NULL,
   title      TEXT NOT NULL,
   body       TEXT NOT NULL,

@@ -136,6 +136,7 @@ function NewDraftForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          type,
           subreddit: subreddit.startsWith("r/") ? subreddit : `r/${subreddit}`,
           title: type === "post" ? title : title || threadContext,
           body,
