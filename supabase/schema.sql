@@ -176,6 +176,23 @@ CREATE TABLE IF NOT EXISTS public.opportunities (
   post_created_at  TIMESTAMPTZ,
   relevance_score  INTEGER,
   relevance_reason TEXT,
+  -- Judgment call from the same batched scoring call as relevance_score —
+  -- "high"/"medium"/"low", not a fact lookup, so it belongs alongside the
+  -- score rather than needing its own LLM call.
+  buying_intent    TEXT,
+  -- Pins a row so a refresh's delete-and-replace cache logic (below) skips
+  -- it — the only way anything here survives a refresh.
+  saved            BOOLEAN NOT NULL DEFAULT FALSE,
+  -- On-demand deep analysis (see app/api/opportunities/analyze/route.js) —
+  -- unlike relevance_score/buying_intent, these come from the thread's
+  -- actual fetched body + comments, not just the title/snippet, so they're
+  -- only populated when a user explicitly asks for them (separately
+  -- credit-metered) rather than for every row on every refresh.
+  analysis_summary               TEXT,
+  analysis_pain_points           TEXT[],
+  analysis_competitors_mentioned TEXT[],
+  analysis_response_angle        TEXT,
+  analyzed_at                    TIMESTAMPTZ,
   fetched_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -190,6 +207,13 @@ CREATE POLICY "Users can read own opportunities"
 CREATE POLICY "Users can insert own opportunities"
   ON public.opportunities FOR INSERT
   WITH CHECK (auth.uid() = user_id);
+
+-- Lets a user toggle their own `saved` flag directly (mirrors "Users can
+-- update own drafts" on report_drafts) — the analysis_* columns are never
+-- written this way, only via the service-role client in the analyze route.
+CREATE POLICY "Users can update own opportunities"
+  ON public.opportunities FOR UPDATE
+  USING (auth.uid() = user_id);
 
 CREATE POLICY "Users can delete own opportunities"
   ON public.opportunities FOR DELETE

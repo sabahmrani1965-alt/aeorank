@@ -73,7 +73,7 @@ export async function POST() {
     const deduped = [...new Map(posts.map((p) => [p.permalink, p])).values()];
 
     if (deduped.length === 0) {
-      await supabase.from("opportunities").delete().eq("user_id", user.id);
+      await supabase.from("opportunities").delete().eq("user_id", user.id).eq("saved", false);
       await refundCredits(admin, user.id, maxCost, "refund", "No opportunities found", reservation.transactionId);
       return NextResponse.json({ ok: true, count: 0 });
     }
@@ -104,11 +104,12 @@ export async function POST() {
       post_created_at: p.created ? new Date(p.created).toISOString() : null,
       relevance_score: scores?.[i]?.score ?? null,
       relevance_reason: scores?.[i]?.reason || null,
+      buying_intent: scores?.[i]?.buyingIntent ?? null,
     }));
 
     // Replace, not append — a refresh reflects the current search, not an
-    // ever-growing history.
-    await supabase.from("opportunities").delete().eq("user_id", user.id);
+    // ever-growing history. Saved rows are pinned and skip this wipe.
+    await supabase.from("opportunities").delete().eq("user_id", user.id).eq("saved", false);
     const { error: insertError } = await supabase.from("opportunities").insert(rows);
     if (insertError) throw insertError;
 
