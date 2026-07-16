@@ -190,6 +190,47 @@ CREATE POLICY "Service role can do anything on opportunities"
   ON public.opportunities FOR ALL
   USING (auth.role() = 'service_role');
 
+-- ── MENTIONS ─────────────────────────────────────────────────
+-- Read-only brand-mention monitoring: real Reddit posts/comments that
+-- already mention the user's brand, with AI sentiment classification.
+-- Same cache-then-refresh-on-demand pattern as opportunities. Nothing
+-- here posts, votes, or otherwise touches Reddit — it only searches and
+-- reads what's already public.
+CREATE TABLE IF NOT EXISTS public.mentions (
+  id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id          UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  sub              TEXT NOT NULL,
+  title            TEXT NOT NULL,
+  snippet          TEXT,
+  permalink        TEXT NOT NULL,
+  ups              INTEGER NOT NULL DEFAULT 0,
+  comments         INTEGER NOT NULL DEFAULT 0,
+  post_created_at  TIMESTAMPTZ,
+  sentiment        TEXT, -- positive / neutral / negative
+  sentiment_reason TEXT,
+  fetched_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS mentions_user_id_idx ON public.mentions(user_id, post_created_at DESC);
+
+ALTER TABLE public.mentions ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can read own mentions"
+  ON public.mentions FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own mentions"
+  ON public.mentions FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own mentions"
+  ON public.mentions FOR DELETE
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Service role can do anything on mentions"
+  ON public.mentions FOR ALL
+  USING (auth.role() = 'service_role');
+
 -- ── COMPANY PROFILES ─────────────────────────────────────────
 -- One row per user, filled in by the post-signup onboarding wizard
 -- (website, company details, competitors). Reference data only for now —

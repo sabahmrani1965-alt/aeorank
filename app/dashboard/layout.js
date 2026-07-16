@@ -26,6 +26,7 @@ export default async function DashboardLayout({ children }) {
           <div style={{ display: "flex", gap: 20, flexWrap: "wrap", marginBottom: 8 }}>
             <Link href="/dashboard" className="header-link">Overview</Link>
             <Link href="/dashboard/opportunities" className="header-link">Opportunities</Link>
+            <Link href="/dashboard/mentions" className="header-link">Mentions</Link>
             <Link href="/dashboard/reports" className="header-link">Reports</Link>
             <Link href="/dashboard/drafts" className="header-link">Drafts</Link>
             <Link href="/dashboard/billing" className="header-link">Billing</Link>
