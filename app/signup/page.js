@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import AuthSplitLayout from "@/components/AuthSplitLayout";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -30,6 +31,7 @@ function SignupForm() {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
 
   async function submit(e) {
     e.preventDefault();
@@ -47,13 +49,21 @@ function SignupForm() {
     setLoading(true);
     try {
       const supabase = createClient();
-      const { error: signUpError } = await supabase.auth.signUp({
+      const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
       });
       if (signUpError) throw signUpError;
-      setSent(true);
+      if (data?.session) {
+        // Email confirmation is off — signUp already returned a live
+        // session, so go straight into onboarding.
+        router.push("/onboarding");
+        router.refresh();
+      } else {
+        // Fallback for if confirmation is ever turned back on.
+        setSent(true);
+      }
     } catch (err) {
       setError(err?.message || "Something went wrong. Please try again.");
     } finally {

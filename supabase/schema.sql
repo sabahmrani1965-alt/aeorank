@@ -127,6 +127,46 @@ CREATE POLICY "Service role can do anything on report_drafts"
   ON public.report_drafts FOR ALL
   USING (auth.role() = 'service_role');
 
+-- ── OPPORTUNITIES ────────────────────────────────────────────
+-- Cached Reddit threads matched + relevance-scored against a user's
+-- company profile. Refreshed on demand (via the dashboard's Refresh
+-- button, not on every page load) — a refresh deletes the user's old rows
+-- and inserts the new batch, it's a replace, not an append.
+CREATE TABLE IF NOT EXISTS public.opportunities (
+  id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id          UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  sub              TEXT NOT NULL,
+  title            TEXT NOT NULL,
+  snippet          TEXT,
+  permalink        TEXT NOT NULL,
+  ups              INTEGER NOT NULL DEFAULT 0,
+  comments         INTEGER NOT NULL DEFAULT 0,
+  post_created_at  TIMESTAMPTZ,
+  relevance_score  INTEGER,
+  relevance_reason TEXT,
+  fetched_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS opportunities_user_id_idx ON public.opportunities(user_id, relevance_score DESC);
+
+ALTER TABLE public.opportunities ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can read own opportunities"
+  ON public.opportunities FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own opportunities"
+  ON public.opportunities FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own opportunities"
+  ON public.opportunities FOR DELETE
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Service role can do anything on opportunities"
+  ON public.opportunities FOR ALL
+  USING (auth.role() = 'service_role');
+
 -- ── COMPANY PROFILES ─────────────────────────────────────────
 -- One row per user, filled in by the post-signup onboarding wizard
 -- (website, company details, competitors). Reference data only for now —
