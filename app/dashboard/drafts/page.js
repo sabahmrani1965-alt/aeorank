@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import PostDraftActions from "@/components/PostDraftActions";
 
@@ -21,14 +22,20 @@ export default async function DashboardDraftsPage() {
         <span className="section-tag">( saved drafts )</span>
         <h2>Your Reddit post drafts</h2>
         <p className="section-sub">
-          AI-suggested drafts from your reports. Copy one and post it
-          yourself, from your own account — nothing here is posted
-          automatically.
+          AI-suggested drafts from your reports, plus anything you compose
+          yourself. Copy one and post it from your own account — nothing
+          here is posted automatically.
         </p>
+
+        <div style={{ marginBottom: 24 }}>
+          <Link href="/dashboard/drafts/new" className="btn btn-primary">
+            + New draft
+          </Link>
+        </div>
 
         {!drafts || drafts.length === 0 ? (
           <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
-            No drafts yet — generate a report while logged in to get one.
+            No drafts yet — generate a report, or click "+ New draft" above to write one.
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
