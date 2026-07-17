@@ -11,10 +11,13 @@ function greeting() {
   return "Good evening";
 }
 
+// Thresholds match components/ScoreBadge.js (Opportunities page) so the
+// same relevance_score doesn't show as a different tier color depending
+// on which page it's viewed from.
 function scoreColor(score) {
   if (score == null) return { bg: "rgba(255,255,255,.06)", fg: "var(--text-dim)" };
-  if (score >= 80) return { bg: "rgba(110, 231, 183, 0.15)", fg: "#6EE7B7" };
-  if (score >= 50) return { bg: "rgba(242, 168, 59, 0.15)", fg: "var(--accent)" };
+  if (score >= 85) return { bg: "rgba(110, 231, 183, 0.15)", fg: "#6EE7B7" };
+  if (score >= 60) return { bg: "rgba(242, 168, 59, 0.15)", fg: "var(--accent)" };
   return { bg: "rgba(255, 120, 120, 0.12)", fg: "#ff8a8a" };
 }
 

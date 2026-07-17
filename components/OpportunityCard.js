@@ -2,13 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-
-function scoreColor(score) {
-  if (score == null) return { bg: "rgba(255,255,255,.06)", fg: "var(--text-dim)" };
-  if (score >= 80) return { bg: "rgba(110, 231, 183, 0.15)", fg: "#6EE7B7" };
-  if (score >= 50) return { bg: "rgba(242, 168, 59, 0.15)", fg: "var(--accent)" };
-  return { bg: "rgba(255, 120, 120, 0.12)", fg: "#ff8a8a" };
-}
+import ScoreBadge from "./ScoreBadge";
 
 function intentColor(intent) {
   if (intent === "high") return { bg: "rgba(110, 231, 183, 0.15)", fg: "#6EE7B7" };
@@ -26,12 +20,11 @@ const labelStyle = {
   marginBottom: 4,
 };
 
-export default function OpportunityCard({ opportunity: o, competitorMatch, freshness, analyzeCost }) {
+export default function OpportunityCard({ opportunity: o, competitorMatch, freshness, analyzeCost, isExpanded, onToggleExpand }) {
   const [saved, setSaved] = useState(Boolean(o.saved));
   const [savingToggle, setSavingToggle] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [analyzeError, setAnalyzeError] = useState("");
-  const [expanded, setExpanded] = useState(false);
   const [analysis, setAnalysis] = useState(
     o.analyzed_at
       ? {
@@ -42,14 +35,15 @@ export default function OpportunityCard({ opportunity: o, competitorMatch, fresh
         }
       : null
   );
-  // The deep "Analyze thread" call can return a better-grounded buying
+  // The deep "Quick Preview" call can return a better-grounded buying
   // intent than the shallow batch guess — kept in state so the pill
   // updates immediately rather than needing a page reload.
   const [buyingIntent, setBuyingIntent] = useState(o.buying_intent);
 
-  const colors = scoreColor(o.relevance_score);
   const intent = intentColor(buyingIntent);
-  const draftHref = `/dashboard/drafts/new?subreddit=${encodeURIComponent(o.sub || "")}&context=${encodeURIComponent(o.title || "")}`;
+  const replyHref = `/dashboard/drafts/new?subreddit=${encodeURIComponent(o.sub || "")}&context=${encodeURIComponent(o.title || "")}`;
+  const reasons = o.relevance_reasons?.length ? o.relevance_reasons : o.relevance_reason ? [o.relevance_reason] : [];
+  const panelId = `opp-preview-${o.id}`;
 
   async function toggleSaved() {
     const next = !saved;
@@ -82,7 +76,6 @@ export default function OpportunityCard({ opportunity: o, competitorMatch, fresh
       if (!res.ok) throw new Error(data?.error || "Could not analyze this thread.");
       setAnalysis(data.analysis);
       if (data.analysis?.buyingIntent) setBuyingIntent(data.analysis.buyingIntent);
-      setExpanded(true);
     } catch (e) {
       setAnalyzeError(e?.message || "Something went wrong.");
     } finally {
@@ -90,10 +83,21 @@ export default function OpportunityCard({ opportunity: o, competitorMatch, fresh
     }
   }
 
+  async function handleQuickPreview() {
+    if (isExpanded) {
+      onToggleExpand(null);
+      return;
+    }
+    onToggleExpand(o.id);
+    if (!analysis && !analyzing) {
+      await analyze();
+    }
+  }
+
   return (
     <div className="card" style={{ padding: 20 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap", marginBottom: 8 }}>
-        <div className="post-meta">
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, marginBottom: 8 }}>
+        <div className="post-meta" style={{ marginBottom: 0 }}>
           <span>{o.sub}</span>
           {freshness && (
             <>
@@ -101,63 +105,82 @@ export default function OpportunityCard({ opportunity: o, competitorMatch, fresh
               <span>{freshness}</span>
             </>
           )}
-        </div>
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-          {o.relevance_score != null && (
-            <span style={{ fontSize: 12, fontWeight: 700, padding: "4px 10px", borderRadius: 999, background: colors.bg, color: colors.fg, whiteSpace: "nowrap" }}>
-              Score: {o.relevance_score}/100
-            </span>
-          )}
           {intent && (
-            <span style={{ fontSize: 12, fontWeight: 700, padding: "4px 10px", borderRadius: 999, background: intent.bg, color: intent.fg, whiteSpace: "nowrap", textTransform: "capitalize" }}>
+            <span
+              style={{
+                fontSize: 11.5,
+                fontWeight: 700,
+                padding: "3px 9px",
+                borderRadius: 999,
+                background: intent.bg,
+                color: intent.fg,
+                textTransform: "capitalize",
+              }}
+            >
               {buyingIntent} intent
             </span>
           )}
         </div>
+        <ScoreBadge score={o.relevance_score} />
       </div>
 
       <a href={o.permalink} target="_blank" rel="noopener noreferrer" className="post-title" style={{ display: "block" }}>
         {o.title}
       </a>
-      {o.snippet && <div className="post-snippet">{o.snippet}…</div>}
-      {(o.ups > 0 || o.comments > 0) && (
-        <div className="post-stats">
-          {o.ups > 0 && <span className="post-stat">↑ {o.ups.toLocaleString()}</span>}
-          {o.comments > 0 && <span className="post-stat">💬 {o.comments.toLocaleString()}</span>}
+      {o.snippet && <div className="opp-preview-clamp">{o.snippet}…</div>}
+
+      {reasons.length > 0 && (
+        <div className="opp-why">
+          <div className="opp-why-title">Why AEOrank recommends this</div>
+          {reasons.slice(0, 5).map((r, i) => (
+            <div key={i} className="opp-why-item">
+              <span className="opp-why-check" aria-hidden="true">✓</span>
+              <span>{r}</span>
+            </div>
+          ))}
         </div>
       )}
-      {o.relevance_reason && (
-        <p style={{ marginTop: 10, fontSize: 13.5, color: "var(--text-dim)", lineHeight: 1.5 }}>{o.relevance_reason}</p>
-      )}
+
       {competitorMatch && (
-        <p style={{ marginTop: 6, fontSize: 13, color: "var(--text-muted)" }}>
+        <p style={{ marginTop: 6, marginBottom: 0, fontSize: 13, color: "var(--text-muted)" }}>
           Competitor mentioned: <strong style={{ color: "var(--text-dim)" }}>{competitorMatch}</strong>
         </p>
       )}
 
-      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
-        <Link href={draftHref} className="btn btn-primary btn-sm">
-          Generate draft →
+      {(o.ups > 0 || o.comments > 0) && (
+        <div className="post-stats" style={{ marginTop: 12 }}>
+          {o.ups > 0 && <span className="post-stat">↑ {o.ups.toLocaleString()}</span>}
+          {o.comments > 0 && <span className="post-stat">💬 {o.comments.toLocaleString()}</span>}
+        </div>
+      )}
+
+      <div className="opp-actions">
+        <Link href={replyHref} className="btn btn-primary btn-sm">
+          Generate Reply →
         </Link>
+        <button
+          type="button"
+          onClick={handleQuickPreview}
+          disabled={analyzing}
+          className="btn btn-ghost btn-sm"
+          aria-expanded={isExpanded}
+          aria-controls={panelId}
+        >
+          {analyzing ? (
+            <>
+              <span className="loader" /> Analyzing…
+            </>
+          ) : isExpanded ? (
+            "Hide preview"
+          ) : analysis ? (
+            "Quick Preview"
+          ) : (
+            `Quick Preview (${analyzeCost} credits)`
+          )}
+        </button>
         <button type="button" onClick={toggleSaved} disabled={savingToggle} className="btn btn-ghost btn-sm">
           {saved ? "★ Saved" : "☆ Save"}
         </button>
-        {!analysis && (
-          <button type="button" onClick={analyze} disabled={analyzing} className="btn btn-ghost btn-sm">
-            {analyzing ? (
-              <>
-                <span className="loader" /> Analyzing…
-              </>
-            ) : (
-              `Analyze thread (${analyzeCost} credits)`
-            )}
-          </button>
-        )}
-        {analysis && (
-          <button type="button" onClick={() => setExpanded((v) => !v)} className="btn btn-ghost btn-sm">
-            {expanded ? "Hide analysis" : "View analysis"}
-          </button>
-        )}
       </div>
 
       {analyzeError && (
@@ -166,51 +189,49 @@ export default function OpportunityCard({ opportunity: o, competitorMatch, fresh
         </p>
       )}
 
-      {analysis && expanded && (
-        <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid var(--card-border-soft)", display: "flex", flexDirection: "column", gap: 12 }}>
-          <div>
-            <div style={labelStyle}>Discussion summary</div>
-            <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.55, margin: 0 }}>{analysis.summary}</p>
-          </div>
-          {analysis.painPoints?.length > 0 && (
-            <div>
-              <div style={labelStyle}>Pain points</div>
-              <ul style={{ margin: 0, paddingLeft: 18, fontSize: 14, color: "var(--text-dim)", lineHeight: 1.6 }}>
-                {analysis.painPoints.map((p, i) => (
-                  <li key={i}>{p}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {analysis.competitorsMentioned?.length > 0 && (
-            <div>
-              <div style={{ ...labelStyle, marginBottom: 6 }}>Competitors mentioned</div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                {analysis.competitorsMentioned.map((c) => (
-                  <span key={c} style={{ fontSize: 12.5, background: "var(--bg-3)", padding: "4px 10px", borderRadius: 999, color: "var(--text-dim)" }}>
-                    {c}
-                  </span>
-                ))}
+      <div id={panelId} className={`opp-expand${isExpanded ? " is-open" : ""}`}>
+        <div className="opp-expand-inner">
+          {isExpanded && analysis && (
+            <div className="opp-expand-content">
+              <div>
+                <div style={labelStyle}>AI summary</div>
+                <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.55, margin: 0 }}>{analysis.summary}</p>
               </div>
+              {analysis.painPoints?.length > 0 && (
+                <div>
+                  <div style={labelStyle}>Pain points</div>
+                  <ul style={{ margin: 0, paddingLeft: 18, fontSize: 14, color: "var(--text-dim)", lineHeight: 1.6 }}>
+                    {analysis.painPoints.map((p, i) => (
+                      <li key={i}>{p}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {analysis.competitorsMentioned?.length > 0 && (
+                <div>
+                  <div style={{ ...labelStyle, marginBottom: 6 }}>Competitors mentioned</div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    {analysis.competitorsMentioned.map((c) => (
+                      <span key={c} style={{ fontSize: 12.5, background: "var(--bg-3)", padding: "4px 10px", borderRadius: 999, color: "var(--text-dim)" }}>
+                        {c}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {analysis.responseAngle && (
+                <div>
+                  <div style={labelStyle}>Recommended reply angle</div>
+                  <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.55, margin: 0 }}>{analysis.responseAngle}</p>
+                </div>
+              )}
+              <button type="button" onClick={analyze} disabled={analyzing} className="btn btn-ghost btn-sm" style={{ alignSelf: "flex-start" }}>
+                {analyzing ? "Re-analyzing…" : `Re-analyze (${analyzeCost} credits)`}
+              </button>
             </div>
           )}
-          {analysis.responseAngle && (
-            <div>
-              <div style={labelStyle}>Recommended response angle</div>
-              <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.55, margin: 0 }}>{analysis.responseAngle}</p>
-            </div>
-          )}
-          <button
-            type="button"
-            onClick={analyze}
-            disabled={analyzing}
-            className="btn btn-ghost btn-sm"
-            style={{ alignSelf: "flex-start" }}
-          >
-            {analyzing ? "Re-analyzing…" : `Re-analyze (${analyzeCost} credits)`}
-          </button>
         </div>
-      )}
+      </div>
     </div>
   );
 }

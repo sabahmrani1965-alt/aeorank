@@ -199,6 +199,11 @@ CREATE TABLE IF NOT EXISTS public.opportunities (
   post_created_at  TIMESTAMPTZ,
   relevance_score  INTEGER,
   relevance_reason TEXT,
+  -- 2-4 short checkmark-style bullets from the same batched scoring call —
+  -- backs the "Why AEOrank recommends this" list. relevance_reason (above)
+  -- stays as the single-sentence version other UI (dashboard spotlight)
+  -- already reads.
+  relevance_reasons TEXT[],
   -- Judgment call from the same batched scoring call as relevance_score —
   -- "high"/"medium"/"low", not a fact lookup, so it belongs alongside the
   -- score rather than needing its own LLM call.

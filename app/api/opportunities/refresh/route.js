@@ -104,6 +104,7 @@ export async function POST() {
       post_created_at: p.created ? new Date(p.created).toISOString() : null,
       relevance_score: scores?.[i]?.score ?? null,
       relevance_reason: scores?.[i]?.reason || null,
+      relevance_reasons: scores?.[i]?.reasons?.length ? scores[i].reasons : null,
       buying_intent: scores?.[i]?.buyingIntent ?? null,
     }));
 

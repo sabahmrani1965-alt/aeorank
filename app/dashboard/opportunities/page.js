@@ -4,41 +4,10 @@ import { timeAgo } from "@/lib/reddit";
 import { hasActiveSubscription } from "@/lib/subscription";
 import { CREDIT_COSTS } from "@/lib/credits";
 import OpportunityRefreshButton from "@/components/OpportunityRefreshButton";
-import OpportunityCard from "@/components/OpportunityCard";
+import OpportunityList from "@/components/OpportunityList";
 import RedeemCodeForm from "@/components/RedeemCodeForm";
 
 export const dynamic = "force-dynamic";
-
-// company_profiles.competitors stores competitor URLs, not clean brand
-// names — reduce a URL to its bare domain label so it can be matched
-// against plain-text post titles/snippets (nobody writes full URLs in a
-// casual Reddit post title).
-function domainLabel(url) {
-  try {
-    const u = new URL(/^https?:\/\//i.test(url) ? url : `https://${url}`);
-    return u.hostname.replace(/^www\./, "").split(".")[0] || "";
-  } catch {
-    return "";
-  }
-}
-
-function findCompetitorMention(text, competitors) {
-  if (!text || !competitors?.length) return null;
-  const compact = text.toLowerCase().replace(/[^a-z0-9]/g, "");
-  for (const c of competitors) {
-    const label = domainLabel(c).toLowerCase();
-    if (label.length >= 3 && compact.includes(label)) return label;
-  }
-  return null;
-}
-
-function freshnessLabel(postCreatedAt) {
-  if (!postCreatedAt) return null;
-  const hours = (Date.now() - new Date(postCreatedAt).getTime()) / 3600000;
-  if (hours < 24) return "New";
-  if (hours < 24 * 7) return "This week";
-  return "Older";
-}
 
 export default async function OpportunitiesPage() {
   const supabase = createClient();
@@ -76,7 +45,7 @@ export default async function OpportunitiesPage() {
   const { data: opportunities } = await supabase
     .from("opportunities")
     .select(
-      "id, sub, title, snippet, permalink, ups, comments, post_created_at, relevance_score, relevance_reason, buying_intent, saved, analysis_summary, analysis_pain_points, analysis_competitors_mentioned, analysis_response_angle, analyzed_at, fetched_at"
+      "id, sub, title, snippet, permalink, ups, comments, post_created_at, relevance_score, relevance_reason, relevance_reasons, buying_intent, saved, analysis_summary, analysis_pain_points, analysis_competitors_mentioned, analysis_response_angle, analyzed_at, fetched_at"
     )
     .eq("user_id", user.id)
     .order("relevance_score", { ascending: false, nullsFirst: false });
@@ -87,18 +56,6 @@ export default async function OpportunitiesPage() {
 
   const saved = (opportunities || []).filter((o) => o.saved);
   const rest = (opportunities || []).filter((o) => !o.saved);
-
-  function renderCard(o) {
-    return (
-      <OpportunityCard
-        key={o.id}
-        opportunity={o}
-        competitorMatch={findCompetitorMention(`${o.title} ${o.snippet || ""}`, competitors)}
-        freshness={freshnessLabel(o.post_created_at)}
-        analyzeCost={analyzeCost}
-      />
-    );
-  }
 
   return (
     <section className="dashboard-page">
@@ -132,22 +89,7 @@ export default async function OpportunitiesPage() {
               No opportunities yet — click "Refresh opportunities" to search Reddit.
             </div>
           ) : (
-            <>
-              {saved.length > 0 && (
-                <div style={{ marginBottom: 32 }}>
-                  <h3 style={{ marginBottom: 14 }}>Saved</h3>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                    {saved.map(renderCard)}
-                  </div>
-                </div>
-              )}
-              <div>
-                {saved.length > 0 && <h3 style={{ marginBottom: 14 }}>All opportunities</h3>}
-                <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                  {rest.map(renderCard)}
-                </div>
-              </div>
-            </>
+            <OpportunityList saved={saved} rest={rest} competitors={competitors} analyzeCost={analyzeCost} />
           )}
         </>
       )}
