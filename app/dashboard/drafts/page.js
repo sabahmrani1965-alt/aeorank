@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import PostDraftActions from "@/components/PostDraftActions";
+import DraftsView from "@/components/DraftsView";
 
 export const dynamic = "force-dynamic";
 
-export default async function DashboardDraftsPage() {
+export default async function DashboardDraftsPage({ searchParams }) {
   const supabase = createClient();
   const {
     data: { user },
@@ -12,19 +12,20 @@ export default async function DashboardDraftsPage() {
 
   const { data: drafts } = await supabase
     .from("report_drafts")
-    .select("id, subreddit, title, body, posted, created_at")
+    .select("id, subreddit, title, body, posted, permalink, created_at")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 
   return (
     <section className="section">
       <div className="container">
-        <span className="section-tag">( saved drafts )</span>
-        <h2>Your Reddit post drafts</h2>
+        <span className="section-tag">( draft library )</span>
+        <h2>Your Reddit drafts</h2>
         <p className="section-sub">
           AI-suggested drafts from your reports, plus anything you compose
           yourself. Copy one and post it from your own account — nothing
-          here is posted automatically.
+          here is posted automatically. Switch to Table to search, filter,
+          and add the live link once you've posted something.
         </p>
 
         <div style={{ marginBottom: 24 }}>
@@ -38,25 +39,7 @@ export default async function DashboardDraftsPage() {
             No drafts yet — generate a report, or click "+ New draft" above to write one.
           </div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-            {drafts.map((d) => (
-              <div key={d.id} className="card">
-                <div className="reddit-mock">
-                  <div className="reddit-mock-meta">
-                    {d.subreddit} · {d.posted ? "Posted" : "Draft — not posted yet"}
-                  </div>
-                  <div className="reddit-mock-title">{d.title}</div>
-                  <div className="reddit-mock-body">{d.body}</div>
-                  <PostDraftActions
-                    title={d.title}
-                    body={d.body}
-                    draftId={d.id}
-                    initialPosted={d.posted}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
+          <DraftsView drafts={drafts} initialView={searchParams?.view === "table" ? "table" : "cards"} />
         )}
       </div>
     </section>
