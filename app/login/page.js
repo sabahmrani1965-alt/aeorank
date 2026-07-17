@@ -37,12 +37,23 @@ function LoginForm() {
     setLoading(true);
     try {
       const supabase = createClient();
-      const { error: signInError } = await supabase.auth.signInWithPassword({
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       if (signInError) throw signInError;
-      router.push("/dashboard");
+
+      // Posters land on /poster, not the customer dashboard.
+      let destination = "/dashboard";
+      if (signInData?.user) {
+        const { data: profile } = await supabase
+          .from("users")
+          .select("role")
+          .eq("id", signInData.user.id)
+          .maybeSingle();
+        if (profile?.role === "poster") destination = "/poster";
+      }
+      router.push(destination);
       router.refresh();
     } catch (err) {
       setError(err?.message || "Something went wrong. Please try again.");

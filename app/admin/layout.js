@@ -22,6 +22,7 @@ export default async function AdminLayout({ children }) {
             <Link href="/admin" className="header-link">Overview</Link>
             <Link href="/admin/users" className="header-link">Users</Link>
             <Link href="/admin/drafts" className="header-link">Drafts</Link>
+            <Link href="/admin/posters" className="header-link">Posters</Link>
             <Link href="/admin/credits" className="header-link">Credits</Link>
           </div>
         </div>

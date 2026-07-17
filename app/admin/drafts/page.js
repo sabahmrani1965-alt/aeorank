@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import AssignDraftControl from "@/components/AssignDraftControl";
 
 export const dynamic = "force-dynamic";
 
@@ -21,12 +22,13 @@ export default async function AdminDraftsPage() {
     );
   }
 
-  const [{ data: drafts }, { data: users }] = await Promise.all([
+  const [{ data: drafts }, { data: users }, { data: posters }] = await Promise.all([
     admin
       .from("report_drafts")
-      .select("id, user_id, type, subreddit, title, body, posted, posted_at, permalink, created_at")
+      .select("id, user_id, type, subreddit, title, body, posted, posted_at, permalink, assigned_to, created_at")
       .order("created_at", { ascending: false }),
     admin.from("users").select("id, email"),
+    admin.from("users").select("id, email").eq("role", "poster"),
   ]);
 
   const emailByUser = new Map((users || []).map((u) => [u.id, u.email]));
@@ -53,6 +55,7 @@ export default async function AdminDraftsPage() {
                   <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Subreddit</th>
                   <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Content</th>
                   <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Status</th>
+                  <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Assigned to</th>
                 </tr>
               </thead>
               <tbody>
@@ -88,6 +91,9 @@ export default async function AdminDraftsPage() {
                       ) : (
                         <span style={{ color: "var(--text-dim)" }}>Draft</span>
                       )}
+                    </td>
+                    <td style={{ padding: "10px 12px" }}>
+                      <AssignDraftControl draftId={d.id} posters={posters || []} initialAssignedTo={d.assigned_to} />
                     </td>
                   </tr>
                 ))}

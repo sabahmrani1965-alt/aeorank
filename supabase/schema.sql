@@ -8,6 +8,10 @@ CREATE TABLE IF NOT EXISTS public.users (
   id                 UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email              TEXT NOT NULL,
   stripe_customer_id TEXT UNIQUE,
+  -- 'customer' (default) | 'poster' — posters are admin-invited accounts
+  -- that fulfill drafts assigned to them across customer accounts, not
+  -- customers themselves. See report_drafts.assigned_to below.
+  role               TEXT NOT NULL DEFAULT 'customer',
   created_at         TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -139,10 +143,15 @@ CREATE TABLE IF NOT EXISTS public.report_drafts (
   -- fetches from cloud IPs, same constraint documented in lib/reddit.js),
   -- so this stays a self-reported reference, not a scraped metric.
   permalink  TEXT,
+  -- Admin-assigned poster (public.users.role = 'poster') who fulfills this
+  -- draft on the owning customer's behalf — see app/poster/**. NULL =
+  -- unassigned, still the owner's own responsibility to post.
+  assigned_to UUID REFERENCES public.users(id) ON DELETE SET NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE INDEX IF NOT EXISTS report_drafts_user_id_idx ON public.report_drafts(user_id);
+CREATE INDEX IF NOT EXISTS report_drafts_assigned_to_idx ON public.report_drafts(assigned_to);
 
 ALTER TABLE public.report_drafts ENABLE ROW LEVEL SECURITY;
 
@@ -157,6 +166,17 @@ CREATE POLICY "Users can insert own drafts"
 CREATE POLICY "Users can update own drafts"
   ON public.report_drafts FOR UPDATE
   USING (auth.uid() = user_id);
+
+-- A poster's own uid matching assigned_to is sufficient proof of
+-- assignment — only the service-role client (admin) ever sets
+-- assigned_to, so this can't be self-granted.
+CREATE POLICY "Posters can read assigned drafts"
+  ON public.report_drafts FOR SELECT
+  USING (auth.uid() = assigned_to);
+
+CREATE POLICY "Posters can update assigned drafts"
+  ON public.report_drafts FOR UPDATE
+  USING (auth.uid() = assigned_to);
 
 CREATE POLICY "Service role can do anything on report_drafts"
   ON public.report_drafts FOR ALL

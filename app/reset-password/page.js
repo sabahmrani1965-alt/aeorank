@@ -27,6 +27,7 @@ function ResetPasswordForm() {
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
   const [hasSession, setHasSession] = useState(null);
+  const [destination, setDestination] = useState("/dashboard");
   const router = useRouter();
 
   useEffect(() => {
@@ -54,8 +55,21 @@ function ResetPasswordForm() {
       const supabase = createClient();
       const { error: updateError } = await supabase.auth.updateUser({ password });
       if (updateError) throw updateError;
+
+      // Posters (admin-invited, no company/plan of their own) land on
+      // /poster instead of the customer dashboard — otherwise they'd hit
+      // an empty /dashboard with no obvious way to find their actual page.
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      let next = "/dashboard";
+      if (user) {
+        const { data: profile } = await supabase.from("users").select("role").eq("id", user.id).maybeSingle();
+        if (profile?.role === "poster") next = "/poster";
+      }
+      setDestination(next);
       setDone(true);
-      setTimeout(() => router.push("/dashboard"), 1500);
+      setTimeout(() => router.push(next), 1500);
     } catch (err) {
       setError(err?.message || "Something went wrong. Please try again.");
     } finally {
@@ -78,7 +92,9 @@ function ResetPasswordForm() {
       ) : done ? (
         <div className="card" style={{ padding: 24, textAlign: "center" }}>
           <strong>Password updated.</strong>
-          <p style={{ color: "var(--text-muted)", marginTop: 8 }}>Redirecting to your dashboard…</p>
+          <p style={{ color: "var(--text-muted)", marginTop: 8 }}>
+            Redirecting to {destination === "/poster" ? "your assignments" : "your dashboard"}…
+          </p>
         </div>
       ) : (
         <form onSubmit={submit} style={{ marginTop: 24 }}>
