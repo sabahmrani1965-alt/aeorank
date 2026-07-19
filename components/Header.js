@@ -17,7 +17,7 @@ export default function Header() {
       <div className="header-actions">
         <Link href="/about" className="header-link">About</Link>
         <HeaderAuthLink />
-        <Link href="/contact" className="btn btn-primary">
+        <Link href="/signup" className="btn btn-primary">
           Get Started →
         </Link>
       </div>
