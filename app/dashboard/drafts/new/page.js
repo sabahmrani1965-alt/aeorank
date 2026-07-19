@@ -66,6 +66,7 @@ function NewDraftForm() {
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [savedInfo, setSavedInfo] = useState(null); // { creditsCharged, creditsRemaining }
 
   const [analyzing, setAnalyzing] = useState(false);
   const [analyzeError, setAnalyzeError] = useState("");
@@ -143,9 +144,12 @@ function NewDraftForm() {
         }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data?.error || "Could not save draft.");
-      router.push("/dashboard/drafts");
-      router.refresh();
+      if (!res.ok) throw new Error(data?.error || "Could not save post.");
+      setSavedInfo({ creditsCharged: data.creditsCharged, creditsRemaining: data.creditsRemaining });
+      setTimeout(() => {
+        router.push("/dashboard/drafts");
+        router.refresh();
+      }, 1400);
     } catch (e) {
       setError(e?.message || "Something went wrong.");
     } finally {
@@ -158,10 +162,10 @@ function NewDraftForm() {
   return (
     <section className="section">
       <div className="container" style={{ maxWidth: 720 }}>
-        <span className="section-tag">( draft studio )</span>
-        <h2>Compose a Reddit draft</h2>
+        <span className="section-tag">( create post )</span>
+        <h2>Create a Reddit post</h2>
         <p className="section-sub">
-          AI-assisted drafting to help you write, nothing here posts for
+          AI-assisted writing to help you create it, nothing here posts for
           you — copy the result and publish it yourself from your own
           account.
         </p>
@@ -180,6 +184,17 @@ function NewDraftForm() {
           ))}
         </div>
 
+        {savedInfo ? (
+          <div className="card" style={{ padding: 32, textAlign: "center" }}>
+            <div style={{ fontSize: 17, fontWeight: 700, marginBottom: 8 }}>✓ Saved to Track Task</div>
+            <p style={{ color: "var(--text-dim)", margin: 0 }}>
+              <strong style={{ color: "#ff8a8a" }}>−{savedInfo.creditsCharged} credits</strong>
+              {typeof savedInfo.creditsRemaining === "number" && (
+                <> · {savedInfo.creditsRemaining} credits remaining</>
+              )}
+            </p>
+          </div>
+        ) : (
         <form onSubmit={save} className="card" style={{ padding: 24 }}>
           <label className="auth-field">
             <span>Subreddit</span>
@@ -354,10 +369,11 @@ function NewDraftForm() {
               ← Cancel
             </button>
             <button type="submit" className="btn btn-primary" disabled={saving}>
-              {saving ? "Saving…" : "Save draft →"}
+              {saving ? "Saving…" : "Save post →"}
             </button>
           </div>
         </form>
+        )}
       </div>
     </section>
   );
