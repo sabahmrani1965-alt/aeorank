@@ -36,7 +36,13 @@ export default function DraftsView({ drafts, initialView = "cards" }) {
                 </div>
                 <div className="reddit-mock-title">{d.title}</div>
                 <div className="reddit-mock-body">{d.body}</div>
-                <PostDraftActions title={d.title} body={d.body} draftId={d.id} initialPosted={d.posted} />
+                <PostDraftActions
+                  title={d.title}
+                  body={d.body}
+                  draftId={d.id}
+                  initialPosted={d.posted}
+                  initialPermalink={d.permalink}
+                />
               </div>
             </div>
           ))}

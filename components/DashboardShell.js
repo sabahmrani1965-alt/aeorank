@@ -36,8 +36,8 @@ const NAV_GROUPS = [
   {
     label: "Create",
     links: [
-      { href: "/dashboard/drafts/new", label: "AI Draft Studio", icon: IconPencil },
-      { href: "/dashboard/drafts", label: "Draft Library", icon: IconLayers },
+      { href: "/dashboard/drafts/new", label: "Add Task", icon: IconPencil },
+      { href: "/dashboard/drafts", label: "Track Task", icon: IconLayers },
     ],
   },
   { label: "Analyze", links: [{ href: "/dashboard/reports", label: "Reports", icon: IconChart }] },
