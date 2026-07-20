@@ -109,8 +109,8 @@ export default async function ReferAFriendPage() {
                         fontWeight: 700,
                         padding: "4px 10px",
                         borderRadius: 999,
-                        background: r.windowOpen ? "rgba(110, 231, 183, 0.15)" : "rgba(255,255,255,.06)",
-                        color: r.windowOpen ? "#6EE7B7" : "var(--text-dim)",
+                        background: r.windowOpen ? "var(--state-success-bg)" : "var(--state-neutral-bg)",
+                        color: r.windowOpen ? "var(--state-success-fg)" : "var(--state-neutral-fg)",
                         whiteSpace: "nowrap",
                       }}
                     >

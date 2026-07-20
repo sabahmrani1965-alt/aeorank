@@ -16,9 +16,11 @@ export default async function PosterLayout({ children }) {
   if (profile?.role !== "poster") redirect("/dashboard");
 
   return (
-    <div className="container" style={{ paddingTop: 24, paddingBottom: 60 }}>
-      <PosterHeader email={user.email} />
-      {children}
+    <div className="kc-theme" style={{ minHeight: "100vh" }}>
+      <div className="container" style={{ paddingTop: 24, paddingBottom: 60 }}>
+        <PosterHeader email={user.email} />
+        {children}
+      </div>
     </div>
   );
 }

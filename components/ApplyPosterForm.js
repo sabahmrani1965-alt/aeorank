@@ -30,7 +30,7 @@ export default function ApplyPosterForm({ referral }) {
 
   if (submitted) {
     return (
-      <p style={{ color: "#7ee3a3", fontSize: 15, margin: 0 }}>
+      <p style={{ color: "var(--msg-success)", fontSize: 15, margin: 0 }}>
         Thanks — your application is in. We'll be in touch by email if it's a fit.
       </p>
     );
@@ -54,7 +54,7 @@ export default function ApplyPosterForm({ referral }) {
         {loading ? "Submitting…" : "Apply →"}
       </button>
       {error && (
-        <p role="alert" style={{ color: "#ff8a8a", fontSize: 13.5, margin: 0 }}>
+        <p role="alert" style={{ color: "var(--msg-danger)", fontSize: 13.5, margin: 0 }}>
           {error}
         </p>
       )}

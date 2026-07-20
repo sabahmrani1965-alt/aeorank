@@ -20,6 +20,58 @@
   --danger: #ef4444;
   --shadow-glow: 0 10px 40px -10px var(--accent-glow);
   --radius: 16px;
+
+  /* Semantic status colors — used by inline badges/messages across the
+     app. Kept as variables (not hardcoded per-usage) so a nested theme
+     like .kc-theme below can re-map them without touching every call site. */
+  --msg-success: #7ee3a3;
+  --msg-danger: #ff8a8a;
+  --state-neutral-bg: rgba(255, 255, 255, 0.06);
+  --state-neutral-fg: var(--text-dim);
+  --state-success-bg: rgba(110, 231, 183, 0.15);
+  --state-success-fg: #6ee7b7;
+  --state-danger-bg: rgba(255, 120, 120, 0.12);
+  --state-danger-fg: #ff8a8a;
+}
+
+/* ── KarmaCrew theme ───────────────────────────────────────────
+   Scoped re-skin for the poster-facing area (app/poster/**,
+   /apply-poster, and /login+/forgot-password+/reset-password when
+   visited from the poster domain — see AuthSplitLayout.js). Deliberately
+   light + teal/gold, the opposite of AEOrank's dark navy/amber, so it
+   reads as a separate site rather than "AEOrank's poster page". Every
+   class below (.card, .btn, .kpi, etc.) is unchanged — only the CSS
+   variables they read are overridden within this scope. */
+.kc-theme {
+  --bg: #ffffff;
+  --bg-2: #f7faf9;
+  --bg-3: #eef4f2;
+  --card: #ffffff;
+  --card-2: #f3f7f6;
+  --card-border: #dbe6e2;
+  --card-border-soft: #e7f0ed;
+  --text: #17241f;
+  --text-dim: #4b5f59;
+  --text-muted: #6b7d77;
+  --accent: #0e7c66;
+  --accent-2: #139c81;
+  --accent-3: #f2b84b;
+  --accent-ink: #ffffff;
+  --accent-dim: rgba(14, 124, 102, 0.1);
+  --accent-glow: rgba(14, 124, 102, 0.25);
+  --shadow-glow: 0 10px 40px -10px var(--accent-glow);
+
+  --msg-success: #0e7c66;
+  --msg-danger: #b91c1c;
+  --state-neutral-bg: rgba(23, 36, 31, 0.06);
+  --state-neutral-fg: var(--text-dim);
+  --state-success-bg: rgba(14, 124, 102, 0.12);
+  --state-success-fg: #0e7c66;
+  --state-danger-bg: rgba(185, 28, 28, 0.1);
+  --state-danger-fg: #b91c1c;
+
+  background: var(--bg);
+  color: var(--text);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }

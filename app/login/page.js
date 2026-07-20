@@ -65,7 +65,7 @@ function LoginForm() {
   return (
     <AuthSplitLayout>
       <span className="section-tag">( account )</span>
-      <h2>Log in to AEOrank</h2>
+      <h2>Log in</h2>
       <p className="section-sub" style={{ marginBottom: 24 }}>
         Enter the email and password you used to subscribe.
       </p>
@@ -102,7 +102,7 @@ function LoginForm() {
           {loading ? "Logging in…" : "Log in →"}
         </button>
         {error && (
-          <p role="alert" style={{ color: "#ff8a8a", marginTop: 12, fontSize: 14 }}>
+          <p role="alert" style={{ color: "var(--msg-danger)", marginTop: 12, fontSize: 14 }}>
             {error}
           </p>
         )}

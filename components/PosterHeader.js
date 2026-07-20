@@ -12,7 +12,8 @@ const TABS = [
 
 // Minimal header for /poster — posters aren't customers (no sidebar, no
 // credits, no subscription), so this deliberately doesn't reuse
-// DashboardShell.
+// DashboardShell. Branded as KarmaCrew (see .kc-theme in globals.css) —
+// posters see a distinct site, not "AEOrank's poster page".
 export default function PosterHeader({ email }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -28,8 +29,8 @@ export default function PosterHeader({ email }) {
     <div style={{ marginBottom: 32 }}>
       <header className="header" style={{ marginBottom: 20 }}>
         <div className="logo">
-          <span className="logo-mark">A</span>
-          AEOrank — Poster
+          <span className="logo-mark">K</span>
+          KarmaCrew
         </div>
         <div className="header-actions">
           <span className="header-link">{email}</span>

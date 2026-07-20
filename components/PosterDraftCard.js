@@ -56,7 +56,7 @@ export default function PosterDraftCard({ draft }) {
 
         {completed ? (
           <div style={{ marginTop: 14, display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ color: "#7ee3a3", fontSize: 13.5, fontWeight: 600 }}>✓ Completed</span>
+            <span style={{ color: "var(--msg-success)", fontSize: 13.5, fontWeight: 600 }}>✓ Completed</span>
             {savedPermalink && (
               <a href={savedPermalink} target="_blank" rel="noopener noreferrer" style={{ fontSize: 13 }}>
                 View live ↗
@@ -82,7 +82,7 @@ export default function PosterDraftCard({ draft }) {
           </div>
         )}
         {error && (
-          <p role="alert" style={{ color: "#ff8a8a", fontSize: 13, marginTop: 8 }}>
+          <p role="alert" style={{ color: "var(--msg-danger)", fontSize: 13, marginTop: 8 }}>
             {error}
           </p>
         )}

@@ -81,7 +81,7 @@ function ForgotPasswordForm() {
             {loading ? "Sending…" : "Send reset link →"}
           </button>
           {error && (
-            <p role="alert" style={{ color: "#ff8a8a", marginTop: 12, fontSize: 14 }}>
+            <p role="alert" style={{ color: "var(--msg-danger)", marginTop: 12, fontSize: 14 }}>
               {error}
             </p>
           )}
