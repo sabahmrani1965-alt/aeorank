@@ -37,44 +37,252 @@
 /* ── KarmaCrew theme ───────────────────────────────────────────
    Scoped re-skin for the poster-facing area (app/poster/**,
    /apply-poster, and /login+/forgot-password+/reset-password when
-   visited from the poster domain — see AuthSplitLayout.js). Deliberately
-   light + Reddit's own orange/blue brand colors — this is a "get paid to
-   post on Reddit" site, so leaning into that association reads more
-   relevant than an arbitrary palette, while still staying visually
-   distinct from AEOrank's dark navy/amber. Every class below (.card,
-   .btn, .kpi, etc.) is unchanged — only the CSS variables they read are
-   overridden within this scope. */
+   visited from the poster domain — see AuthSplitLayout.js). Dark, with
+   Reddit's own orange/blue brand colors — this is a "get paid to post on
+   Reddit" site, so leaning into that association reads more relevant
+   than an arbitrary palette, while a dark near-black base (vs. AEOrank's
+   dark NAVY) keeps the two products visually distinct side by side.
+   Every class below (.card, .btn, .kpi, .app-shell, etc.) is unchanged —
+   only the CSS variables they read are overridden within this scope. */
 .kc-theme {
-  --bg: #ffffff;
-  --bg-2: #fff6f2;
-  --bg-3: #ffece3;
-  --card: #ffffff;
-  --card-2: #fff3ed;
-  --card-border: #ffd9c7;
-  --card-border-soft: #ffe6d9;
-  --text: #241a12;
-  --text-dim: #5f4f45;
-  --text-muted: #7d6c61;
+  --bg: #0b0e14;
+  --bg-2: #11151d;
+  --bg-3: #171c26;
+  --card: #12161f;
+  --card-2: #181e29;
+  --card-border: #232938;
+  --card-border-soft: #1c212e;
+  --text: #f4f6f8;
+  --text-dim: #9aa4b2;
+  --text-muted: #6b7686;
   --accent: #ff4500;
   --accent-2: #ff6a33;
   --accent-3: #0079d3;
   --accent-ink: #ffffff;
-  --accent-dim: rgba(255, 69, 0, 0.1);
-  --accent-glow: rgba(255, 69, 0, 0.25);
+  --accent-dim: rgba(255, 69, 0, 0.15);
+  --accent-glow: rgba(255, 69, 0, 0.4);
   --shadow-glow: 0 10px 40px -10px var(--accent-glow);
 
-  --msg-success: #16a34a;
-  --msg-danger: #b91c1c;
-  --state-neutral-bg: rgba(36, 26, 18, 0.06);
+  --msg-success: #22c55e;
+  --msg-danger: #f87171;
+  --state-neutral-bg: rgba(255, 255, 255, 0.06);
   --state-neutral-fg: var(--text-dim);
-  --state-success-bg: rgba(22, 163, 74, 0.12);
-  --state-success-fg: #16a34a;
-  --state-danger-bg: rgba(185, 28, 28, 0.1);
-  --state-danger-fg: #b91c1c;
+  --state-success-bg: rgba(34, 197, 94, 0.15);
+  --state-success-fg: #22c55e;
+  --state-danger-bg: rgba(239, 68, 68, 0.15);
+  --state-danger-fg: #f87171;
+  --state-claimed-bg: rgba(255, 69, 0, 0.15);
+  --state-claimed-fg: #ff8a5c;
+  --state-paid-bg: rgba(234, 179, 8, 0.15);
+  --state-paid-fg: #eab308;
+  --state-available-bg: rgba(0, 121, 211, 0.15);
+  --state-available-fg: #4db8ff;
 
   background: var(--bg);
   color: var(--text);
 }
+
+/* Hardcoded (not variable-driven) elsewhere in this file since they were
+   written for AEOrank's dark-navy shell specifically — re-pinned here so
+   the KarmaCrew sidebar shell (reusing .app-shell/.app-sidebar/.app-topbar
+   wholesale, see components/karmacrew/Sidebar.js) doesn't inherit a navy
+   tint on a near-black background. */
+.kc-theme .app-topbar { background: rgba(11, 14, 20, 0.75); }
+.kc-theme .app-sidebar-backdrop { background: rgba(0, 0, 0, 0.6); }
+
+/* ----------------- KarmaCrew: sidebar bottom section ----------------- */
+.kc-sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--card-border-soft);
+}
+.kc-balance-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--card);
+  border: 1px solid var(--card-border-soft);
+  border-radius: 12px;
+}
+.kc-balance-pill-label { font-size: 12px; color: var(--text-muted); }
+.kc-balance-pill-value { font-size: 15px; font-weight: 700; color: var(--state-success-fg); }
+
+.kc-account-row { display: flex; align-items: center; gap: 10px; padding: 0 2px; }
+.kc-avatar {
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-3) 100%);
+  color: var(--accent-ink);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 13px;
+}
+.kc-account-email {
+  font-size: 12.5px;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+
+.kc-discord-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #5865f2;
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: transform .12s ease, box-shadow .2s ease;
+}
+.kc-discord-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -6px rgba(88, 101, 242, .6); color: #fff; }
+
+/* ----------------- KarmaCrew: stats bar ----------------- */
+.kc-stats-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px 20px;
+  margin: 0 20px 20px;
+}
+@media (min-width: 769px) { .kc-stats-bar { margin: 0 28px 24px; } }
+.kc-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--card);
+  border: 1px solid var(--card-border-soft);
+  border-radius: 999px;
+  font-size: 13.5px;
+}
+.kc-stat-icon { font-size: 15px; line-height: 1; }
+.kc-stat-value { font-weight: 700; color: var(--text); }
+.kc-stat-label { color: var(--text-muted); }
+
+/* ----------------- KarmaCrew: task cards ----------------- */
+.kc-task-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+}
+.kc-task-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--card-border);
+  border-radius: 18px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.kc-task-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: 0 16px 40px -12px var(--accent-glow);
+}
+.kc-task-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.kc-task-subreddit { font-weight: 700; font-size: 15px; }
+.kc-task-reward { font-weight: 800; font-size: 18px; color: var(--state-success-fg); white-space: nowrap; }
+.kc-task-meta { display: flex; flex-wrap: wrap; gap: 6px 10px; font-size: 12.5px; color: var(--text-muted); }
+.kc-task-desc { font-size: 13.5px; color: var(--text-dim); line-height: 1.5; flex: 1; }
+
+/* ----------------- KarmaCrew: badges ----------------- */
+.kc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+.kc-badge-available { background: var(--state-available-bg); color: var(--state-available-fg); }
+.kc-badge-claimed { background: var(--state-claimed-bg); color: var(--state-claimed-fg); }
+.kc-badge-submitted { background: var(--state-success-bg); color: var(--state-success-fg); }
+.kc-badge-paid { background: var(--state-paid-bg); color: var(--state-paid-fg); }
+.kc-badge-rejected { background: var(--state-danger-bg); color: var(--state-danger-fg); }
+.kc-badge-neutral { background: var(--state-neutral-bg); color: var(--state-neutral-fg); }
+
+/* ----------------- KarmaCrew: countdown ----------------- */
+.kc-countdown {
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--text);
+}
+.kc-countdown.kc-countdown-low { color: var(--state-danger-fg); animation: kc-pulse 1s infinite; }
+@keyframes kc-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+
+/* ----------------- KarmaCrew: draft/code viewer ----------------- */
+.kc-code-block {
+  position: relative;
+  background: #05070b;
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 18px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #d7dde5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+/* ----------------- KarmaCrew: empty state ----------------- */
+.kc-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  padding: 64px 24px;
+  color: var(--text-dim);
+}
+.kc-empty-state-icon {
+  width: 64px; height: 64px;
+  border-radius: 999px;
+  background: var(--card);
+  border: 1px solid var(--card-border-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+/* ----------------- KarmaCrew: leaderboard ----------------- */
+.kc-leaderboard-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid var(--card-border-soft);
+}
+.kc-leaderboard-row.is-you { border-color: var(--accent); background: var(--accent-dim); }
+.kc-leaderboard-rank {
+  width: 28px; text-align: center;
+  font-weight: 800; font-size: 14px; color: var(--text-muted);
+  flex-shrink: 0;
+}
+.kc-leaderboard-rank.kc-rank-1 { color: #eab308; }
+.kc-leaderboard-rank.kc-rank-2 { color: #cbd5e1; }
+.kc-leaderboard-rank.kc-rank-3 { color: #d97757; }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 

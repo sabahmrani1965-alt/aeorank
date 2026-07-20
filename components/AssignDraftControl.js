@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 
-export default function AssignDraftControl({ draftId, posters, initialAssignedTo }) {
-  const [assignedTo, setAssignedTo] = useState(initialAssignedTo || "");
-  const [pending, setPending] = useState(initialAssignedTo || "");
+export default function AssignDraftControl({ draftId, posters, initialClaimedBy }) {
+  const [assignedTo, setAssignedTo] = useState(initialClaimedBy || "");
+  const [pending, setPending] = useState(initialClaimedBy || "");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -15,7 +15,7 @@ export default function AssignDraftControl({ draftId, posters, initialAssignedTo
       const res = await fetch(`/api/admin/drafts/${draftId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ assigned_to: pending || null }),
+        body: JSON.stringify({ claimed_by: pending || null }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data?.error || "Could not update assignment.");

@@ -1,9 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
-import { POSTER_RATES, rateForType } from "@/lib/posterPay";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { getEarningsSummary } from "@/lib/posterPay";
+import StatusBadge from "@/components/karmacrew/StatusBadge";
+import EarningsChart from "@/components/karmacrew/EarningsChart";
 
 export const dynamic = "force-dynamic";
-
-const TYPE_LABEL = { comment: "Comments", reply: "Replies", post: "Posts" };
 
 export default async function PosterEarningsPage() {
   const supabase = createClient();
@@ -11,76 +12,120 @@ export default async function PosterEarningsPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // RLS ("Posters can read assigned drafts") scopes this to this poster's
-  // own assignments — same source of truth as the assignments tab.
-  const { data: completed } = await supabase
-    .from("report_drafts")
-    .select("id, type, posted_at")
-    .eq("assigned_to", user.id)
-    .eq("posted", true);
+  const admin = createAdminClient();
+  const summary = admin
+    ? await getEarningsSummary(admin, user.id)
+    : { totalEarned: 0, totalPaid: 0, pending: 0, tasks: [], payouts: [] };
 
-  const rows = completed || [];
-  const byType = new Map();
-  for (const key of Object.keys(POSTER_RATES)) byType.set(key, 0);
-  for (const r of rows) {
-    const key = r.type && POSTER_RATES[r.type] != null ? r.type : "comment";
-    byType.set(key, (byType.get(key) || 0) + 1);
-  }
+  const daySpanDays = summary.tasks.length
+    ? Math.max(1, Math.ceil((Date.now() - new Date(summary.tasks[summary.tasks.length - 1].posted_at).getTime()) / 86400000))
+    : 1;
+  const averagePerDay = summary.totalEarned / daySpanDays;
 
-  const total = rows.reduce((sum, r) => sum + rateForType(r.type), 0);
+  // Real daily totals for the last 7 days — no interpolation, days with
+  // nothing submitted just show $0.
+  const days = Array.from({ length: 7 }).map((_, i) => {
+    const d = new Date();
+    d.setUTCHours(0, 0, 0, 0);
+    d.setUTCDate(d.getUTCDate() - (6 - i));
+    return d;
+  });
+  const chartPoints = days.map((d) => {
+    const key = d.toISOString().slice(0, 10);
+    const value = summary.tasks
+      .filter((t) => new Date(t.posted_at).toISOString().slice(0, 10) === key)
+      .reduce((sum, t) => sum + t.rate, 0);
+    return { label: d.toLocaleDateString(undefined, { weekday: "short" }), value };
+  });
 
   return (
     <section>
-      <span className="section-tag">( poster )</span>
+      <span className="section-tag">( earnings )</span>
       <h2>Your earnings</h2>
-      <p className="section-sub">
-        A running total from completed assignments — not a payout record.
-        Actual payment happens outside this app.
+      <p className="section-sub" style={{ marginBottom: 24 }}>
+        Real payout ledger — Pending is what's owed but not yet paid out.
       </p>
 
-      <div className="kpi-row" style={{ gridTemplateColumns: "repeat(2, 1fr)", maxWidth: 420, marginTop: 24, marginBottom: 32 }}>
-        <div className="kpi">
-          <div className="kpi-label">Completed tasks</div>
-          <div className="kpi-value">{rows.length}</div>
-        </div>
+      <div className="kpi-row" style={{ gridTemplateColumns: "repeat(4, 1fr)", marginBottom: 32 }}>
         <div className="kpi">
           <div className="kpi-label">Total earned</div>
-          <div className="kpi-value">${total.toFixed(2)}</div>
+          <div className="kpi-value">${summary.totalEarned.toFixed(2)}</div>
+        </div>
+        <div className="kpi">
+          <div className="kpi-label">Pending</div>
+          <div className="kpi-value">${summary.pending.toFixed(2)}</div>
+        </div>
+        <div className="kpi">
+          <div className="kpi-label">Paid</div>
+          <div className="kpi-value">${summary.totalPaid.toFixed(2)}</div>
+        </div>
+        <div className="kpi">
+          <div className="kpi-label">Avg / day</div>
+          <div className="kpi-value">${averagePerDay.toFixed(2)}</div>
         </div>
       </div>
 
-      <div style={{ overflowX: "auto" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <thead>
-            <tr style={{ borderBottom: "1px solid var(--card-border)" }}>
-              <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Task type</th>
-              <th style={{ textAlign: "right", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Rate</th>
-              <th style={{ textAlign: "right", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Completed</th>
-              <th style={{ textAlign: "right", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Subtotal</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.keys(POSTER_RATES).map((type) => {
-              const count = byType.get(type) || 0;
-              const rate = POSTER_RATES[type];
-              return (
-                <tr key={type} style={{ borderBottom: "1px solid var(--card-border-soft)" }}>
-                  <td style={{ padding: "10px 12px" }}>{TYPE_LABEL[type]}</td>
-                  <td style={{ padding: "10px 12px", textAlign: "right", color: "var(--text-dim)" }}>${rate.toFixed(2)}</td>
-                  <td style={{ padding: "10px 12px", textAlign: "right" }}>{count}</td>
-                  <td style={{ padding: "10px 12px", textAlign: "right", fontWeight: 600 }}>${(count * rate).toFixed(2)}</td>
+      <div className="card" style={{ padding: 24, marginBottom: 32 }}>
+        <div style={{ fontWeight: 700, marginBottom: 16 }}>This week</div>
+        <EarningsChart points={chartPoints} />
+      </div>
+
+      <div style={{ marginBottom: 32 }}>
+        <h3 style={{ marginBottom: 14 }}>Transactions</h3>
+        {summary.tasks.length === 0 ? (
+          <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
+            No completed tasks yet.
+          </div>
+        ) : (
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead>
+                <tr style={{ borderBottom: "1px solid var(--card-border)" }}>
+                  <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Date</th>
+                  <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Subreddit</th>
+                  <th style={{ textAlign: "right", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Amount</th>
+                  <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Status</th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+                {summary.tasks.map((t) => (
+                  <tr key={t.id} style={{ borderBottom: "1px solid var(--card-border-soft)" }}>
+                    <td style={{ padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>
+                      {new Date(t.posted_at).toLocaleDateString()}
+                    </td>
+                    <td style={{ padding: "10px 12px" }}>r/{t.subreddit}</td>
+                    <td style={{ padding: "10px 12px", textAlign: "right", fontWeight: 600 }}>${t.rate.toFixed(2)}</td>
+                    <td style={{ padding: "10px 12px" }}>
+                      <StatusBadge status={t.displayStatus} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
-      {rows.length === 0 && (
-        <div className="card" style={{ textAlign: "center", color: "var(--text-dim)", marginTop: 20 }}>
-          Nothing completed yet — earnings show up here once you mark assignments as posted.
-        </div>
-      )}
+      <div>
+        <h3 style={{ marginBottom: 14 }}>Withdrawal history</h3>
+        {summary.payouts.length === 0 ? (
+          <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
+            No payouts recorded yet.
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {summary.payouts.map((p) => (
+              <div key={p.id} className="card" style={{ padding: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <div style={{ fontWeight: 700 }}>${Number(p.amount).toFixed(2)}</div>
+                  {p.note && <div style={{ fontSize: 12.5, color: "var(--text-muted)", marginTop: 2 }}>{p.note}</div>}
+                </div>
+                <div style={{ fontSize: 12.5, color: "var(--text-dim)" }}>{new Date(p.created_at).toLocaleDateString()}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </section>
   );
 }

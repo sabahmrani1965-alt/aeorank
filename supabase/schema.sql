@@ -226,15 +226,29 @@ CREATE TABLE IF NOT EXISTS public.report_drafts (
   -- fetches from cloud IPs, same constraint documented in lib/reddit.js),
   -- so this stays a self-reported reference, not a scraped metric.
   permalink  TEXT,
-  -- Admin-assigned poster (public.users.role = 'poster') who fulfills this
-  -- draft on the owning customer's behalf — see app/poster/**. NULL =
-  -- unassigned, still the owner's own responsibility to post.
-  assigned_to UUID REFERENCES public.users(id) ON DELETE SET NULL,
+  -- Poster (public.users.role = 'poster') who currently holds this task —
+  -- see app/poster/**. NULL = sitting in the open marketplace pool,
+  -- unclaimed. Still admin-settable directly for a manual override/VIP
+  -- routing (components/AssignDraftControl.js), but the primary path is
+  -- now self-claim (see app/api/poster/tasks/[id]/claim).
+  claimed_by UUID REFERENCES public.users(id) ON DELETE SET NULL,
+  -- 'available' (open in the marketplace) | 'claimed' (locked to
+  -- claimed_by until claim_expires_at) | 'submitted' (permalink pasted —
+  -- cosmetically "Approved" too, there's no review gate) | 'paid' (an
+  -- admin has recorded a poster_payouts row covering this task's period;
+  -- see lib/posterTasks.js for how "paid" gets applied).
+  status     TEXT NOT NULL DEFAULT 'available',
+  claimed_at TIMESTAMPTZ,
+  -- Lazily enforced (no cron in this app) — a claim past this time is
+  -- treated as expired/released the next time anything reads or claims
+  -- it, rather than needing a background sweep.
+  claim_expires_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE INDEX IF NOT EXISTS report_drafts_user_id_idx ON public.report_drafts(user_id);
-CREATE INDEX IF NOT EXISTS report_drafts_assigned_to_idx ON public.report_drafts(assigned_to);
+CREATE INDEX IF NOT EXISTS report_drafts_claimed_by_idx ON public.report_drafts(claimed_by);
+CREATE INDEX IF NOT EXISTS report_drafts_status_idx ON public.report_drafts(status);
 
 ALTER TABLE public.report_drafts ENABLE ROW LEVEL SECURITY;
 
@@ -250,16 +264,26 @@ CREATE POLICY "Users can update own drafts"
   ON public.report_drafts FOR UPDATE
   USING (auth.uid() = user_id);
 
--- A poster's own uid matching assigned_to is sufficient proof of
--- assignment — only the service-role client (admin) ever sets
--- assigned_to, so this can't be self-granted.
-CREATE POLICY "Posters can read assigned drafts"
+-- A poster's own uid matching claimed_by is sufficient proof of
+-- ownership — only the service-role client (admin) ever sets claimed_by
+-- on a row that wasn't already theirs (the atomic claim operation), so
+-- this can't be self-granted for someone else's task.
+CREATE POLICY "Posters can read claimed drafts"
   ON public.report_drafts FOR SELECT
-  USING (auth.uid() = assigned_to);
+  USING (auth.uid() = claimed_by);
 
-CREATE POLICY "Posters can update assigned drafts"
+CREATE POLICY "Posters can update claimed drafts"
   ON public.report_drafts FOR UPDATE
-  USING (auth.uid() = assigned_to);
+  USING (auth.uid() = claimed_by);
+
+-- No "posters can read available drafts" policy — the marketplace list
+-- (unclaimed rows across ALL customers) is deliberately read only via the
+-- service-role client, scoped in application code
+-- (app/api/poster/tasks/route.js), not opened up via RLS. A broad
+-- status='available' policy would let any authenticated customer session
+-- read OTHER customers' unclaimed draft titles/subreddits too, since RLS
+-- policies are OR'd together — not worth the exposure for a read that's
+-- easy to do safely server-side instead.
 
 CREATE POLICY "Service role can do anything on report_drafts"
   ON public.report_drafts FOR ALL
@@ -593,4 +617,32 @@ ALTER TABLE public.poster_applications ENABLE ROW LEVEL SECURITY;
 -- (service role), same as redeem_codes.
 CREATE POLICY "Service role can do anything on poster_applications"
   ON public.poster_applications FOR ALL
+  USING (auth.role() = 'service_role');
+
+-- ── POSTER PAYOUTS ────────────────────────────────────────────
+-- Real payout ledger — each row is one payment event an admin recorded
+-- (app/api/admin/posters/[id]/payouts), not a computed running total. A
+-- poster's "Total paid" = sum of their own rows here; "Pending" = their
+-- lifetime task earnings (computed from report_drafts, see
+-- lib/posterTasks.js) minus that sum. Mirrors the credit system's
+-- cache+ledger split (lib/credits.js) — the ledger is the source of
+-- truth, nothing here is ever recomputed/overwritten.
+CREATE TABLE IF NOT EXISTS public.poster_payouts (
+  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  poster_id  UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  amount     NUMERIC(10,2) NOT NULL,
+  note       TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS poster_payouts_poster_id_idx ON public.poster_payouts(poster_id, created_at DESC);
+
+ALTER TABLE public.poster_payouts ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Posters can read own payouts"
+  ON public.poster_payouts FOR SELECT
+  USING (auth.uid() = poster_id);
+
+CREATE POLICY "Service role can do anything on poster_payouts"
+  ON public.poster_payouts FOR ALL
   USING (auth.role() = 'service_role');

@@ -33,12 +33,12 @@ export default async function ReferAFriendPage() {
   if (admin && referredIds.length > 0) {
     const { data: drafts } = await admin
       .from("report_drafts")
-      .select("assigned_to, type, posted_at")
-      .in("assigned_to", referredIds)
-      .eq("posted", true);
+      .select("claimed_by, type, posted_at")
+      .in("claimed_by", referredIds)
+      .eq("status", "submitted");
     for (const d of drafts || []) {
-      if (!draftsByReferred.has(d.assigned_to)) draftsByReferred.set(d.assigned_to, []);
-      draftsByReferred.get(d.assigned_to).push(d);
+      if (!draftsByReferred.has(d.claimed_by)) draftsByReferred.set(d.claimed_by, []);
+      draftsByReferred.get(d.claimed_by).push(d);
     }
   }
 

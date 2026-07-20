@@ -1,6 +1,8 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import InvitePosterForm from "@/components/InvitePosterForm";
 import PosterApplicationsTable from "@/components/PosterApplicationsTable";
+import PosterPayoutControl from "@/components/PosterPayoutControl";
+import { getEarningsSummary } from "@/lib/posterPay";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +28,13 @@ export default async function AdminPostersPage() {
     .select("id, email, created_at")
     .eq("role", "poster")
     .order("created_at", { ascending: false });
+
+  const postersWithPending = await Promise.all(
+    (posters || []).map(async (p) => {
+      const summary = await getEarningsSummary(admin, p.id);
+      return { ...p, pending: summary.pending };
+    })
+  );
 
   const { data: applications } = await admin
     .from("poster_applications")
@@ -54,7 +63,7 @@ export default async function AdminPostersPage() {
         </p>
 
         <div style={{ marginBottom: 32 }}>
-          {!posters || posters.length === 0 ? (
+          {postersWithPending.length === 0 ? (
             <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
               No posters yet.
             </div>
@@ -65,14 +74,20 @@ export default async function AdminPostersPage() {
                   <tr style={{ borderBottom: "1px solid var(--border, rgba(255,255,255,.1))" }}>
                     <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Email</th>
                     <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Added</th>
+                    <th style={{ textAlign: "right", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Pending</th>
+                    <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Payout</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {posters.map((p) => (
+                  {postersWithPending.map((p) => (
                     <tr key={p.id} style={{ borderBottom: "1px solid var(--border, rgba(255,255,255,.06))" }}>
                       <td style={{ padding: "10px 12px" }}>{p.email}</td>
                       <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>
                         {new Date(p.created_at).toLocaleDateString()}
+                      </td>
+                      <td style={{ padding: "10px 12px", textAlign: "right", fontWeight: 600 }}>${p.pending.toFixed(2)}</td>
+                      <td style={{ padding: "10px 12px" }}>
+                        <PosterPayoutControl posterId={p.id} pending={p.pending} />
                       </td>
                     </tr>
                   ))}

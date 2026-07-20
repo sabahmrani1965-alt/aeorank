@@ -25,7 +25,7 @@ export default async function AdminDraftsPage() {
   const [{ data: drafts }, { data: users }, { data: posters }] = await Promise.all([
     admin
       .from("report_drafts")
-      .select("id, user_id, type, subreddit, title, body, posted, posted_at, permalink, assigned_to, created_at")
+      .select("id, user_id, type, subreddit, title, body, posted, posted_at, permalink, claimed_by, created_at")
       .order("created_at", { ascending: false }),
     admin.from("users").select("id, email"),
     admin.from("users").select("id, email").eq("role", "poster"),
@@ -93,7 +93,7 @@ export default async function AdminDraftsPage() {
                       )}
                     </td>
                     <td style={{ padding: "10px 12px" }}>
-                      <AssignDraftControl draftId={d.id} posters={posters || []} initialAssignedTo={d.assigned_to} />
+                      <AssignDraftControl draftId={d.id} posters={posters || []} initialClaimedBy={d.claimed_by} />
                     </td>
                   </tr>
                 ))}

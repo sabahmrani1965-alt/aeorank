@@ -1,0 +1,111 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Countdown from "./Countdown";
+import DraftViewer from "./DraftViewer";
+import SubmissionForm from "./SubmissionForm";
+import StatusBadge from "./StatusBadge";
+import RewardBadge from "./RewardBadge";
+
+const TYPE_LABEL = { comment: "Comment", reply: "Reply", post: "Post" };
+
+const DOS_DONTS = {
+  dos: ["Sound like a real person, not an ad", "Keep it on-topic for the subreddit", "Only post once — no duplicates"],
+  donts: ["Don't mention you were paid to post this", "Don't spam the same content elsewhere", "Don't use engagement-bait phrasing"],
+};
+
+export default function TaskDetail({ task, reward }) {
+  const router = useRouter();
+  const [expired, setExpired] = useState(false);
+
+  if (task.status === "submitted") {
+    return (
+      <section>
+        <span className="section-tag">( submitted )</span>
+        <h2>r/{task.subreddit}</h2>
+        <div className="card" style={{ padding: 24, marginTop: 20 }}>
+          <StatusBadge status="submitted" />
+          <p style={{ marginTop: 14, color: "var(--text-dim)" }}>
+            Nice work — this one's in. It'll show up in your Earnings and History.
+          </p>
+          {task.permalink && (
+            <a href={task.permalink} target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)", fontSize: 14 }}>
+              View live post ↗
+            </a>
+          )}
+          <div style={{ marginTop: 18 }}>
+            <button type="button" onClick={() => router.push("/poster")} className="btn btn-primary">
+              Pick another task →
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (expired) {
+    return (
+      <section>
+        <div className="kc-empty-state fade-in">
+          <div className="kc-empty-state-icon">⏰</div>
+          <div style={{ fontWeight: 700, fontSize: 16, color: "var(--text)" }}>Time's up on this one.</div>
+          <div style={{ fontSize: 13.5, maxWidth: 340 }}>It's back in the pool for someone else — grab a new task.</div>
+          <button type="button" onClick={() => router.push("/poster")} className="btn btn-primary btn-sm" style={{ marginTop: 14 }}>
+            Back to tasks →
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section>
+      <span className="section-tag">( in progress )</span>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 6 }}>
+        <h2 style={{ margin: 0 }}>r/{task.subreddit}</h2>
+        <RewardBadge amount={reward} />
+      </div>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24, flexWrap: "wrap" }}>
+        <span className="kc-badge kc-badge-neutral">{TYPE_LABEL[task.type] || "Comment"}</span>
+        <Countdown expiresAt={task.claim_expires_at} onExpire={() => setExpired(true)} />
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 24, alignItems: "start" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          <div className="card" style={{ padding: 22 }}>
+            <div style={{ fontWeight: 700, marginBottom: 10 }}>Instructions</div>
+            <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.6, margin: 0 }}>{task.title}</p>
+          </div>
+
+          <div className="card" style={{ padding: 22 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+              <div>
+                <div style={{ fontWeight: 700, marginBottom: 8, fontSize: 13.5, color: "var(--msg-success)" }}>Do</div>
+                <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: "var(--text-dim)", lineHeight: 1.7 }}>
+                  {DOS_DONTS.dos.map((d) => (
+                    <li key={d}>{d}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <div style={{ fontWeight: 700, marginBottom: 8, fontSize: 13.5, color: "var(--msg-danger)" }}>Don't</div>
+                <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: "var(--text-dim)", lineHeight: 1.7 }}>
+                  {DOS_DONTS.donts.map((d) => (
+                    <li key={d}>{d}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="card" style={{ padding: 22 }}>
+            <DraftViewer taskId={task.id} initialTitle={task.title} initialBody={task.body} type={task.type} />
+          </div>
+        </div>
+
+        <SubmissionForm taskId={task.id} />
+      </div>
+    </section>
+  );
+}
