@@ -2,7 +2,11 @@
 
 import { useMemo, useState } from "react";
 
-function PermalinkCell({ id, permalink }) {
+function shortId(id) {
+  return (id || "").slice(0, 8);
+}
+
+function ViewOnRedditCell({ id, permalink }) {
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState(permalink || "");
   const [current, setCurrent] = useState(permalink || "");
@@ -47,7 +51,7 @@ function PermalinkCell({ id, permalink }) {
     return (
       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
         <a href={current} target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)", fontSize: 13 }}>
-          View live ↗
+          View on Reddit ↗
         </a>
         <button
           type="button"
@@ -68,6 +72,107 @@ function PermalinkCell({ id, permalink }) {
     >
       + Add link
     </button>
+  );
+}
+
+function TaskRow({ task }) {
+  const [expanded, setExpanded] = useState(false);
+  const [posted, setPosted] = useState(task.posted);
+  const [saving, setSaving] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  async function toggleMarked() {
+    const next = !posted;
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/drafts/${task.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ posted: next }),
+      });
+      if (res.ok) setPosted(next);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function copyContent() {
+    try {
+      await navigator.clipboard.writeText(`${task.title}\n\n${task.body}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard API unavailable — nothing to fall back to.
+    }
+  }
+
+  return (
+    <>
+      <tr style={{ borderBottom: expanded ? "none" : "1px solid var(--card-border-soft)" }}>
+        <td style={{ padding: "10px 12px" }}>
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: 0,
+              fontSize: 13,
+              fontFamily: "ui-monospace, monospace",
+              color: "var(--text-dim)",
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+            }}
+          >
+            <span style={{ display: "inline-block", transform: expanded ? "rotate(90deg)" : "none", transition: "transform .15s" }}>
+              ▸
+            </span>
+            {shortId(task.id)}
+          </button>
+        </td>
+        <td style={{ padding: "10px 12px", fontSize: 13.5 }}>{task.subreddit}</td>
+        <td style={{ padding: "10px 12px" }}>
+          <span
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              padding: "4px 10px",
+              borderRadius: 999,
+              background: posted ? "rgba(110, 231, 183, 0.15)" : "rgba(255,255,255,.06)",
+              color: posted ? "#6EE7B7" : "var(--text-dim)",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {posted ? "Posted" : "Draft"}
+          </span>
+        </td>
+        <td style={{ padding: "10px 12px" }}>
+          <ViewOnRedditCell id={task.id} permalink={task.permalink} />
+        </td>
+      </tr>
+      {expanded && (
+        <tr style={{ borderBottom: "1px solid var(--card-border-soft)" }}>
+          <td colSpan={4} style={{ padding: "4px 12px 16px" }}>
+            <div className="card" style={{ padding: 16 }}>
+              <div style={{ fontWeight: 600, marginBottom: 6 }}>{task.title}</div>
+              <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.55, margin: 0, marginBottom: 14, whiteSpace: "pre-wrap" }}>
+                {task.body}
+              </p>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+                <button type="button" onClick={copyContent} className="btn btn-secondary btn-sm">
+                  {copied ? "Copied" : "Copy content"}
+                </button>
+                <button type="button" onClick={toggleMarked} disabled={saving} className="btn btn-secondary btn-sm">
+                  {posted ? "✓ Marked as posted" : "Mark as posted"}
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+      )}
+    </>
   );
 }
 
@@ -127,45 +232,15 @@ export default function TrackTasksTable({ tasks }) {
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ borderBottom: "1px solid var(--card-border)" }}>
-                <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Date</th>
+                <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Task ID</th>
                 <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Subreddit</th>
-                <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Content</th>
                 <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Status</th>
-                <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Live link</th>
+                <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>View on Reddit</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map((t) => (
-                <tr key={t.id} style={{ borderBottom: "1px solid var(--card-border-soft)" }}>
-                  <td style={{ padding: "10px 12px", color: "var(--text-dim)", fontSize: 13, whiteSpace: "nowrap" }}>
-                    {new Date(t.created_at).toLocaleDateString()}
-                  </td>
-                  <td style={{ padding: "10px 12px", fontSize: 13.5 }}>{t.subreddit}</td>
-                  <td style={{ padding: "10px 12px", fontSize: 13.5, maxWidth: 360 }}>
-                    <div style={{ fontWeight: 600, marginBottom: 2 }}>{t.title}</div>
-                    <div style={{ color: "var(--text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                      {t.body}
-                    </div>
-                  </td>
-                  <td style={{ padding: "10px 12px" }}>
-                    <span
-                      style={{
-                        fontSize: 12,
-                        fontWeight: 700,
-                        padding: "4px 10px",
-                        borderRadius: 999,
-                        background: t.posted ? "rgba(110, 231, 183, 0.15)" : "rgba(255,255,255,.06)",
-                        color: t.posted ? "#6EE7B7" : "var(--text-dim)",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {t.posted ? "Posted" : "Draft"}
-                    </span>
-                  </td>
-                  <td style={{ padding: "10px 12px" }}>
-                    <PermalinkCell id={t.id} permalink={t.permalink} />
-                  </td>
-                </tr>
+                <TaskRow key={t.id} task={t} />
               ))}
             </tbody>
           </table>

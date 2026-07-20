@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import DraftsView from "@/components/DraftsView";
+import TrackTasksTable from "@/components/TrackTasksTable";
 
 export const dynamic = "force-dynamic";
 
-export default async function DashboardDraftsPage({ searchParams }) {
+export default async function DashboardDraftsPage() {
   const supabase = createClient();
   const {
     data: { user },
@@ -24,8 +24,8 @@ export default async function DashboardDraftsPage({ searchParams }) {
         <p className="section-sub">
           AI-suggested replies and posts from your reports, plus anything you
           compose yourself. Copy one and post it from your own account —
-          nothing here is posted automatically. Switch to Table to search,
-          filter, and add the live link once you've posted something.
+          nothing here is posted automatically. Expand a row to read the
+          content, copy it, and add the live link once you've posted it.
         </p>
 
         <div style={{ marginBottom: 24 }}>
@@ -39,7 +39,7 @@ export default async function DashboardDraftsPage({ searchParams }) {
             No tasks yet — generate a report, or click "+ New task" above to write one.
           </div>
         ) : (
-          <DraftsView drafts={drafts} initialView={searchParams?.view === "table" ? "table" : "cards"} />
+          <TrackTasksTable tasks={drafts} />
         )}
       </div>
     </section>
