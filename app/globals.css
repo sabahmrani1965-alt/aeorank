@@ -1772,6 +1772,34 @@ button { font-family: inherit; }
 
 /* ================= CrewQuest landing page (/crewquest) ================= */
 
+/* Join tabs (components/JoinTabs.js, on /apply-poster) */
+.cq-join-tabs {
+  display: flex;
+  gap: 8px;
+  max-width: 420px;
+  margin: 0 auto;
+  background: var(--bg-3);
+  border: 1px solid var(--card-border-soft);
+  border-radius: 12px;
+  padding: 4px;
+}
+.cq-join-tab {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 9px;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.cq-join-tab.is-active {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
 /* Scroll-reveal (components/crewquest/ScrollReveal.js) */
 .cq-reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
 .cq-reveal-visible { opacity: 1; transform: translateY(0); }
