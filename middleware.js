@@ -8,11 +8,21 @@ import { updateSession } from "@/lib/supabase/middleware";
 // forgot-password, /apply-poster) already works unchanged, since it's the
 // same app either way. NEXT_PUBLIC_ (not just server-side) because
 // AuthSplitLayout.js also needs this client-side to re-skin /login.
+//
+// www.-agnostic on purpose: Vercel auto-redirects the apex to www (or
+// vice versa) depending on which domain was added, and it's easy to set
+// this env var to whichever variant isn't actually the one serving
+// traffic. Stripping "www." on both sides before comparing means either
+// form works regardless of which one Vercel treats as canonical.
+function stripWww(hostname) {
+  return hostname.replace(/^www\./, "");
+}
+
 function posterHostname() {
   const url = process.env.NEXT_PUBLIC_POSTER_SITE_URL;
   if (!url) return null;
   try {
-    return new URL(url).hostname;
+    return stripWww(new URL(url).hostname);
   } catch {
     return null;
   }
@@ -22,7 +32,7 @@ export async function middleware(request) {
   const response = await updateSession(request);
 
   const hostname = posterHostname();
-  const requestHost = (request.headers.get("host") || "").split(":")[0];
+  const requestHost = stripWww((request.headers.get("host") || "").split(":")[0]);
   if (hostname && requestHost === hostname && request.nextUrl.pathname === "/") {
     const url = request.nextUrl.clone();
     url.pathname = "/poster";
