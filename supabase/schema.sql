@@ -119,6 +119,89 @@ CREATE POLICY "Service role can do anything on reports"
   ON public.reports FOR ALL
   USING (auth.role() = 'service_role');
 
+-- ── PROMPTS ──────────────────────────────────────────────────
+-- User-authored AI-visibility test questions, checked on demand (see
+-- app/api/prompts/[id]/check/route.js) against the same Gemini/Claude
+-- models lib/aivisibility.js already uses. Latest result is denormalized
+-- onto the row (last_*) rather than a separate history table — same
+-- reasoning as the comment on `opportunities` above: nothing here asks for
+-- a trend view, just current status per prompt.
+CREATE TABLE IF NOT EXISTS public.prompts (
+  id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id          UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  text             TEXT NOT NULL,
+  -- 'commercial' | 'competitor' | 'branded' — user-selected when adding
+  -- the prompt, not auto-classified.
+  type             TEXT NOT NULL DEFAULT 'commercial',
+  -- Free-text organizational label only — this app doesn't pass any
+  -- region parameter to Gemini/Claude, so this never changes what's
+  -- actually checked. Shown as a plain label, not implied to be real
+  -- geo-targeting.
+  location         TEXT NOT NULL DEFAULT 'Global',
+  active           BOOLEAN NOT NULL DEFAULT TRUE,
+  last_checked_at  TIMESTAMPTZ,
+  last_mentioned   BOOLEAN,
+  last_position    INTEGER,
+  last_brands      TEXT[],
+  last_answer      TEXT,
+  last_model       TEXT,
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS prompts_user_id_idx ON public.prompts(user_id, created_at DESC);
+
+ALTER TABLE public.prompts ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can read own prompts"
+  ON public.prompts FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own prompts"
+  ON public.prompts FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own prompts"
+  ON public.prompts FOR UPDATE
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own prompts"
+  ON public.prompts FOR DELETE
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Service role can do anything on prompts"
+  ON public.prompts FOR ALL
+  USING (auth.role() = 'service_role');
+
+-- ── PROMPT CHECKS ────────────────────────────────────────────
+-- Immutable history log — one row per "Check now" run (see
+-- app/api/prompts/[id]/check/route.js), alongside prompts.last_* which
+-- stays as the current-state cache. Same split as credit_balances
+-- (cache) + credit_transactions (immutable ledger). No user-facing
+-- INSERT policy — written only by the check route's service-role client.
+CREATE TABLE IF NOT EXISTS public.prompt_checks (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  prompt_id   UUID NOT NULL REFERENCES public.prompts(id) ON DELETE CASCADE,
+  user_id     UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  mentioned   BOOLEAN,
+  position    INTEGER,
+  brands      TEXT[],
+  answer      TEXT,
+  model       TEXT,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS prompt_checks_prompt_id_idx ON public.prompt_checks(prompt_id, created_at DESC);
+
+ALTER TABLE public.prompt_checks ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can read own prompt checks"
+  ON public.prompt_checks FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Service role can do anything on prompt_checks"
+  ON public.prompt_checks FOR ALL
+  USING (auth.role() = 'service_role');
+
 -- ── REPORT DRAFTS ────────────────────────────────────────────
 -- Persisted version of the AI-drafted Reddit post suggestion + posted
 -- status. Anonymous visitors never write here — PostDraftActions.js keeps

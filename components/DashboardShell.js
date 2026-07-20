@@ -19,6 +19,7 @@ const IconChat = () => <IconProps><path d="M3 4.5h14v9H8l-3.5 3v-3H3z" /></IconP
 const IconPencil = () => <IconProps><path d="M13 3.5l3.5 3.5L6 17.5H2.5V14z" /></IconProps>;
 const IconLayers = () => <IconProps><path d="M10 3l7 4-7 4-7-4 7-4z" /><path d="M3 11l7 4 7-4" /></IconProps>;
 const IconChart = () => <IconProps><path d="M3.5 16.5V9M9.5 16.5V4M15.5 16.5v-6" /><path d="M3.5 16.5h14" /></IconProps>;
+const IconPrompt = () => <IconProps><circle cx="10" cy="10" r="7" /><path d="M7.8 8a2.2 2.2 0 014.2.9c0 1.5-2 1.3-2 3" /><circle cx="10" cy="14" r=".4" fill="currentColor" /></IconProps>;
 const IconBook = () => <IconProps><path d="M4 4h9a3 3 0 013 3v9.5H7a3 3 0 00-3 3z" /><path d="M4 4v12.5" /></IconProps>;
 const IconCoin = () => <IconProps><circle cx="10" cy="10" r="6.5" /><path d="M10 6.5v7M7.7 12.5c0 1 1 1.5 2.3 1.5s2.3-.6 2.3-1.5-1-1.2-2.3-1.5-2.3-.5-2.3-1.4S9 8 10.3 8s2 .4 2.2 1.2" /></IconProps>;
 const IconCard = () => <IconProps><rect x="3" y="5" width="14" height="10" rx="2" /><path d="M3 8.5h14" /></IconProps>;
@@ -40,7 +41,13 @@ const NAV_GROUPS = [
       { href: "/dashboard/drafts", label: "Track Task", icon: IconLayers },
     ],
   },
-  { label: "Analyze", links: [{ href: "/dashboard/reports", label: "Reports", icon: IconChart }] },
+  {
+    label: "Analyze",
+    links: [
+      { href: "/dashboard/reports", label: "Reports", icon: IconChart },
+      { href: "/dashboard/prompts", label: "Prompts", icon: IconPrompt },
+    ],
+  },
   { label: "Knowledge", links: [{ href: "/dashboard/settings", label: "Company Profile", icon: IconBook }] },
   {
     label: "Account",
