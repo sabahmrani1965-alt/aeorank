@@ -34,6 +34,7 @@ export default async function DashboardOverviewPage() {
     { data: opportunities },
     { count: mentionsCount },
     { data: balanceRow },
+    { count: activePromptsCount },
   ] = await Promise.all([
     supabase
       .from("reports")
@@ -66,6 +67,11 @@ export default async function DashboardOverviewPage() {
       .select("balance")
       .eq("user_id", user.id)
       .maybeSingle(),
+    supabase
+      .from("prompts")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .eq("active", true),
   ]);
 
   // Most recent report per brand — reports are already newest-first, so the
@@ -105,7 +111,7 @@ export default async function DashboardOverviewPage() {
           <div className="kpi-value">{mentionsCount || 0}</div>
         </div>
         <div className="kpi">
-          <div className="kpi-label">Drafts waiting</div>
+          <div className="kpi-label">Tasks waiting</div>
           <div className="kpi-value">{unpostedCount || 0}</div>
         </div>
         <div className="kpi">
@@ -115,6 +121,10 @@ export default async function DashboardOverviewPage() {
         <div className="kpi">
           <div className="kpi-label">AI visibility</div>
           <div className="kpi-value">{visibilityScore == null ? "—" : `${visibilityScore}%`}</div>
+        </div>
+        <div className="kpi">
+          <div className="kpi-label">Prompts tracked</div>
+          <div className="kpi-value">{activePromptsCount || 0}</div>
         </div>
       </div>
 
@@ -129,7 +139,11 @@ export default async function DashboardOverviewPage() {
         </Link>
         <Link href="/dashboard/drafts/new" className="quick-action">
           <span className="quick-action-icon">✎</span>
-          <span className="quick-action-label">Generate draft</span>
+          <span className="quick-action-label">Add task</span>
+        </Link>
+        <Link href="/dashboard/prompts" className="quick-action">
+          <span className="quick-action-icon">❓</span>
+          <span className="quick-action-label">Check a prompt</span>
         </Link>
         <Link href="/dashboard/reports" className="quick-action">
           <span className="quick-action-icon">▲</span>
@@ -167,7 +181,7 @@ export default async function DashboardOverviewPage() {
               href={`/dashboard/drafts/new?subreddit=${encodeURIComponent(topOpportunity.sub || "")}&context=${encodeURIComponent(topOpportunity.title || "")}`}
               className="btn btn-primary btn-sm"
             >
-              Generate draft →
+              Generate Reply →
             </Link>
             <a href={topOpportunity.permalink} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-sm">
               View thread ↗
