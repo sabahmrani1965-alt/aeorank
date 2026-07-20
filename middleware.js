@@ -3,11 +3,12 @@ import { updateSession } from "@/lib/supabase/middleware";
 
 // Optional: point a second custom domain (e.g. joincrewquest.com) at this
 // same deployment and set NEXT_PUBLIC_POSTER_SITE_URL to its full origin — that
-// domain's homepage then rewrites straight to /poster instead of showing
-// the AEOrank marketing site. Everything else on that domain (login,
-// forgot-password, /apply-poster) already works unchanged, since it's the
-// same app either way. NEXT_PUBLIC_ (not just server-side) because
-// AuthSplitLayout.js also needs this client-side to re-skin /login.
+// domain's homepage then rewrites to /crewquest (the public marketing
+// landing page) instead of showing the AEOrank marketing site. Everything
+// else on that domain (login, forgot-password, /apply-poster, /poster)
+// already works unchanged, since it's the same app either way. NEXT_PUBLIC_
+// (not just server-side) because AuthSplitLayout.js also needs this
+// client-side to re-skin /login.
 //
 // www.-agnostic on purpose: Vercel auto-redirects the apex to www (or
 // vice versa) depending on which domain was added, and it's easy to set
@@ -35,7 +36,7 @@ export async function middleware(request) {
   const requestHost = stripWww((request.headers.get("host") || "").split(":")[0]);
   if (hostname && requestHost === hostname && request.nextUrl.pathname === "/") {
     const url = request.nextUrl.clone();
-    url.pathname = "/poster";
+    url.pathname = "/crewquest";
     const rewritten = NextResponse.rewrite(url);
     // Carry over the refreshed session cookies from updateSession's response.
     response.cookies.getAll().forEach((c) => rewritten.cookies.set(c.name, c.value, c));

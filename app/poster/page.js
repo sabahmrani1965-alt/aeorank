@@ -5,12 +5,10 @@ import {
   getActiveClaim,
   getCooldowns,
   getDailyCount,
+  getAvailableMissions,
   DAILY_TASK_LIMIT,
   CLAIM_WINDOW_MINUTES,
-  estimateMinutes,
-  difficultyForBody,
 } from "@/lib/posterTasks";
-import { rateForType } from "@/lib/posterPay";
 import TaskCard from "@/components/karmacrew/TaskCard";
 import EmptyState from "@/components/karmacrew/EmptyState";
 
@@ -35,47 +33,7 @@ export default async function PosterPlayPage() {
   const dailyCount = await getDailyCount(admin, user.id);
   const dailyLimitReached = dailyCount >= DAILY_TASK_LIMIT;
   const cooldowns = dailyLimitReached ? {} : await getCooldowns(admin, user.id);
-
-  // Real inventory grouping — "slots" reflects genuinely how many rows
-  // share the same (customer, subreddit, type) combo, not a fabricated
-  // quota. Widened to a 14-day window so slot totals include recently
-  // claimed/submitted siblings, not just what's available right now.
-  const since = new Date(Date.now() - 14 * 24 * 3600 * 1000).toISOString();
-  const { data: recent } = await admin
-    .from("report_drafts")
-    .select("id, user_id, subreddit, type, title, body, status, created_at")
-    .in("status", ["available", "claimed", "submitted"])
-    .gte("created_at", since)
-    .order("created_at", { ascending: true });
-
-  const rows = recent || [];
-  const groupKey = (r) => `${r.user_id}::${r.subreddit}::${r.type || "comment"}`;
-  const totals = new Map();
-  const remaining = new Map();
-  for (const r of rows) {
-    const k = groupKey(r);
-    totals.set(k, (totals.get(k) || 0) + 1);
-    if (r.status === "available") remaining.set(k, (remaining.get(k) || 0) + 1);
-  }
-
-  const tasks = rows
-    .filter((r) => r.status === "available")
-    .map((r) => {
-      const k = groupKey(r);
-      const type = r.type || "comment";
-      return {
-        id: r.id,
-        subreddit: r.subreddit,
-        type,
-        title: r.title,
-        body: r.body,
-        reward: rateForType(type),
-        estimatedMinutes: estimateMinutes(type),
-        difficulty: difficultyForBody(r.body),
-        slotsTotal: totals.get(k) || 1,
-        slotsRemaining: remaining.get(k) || 1,
-      };
-    });
+  const tasks = await getAvailableMissions(admin);
 
   return (
     <section>
