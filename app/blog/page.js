@@ -6,7 +6,7 @@ export const metadata = {
   title: "Blog — AEOrank",
   description:
     "Practical AEO and Answer Engine Optimization guides, research, and notes for B2B SaaS marketers winning in the age of AI search.",
-  alternates: { canonical: "https://aeorank.tech/blog" },
+  alternates: { canonical: "https://www.aeorank.tech/blog" },
 };
 
 const posts = [

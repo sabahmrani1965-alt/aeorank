@@ -7,7 +7,7 @@ export const metadata = {
   title: "Services — AEOrank",
   description:
     "AEO services for B2B SaaS: entity authority, citation building, schema, content, and full-service management. Built around the work that actually moves AI citations.",
-  alternates: { canonical: "https://aeorank.tech/services" },
+  alternates: { canonical: "https://www.aeorank.tech/services" },
 };
 
 const services = [

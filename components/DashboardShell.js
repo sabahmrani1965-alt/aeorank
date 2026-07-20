@@ -74,7 +74,17 @@ function activeHref(pathname) {
   return best;
 }
 
-export default function DashboardShell({ email, isAdmin, creditBalance, children }) {
+function displayDomain(website) {
+  if (!website) return "";
+  try {
+    const u = new URL(/^https?:\/\//i.test(website) ? website : `https://${website}`);
+    return u.hostname.replace(/^www\./, "");
+  } catch {
+    return website;
+  }
+}
+
+export default function DashboardShell({ email, isAdmin, creditBalance, project, plan, children }) {
   const pathname = usePathname();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -101,6 +111,8 @@ export default function DashboardShell({ email, isAdmin, creditBalance, children
     router.refresh();
   }
 
+  const projectLabel = displayDomain(project?.website) || project?.name || "";
+
   return (
     <div className="app-shell">
       {sidebarOpen && <div className="app-sidebar-backdrop" onClick={() => setSidebarOpen(false)} />}
@@ -110,6 +122,17 @@ export default function DashboardShell({ email, isAdmin, creditBalance, children
           <span className="logo-mark" style={{ width: 28, height: 28, fontSize: 13 }}>A</span>
           AEOrank
         </Link>
+
+        {projectLabel && (
+          <div className="app-sidebar-project">
+            <span className="app-sidebar-project-icon">{projectLabel[0].toUpperCase()}</span>
+            <div className="app-sidebar-project-info">
+              <div className="app-sidebar-project-name">{projectLabel}</div>
+              <span className="app-sidebar-project-plan">{plan ? `${plan} Plan` : "No plan"}</span>
+            </div>
+          </div>
+        )}
+
         <nav style={{ display: "flex", flexDirection: "column", gap: 18, flex: 1, overflowY: "auto" }}>
           {NAV_GROUPS.map((group, i) => (
             <div className="app-sidebar-group" key={group.label || `top-${i}`}>

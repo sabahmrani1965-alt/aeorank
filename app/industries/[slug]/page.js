@@ -119,12 +119,12 @@ export async function generateMetadata({ params }) {
   return {
     title: industry.title,
     description: industry.description,
-    alternates: { canonical: `https://aeorank.tech/industries/${params.slug}` },
+    alternates: { canonical: `https://www.aeorank.tech/industries/${params.slug}` },
     openGraph: {
       title: industry.title,
       description: industry.description,
       type: 'website',
-      url: `https://aeorank.tech/industries/${params.slug}`,
+      url: `https://www.aeorank.tech/industries/${params.slug}`,
     },
   }
 }
@@ -137,9 +137,9 @@ export default function IndustryPage({ params }) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://aeorank.tech' },
-      { '@type': 'ListItem', position: 2, name: 'Industries', item: 'https://aeorank.tech' },
-      { '@type': 'ListItem', position: 3, name: industry.title, item: `https://aeorank.tech/industries/${params.slug}` },
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.aeorank.tech' },
+      { '@type': 'ListItem', position: 2, name: 'Industries', item: 'https://www.aeorank.tech' },
+      { '@type': 'ListItem', position: 3, name: industry.title, item: `https://www.aeorank.tech/industries/${params.slug}` },
     ],
   }
 

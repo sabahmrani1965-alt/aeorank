@@ -423,7 +423,7 @@ export async function generateMetadata({ params }) {
       authors: [post.author],
     },
     alternates: {
-      canonical: `https://aeorank.tech/blog/${params.slug}`,
+      canonical: `https://www.aeorank.tech/blog/${params.slug}`,
     },
   }
 }
@@ -442,17 +442,17 @@ export default function BlogPost({ params }) {
     datePublished: post.updated,
     dateModified: post.updated,
     author: { '@type': 'Person', name: post.author },
-    publisher: { '@type': 'Organization', name: 'AEOrank', url: 'https://aeorank.tech' },
-    mainEntityOfPage: { '@type': 'WebPage', '@id': `https://aeorank.tech/blog/${params.slug}` },
+    publisher: { '@type': 'Organization', name: 'AEOrank', url: 'https://www.aeorank.tech' },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `https://www.aeorank.tech/blog/${params.slug}` },
   }
 
   const breadcrumbLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://aeorank.tech' },
-      { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://aeorank.tech/blog' },
-      { '@type': 'ListItem', position: 3, name: post.title, item: `https://aeorank.tech/blog/${params.slug}` },
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.aeorank.tech' },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://www.aeorank.tech/blog' },
+      { '@type': 'ListItem', position: 3, name: post.title, item: `https://www.aeorank.tech/blog/${params.slug}` },
     ],
   }
 

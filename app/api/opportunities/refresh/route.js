@@ -68,6 +68,11 @@ export async function POST() {
     return NextResponse.json({ error: "Not enough credits." }, { status: 402 });
   }
 
+  // Tracks how much of `maxCost` has already been refunded, so the catch
+  // block below only refunds what's still outstanding instead of refunding
+  // the full reservation again on top of an earlier partial refund.
+  let refunded = 0;
+
   try {
     const posts = await searchPosts(categoryQuery, SEARCH_LIMIT);
     const deduped = [...new Map(posts.map((p) => [p.permalink, p])).values()];
@@ -91,6 +96,7 @@ export async function POST() {
         admin, user.id, refundAmount, "refund",
         `Reconciled: ${deduped.length} opportunities analyzed`, reservation.transactionId
       );
+      refunded = refundAmount;
     }
 
     const rows = deduped.map((p, i) => ({
@@ -117,7 +123,10 @@ export async function POST() {
     return NextResponse.json({ ok: true, count: rows.length });
   } catch (e) {
     console.error("[opportunities/refresh] failed:", e?.message || e);
-    await refundCredits(admin, user.id, maxCost, "refund", "Refresh failed", reservation.transactionId);
+    const remaining = maxCost - refunded;
+    if (remaining > 0) {
+      await refundCredits(admin, user.id, remaining, "refund", "Refresh failed", reservation.transactionId);
+    }
     return NextResponse.json({ error: "Could not refresh opportunities." }, { status: 500 });
   }
 }

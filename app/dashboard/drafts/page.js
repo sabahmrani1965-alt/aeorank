@@ -19,24 +19,24 @@ export default async function DashboardDraftsPage({ searchParams }) {
   return (
     <section className="section">
       <div className="container">
-        <span className="section-tag">( draft library )</span>
-        <h2>Your Reddit drafts</h2>
+        <span className="section-tag">( track task )</span>
+        <h2>Your tasks</h2>
         <p className="section-sub">
-          AI-suggested drafts from your reports, plus anything you compose
-          yourself. Copy one and post it from your own account — nothing
-          here is posted automatically. Switch to Table to search, filter,
-          and add the live link once you've posted something.
+          AI-suggested replies and posts from your reports, plus anything you
+          compose yourself. Copy one and post it from your own account —
+          nothing here is posted automatically. Switch to Table to search,
+          filter, and add the live link once you've posted something.
         </p>
 
         <div style={{ marginBottom: 24 }}>
           <Link href="/dashboard/drafts/new" className="btn btn-primary">
-            + New draft
+            + New task
           </Link>
         </div>
 
         {!drafts || drafts.length === 0 ? (
           <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
-            No drafts yet — generate a report, or click "+ New draft" above to write one.
+            No tasks yet — generate a report, or click "+ New task" above to write one.
           </div>
         ) : (
           <DraftsView drafts={drafts} initialView={searchParams?.view === "table" ? "table" : "cards"} />

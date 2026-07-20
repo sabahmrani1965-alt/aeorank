@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import DashboardAnalyzeForm from "@/components/DashboardAnalyzeForm";
 
 export const dynamic = "force-dynamic";
 
@@ -129,10 +128,6 @@ export default async function DashboardOverviewPage() {
       </div>
 
       <div className="quick-actions">
-        <a href="#analyze" className="quick-action">
-          <span className="quick-action-icon">↗</span>
-          <span className="quick-action-label">Analyze website</span>
-        </a>
         <Link href="/dashboard/opportunities" className="quick-action">
           <span className="quick-action-icon">◎</span>
           <span className="quick-action-label">Find opportunities</span>
@@ -189,10 +184,6 @@ export default async function DashboardOverviewPage() {
           </div>
         </div>
       )}
-
-      <div id="analyze">
-        <DashboardAnalyzeForm />
-      </div>
 
       <div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 14 }}>

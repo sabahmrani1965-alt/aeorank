@@ -141,12 +141,12 @@ export async function generateMetadata({ params }) {
   return {
     title: service.title,
     description: service.description,
-    alternates: { canonical: `https://aeorank.tech/services/${params.slug}` },
+    alternates: { canonical: `https://www.aeorank.tech/services/${params.slug}` },
     openGraph: {
       title: service.title,
       description: service.description,
       type: 'website',
-      url: `https://aeorank.tech/services/${params.slug}`,
+      url: `https://www.aeorank.tech/services/${params.slug}`,
     },
   }
 }
@@ -159,9 +159,9 @@ export default function ServicePage({ params }) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://aeorank.tech' },
-      { '@type': 'ListItem', position: 2, name: 'Services', item: 'https://aeorank.tech/services' },
-      { '@type': 'ListItem', position: 3, name: service.title, item: `https://aeorank.tech/services/${params.slug}` },
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.aeorank.tech' },
+      { '@type': 'ListItem', position: 2, name: 'Services', item: 'https://www.aeorank.tech/services' },
+      { '@type': 'ListItem', position: 3, name: service.title, item: `https://www.aeorank.tech/services/${params.slug}` },
     ],
   }
 
@@ -170,7 +170,7 @@ export default function ServicePage({ params }) {
     '@type': 'Service',
     name: service.title,
     description: service.description,
-    provider: { '@type': 'Organization', name: 'AEOrank', url: 'https://aeorank.tech' },
+    provider: { '@type': 'Organization', name: 'AEOrank', url: 'https://www.aeorank.tech' },
     areaServed: 'Worldwide',
     serviceType: 'Answer Engine Optimization',
   }

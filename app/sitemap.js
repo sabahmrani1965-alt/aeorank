@@ -1,4 +1,4 @@
-const BASE_URL = "https://aeorank.tech";
+const BASE_URL = "https://www.aeorank.tech";
 
 const blogSlugs = [
   "aeo-schema-markup-guide",
