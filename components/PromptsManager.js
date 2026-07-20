@@ -223,6 +223,11 @@ export default function PromptsManager({ initialPrompts, checkCost }) {
   const [adding, setAdding] = useState(false);
   const [addError, setAddError] = useState("");
 
+  const [suggesting, setSuggesting] = useState(false);
+  const [suggestError, setSuggestError] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [addingSuggestions, setAddingSuggestions] = useState(() => new Set());
+
   async function addPrompt(e) {
     e.preventDefault();
     setAddError("");
@@ -244,6 +249,48 @@ export default function PromptsManager({ initialPrompts, checkCost }) {
       setAddError(err?.message || "Something went wrong.");
     } finally {
       setAdding(false);
+    }
+  }
+
+  async function suggestPromptsNow() {
+    setSuggestError("");
+    setSuggesting(true);
+    try {
+      const res = await fetch("/api/prompts/suggest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ existing: prompts.map((p) => p.text) }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || "Could not generate suggestions.");
+      setSuggestions(data.suggestions || []);
+    } catch (err) {
+      setSuggestError(err?.message || "Something went wrong.");
+    } finally {
+      setSuggesting(false);
+    }
+  }
+
+  async function addSuggestion(suggestion) {
+    setAddingSuggestions((prev) => new Set(prev).add(suggestion));
+    try {
+      const res = await fetch("/api/prompts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: suggestion, type: "commercial", location: "Global" }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || "Could not add this prompt.");
+      setPrompts((prev) => [data.prompt, ...prev]);
+      setSuggestions((prev) => prev.filter((s) => s !== suggestion));
+    } catch (err) {
+      setSuggestError(err?.message || "Something went wrong.");
+    } finally {
+      setAddingSuggestions((prev) => {
+        const next = new Set(prev);
+        next.delete(suggestion);
+        return next;
+      });
     }
   }
 
@@ -304,9 +351,51 @@ export default function PromptsManager({ initialPrompts, checkCost }) {
             )}
           </form>
         ) : (
-          <button type="button" className="btn btn-primary" onClick={() => setShowAddForm(true)}>
-            + Add prompt
-          </button>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+            <button type="button" className="btn btn-primary" onClick={() => setShowAddForm(true)}>
+              + Add prompt
+            </button>
+            <button type="button" className="btn btn-ghost" onClick={suggestPromptsNow} disabled={suggesting}>
+              {suggesting ? (
+                <>
+                  <span className="loader" /> Suggesting…
+                </>
+              ) : (
+                "✨ Suggest prompts"
+              )}
+            </button>
+          </div>
+        )}
+
+        {suggestError && (
+          <p role="alert" style={{ color: "#ff8a8a", fontSize: 13.5, marginTop: 10 }}>
+            {suggestError}
+          </p>
+        )}
+
+        {suggestions.length > 0 && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 14 }}>
+            {suggestions.map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => addSuggestion(s)}
+                disabled={addingSuggestions.has(s)}
+                style={{
+                  fontSize: 13,
+                  padding: "7px 14px",
+                  borderRadius: 999,
+                  border: "1px solid var(--card-border)",
+                  background: "var(--bg-3)",
+                  color: "var(--text)",
+                  cursor: addingSuggestions.has(s) ? "default" : "pointer",
+                  opacity: addingSuggestions.has(s) ? 0.6 : 1,
+                }}
+              >
+                {addingSuggestions.has(s) ? "Adding…" : `+ ${s}`}
+              </button>
+            ))}
+          </div>
         )}
       </div>
 
