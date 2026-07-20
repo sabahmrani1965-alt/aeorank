@@ -9,9 +9,14 @@ CREATE TABLE IF NOT EXISTS public.users (
   email              TEXT NOT NULL,
   stripe_customer_id TEXT UNIQUE,
   -- 'customer' (default) | 'poster' — posters are admin-invited accounts
-  -- that fulfill drafts assigned to them across customer accounts, not
-  -- customers themselves. See report_drafts.assigned_to below.
+  -- that fulfill tasks claimed from the shared pool, not customers
+  -- themselves. See report_drafts.claimed_by below.
   role               TEXT NOT NULL DEFAULT 'customer',
+  -- Set from the applicant's poster_applications.reddit_username at
+  -- approval time (lib/posterAccount.js) — the Reddit account they told
+  -- us they'd post from. NULL for customers and for posters invited
+  -- directly (app/api/admin/posters) rather than via /apply-poster.
+  reddit_username    TEXT,
   created_at         TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -596,6 +601,17 @@ CREATE TABLE IF NOT EXISTS public.poster_applications (
   -- NULL if there was no ref param, or it didn't match a real poster —
   -- the applicant is never blocked for a bad/missing ref.
   referred_by  UUID REFERENCES public.users(id) ON DELETE SET NULL,
+  -- Normalized username (see lib/reddit.js's normalizeRedditUsername) from
+  -- whatever profile link/username the applicant entered.
+  reddit_username     TEXT,
+  -- 'active' | 'suspended' | 'not_found' | 'too_new' (younger than
+  -- lib/reddit.js's MIN_ACCOUNT_AGE_MONTHS) | 'low_karma' (under
+  -- MIN_KARMA) | 'unverified' (couldn't check — neither Reddit OAuth nor
+  -- the direct fetch succeeded) | 'invalid' (unparseable input).
+  -- Everything except 'active'/'unverified' is rejected at submission
+  -- time in app/api/poster-applications — this column only ever holds
+  -- those two for rows that made it past that.
+  reddit_check_status TEXT,
   -- 'pending' (default) | 'approved' | 'dismissed'
   status       TEXT NOT NULL DEFAULT 'pending',
   created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()

@@ -50,6 +50,23 @@ function ApplicationRow({ application }) {
   return (
     <tr style={{ borderBottom: "1px solid var(--card-border-soft)" }}>
       <td style={{ padding: "10px 12px" }}>{application.email}</td>
+      <td style={{ padding: "10px 12px" }}>
+        {application.reddit_username ? (
+          <a href={`https://www.reddit.com/user/${application.reddit_username}`} target="_blank" rel="noopener noreferrer">
+            u/{application.reddit_username}
+          </a>
+        ) : (
+          "—"
+        )}
+        {application.reddit_check_status === "unverified" && (
+          <span
+            title="Neither Reddit's API nor a direct fetch could confirm this account's status — worth a manual look."
+            style={{ marginLeft: 6, fontSize: 11, fontWeight: 700, color: "var(--warn, #ffc857)" }}
+          >
+            unverified
+          </span>
+        )}
+      </td>
       <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>{application.referrerEmail || "—"}</td>
       <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>
         {new Date(application.created_at).toLocaleDateString()}
@@ -99,6 +116,7 @@ export default function PosterApplicationsTable({ applications }) {
         <thead>
           <tr style={{ borderBottom: "1px solid var(--border, rgba(255,255,255,.1))" }}>
             <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Email</th>
+            <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Reddit</th>
             <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Referred by</th>
             <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Applied</th>
             <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Action</th>

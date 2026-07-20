@@ -20,7 +20,7 @@ export async function POST(req, { params }) {
 
   const { data: application } = await admin
     .from("poster_applications")
-    .select("id, email, referred_by, status")
+    .select("id, email, referred_by, reddit_username, status")
     .eq("id", params.id)
     .maybeSingle();
 
@@ -31,6 +31,7 @@ export async function POST(req, { params }) {
   const result = await createOrPromotePoster({
     email: application.email,
     referredBy: application.referred_by,
+    redditUsername: application.reddit_username,
     origin: siteOrigin(req),
   });
   if (!result.ok) {

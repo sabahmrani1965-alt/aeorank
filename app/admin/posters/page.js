@@ -56,7 +56,7 @@ export default async function AdminPostersPage() {
 
   const { data: applications } = await admin
     .from("poster_applications")
-    .select("id, email, referred_by, created_at")
+    .select("id, email, referred_by, reddit_username, reddit_check_status, created_at")
     .eq("status", "pending")
     .order("created_at", { ascending: false });
 

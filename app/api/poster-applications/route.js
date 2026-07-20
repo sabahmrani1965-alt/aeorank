@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { checkRedditAccount, MIN_ACCOUNT_AGE_MONTHS, MIN_KARMA } from "@/lib/reddit";
 
 export const runtime = "nodejs";
 
@@ -13,9 +14,41 @@ export async function POST(req) {
   } catch {}
   const email = String(body?.email || "").trim().toLowerCase();
   const refParam = String(body?.ref || "").trim();
+  const redditInput = String(body?.reddit || "").trim();
 
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return NextResponse.json({ error: "Please provide a valid email address." }, { status: 400 });
+  }
+  if (!redditInput) {
+    return NextResponse.json({ error: "Enter your Reddit username or profile link." }, { status: 400 });
+  }
+
+  // Reject on a confident real signal (confirmed suspended/nonexistent, or
+  // unparseable input). "unverified" — neither Reddit OAuth nor the direct
+  // fetch succeeded — still lets the application through rather than
+  // blocking everyone whenever that check can't run; the status is stored
+  // so an admin can eyeball it before approving (see PosterApplicationsTable).
+  const check = await checkRedditAccount(redditInput);
+  if (check.status === "invalid") {
+    return NextResponse.json({ error: "That doesn't look like a valid Reddit username or profile link." }, { status: 400 });
+  }
+  if (check.status === "not_found") {
+    return NextResponse.json({ error: "We couldn't find that Reddit account. Double-check the username." }, { status: 400 });
+  }
+  if (check.status === "suspended") {
+    return NextResponse.json({ error: "That Reddit account is suspended — you'll need an active account to post from." }, { status: 400 });
+  }
+  if (check.status === "too_new") {
+    return NextResponse.json(
+      { error: `That Reddit account needs to be at least ${MIN_ACCOUNT_AGE_MONTHS} months old.` },
+      { status: 400 }
+    );
+  }
+  if (check.status === "low_karma") {
+    return NextResponse.json(
+      { error: `That Reddit account needs at least ${MIN_KARMA} combined karma.` },
+      { status: 400 }
+    );
   }
 
   const admin = createAdminClient();
@@ -35,7 +68,12 @@ export async function POST(req) {
     if (referrer?.id) referredBy = referrer.id;
   }
 
-  const { error } = await admin.from("poster_applications").insert({ email, referred_by: referredBy });
+  const { error } = await admin.from("poster_applications").insert({
+    email,
+    referred_by: referredBy,
+    reddit_username: check.username,
+    reddit_check_status: check.status,
+  });
 
   if (error) {
     // Unique-violation on the "one pending application per email" index —
