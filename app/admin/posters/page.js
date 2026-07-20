@@ -2,6 +2,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import InvitePosterForm from "@/components/InvitePosterForm";
 import PosterApplicationsTable from "@/components/PosterApplicationsTable";
 import PosterPayoutControl from "@/components/PosterPayoutControl";
+import AdminPayoutRequestsTable from "@/components/AdminPayoutRequestsTable";
 import { getEarningsSummary } from "@/lib/posterPay";
 
 export const dynamic = "force-dynamic";
@@ -35,6 +36,23 @@ export default async function AdminPostersPage() {
       return { ...p, pending: summary.pending };
     })
   );
+
+  const { data: payoutRequests } = await admin
+    .from("poster_payouts")
+    .select("id, poster_id, amount, created_at")
+    .eq("status", "requested")
+    .order("created_at", { ascending: true });
+
+  const requesterIds = [...new Set((payoutRequests || []).map((r) => r.poster_id))];
+  let requesterEmailById = new Map();
+  if (requesterIds.length > 0) {
+    const { data: requesters } = await admin.from("users").select("id, email").in("id", requesterIds);
+    requesterEmailById = new Map((requesters || []).map((r) => [r.id, r.email]));
+  }
+  const enrichedRequests = (payoutRequests || []).map((r) => ({
+    ...r,
+    posterEmail: requesterEmailById.get(r.poster_id) || "—",
+  }));
 
   const { data: applications } = await admin
     .from("poster_applications")
@@ -98,6 +116,11 @@ export default async function AdminPostersPage() {
         </div>
 
         <InvitePosterForm />
+
+        <div style={{ marginTop: 40 }}>
+          <h3 style={{ marginBottom: 14 }}>Pending withdrawal requests</h3>
+          <AdminPayoutRequestsTable requests={enrichedRequests} />
+        </div>
 
         <div style={{ marginTop: 40 }}>
           <h3 style={{ marginBottom: 14 }}>Pending applications</h3>

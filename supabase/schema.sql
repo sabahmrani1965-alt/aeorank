@@ -632,6 +632,12 @@ CREATE TABLE IF NOT EXISTS public.poster_payouts (
   poster_id  UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
   amount     NUMERIC(10,2) NOT NULL,
   note       TEXT,
+  -- 'paid' (admin recorded an actual payment — app/api/admin/posters/[id]/
+  -- payouts) | 'requested' (poster asked to withdraw via
+  -- app/api/poster/withdraw, awaiting admin action — see
+  -- app/api/admin/payouts/[id] for marking it paid). Only 'paid' rows
+  -- count toward totalPaid in lib/posterPay.js's getEarningsSummary.
+  status     TEXT NOT NULL DEFAULT 'paid',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 

@@ -11,7 +11,7 @@ import { isPosterHost } from "@/lib/posterBrand";
 //
 // Domain-aware: these pages serve both customers and posters. On the
 // dedicated poster domain (NEXT_PUBLIC_POSTER_SITE_URL), this renders the
-// KarmaCrew variant instead — checked client-side via useEffect (not at
+// CrewQuest variant instead — checked client-side via useEffect (not at
 // first render) to avoid a server/client markup mismatch, so there's a
 // brief flash of the default variant before it corrects on the poster
 // domain. Everywhere else this never fires and renders exactly as before.
@@ -30,11 +30,11 @@ export default function AuthSplitLayout({ children }) {
             <Link
               href="/apply-poster"
               className="logo"
-              aria-label="KarmaCrew home"
+              aria-label="CrewQuest home"
               style={{ display: "inline-flex", marginBottom: 32 }}
             >
-              <span className="logo-mark">K</span>
-              KarmaCrew
+              <span className="logo-mark">C</span>
+              CrewQuest
             </Link>
             {children}
           </div>

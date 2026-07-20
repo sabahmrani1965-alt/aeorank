@@ -8,6 +8,7 @@ const CONFIG = {
   claimed: { label: "In Progress", cls: "kc-badge-claimed" },
   submitted: { label: "Submitted · Approved", cls: "kc-badge-submitted" },
   paid: { label: "Paid", cls: "kc-badge-paid" },
+  requested: { label: "Requested", cls: "kc-badge-claimed" },
   rejected: { label: "Rejected", cls: "kc-badge-rejected" },
 };
 

@@ -21,7 +21,7 @@ export default function TopHeader({ email, notifications, onOpenSidebar }) {
         <button type="button" className="app-sidebar-toggle" onClick={onOpenSidebar} aria-label="Open menu">
           <IconMenu />
         </button>
-        <span className="logo-mark" style={{ width: 26, height: 26, fontSize: 12 }}>K</span>
+        <span className="logo-mark" style={{ width: 26, height: 26, fontSize: 12 }}>C</span>
       </div>
 
       <span

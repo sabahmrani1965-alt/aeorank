@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
-// Optional: point a second custom domain (e.g. karmacrew.co) at this same
-// deployment and set NEXT_PUBLIC_POSTER_SITE_URL to its full origin — that
+// Optional: point a second custom domain (e.g. joincrewquest.com) at this
+// same deployment and set NEXT_PUBLIC_POSTER_SITE_URL to its full origin — that
 // domain's homepage then rewrites straight to /poster instead of showing
 // the AEOrank marketing site. Everything else on that domain (login,
 // forgot-password, /apply-poster) already works unchanged, since it's the

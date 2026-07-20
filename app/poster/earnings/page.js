@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getEarningsSummary } from "@/lib/posterPay";
 import StatusBadge from "@/components/karmacrew/StatusBadge";
 import EarningsChart from "@/components/karmacrew/EarningsChart";
+import WithdrawControl from "@/components/karmacrew/WithdrawControl";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +16,7 @@ export default async function PosterEarningsPage() {
   const admin = createAdminClient();
   const summary = admin
     ? await getEarningsSummary(admin, user.id)
-    : { totalEarned: 0, totalPaid: 0, pending: 0, tasks: [], payouts: [] };
+    : { totalEarned: 0, totalPaid: 0, totalRequested: 0, pending: 0, tasks: [], payouts: [] };
 
   const daySpanDays = summary.tasks.length
     ? Math.max(1, Math.ceil((Date.now() - new Date(summary.tasks[summary.tasks.length - 1].posted_at).getTime()) / 86400000))
@@ -46,7 +47,7 @@ export default async function PosterEarningsPage() {
         Real payout ledger — Pending is what's owed but not yet paid out.
       </p>
 
-      <div className="kpi-row" style={{ gridTemplateColumns: "repeat(4, 1fr)", marginBottom: 32 }}>
+      <div className="kpi-row" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", marginBottom: 20 }}>
         <div className="kpi">
           <div className="kpi-label">Total earned</div>
           <div className="kpi-value">${summary.totalEarned.toFixed(2)}</div>
@@ -55,6 +56,12 @@ export default async function PosterEarningsPage() {
           <div className="kpi-label">Pending</div>
           <div className="kpi-value">${summary.pending.toFixed(2)}</div>
         </div>
+        {summary.totalRequested > 0 && (
+          <div className="kpi">
+            <div className="kpi-label">Requested</div>
+            <div className="kpi-value">${summary.totalRequested.toFixed(2)}</div>
+          </div>
+        )}
         <div className="kpi">
           <div className="kpi-label">Paid</div>
           <div className="kpi-value">${summary.totalPaid.toFixed(2)}</div>
@@ -63,6 +70,10 @@ export default async function PosterEarningsPage() {
           <div className="kpi-label">Avg / day</div>
           <div className="kpi-value">${averagePerDay.toFixed(2)}</div>
         </div>
+      </div>
+
+      <div style={{ marginBottom: 32 }}>
+        <WithdrawControl pending={summary.pending} />
       </div>
 
       <div className="card" style={{ padding: 24, marginBottom: 32 }}>
@@ -115,12 +126,15 @@ export default async function PosterEarningsPage() {
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {summary.payouts.map((p) => (
-              <div key={p.id} className="card" style={{ padding: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div key={p.id} className="card" style={{ padding: 16, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
                 <div>
                   <div style={{ fontWeight: 700 }}>${Number(p.amount).toFixed(2)}</div>
                   {p.note && <div style={{ fontSize: 12.5, color: "var(--text-muted)", marginTop: 2 }}>{p.note}</div>}
                 </div>
-                <div style={{ fontSize: 12.5, color: "var(--text-dim)" }}>{new Date(p.created_at).toLocaleDateString()}</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <StatusBadge status={p.status} />
+                  <span style={{ fontSize: 12.5, color: "var(--text-dim)" }}>{new Date(p.created_at).toLocaleDateString()}</span>
+                </div>
               </div>
             ))}
           </div>

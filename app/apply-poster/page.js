@@ -1,9 +1,9 @@
-import KarmaCrewHeader from "@/components/KarmaCrewHeader";
+import CrewQuestHeader from "@/components/CrewQuestHeader";
 import ApplyPosterForm from "@/components/ApplyPosterForm";
 
 export const metadata = {
-  title: "Apply to be a poster — KarmaCrew",
-  description: "Apply to join KarmaCrew and get paid to post Reddit replies and comments on behalf of brands.",
+  title: "Apply to be a poster — CrewQuest",
+  description: "Apply to join CrewQuest and get paid to post Reddit replies and comments on behalf of brands.",
 };
 
 export default function ApplyPosterPage({ searchParams }) {
@@ -11,12 +11,12 @@ export default function ApplyPosterPage({ searchParams }) {
 
   return (
     <div className="kc-theme" style={{ minHeight: "100vh" }}>
-      <KarmaCrewHeader />
+      <CrewQuestHeader />
       <section className="section">
         <div className="container-narrow">
           <span className="section-tag">( apply )</span>
           <h2 style={{ textAlign: "center" }}>
-            Become a <span className="accent">KarmaCrew</span> poster
+            Become a <span className="accent">CrewQuest</span> poster
           </h2>
           <p className="section-sub" style={{ marginBottom: 28 }}>
             Get paid to post AI-drafted replies and comments to Reddit on behalf of brands, from
@@ -29,7 +29,7 @@ export default function ApplyPosterPage({ searchParams }) {
         </div>
       </section>
       <footer style={{ textAlign: "center", color: "var(--text-muted)", fontSize: 13, padding: "40px 24px" }}>
-        © {new Date().getFullYear()} KarmaCrew.
+        © {new Date().getFullYear()} CrewQuest.
       </footer>
     </div>
   );
