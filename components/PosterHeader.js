@@ -1,13 +1,20 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+
+const TABS = [
+  { href: "/poster", label: "Assignments" },
+  { href: "/poster/earnings", label: "Earnings" },
+];
 
 // Minimal header for /poster — posters aren't customers (no sidebar, no
 // credits, no subscription), so this deliberately doesn't reuse
 // DashboardShell.
 export default function PosterHeader({ email }) {
   const router = useRouter();
+  const pathname = usePathname();
 
   async function handleSignOut() {
     const supabase = createClient();
@@ -17,17 +24,30 @@ export default function PosterHeader({ email }) {
   }
 
   return (
-    <header className="header" style={{ marginBottom: 32 }}>
-      <div className="logo">
-        <span className="logo-mark">A</span>
-        AEOrank — Poster
+    <div style={{ marginBottom: 32 }}>
+      <header className="header" style={{ marginBottom: 20 }}>
+        <div className="logo">
+          <span className="logo-mark">A</span>
+          AEOrank — Poster
+        </div>
+        <div className="header-actions">
+          <span className="header-link">{email}</span>
+          <button type="button" onClick={handleSignOut} className="btn btn-ghost btn-sm">
+            Sign out
+          </button>
+        </div>
+      </header>
+      <div style={{ display: "flex", gap: 8 }}>
+        {TABS.map((tab) => (
+          <Link
+            key={tab.href}
+            href={tab.href}
+            className={pathname === tab.href ? "btn btn-primary btn-sm" : "btn btn-ghost btn-sm"}
+          >
+            {tab.label}
+          </Link>
+        ))}
       </div>
-      <div className="header-actions">
-        <span className="header-link">{email}</span>
-        <button type="button" onClick={handleSignOut} className="btn btn-ghost btn-sm">
-          Sign out
-        </button>
-      </div>
-    </header>
+    </div>
   );
 }
