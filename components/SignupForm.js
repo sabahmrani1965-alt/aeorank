@@ -6,10 +6,12 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 // Extracted from app/signup/page.js so the same real signup logic (auth
-// account creation, not just UI) can be embedded both on the standalone
-// /signup page and inside the combined /apply-poster "I'm a Brand" tab —
-// one code path, not two copies that could drift.
-export default function SignupForm() {
+// account creation, not just UI) is shared with app/apply-poster/page.js's
+// creator signup step 1 — one code path, not two copies that could drift.
+// New accounts default to role='customer' (see supabase/schema.sql) — the
+// creator flow promotes to 'poster' in a separate step 2, only once their
+// Reddit account actually passes verification.
+export default function SignupForm({ redirectTo = "/onboarding" }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -42,8 +44,8 @@ export default function SignupForm() {
       if (signUpError) throw signUpError;
       if (data?.session) {
         // Email confirmation is off — signUp already returned a live
-        // session, so go straight into onboarding.
-        router.push("/onboarding");
+        // session, so go straight to the next step.
+        router.push(redirectTo);
         router.refresh();
       } else {
         // Fallback for if confirmation is ever turned back on.

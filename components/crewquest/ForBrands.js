@@ -38,7 +38,7 @@ export default function ForBrands() {
 
         <ScrollReveal delay={300}>
           <div style={{ textAlign: "center", marginTop: 32 }}>
-            <Link href="/apply-poster?as=brand" className="btn btn-primary btn-large">
+            <Link href="/signup" className="btn btn-primary btn-large">
               Get Started as a Brand →
             </Link>
           </div>
