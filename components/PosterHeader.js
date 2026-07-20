@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 const TABS = [
   { href: "/poster", label: "Assignments" },
   { href: "/poster/earnings", label: "Earnings" },
+  { href: "/poster/refer", label: "Refer a friend" },
 ];
 
 // Minimal header for /poster — posters aren't customers (no sidebar, no

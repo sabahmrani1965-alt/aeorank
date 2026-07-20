@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import InvitePosterForm from "@/components/InvitePosterForm";
+import PosterApplicationsTable from "@/components/PosterApplicationsTable";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +26,23 @@ export default async function AdminPostersPage() {
     .select("id, email, created_at")
     .eq("role", "poster")
     .order("created_at", { ascending: false });
+
+  const { data: applications } = await admin
+    .from("poster_applications")
+    .select("id, email, referred_by, created_at")
+    .eq("status", "pending")
+    .order("created_at", { ascending: false });
+
+  const referrerIds = [...new Set((applications || []).map((a) => a.referred_by).filter(Boolean))];
+  let referrerEmailById = new Map();
+  if (referrerIds.length > 0) {
+    const { data: referrers } = await admin.from("users").select("id, email").in("id", referrerIds);
+    referrerEmailById = new Map((referrers || []).map((r) => [r.id, r.email]));
+  }
+  const enrichedApplications = (applications || []).map((a) => ({
+    ...a,
+    referrerEmail: a.referred_by ? referrerEmailById.get(a.referred_by) : null,
+  }));
 
   return (
     <section className="section">
@@ -65,6 +83,11 @@ export default async function AdminPostersPage() {
         </div>
 
         <InvitePosterForm />
+
+        <div style={{ marginTop: 40 }}>
+          <h3 style={{ marginBottom: 14 }}>Pending applications</h3>
+          <PosterApplicationsTable applications={enrichedApplications} />
+        </div>
       </div>
     </section>
   );

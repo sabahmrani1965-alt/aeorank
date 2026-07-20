@@ -550,3 +550,47 @@ DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- ── USERS: referral tracking ─────────────────────────────────
+-- Set only by the admin-approval flow (app/api/admin/poster-applications/
+-- [id]/approve/route.js) from poster_applications.referred_by at
+-- account-creation time — never self-reported after the fact.
+ALTER TABLE public.users
+  ADD COLUMN IF NOT EXISTS referred_by UUID REFERENCES public.users(id) ON DELETE SET NULL;
+
+CREATE INDEX IF NOT EXISTS users_referred_by_idx ON public.users(referred_by);
+
+-- ── POSTER APPLICATIONS ──────────────────────────────────────
+-- Pending signups from the public "Refer a friend" apply form
+-- (app/apply-poster). No self-signup exists for posters — an application
+-- here never creates an account by itself; an admin must approve it via
+-- app/admin/posters, which is what actually calls auth.admin.createUser.
+CREATE TABLE IF NOT EXISTS public.poster_applications (
+  id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email        TEXT NOT NULL,
+  -- Resolved from the ?ref=<user-id> query param on the public apply form.
+  -- NULL if there was no ref param, or it didn't match a real poster —
+  -- the applicant is never blocked for a bad/missing ref.
+  referred_by  UUID REFERENCES public.users(id) ON DELETE SET NULL,
+  -- 'pending' (default) | 'approved' | 'dismissed'
+  status       TEXT NOT NULL DEFAULT 'pending',
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS poster_applications_status_idx ON public.poster_applications(status, created_at DESC);
+CREATE INDEX IF NOT EXISTS poster_applications_referred_by_idx ON public.poster_applications(referred_by);
+
+-- Only one *pending* application per email at a time — resubmission after
+-- a dismissal is fine, but prevents duplicate pending rows piling up from
+-- someone re-submitting the form.
+CREATE UNIQUE INDEX IF NOT EXISTS poster_applications_email_pending_uidx
+  ON public.poster_applications(email) WHERE status = 'pending';
+
+ALTER TABLE public.poster_applications ENABLE ROW LEVEL SECURITY;
+
+-- No public/user policies at all — every access (public submission via the
+-- apply form, admin review/approve/dismiss) goes through createAdminClient()
+-- (service role), same as redeem_codes.
+CREATE POLICY "Service role can do anything on poster_applications"
+  ON public.poster_applications FOR ALL
+  USING (auth.role() = 'service_role');
