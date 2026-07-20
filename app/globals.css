@@ -38,35 +38,37 @@
    Scoped re-skin for the poster-facing area (app/poster/**,
    /apply-poster, and /login+/forgot-password+/reset-password when
    visited from the poster domain — see AuthSplitLayout.js). Deliberately
-   light + teal/gold, the opposite of AEOrank's dark navy/amber, so it
-   reads as a separate site rather than "AEOrank's poster page". Every
-   class below (.card, .btn, .kpi, etc.) is unchanged — only the CSS
-   variables they read are overridden within this scope. */
+   light + Reddit's own orange/blue brand colors — this is a "get paid to
+   post on Reddit" site, so leaning into that association reads more
+   relevant than an arbitrary palette, while still staying visually
+   distinct from AEOrank's dark navy/amber. Every class below (.card,
+   .btn, .kpi, etc.) is unchanged — only the CSS variables they read are
+   overridden within this scope. */
 .kc-theme {
   --bg: #ffffff;
-  --bg-2: #f7faf9;
-  --bg-3: #eef4f2;
+  --bg-2: #fff6f2;
+  --bg-3: #ffece3;
   --card: #ffffff;
-  --card-2: #f3f7f6;
-  --card-border: #dbe6e2;
-  --card-border-soft: #e7f0ed;
-  --text: #17241f;
-  --text-dim: #4b5f59;
-  --text-muted: #6b7d77;
-  --accent: #0e7c66;
-  --accent-2: #139c81;
-  --accent-3: #f2b84b;
+  --card-2: #fff3ed;
+  --card-border: #ffd9c7;
+  --card-border-soft: #ffe6d9;
+  --text: #241a12;
+  --text-dim: #5f4f45;
+  --text-muted: #7d6c61;
+  --accent: #ff4500;
+  --accent-2: #ff6a33;
+  --accent-3: #0079d3;
   --accent-ink: #ffffff;
-  --accent-dim: rgba(14, 124, 102, 0.1);
-  --accent-glow: rgba(14, 124, 102, 0.25);
+  --accent-dim: rgba(255, 69, 0, 0.1);
+  --accent-glow: rgba(255, 69, 0, 0.25);
   --shadow-glow: 0 10px 40px -10px var(--accent-glow);
 
-  --msg-success: #0e7c66;
+  --msg-success: #16a34a;
   --msg-danger: #b91c1c;
-  --state-neutral-bg: rgba(23, 36, 31, 0.06);
+  --state-neutral-bg: rgba(36, 26, 18, 0.06);
   --state-neutral-fg: var(--text-dim);
-  --state-success-bg: rgba(14, 124, 102, 0.12);
-  --state-success-fg: #0e7c66;
+  --state-success-bg: rgba(22, 163, 74, 0.12);
+  --state-success-fg: #16a34a;
   --state-danger-bg: rgba(185, 28, 28, 0.1);
   --state-danger-fg: #b91c1c;
 
