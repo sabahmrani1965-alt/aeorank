@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { rateForType } from "@/lib/posterPay";
+import { displaySubreddit } from "@/lib/format";
 import TaskDetail from "@/components/karmacrew/TaskDetail";
 
 export const dynamic = "force-dynamic";
@@ -28,5 +29,5 @@ export default async function PosterTaskDetailPage({ params }) {
     redirect("/poster");
   }
 
-  return <TaskDetail task={task} reward={rateForType(task.type)} />;
+  return <TaskDetail task={{ ...task, subreddit: displaySubreddit(task.subreddit) }} reward={rateForType(task.type)} />;
 }

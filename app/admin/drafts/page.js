@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import AssignDraftControl from "@/components/AssignDraftControl";
+import { displaySubreddit } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -66,7 +67,7 @@ export default async function AdminDraftsPage() {
                     </td>
                     <td style={{ padding: "10px 12px" }}>{emailByUser.get(d.user_id) || "—"}</td>
                     <td style={{ padding: "10px 12px" }}>{TYPE_LABELS[d.type] || "—"}</td>
-                    <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>{d.subreddit}</td>
+                    <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>r/{displaySubreddit(d.subreddit)}</td>
                     <td style={{ padding: "10px 12px", maxWidth: 420 }}>
                       {d.title && d.title !== d.subreddit && (
                         <div style={{ fontWeight: 600, marginBottom: 3 }}>{d.title}</div>
