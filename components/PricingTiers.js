@@ -2,10 +2,90 @@
 
 import { useState } from "react";
 
-// Three monthly partnership tiers (Starter, Growth, Scale) route through
-// Stripe Checkout via /api/checkout. Differentiation is on volume (posts,
-// comments, blog placements) and surface (LinkedIn, case study). AEO
-// structuring across ChatGPT / Perplexity / Claude is included in every tier.
+// Three subscription tiers (Lite, Pro, Max) route through Stripe Checkout
+// via /api/checkout. Checkout still submits the underlying plan keys
+// (starter/growth/scale) that lib/stripe.js, lib/credits.js, and the admin
+// dashboard already key off of — only the public-facing name/price/feature
+// copy changed here, not the internal plan identifiers.
+const ALSO_INCLUDED = [
+  "Access To High Karma Accounts",
+  "1-Click Commenting & Posting",
+  "Smart Upvoting",
+  "Analytics & Reporting",
+];
+
+const TIERS = [
+  {
+    plan: "starter",
+    name: "Lite",
+    tagline: "Access to core features.",
+    price: "$199",
+    cta: "Get Lite",
+    ctaClass: "btn btn-ghost",
+    features: [
+      { text: "$100 Monthly Credits Included", type: "metered" },
+      { text: "$10 Per Comment | $20 Per Post", type: "metered" },
+      { text: "$0.1 Per Upvote", type: "metered" },
+      { text: "New Thread Scans (Every 2 Weeks)", type: "feature" },
+      { text: "Brand & Competitor Mentions (Weekly)", type: "feature" },
+      { text: "Monitor 50 Keywords", type: "feature" },
+      { text: "Connect Up to 3 Brands", type: "feature" },
+      { text: "Add Up to 2 Team Members", type: "feature" },
+    ],
+  },
+  {
+    plan: "growth",
+    name: "Pro",
+    tagline: "Get more out of Reddit.",
+    price: "$299",
+    cta: "Get Pro",
+    ctaClass: "btn btn-ghost",
+    features: [
+      { text: "$200 Monthly Credits Included", type: "metered" },
+      { text: "$7 Per Comment | $15 Per Post", type: "metered" },
+      { text: "$0.1 Per Upvote", type: "metered" },
+      { text: "New Thread Scans (Weekly)", type: "feature" },
+      { text: "Brand & Competitor Mentions (Daily)", type: "feature" },
+      { text: "Monitor 75 Keywords", type: "feature" },
+      { text: "Connect Up to 6 Brands", type: "feature" },
+      { text: "Add Unlimited Team Members", type: "feature" },
+      { text: "Dedicated Slack Channel", type: "metered" },
+    ],
+  },
+  {
+    plan: "scale",
+    name: "Max",
+    tagline: "Our most advanced features.",
+    price: "$449",
+    cta: "Get Max",
+    ctaClass: "btn btn-primary",
+    badge: "Best Value",
+    features: [
+      { text: "$300 Monthly Credits Included", type: "metered" },
+      { text: "$5 Per Comment | $10 Per Post", type: "metered" },
+      { text: "$0.1 Per Upvote", type: "metered" },
+      { text: "New Thread Scans (Daily)", type: "feature" },
+      { text: "Brand & Competitor Mentions (Daily)", type: "feature" },
+      { text: "Monitor 100 Keywords", type: "feature" },
+      { text: "Connect Up to 10 Brands", type: "feature" },
+      { text: "Add Unlimited Team Members", type: "feature" },
+      { text: "Dedicated Slack Channel", type: "metered" },
+    ],
+  },
+];
+
+function FeatureRow({ text, type }) {
+  return (
+    <li className={`pricing-row pricing-row-${type}`}>
+      <span className="pricing-row-check">✓</span>
+      <span className="pricing-row-text">{text}</span>
+      <span className="pricing-row-info" title={text}>
+        ⓘ
+      </span>
+    </li>
+  );
+}
+
 export default function PricingTiers({ brand = "" }) {
   const [loading, setLoading] = useState(""); // which plan key is in-flight
   const [error, setError] = useState("");
@@ -31,95 +111,49 @@ export default function PricingTiers({ brand = "" }) {
     }
   }
 
-  function CheckoutButton({ plan, className, children }) {
-    const isLoading = loading === plan;
-    const disabled = Boolean(loading);
-    return (
-      <button
-        type="button"
-        className={className}
-        onClick={() => startCheckout(plan)}
-        disabled={disabled}
-        style={disabled ? { opacity: 0.7, cursor: "not-allowed" } : undefined}
-      >
-        {isLoading ? "Redirecting…" : children}
-      </button>
-    );
-  }
-
   return (
     <>
       <div className="pricing-grid">
-        <div className="pricing-card">
-          <div className="pricing-name">Starter</div>
-          <div className="pricing-price">
-            $2,000 <span className="per">/ month</span>
-          </div>
-          <div className="pricing-divider" />
-          <p className="pricing-desc">
-            Consistent monthly presence across Reddit and AI answers — built to start moving the needle.
-          </p>
-          <ul className="pricing-features">
-            <li>5 Reddit posts from established accounts</li>
-            <li>15 strategic comments with natural brand mentions</li>
-            <li>1 blog post published on saasoffers.tech (our sister marketplace)</li>
-            <li>AEO structuring across ChatGPT, Perplexity & Claude</li>
-          </ul>
-          <div className="pricing-actions">
-            <CheckoutButton plan="starter" className="btn btn-ghost">
-              Get Started
-            </CheckoutButton>
-          </div>
-        </div>
+        {TIERS.map((tier) => (
+          <div key={tier.plan} className={`pricing-card${tier.badge ? " best-value" : ""}`}>
+            {tier.badge ? <div className="pricing-corner-badge">{tier.badge}</div> : null}
+            <div className="pricing-name">{tier.name}</div>
+            <p className="pricing-tagline">{tier.tagline}</p>
+            <div className="pricing-divider" />
+            <div className="pricing-price">
+              {tier.price} <span className="per">/ MONTH</span>
+            </div>
+            <div className="pricing-actions">
+              <button
+                type="button"
+                className={tier.ctaClass}
+                onClick={() => startCheckout(tier.plan)}
+                disabled={Boolean(loading)}
+                style={loading ? { opacity: 0.7, cursor: "not-allowed" } : undefined}
+              >
+                {loading === tier.plan ? "Redirecting…" : `${tier.cta} →`}
+              </button>
+            </div>
 
-        <div className="pricing-card popular">
-          <div className="pricing-name">Growth</div>
-          <div className="pricing-price">
-            $3,500 <span className="per">/ month</span>
-          </div>
-          <div className="pricing-badge">Recommended</div>
-          <div className="pricing-divider" />
-          <p className="pricing-desc">
-            Compounding presence with newsletter reach — the sweet spot for most B2B SaaS brands.
-          </p>
-          <ul className="pricing-features">
-            <li>9 Reddit posts from established accounts</li>
-            <li>25 strategic comments with natural brand mentions</li>
-            <li>2 blog posts published on saasoffers.tech (our sister marketplace)</li>
-            <li>Newsletter mention — direct email to the SaaSOffers founder audience</li>
-            <li>AEO structuring across ChatGPT, Perplexity & Claude</li>
-          </ul>
-          <div className="pricing-actions">
-            <CheckoutButton plan="growth" className="btn btn-primary">
-              Get Started
-            </CheckoutButton>
-          </div>
-        </div>
+            <ul className="pricing-features">
+              {tier.features.map((f) => (
+                <FeatureRow key={f.text} text={f.text} type={f.type} />
+              ))}
+            </ul>
 
-        <div className="pricing-card">
-          <div className="pricing-name">Scale</div>
-          <div className="pricing-price">
-            $6,500 <span className="per">/ month</span>
+            <div className="pricing-also-included">Also Included</div>
+            <ul className="pricing-features">
+              {ALSO_INCLUDED.map((text) => (
+                <FeatureRow key={text} text={text} type="feature" />
+              ))}
+            </ul>
           </div>
-          <div className="pricing-divider" />
-          <p className="pricing-desc">
-            Aggressive expansion with permanent placement — built for brands ready to dominate their category in AI answers.
-          </p>
-          <ul className="pricing-features">
-            <li>18 Reddit posts from established accounts</li>
-            <li>50 strategic comments with natural brand mentions</li>
-            <li>4 blog posts published on saasoffers.tech (our sister marketplace)</li>
-            <li>Newsletter mention — direct email to the SaaSOffers founder audience</li>
-            <li>Permanent featured listing on saasoffers.tech</li>
-            <li>AEO structuring across ChatGPT, Perplexity & Claude</li>
-          </ul>
-          <div className="pricing-actions">
-            <CheckoutButton plan="scale" className="btn btn-ghost">
-              Get Started
-            </CheckoutButton>
-          </div>
-        </div>
+        ))}
       </div>
+
+      <p className="pricing-topup">
+        Need more credits? Top up anytime inside your dashboard — pay only for what you use.
+      </p>
 
       {error ? (
         <p

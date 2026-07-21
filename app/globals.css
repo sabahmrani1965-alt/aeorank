@@ -663,46 +663,50 @@ button { font-family: inherit; }
   transition: border-color .2s, transform .15s;
 }
 .pricing-card:hover { border-color: rgba(242, 168, 59, 0.3); transform: translateY(-4px); }
-.pricing-card.popular {
+.pricing-card.best-value {
   border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent), 0 16px 40px -8px var(--accent-glow);
+  background: linear-gradient(160deg, rgba(242, 168, 59, 0.1), var(--card) 55%);
 }
-.pricing-card.popular::before {
-  content: "MOST POPULAR";
+.pricing-corner-badge {
   position: absolute;
-  top: -12px; left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, var(--accent), var(--accent-3));
-  color: var(--accent-ink);
-  padding: 4px 14px;
-  font-size: 11px; font-weight: 800;
-  letter-spacing: .08em;
+  top: 20px; right: 20px;
+  background: rgba(242, 168, 59, 0.15);
+  color: var(--accent);
+  border: 1px solid rgba(242, 168, 59, 0.4);
+  padding: 4px 12px;
+  font-size: 11.5px; font-weight: 700;
   border-radius: 999px;
 }
 .pricing-name { color: var(--accent); font-size: 22px; font-weight: 700; }
+.pricing-tagline { color: var(--text-dim); font-size: 14px; margin: 4px 0 0; }
 .pricing-price { font-size: 32px; font-weight: 800; margin: 14px 0; letter-spacing: -.02em; }
 .pricing-price .per { color: var(--text-muted); font-size: 16px; font-weight: 500; }
-.pricing-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: rgba(255, 255, 255, .05);
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 12.5px; color: var(--text-dim);
-  margin: 8px 0;
-  align-self: flex-start;
-}
 .pricing-divider { border-top: 1px solid var(--card-border); margin: 16px 0; }
-.pricing-desc { color: var(--text-dim); margin-bottom: 16px; font-size: 14.5px; line-height: 1.5; }
-.pricing-features { list-style: none; padding: 0; margin: 0 0 24px; flex: 1; }
-.pricing-features li {
-  display: flex; gap: 10px; align-items: flex-start;
-  padding: 8px 0; color: var(--text-dim); font-size: 14px;
+.pricing-features { list-style: none; padding: 0; margin: 0 0 8px; }
+.pricing-row {
+  display: flex; gap: 10px; align-items: center;
+  padding: 7px 0; color: var(--text-dim); font-size: 13.5px;
 }
-.pricing-features li::before {
-  content: "✓"; color: var(--accent); flex-shrink: 0;
-  font-weight: 700; margin-top: 1px;
+.pricing-row-check {
+  flex-shrink: 0; font-weight: 700;
+  width: 18px; height: 18px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%; font-size: 11px;
 }
-.pricing-actions { display: flex; flex-direction: column; gap: 8px; }
+.pricing-row-metered .pricing-row-check { color: var(--accent); background: rgba(242, 168, 59, 0.15); }
+.pricing-row-feature .pricing-row-check { color: var(--state-success-fg); background: var(--state-success-bg); }
+.pricing-row-text { flex: 1; }
+.pricing-row-info {
+  flex-shrink: 0; color: var(--text-muted); font-size: 13px; cursor: help;
+}
+.pricing-also-included {
+  text-align: center; color: var(--text-muted); font-size: 11.5px;
+  font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  border-top: 1px solid var(--card-border);
+  margin: 14px 0 4px; padding-top: 14px;
+}
+.pricing-actions { display: flex; flex-direction: column; gap: 8px; margin: 18px 0 16px; }
+.pricing-topup { text-align: center; color: var(--text-dim); font-size: 14px; margin-top: 28px; }
 
 /* ----------------- Report-specific ----------------- */
 .report-hero {
