@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import OpportunityCard from "./OpportunityCard";
+import OpportunityListItem from "./OpportunityListItem";
+import OpportunityDetailPane from "./OpportunityDetailPane";
 
 // company_profiles.competitors stores competitor URLs, not clean brand
 // names — reduce a URL to its bare domain label so it can be matched
@@ -34,39 +35,57 @@ function freshnessLabel(postCreatedAt) {
   return "Older";
 }
 
-// Owns which single card is expanded (shared across both the Saved and All
-// sections) so opening one Quick Preview closes any other — coordinating
-// this here is the only reason this needs to be a client component wrapper
-// rather than each OpportunityCard managing its own expand state.
+// Two-pane layout: a compact scrollable list on the left, full detail +
+// inline draft-and-create-task composer on the right for whichever
+// opportunity is selected. Defaults to the first item so the pane is never
+// empty on load.
 export default function OpportunityList({ saved, rest, competitors, analyzeCost }) {
-  const [expandedId, setExpandedId] = useState(null);
+  const all = [...saved, ...rest];
+  const [selectedId, setSelectedId] = useState(all[0]?.id ?? null);
+  const selected = all.find((o) => o.id === selectedId) || null;
 
-  function renderCard(o) {
+  function renderItem(o) {
     return (
-      <OpportunityCard
+      <OpportunityListItem
         key={o.id}
         opportunity={o}
-        competitorMatch={findCompetitorMention(`${o.title} ${o.snippet || ""}`, competitors)}
         freshness={freshnessLabel(o.post_created_at)}
-        analyzeCost={analyzeCost}
-        isExpanded={expandedId === o.id}
-        onToggleExpand={setExpandedId}
+        isSelected={selectedId === o.id}
+        onSelect={setSelectedId}
       />
     );
   }
 
   return (
-    <>
-      {saved.length > 0 && (
-        <div style={{ marginBottom: 32 }}>
-          <h3 style={{ marginBottom: 14 }}>Saved</h3>
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>{saved.map(renderCard)}</div>
+    <div className="opp-split">
+      <div className="opp-list-col">
+        {saved.length > 0 && (
+          <div style={{ marginBottom: 24 }}>
+            <h3 className="opp-list-col-heading">Saved</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>{saved.map(renderItem)}</div>
+          </div>
+        )}
+        <div>
+          {saved.length > 0 && <h3 className="opp-list-col-heading">All opportunities</h3>}
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>{rest.map(renderItem)}</div>
         </div>
-      )}
-      <div>
-        {saved.length > 0 && <h3 style={{ marginBottom: 14 }}>All opportunities</h3>}
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>{rest.map(renderCard)}</div>
       </div>
-    </>
+
+      <div className="opp-detail-col">
+        {selected ? (
+          <OpportunityDetailPane
+            key={selected.id}
+            opportunity={selected}
+            competitorMatch={findCompetitorMention(`${selected.title} ${selected.snippet || ""}`, competitors)}
+            freshness={freshnessLabel(selected.post_created_at)}
+            analyzeCost={analyzeCost}
+          />
+        ) : (
+          <div className="card" style={{ textAlign: "center", color: "var(--text-dim)", padding: 32 }}>
+            Select an opportunity to see details.
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

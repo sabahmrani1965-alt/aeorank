@@ -43,7 +43,7 @@ export default async function OpportunitiesPage() {
     ? await supabase
         .from("opportunities")
         .select(
-          "id, sub, title, snippet, permalink, ups, comments, post_created_at, relevance_score, relevance_reason, relevance_reasons, buying_intent, saved, analysis_summary, analysis_pain_points, analysis_competitors_mentioned, analysis_response_angle, analyzed_at, fetched_at"
+          "id, sub, title, snippet, permalink, ups, comments, post_created_at, relevance_score, relevance_reason, relevance_reasons, buying_intent, saved, analysis_summary, analysis_pain_points, analysis_competitors_mentioned, analysis_response_angle, thread_selftext, thread_comments, analyzed_at, fetched_at"
         )
         .eq("user_id", user.id)
         .eq("company_profile_id", profile.id)

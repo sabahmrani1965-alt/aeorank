@@ -389,6 +389,14 @@ CREATE TABLE IF NOT EXISTS public.opportunities (
   analysis_pain_points           TEXT[],
   analysis_competitors_mentioned TEXT[],
   analysis_response_angle        TEXT,
+  -- Real fetched thread content from the same Quick Preview call as the
+  -- analysis_* fields above (fetchThread() in lib/reddit.js) — kept
+  -- alongside the AI-derived fields rather than re-fetched on every view,
+  -- so the detail pane can show the actual post body + top comments
+  -- without a second Apify call/credit charge. thread_comments is an array
+  -- of { body, ups }, no author/id (fetchThread doesn't return those).
+  thread_selftext                TEXT,
+  thread_comments                JSONB,
   analyzed_at                    TIMESTAMPTZ,
   fetched_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -420,6 +428,12 @@ CREATE POLICY "Users can delete own opportunities"
 CREATE POLICY "Service role can do anything on opportunities"
   ON public.opportunities FOR ALL
   USING (auth.role() = 'service_role');
+
+-- ── OPPORTUNITIES: real fetched thread content ───────────────
+-- Migration for databases created before these existed (the CREATE TABLE
+-- above only applies to a fresh database).
+ALTER TABLE public.opportunities ADD COLUMN IF NOT EXISTS thread_selftext TEXT;
+ALTER TABLE public.opportunities ADD COLUMN IF NOT EXISTS thread_comments JSONB;
 
 -- ── MENTIONS ─────────────────────────────────────────────────
 -- Read-only brand-mention monitoring: real Reddit posts/comments that

@@ -65,6 +65,12 @@ export async function POST(req) {
 
   const companyDescription = profile?.description || profile?.company_name || "";
 
+  // Populated by run() below — kept in the outer scope so it can be
+  // persisted/returned alongside the analysis once withCredits resolves,
+  // instead of a second fetch. Real fetched thread content, not an LLM
+  // output: post body + top comments as they actually appear on Reddit.
+  let fetchedThread = null;
+
   const outcome = await withCredits({
     admin,
     userId: user.id,
@@ -75,6 +81,7 @@ export async function POST(req) {
     run: async () => {
       const thread = await fetchThread(opportunity.permalink);
       if (!thread) return null;
+      fetchedThread = thread;
       return analyzeThread({
         title: opportunity.title,
         selftext: thread.selftext,
@@ -103,6 +110,8 @@ export async function POST(req) {
     analysis_pain_points: analysis.painPoints,
     analysis_competitors_mentioned: analysis.competitorsMentioned,
     analysis_response_angle: analysis.responseAngle,
+    thread_selftext: fetchedThread?.selftext || null,
+    thread_comments: fetchedThread?.comments || null,
     analyzed_at: analyzedAt,
   };
   // The deep analysis has the full thread text, so its buying-intent read is
@@ -121,6 +130,7 @@ export async function POST(req) {
   return NextResponse.json({
     ok: true,
     analysis: { ...analysis, analyzedAt },
+    thread: fetchedThread ? { selftext: fetchedThread.selftext, comments: fetchedThread.comments } : null,
     creditsRemaining: outcome.balance,
   });
 }
