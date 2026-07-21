@@ -60,10 +60,18 @@ function ApplicationRow({ application }) {
         )}
         {application.reddit_check_status === "unverified" && (
           <span
-            title="Neither Reddit's API nor a direct fetch could confirm this account's status — worth a manual look."
+            title="Neither Reddit's API, a direct fetch, nor Pullpush's archive could confirm this account's status — worth a manual look."
             style={{ marginLeft: 6, fontSize: 11, fontWeight: 700, color: "var(--warn, #ffc857)" }}
           >
             unverified
+          </span>
+        )}
+        {application.reddit_check_status === "active_approx" && (
+          <span
+            title="Confirmed active via Pullpush's historical archive (age + karma), not Reddit's own API — can't confirm it isn't currently suspended."
+            style={{ marginLeft: 6, fontSize: 11, fontWeight: 700, color: "var(--text-muted)" }}
+          >
+            approx.
           </span>
         )}
       </td>

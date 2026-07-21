@@ -38,6 +38,12 @@ export async function POST(req) {
   if (check.status === "suspended") {
     return NextResponse.json({ error: "That Reddit account is suspended — you'll need an active account to post from." }, { status: 400 });
   }
+  if (check.status === "unavailable") {
+    return NextResponse.json(
+      { error: "That Reddit account couldn't be found — it may be suspended, deleted, or the username may be wrong." },
+      { status: 400 }
+    );
+  }
   if (check.status === "too_new") {
     return NextResponse.json(
       { error: `That Reddit account needs to be at least ${MIN_ACCOUNT_AGE_MONTHS} months old.` },

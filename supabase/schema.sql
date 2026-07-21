@@ -12,11 +12,22 @@ CREATE TABLE IF NOT EXISTS public.users (
   -- that fulfill tasks claimed from the shared pool, not customers
   -- themselves. See report_drafts.claimed_by below.
   role               TEXT NOT NULL DEFAULT 'customer',
-  -- Set from the applicant's poster_applications.reddit_username at
-  -- approval time (lib/posterAccount.js) — the Reddit account they told
-  -- us they'd post from. NULL for customers and for posters invited
-  -- directly (app/api/admin/posters) rather than via /apply-poster.
+  -- Set at role-flip time — either by lib/posterAccount.js (legacy
+  -- admin-approval path) or app/api/poster/verify-reddit (current
+  -- self-serve signup path) — the Reddit account they told us they'd
+  -- post from. NULL for customers and for posters invited directly
+  -- (app/api/admin/posters) without going through either apply flow.
   reddit_username    TEXT,
+  -- Result of lib/reddit.js's checkRedditAccount() at the moment the role
+  -- flipped to 'poster': 'active' (confirmed via Reddit OAuth, a direct
+  -- fetch, or the Apify user-scraper actor — all read the account's real
+  -- profile) | 'active_approx' (confirmed via Pullpush's historical
+  -- archive instead — an approximation derived from post history, not
+  -- the account itself) | 'unverified' (couldn't check any way — neither
+  -- a rejection nor a confirmation). Never
+  -- 'suspended'/'unavailable'/'too_new'/'low_karma'/'not_found'/'invalid'
+  -- — those are rejected before the role ever flips.
+  reddit_check_status TEXT,
   created_at         TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -604,13 +615,17 @@ CREATE TABLE IF NOT EXISTS public.poster_applications (
   -- Normalized username (see lib/reddit.js's normalizeRedditUsername) from
   -- whatever profile link/username the applicant entered.
   reddit_username     TEXT,
-  -- 'active' | 'suspended' | 'not_found' | 'too_new' (younger than
+  -- 'active' (via Reddit OAuth/direct fetch/Apify user-scraper) |
+  -- 'active_approx' (via Pullpush's historical archive instead — an
+  -- approximation, not the account itself) | 'suspended' | 'unavailable'
+  -- (Apify's actor found no profile at all — likely suspended/deleted,
+  -- can't tell which) | 'not_found' | 'too_new' (younger than
   -- lib/reddit.js's MIN_ACCOUNT_AGE_MONTHS) | 'low_karma' (under
-  -- MIN_KARMA) | 'unverified' (couldn't check — neither Reddit OAuth nor
-  -- the direct fetch succeeded) | 'invalid' (unparseable input).
-  -- Everything except 'active'/'unverified' is rejected at submission
-  -- time in app/api/poster-applications — this column only ever holds
-  -- those two for rows that made it past that.
+  -- MIN_KARMA) | 'unverified' (couldn't check any way) | 'invalid'
+  -- (unparseable input). Everything except 'active'/'active_approx'/
+  -- 'unverified' is rejected at submission time in
+  -- app/api/poster-applications — this column only ever holds those
+  -- three for rows that made it past that.
   reddit_check_status TEXT,
   -- 'pending' (default) | 'approved' | 'dismissed'
   status       TEXT NOT NULL DEFAULT 'pending',

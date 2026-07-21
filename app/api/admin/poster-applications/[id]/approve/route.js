@@ -20,7 +20,7 @@ export async function POST(req, { params }) {
 
   const { data: application } = await admin
     .from("poster_applications")
-    .select("id, email, referred_by, reddit_username, status")
+    .select("id, email, referred_by, reddit_username, reddit_check_status, status")
     .eq("id", params.id)
     .maybeSingle();
 
@@ -32,6 +32,7 @@ export async function POST(req, { params }) {
     email: application.email,
     referredBy: application.referred_by,
     redditUsername: application.reddit_username,
+    redditCheckStatus: application.reddit_check_status,
     origin: siteOrigin(req),
   });
   if (!result.ok) {
