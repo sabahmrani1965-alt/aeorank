@@ -32,7 +32,7 @@ export default async function CrewQuestLandingPage() {
   return (
     <div className="kc-theme cq-landing">
       <CrewQuestNav />
-      <Hero liveMissionCount={missions.length} previewMission={missions[0] || null} />
+      <Hero liveMissionCount={missions.length} />
       <FoundingBanner posterCount={posterCount} />
       <HowItWorks />
       <Faq />

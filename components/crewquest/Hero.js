@@ -1,9 +1,7 @@
 import Link from "next/link";
 import ScrollReveal from "./ScrollReveal";
 
-const TYPE_LABEL = { comment: "Comment", reply: "Reply", post: "Post" };
-
-export default function Hero({ liveMissionCount, previewMission }) {
+export default function Hero({ liveMissionCount }) {
   return (
     <section className="cq-hero-section">
       <div className="container cq-hero">
@@ -49,43 +47,23 @@ export default function Hero({ liveMissionCount, previewMission }) {
       <ScrollReveal delay={200} className="cq-hero-preview-wrap">
         <div className="cq-hero-preview kc-task-card">
           <div className="cq-hero-preview-eyebrow">
-            <span>{previewMission ? "Live mission" : "Example mission"}</span>
+            <span>Example mission</span>
             <span className="kc-badge kc-badge-available">Available</span>
           </div>
 
-          {previewMission ? (
-            <>
-              <div className="kc-task-card-head">
-                <span className="kc-task-subreddit">r/{previewMission.subreddit}</span>
-                <span className="kc-task-reward">${previewMission.reward.toFixed(2)}</span>
-              </div>
-              <div className="kc-task-meta">
-                <span className="kc-badge kc-badge-neutral">{TYPE_LABEL[previewMission.type] || "Comment"}</span>
-                <span className="kc-badge kc-badge-neutral">{previewMission.difficulty}</span>
-                <span>⏱ {previewMission.estimatedMinutes} min</span>
-                <span>
-                  🎟 {previewMission.slotsRemaining}/{previewMission.slotsTotal} slots
-                </span>
-              </div>
-              <p className="cq-hero-preview-desc">{previewMission.title}</p>
-            </>
-          ) : (
-            <>
-              <div className="kc-task-card-head">
-                <span className="kc-task-subreddit">r/technology</span>
-                <span className="kc-task-reward">$2.50</span>
-              </div>
-              <div className="kc-task-meta">
-                <span className="kc-badge kc-badge-neutral">Comment</span>
-                <span className="kc-badge kc-badge-neutral">Easy</span>
-                <span>⏱ 10 min</span>
-              </div>
-              <p className="cq-hero-preview-desc">
-                Share a genuine take on a trending discussion — this is what a real mission looks
-                like once you're in.
-              </p>
-            </>
-          )}
+          <div className="kc-task-card-head">
+            <span className="kc-task-subreddit">r/technology</span>
+            <span className="kc-task-reward">$2.50</span>
+          </div>
+          <div className="kc-task-meta">
+            <span className="kc-badge kc-badge-neutral">Comment</span>
+            <span className="kc-badge kc-badge-neutral">Easy</span>
+            <span>⏱ 10 min</span>
+          </div>
+          <p className="cq-hero-preview-desc">
+            Share a genuine take on a trending discussion — this is what a real mission looks
+            like once you're in.
+          </p>
 
           <Link href="/apply-poster" className="btn btn-primary" style={{ width: "100%" }}>
             Accept Mission →
