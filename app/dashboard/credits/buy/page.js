@@ -37,7 +37,6 @@ export default async function BuyCreditsPage() {
               });
               const approxComments = Math.round(total / CREDIT_COSTS.generate_comment);
               const approxPosts = Math.round(total / CREDIT_COSTS.generate_post);
-              const approxReports = Math.max(1, Math.round(total / CREDIT_COSTS.ai_visibility_report));
 
               return (
                 <div
@@ -96,7 +95,6 @@ export default async function BuyCreditsPage() {
                   >
                     <span>≈ {approxComments} AI comments</span>
                     <span>≈ {approxPosts} Reddit posts</span>
-                    <span>≈ {approxReports} visibility report{approxReports === 1 ? "" : "s"}</span>
                   </div>
                   <BuyCreditsButton packageId={pkg.id} className="btn btn-primary" style={{ marginTop: 8 }}>
                     Buy {total} credits
