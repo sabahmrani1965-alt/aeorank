@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { hasActiveSubscription } from "@/lib/subscription";
+import { getActiveCompanyProfile } from "@/lib/brands";
 import { analyzeBrandVisibility, isAiVisibilityConfigured } from "@/lib/aivisibility";
 import { pickCategoryQuery } from "@/lib/keywords";
 import { withCredits, getBalance, CREDIT_COSTS } from "@/lib/credits";
@@ -35,11 +36,7 @@ export async function POST() {
     return NextResponse.json({ error: "Not configured." }, { status: 500 });
   }
 
-  const { data: profile } = await supabase
-    .from("company_profiles")
-    .select("company_name, description, website")
-    .eq("user_id", user.id)
-    .maybeSingle();
+  const profile = await getActiveCompanyProfile(supabase, user.id);
 
   const brand = profile?.company_name || "";
   const description = profile?.description || "";
@@ -75,6 +72,7 @@ export async function POST() {
     .from("reports")
     .insert({
       user_id: user.id,
+      company_profile_id: profile.id,
       brand,
       url: profile?.website || null,
       score: aiVisibility.score,

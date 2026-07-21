@@ -28,6 +28,15 @@ CREATE TABLE IF NOT EXISTS public.users (
   -- 'suspended'/'unavailable'/'too_new'/'low_karma'/'not_found'/'invalid'
   -- — those are rejected before the role ever flips.
   reddit_check_status TEXT,
+  -- Which of this user's company_profiles ("brands") is currently active —
+  -- resolved via lib/brands.js's getActiveCompanyProfile, which
+  -- self-heals this to the user's oldest brand if it's ever null/stale/
+  -- deleted. NULL for a user with zero brands. No inline REFERENCES here:
+  -- company_profiles is defined later in this file and itself references
+  -- public.users, so the FK is added via ALTER TABLE right after
+  -- company_profiles is created below (avoids a forward-reference error
+  -- on a fresh install).
+  active_company_profile_id UUID,
   created_at         TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -109,6 +118,11 @@ CREATE POLICY "Service role can do anything on redeem_codes"
 CREATE TABLE IF NOT EXISTS public.reports (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id     UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  -- Which brand this report was generated for — no inline REFERENCES:
+  -- company_profiles is defined later in this file (see the deferred FK
+  -- block right after it). NULL for reports generated before multi-brand
+  -- support existed.
+  company_profile_id UUID,
   brand       TEXT NOT NULL,
   url         TEXT,
   score       INTEGER,
@@ -118,6 +132,7 @@ CREATE TABLE IF NOT EXISTS public.reports (
   rows        JSONB, -- aiVisibility.rows: [{ query, model, live, answer, mentioned }]
   created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+CREATE INDEX IF NOT EXISTS reports_company_profile_id_idx ON public.reports(company_profile_id);
 
 CREATE INDEX IF NOT EXISTS reports_user_id_created_at_idx ON public.reports(user_id, created_at DESC);
 
@@ -145,6 +160,10 @@ CREATE POLICY "Service role can do anything on reports"
 CREATE TABLE IF NOT EXISTS public.prompts (
   id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id          UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  -- Which brand this prompt belongs to — no inline REFERENCES (see the
+  -- reports.company_profile_id comment above for why). NULL for prompts
+  -- created before multi-brand support existed.
+  company_profile_id UUID,
   text             TEXT NOT NULL,
   -- 'commercial' | 'competitor' | 'branded' — user-selected when adding
   -- the prompt, not auto-classified.
@@ -165,6 +184,7 @@ CREATE TABLE IF NOT EXISTS public.prompts (
 );
 
 CREATE INDEX IF NOT EXISTS prompts_user_id_idx ON public.prompts(user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS prompts_company_profile_id_idx ON public.prompts(company_profile_id);
 
 ALTER TABLE public.prompts ENABLE ROW LEVEL SECURITY;
 
@@ -228,6 +248,14 @@ CREATE TABLE IF NOT EXISTS public.report_drafts (
   id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id    UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
   report_id  UUID REFERENCES public.reports(id) ON DELETE CASCADE,
+  -- Which brand this task belongs to — no inline REFERENCES (see the
+  -- reports.company_profile_id comment above for why). Set at creation
+  -- time (app/api/drafts/route.js) to the customer's active brand; read
+  -- directly (not re-derived from user_id) by
+  -- app/api/poster/tasks/[id]/regenerate/route.js, since the acting user
+  -- there is the poster fulfilling the task, not its owning brand's
+  -- customer. NULL for tasks created before multi-brand support existed.
+  company_profile_id UUID,
   -- 'comment' | 'post' | 'reply' — which Draft Studio type this came from.
   -- NULL on rows saved before this column existed.
   type       TEXT,
@@ -264,6 +292,7 @@ CREATE TABLE IF NOT EXISTS public.report_drafts (
 
 CREATE INDEX IF NOT EXISTS report_drafts_user_id_idx ON public.report_drafts(user_id);
 CREATE INDEX IF NOT EXISTS report_drafts_claimed_by_idx ON public.report_drafts(claimed_by);
+CREATE INDEX IF NOT EXISTS report_drafts_company_profile_id_idx ON public.report_drafts(company_profile_id);
 CREATE INDEX IF NOT EXISTS report_drafts_status_idx ON public.report_drafts(status);
 
 ALTER TABLE public.report_drafts ENABLE ROW LEVEL SECURITY;
@@ -313,6 +342,9 @@ CREATE POLICY "Service role can do anything on report_drafts"
 CREATE TABLE IF NOT EXISTS public.opportunities (
   id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id          UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  -- Which brand this opportunity was scored for — no inline REFERENCES
+  -- (see the reports.company_profile_id comment above for why).
+  company_profile_id UUID,
   sub              TEXT NOT NULL,
   title            TEXT NOT NULL,
   snippet          TEXT,
@@ -348,6 +380,7 @@ CREATE TABLE IF NOT EXISTS public.opportunities (
 );
 
 CREATE INDEX IF NOT EXISTS opportunities_user_id_idx ON public.opportunities(user_id, relevance_score DESC);
+CREATE INDEX IF NOT EXISTS opportunities_company_profile_id_idx ON public.opportunities(company_profile_id);
 
 ALTER TABLE public.opportunities ENABLE ROW LEVEL SECURITY;
 
@@ -383,6 +416,9 @@ CREATE POLICY "Service role can do anything on opportunities"
 CREATE TABLE IF NOT EXISTS public.mentions (
   id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id          UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  -- Which brand this mention was searched for — no inline REFERENCES (see
+  -- the reports.company_profile_id comment above for why).
+  company_profile_id UUID,
   sub              TEXT NOT NULL,
   title            TEXT NOT NULL,
   snippet          TEXT,
@@ -396,6 +432,7 @@ CREATE TABLE IF NOT EXISTS public.mentions (
 );
 
 CREATE INDEX IF NOT EXISTS mentions_user_id_idx ON public.mentions(user_id, post_created_at DESC);
+CREATE INDEX IF NOT EXISTS mentions_company_profile_id_idx ON public.mentions(company_profile_id);
 
 ALTER TABLE public.mentions ENABLE ROW LEVEL SECURITY;
 
@@ -416,13 +453,18 @@ CREATE POLICY "Service role can do anything on mentions"
   USING (auth.role() = 'service_role');
 
 -- ── COMPANY PROFILES ─────────────────────────────────────────
--- One row per user, filled in by the post-signup onboarding wizard
--- (website, company details, competitors). Reference data only for now —
--- not yet wired into report generation. `completed` is set whether the
--- user finishes the wizard or hits "Skip onboarding", so we don't
--- re-prompt either way.
+-- Multiple rows per user ("brands") — filled in by the post-signup
+-- onboarding wizard (website, company details, competitors) or the
+-- "+ Add brand" flow (app/api/brands/route.js), which of these a user is
+-- currently working in is tracked by users.active_company_profile_id (see
+-- lib/brands.js's getActiveCompanyProfile). Brand-count limits per plan
+-- live in lib/brands.js's BRAND_LIMITS, enforced in app/api/brands/route.js
+-- (no active plan = 1 brand, matching the original single-profile
+-- behavior). `completed` is set whether the user finishes the wizard or
+-- hits "Skip onboarding", so we don't re-prompt either way.
 CREATE TABLE IF NOT EXISTS public.company_profiles (
-  user_id           UUID PRIMARY KEY REFERENCES public.users(id) ON DELETE CASCADE,
+  id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id           UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
   website           TEXT,
   company_name      TEXT,
   target_location   TEXT,
@@ -433,6 +475,8 @@ CREATE TABLE IF NOT EXISTS public.company_profiles (
   created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE INDEX IF NOT EXISTS company_profiles_user_id_idx ON public.company_profiles(user_id);
 
 ALTER TABLE public.company_profiles ENABLE ROW LEVEL SECURITY;
 
@@ -448,9 +492,40 @@ CREATE POLICY "Users can update own company profile"
   ON public.company_profiles FOR UPDATE
   USING (auth.uid() = user_id);
 
+CREATE POLICY "Users can delete own company profile"
+  ON public.company_profiles FOR DELETE
+  USING (auth.uid() = user_id);
+
 CREATE POLICY "Service role can do anything on company_profiles"
   ON public.company_profiles FOR ALL
   USING (auth.role() = 'service_role');
+
+-- Deferred FKs from the users/reports/prompts/report_drafts/opportunities/
+-- mentions tables above (see each one's company_profile_id comment) —
+-- company_profiles didn't exist yet at those points in the file.
+ALTER TABLE public.users
+  ADD CONSTRAINT users_active_company_profile_id_fkey
+  FOREIGN KEY (active_company_profile_id) REFERENCES public.company_profiles(id) ON DELETE SET NULL;
+
+ALTER TABLE public.reports
+  ADD CONSTRAINT reports_company_profile_id_fkey
+  FOREIGN KEY (company_profile_id) REFERENCES public.company_profiles(id) ON DELETE CASCADE;
+
+ALTER TABLE public.prompts
+  ADD CONSTRAINT prompts_company_profile_id_fkey
+  FOREIGN KEY (company_profile_id) REFERENCES public.company_profiles(id) ON DELETE CASCADE;
+
+ALTER TABLE public.report_drafts
+  ADD CONSTRAINT report_drafts_company_profile_id_fkey
+  FOREIGN KEY (company_profile_id) REFERENCES public.company_profiles(id) ON DELETE CASCADE;
+
+ALTER TABLE public.opportunities
+  ADD CONSTRAINT opportunities_company_profile_id_fkey
+  FOREIGN KEY (company_profile_id) REFERENCES public.company_profiles(id) ON DELETE CASCADE;
+
+ALTER TABLE public.mentions
+  ADD CONSTRAINT mentions_company_profile_id_fkey
+  FOREIGN KEY (company_profile_id) REFERENCES public.company_profiles(id) ON DELETE CASCADE;
 
 -- ── CREDIT BALANCES ──────────────────────────────────────────
 -- One row per user. Every mutation goes through the deduct_credits/

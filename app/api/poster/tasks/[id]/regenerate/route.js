@@ -25,7 +25,7 @@ export async function POST(req, { params }) {
 
   const { data: task } = await admin
     .from("report_drafts")
-    .select("id, user_id, type, subreddit, title, body")
+    .select("id, user_id, company_profile_id, type, subreddit, title, body")
     .eq("id", params.id)
     .eq("claimed_by", user.id)
     .eq("status", "claimed")
@@ -34,11 +34,16 @@ export async function POST(req, { params }) {
     return NextResponse.json({ error: "Task not found, expired, or not claimed by you." }, { status: 404 });
   }
 
-  const { data: profile } = await admin
-    .from("company_profiles")
-    .select("company_name, description")
-    .eq("user_id", task.user_id)
-    .maybeSingle();
+  // The task's own brand, not re-derived from task.user_id — that customer
+  // may have several brands now, so task.user_id alone no longer resolves
+  // a single company_profiles row.
+  const { data: profile } = task.company_profile_id
+    ? await admin
+        .from("company_profiles")
+        .select("company_name, description")
+        .eq("id", task.company_profile_id)
+        .maybeSingle()
+    : { data: null };
 
   const content = await generateRedditContent({
     type: task.type || "comment",

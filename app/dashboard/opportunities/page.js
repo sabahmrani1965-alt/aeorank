@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { timeAgo } from "@/lib/reddit";
 import { hasActiveSubscription } from "@/lib/subscription";
+import { getActiveCompanyProfile } from "@/lib/brands";
 import { CREDIT_COSTS } from "@/lib/credits";
 import OpportunityRefreshButton from "@/components/OpportunityRefreshButton";
 import OpportunityList from "@/components/OpportunityList";
@@ -36,19 +37,18 @@ export default async function OpportunitiesPage() {
     );
   }
 
-  const { data: profile } = await supabase
-    .from("company_profiles")
-    .select("description, company_name, competitors")
-    .eq("user_id", user.id)
-    .maybeSingle();
+  const profile = await getActiveCompanyProfile(supabase, user.id);
 
-  const { data: opportunities } = await supabase
-    .from("opportunities")
-    .select(
-      "id, sub, title, snippet, permalink, ups, comments, post_created_at, relevance_score, relevance_reason, relevance_reasons, buying_intent, saved, analysis_summary, analysis_pain_points, analysis_competitors_mentioned, analysis_response_angle, analyzed_at, fetched_at"
-    )
-    .eq("user_id", user.id)
-    .order("relevance_score", { ascending: false, nullsFirst: false });
+  const { data: opportunities } = profile
+    ? await supabase
+        .from("opportunities")
+        .select(
+          "id, sub, title, snippet, permalink, ups, comments, post_created_at, relevance_score, relevance_reason, relevance_reasons, buying_intent, saved, analysis_summary, analysis_pain_points, analysis_competitors_mentioned, analysis_response_angle, analyzed_at, fetched_at"
+        )
+        .eq("user_id", user.id)
+        .eq("company_profile_id", profile.id)
+        .order("relevance_score", { ascending: false, nullsFirst: false })
+    : { data: [] };
 
   const hasProfile = Boolean(profile?.description || profile?.company_name);
   const competitors = profile?.competitors || [];

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 const LOCATIONS = [
@@ -21,7 +22,11 @@ const selectStyle = {
   fontFamily: "inherit",
 };
 
-export default function CompanyProfileForm({ initialProfile }) {
+// mode="edit" (default) updates the given profileId in place. mode="create"
+// posts to /api/brands instead, so the plan's brand-count limit stays
+// enforced server-side rather than duplicated here.
+export default function CompanyProfileForm({ initialProfile, mode = "edit", profileId }) {
+  const router = useRouter();
   const p = initialProfile || {};
   const [website, setWebsite] = useState(p.website || "");
   const [companyName, setCompanyName] = useState(p.company_name || "");
@@ -59,24 +64,43 @@ export default function CompanyProfileForm({ initialProfile }) {
     setSaved(false);
     setSaving(true);
     try {
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("Not signed in.");
-
-      const { error: upsertError } = await supabase.from("company_profiles").upsert({
-        user_id: user.id,
+      const fields = {
         website: website || null,
-        company_name: companyName || null,
-        target_location: targetLocation || null,
-        brand_variations: variations,
+        companyName: companyName || null,
+        targetLocation: targetLocation || null,
+        brandVariations: variations,
         description: description || null,
         competitors: competitors.map((c) => c.trim()).filter(Boolean),
-        completed: true,
-        updated_at: new Date().toISOString(),
-      });
-      if (upsertError) throw upsertError;
+      };
+
+      if (mode === "create") {
+        const res = await fetch("/api/brands", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(fields),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data?.error || "Could not create this brand.");
+        router.push("/dashboard");
+        router.refresh();
+        return;
+      }
+
+      const supabase = createClient();
+      const { error: updateError } = await supabase
+        .from("company_profiles")
+        .update({
+          website: fields.website,
+          company_name: fields.companyName,
+          target_location: fields.targetLocation,
+          brand_variations: fields.brandVariations,
+          description: fields.description,
+          competitors: fields.competitors,
+          completed: true,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", profileId);
+      if (updateError) throw updateError;
       setSaved(true);
     } catch (err) {
       setError(err?.message || "Could not save your profile.");
@@ -204,7 +228,7 @@ export default function CompanyProfileForm({ initialProfile }) {
 
       <div>
         <button type="submit" className="btn btn-primary" disabled={saving}>
-          {saving ? "Saving…" : "Save changes"}
+          {saving ? "Saving…" : mode === "create" ? "Create brand" : "Save changes"}
         </button>
       </div>
     </form>

@@ -16,12 +16,13 @@ export async function GET(req) {
       // reset sets its own) go to onboarding if they haven't done it yet.
       let next = explicitNext || "/dashboard";
       if (!explicitNext && data?.user) {
-        const { data: profile } = await supabase
+        // Existence check only — .eq("user_id", ...).maybeSingle() would
+        // throw once a user can have more than one company_profiles row.
+        const { count } = await supabase
           .from("company_profiles")
-          .select("user_id")
-          .eq("user_id", data.user.id)
-          .maybeSingle();
-        if (!profile) next = "/onboarding";
+          .select("id", { count: "exact", head: true })
+          .eq("user_id", data.user.id);
+        if (!count) next = "/onboarding";
       }
       return NextResponse.redirect(`${origin}${next}`);
     }

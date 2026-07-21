@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getActiveCompanyProfile } from "@/lib/brands";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +27,8 @@ export default async function DashboardOverviewPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const profile = await getActiveCompanyProfile(supabase, user.id);
+
   const [
     { data: reports },
     { data: subs },
@@ -35,42 +38,57 @@ export default async function DashboardOverviewPage() {
     { data: balanceRow },
     { count: activePromptsCount },
   ] = await Promise.all([
-    supabase
-      .from("reports")
-      .select("id, brand, score, created_at")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false })
-      .limit(50),
+    profile
+      ? supabase
+          .from("reports")
+          .select("id, brand, score, created_at")
+          .eq("user_id", user.id)
+          .eq("company_profile_id", profile.id)
+          .order("created_at", { ascending: false })
+          .limit(50)
+      : Promise.resolve({ data: [] }),
     supabase
       .from("subscriptions")
       .select("plan, status, current_period_end")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false })
       .limit(1),
-    supabase
-      .from("report_drafts")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", user.id)
-      .eq("posted", false),
-    supabase
-      .from("opportunities")
-      .select("id, sub, title, snippet, permalink, relevance_score, relevance_reason")
-      .eq("user_id", user.id)
-      .order("relevance_score", { ascending: false, nullsFirst: false }),
-    supabase
-      .from("mentions")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", user.id),
+    profile
+      ? supabase
+          .from("report_drafts")
+          .select("id", { count: "exact", head: true })
+          .eq("user_id", user.id)
+          .eq("company_profile_id", profile.id)
+          .eq("posted", false)
+      : Promise.resolve({ count: 0 }),
+    profile
+      ? supabase
+          .from("opportunities")
+          .select("id, sub, title, snippet, permalink, relevance_score, relevance_reason")
+          .eq("user_id", user.id)
+          .eq("company_profile_id", profile.id)
+          .order("relevance_score", { ascending: false, nullsFirst: false })
+      : Promise.resolve({ data: [] }),
+    profile
+      ? supabase
+          .from("mentions")
+          .select("id", { count: "exact", head: true })
+          .eq("user_id", user.id)
+          .eq("company_profile_id", profile.id)
+      : Promise.resolve({ count: 0 }),
     supabase
       .from("credit_balances")
       .select("balance")
       .eq("user_id", user.id)
       .maybeSingle(),
-    supabase
-      .from("prompts")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", user.id)
-      .eq("active", true),
+    profile
+      ? supabase
+          .from("prompts")
+          .select("id", { count: "exact", head: true })
+          .eq("user_id", user.id)
+          .eq("company_profile_id", profile.id)
+          .eq("active", true)
+      : Promise.resolve({ count: 0 }),
   ]);
 
   // Most recent report per brand — reports are already newest-first, so the

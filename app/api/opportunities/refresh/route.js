@@ -5,6 +5,7 @@ import { searchPosts } from "@/lib/reddit";
 import { pickCategoryQuery } from "@/lib/keywords";
 import { scoreOpportunities, isLlmConfigured } from "@/lib/llm";
 import { hasActiveSubscription } from "@/lib/subscription";
+import { getActiveCompanyProfile } from "@/lib/brands";
 import { hasCredits, deductCredits, refundCredits, getBalance, CREDIT_COSTS } from "@/lib/credits";
 
 export const runtime = "nodejs";
@@ -43,11 +44,13 @@ export async function POST() {
     );
   }
 
-  const { data: profile } = await supabase
-    .from("company_profiles")
-    .select("company_name, description, website")
-    .eq("user_id", user.id)
-    .maybeSingle();
+  const profile = await getActiveCompanyProfile(supabase, user.id);
+  if (!profile) {
+    return NextResponse.json(
+      { error: "Complete your company profile first (Onboarding) so we know what to search for." },
+      { status: 400 }
+    );
+  }
 
   const description = profile?.description || "";
   const brand = profile?.company_name || "";
@@ -78,7 +81,12 @@ export async function POST() {
     const deduped = [...new Map(posts.map((p) => [p.permalink, p])).values()];
 
     if (deduped.length === 0) {
-      await supabase.from("opportunities").delete().eq("user_id", user.id).eq("saved", false);
+      await supabase
+        .from("opportunities")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("company_profile_id", profile.id)
+        .eq("saved", false);
       await refundCredits(admin, user.id, maxCost, "refund", "No opportunities found", reservation.transactionId);
       return NextResponse.json({ ok: true, count: 0 });
     }
@@ -101,6 +109,7 @@ export async function POST() {
 
     const rows = deduped.map((p, i) => ({
       user_id: user.id,
+      company_profile_id: profile.id,
       sub: p.sub,
       title: p.title,
       snippet: p.snippet || null,
@@ -116,7 +125,12 @@ export async function POST() {
 
     // Replace, not append — a refresh reflects the current search, not an
     // ever-growing history. Saved rows are pinned and skip this wipe.
-    await supabase.from("opportunities").delete().eq("user_id", user.id).eq("saved", false);
+    await supabase
+      .from("opportunities")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("company_profile_id", profile.id)
+      .eq("saved", false);
     const { error: insertError } = await supabase.from("opportunities").insert(rows);
     if (insertError) throw insertError;
 

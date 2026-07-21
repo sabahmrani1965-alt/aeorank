@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { searchPosts } from "@/lib/reddit";
 import { scoreMentionSentiment, isLlmConfigured } from "@/lib/llm";
 import { hasActiveSubscription } from "@/lib/subscription";
+import { getActiveCompanyProfile } from "@/lib/brands";
 import { hasCredits, deductCredits, refundCredits, getBalance, CREDIT_COSTS } from "@/lib/credits";
 
 export const runtime = "nodejs";
@@ -39,11 +40,7 @@ export async function POST() {
     );
   }
 
-  const { data: profile } = await supabase
-    .from("company_profiles")
-    .select("company_name, website")
-    .eq("user_id", user.id)
-    .maybeSingle();
+  const profile = await getActiveCompanyProfile(supabase, user.id);
 
   const brand = profile?.company_name || "";
   if (!brand) {
@@ -71,7 +68,7 @@ export async function POST() {
     const deduped = [...new Map(posts.map((p) => [p.permalink, p])).values()];
 
     if (deduped.length === 0) {
-      await supabase.from("mentions").delete().eq("user_id", user.id);
+      await supabase.from("mentions").delete().eq("user_id", user.id).eq("company_profile_id", profile.id);
       await refundCredits(admin, user.id, maxCost, "refund", "No mentions found", reservation.transactionId);
       return NextResponse.json({ ok: true, count: 0 });
     }
@@ -90,6 +87,7 @@ export async function POST() {
 
     const rows = deduped.map((p, i) => ({
       user_id: user.id,
+      company_profile_id: profile.id,
       sub: p.sub,
       title: p.title,
       snippet: p.snippet || null,
@@ -101,7 +99,7 @@ export async function POST() {
       sentiment_reason: sentiments?.[i]?.reason || null,
     }));
 
-    await supabase.from("mentions").delete().eq("user_id", user.id);
+    await supabase.from("mentions").delete().eq("user_id", user.id).eq("company_profile_id", profile.id);
     const { error: insertError } = await supabase.from("mentions").insert(rows);
     if (insertError) throw insertError;
 

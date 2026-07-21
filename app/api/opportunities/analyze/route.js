@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { fetchThread } from "@/lib/reddit";
 import { analyzeThread, isLlmConfigured } from "@/lib/llm";
 import { hasActiveSubscription } from "@/lib/subscription";
+import { getActiveCompanyProfile } from "@/lib/brands";
 import { withCredits, getBalance, CREDIT_COSTS } from "@/lib/credits";
 
 export const runtime = "nodejs";
@@ -43,21 +44,25 @@ export async function POST(req) {
     return NextResponse.json({ error: "Not configured." }, { status: 500 });
   }
 
+  const profile = await getActiveCompanyProfile(supabase, user.id);
+  if (!profile) {
+    return NextResponse.json({ error: "Complete your company profile first." }, { status: 400 });
+  }
+
+  // Scoped to the active brand, not just user_id — a user with 2+ brands
+  // could otherwise pass an opportunityId that's still their own row but
+  // belongs to a different brand than the one currently active.
   const { data: opportunity } = await admin
     .from("opportunities")
     .select("id, title, permalink")
     .eq("id", opportunityId)
     .eq("user_id", user.id)
+    .eq("company_profile_id", profile.id)
     .maybeSingle();
   if (!opportunity) {
     return NextResponse.json({ error: "Opportunity not found." }, { status: 404 });
   }
 
-  const { data: profile } = await supabase
-    .from("company_profiles")
-    .select("description, company_name")
-    .eq("user_id", user.id)
-    .maybeSingle();
   const companyDescription = profile?.description || profile?.company_name || "";
 
   const outcome = await withCredits({

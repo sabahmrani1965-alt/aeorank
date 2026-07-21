@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PricingTiers from "@/components/PricingTiers";
 import RedeemCodeForm from "@/components/RedeemCodeForm";
 import { createClient } from "@/lib/supabase/client";
+import { listBrands } from "@/lib/brands";
 
 const LOCATIONS = [
   "United States — English",
@@ -29,24 +30,39 @@ export default function OnboardingPage() {
   const [description, setDescription] = useState("");
   const [competitors, setCompetitors] = useState(["", "", ""]);
 
-  async function saveProfile(completed) {
-    const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return;
+  // Onboarding is strictly a first-brand, one-time flow — a user who
+  // already has a brand always adds more via /dashboard/brands/new
+  // instead, so this never creates a confusing duplicate "first" brand.
+  useEffect(() => {
+    (async () => {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return;
+      const brands = await listBrands(supabase, user.id);
+      if (brands.length > 0) router.replace("/dashboard");
+    })();
+  }, [router]);
 
-    await supabase.from("company_profiles").upsert({
-      user_id: user.id,
-      website: website || null,
-      company_name: companyName || null,
-      target_location: targetLocation || null,
-      brand_variations: variations,
-      description: description || null,
-      competitors: competitors.map((c) => c.trim()).filter(Boolean),
-      completed,
-      updated_at: new Date().toISOString(),
+  async function saveProfile(completed) {
+    const res = await fetch("/api/brands", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        website: website || null,
+        companyName: companyName || null,
+        targetLocation: targetLocation || null,
+        brandVariations: variations,
+        description: description || null,
+        competitors: competitors.map((c) => c.trim()).filter(Boolean),
+        completed,
+      }),
     });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data?.error || "Could not save your profile.");
+    }
   }
 
   async function skip() {

@@ -5,6 +5,7 @@ import PricingTiers from "@/components/PricingTiers";
 import StepsSection from "@/components/StepsSection";
 import AiVisibilityScoreCard from "@/components/AiVisibilityScoreCard";
 import { createClient } from "@/lib/supabase/server";
+import { getActiveCompanyProfile } from "@/lib/brands";
 import { fetchSiteMeta, prettyBrand, extractBrandFromTitle } from "@/lib/site";
 import {
   heuristicKeywords,
@@ -110,10 +111,12 @@ export default async function ReportPage({ params, searchParams }) {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
+      const profile = await getActiveCompanyProfile(supabase, user.id);
       const { data: report } = await supabase
         .from("reports")
         .insert({
           user_id: user.id,
+          company_profile_id: profile?.id || null,
           brand,
           url: enteredUrl || null,
           score: aiVisibility.score,
@@ -130,6 +133,7 @@ export default async function ReportPage({ params, searchParams }) {
           .from("report_drafts")
           .insert({
             user_id: user.id,
+            company_profile_id: profile?.id || null,
             report_id: report.id,
             subreddit: suggestedPost.subreddit,
             title: suggestedPost.title,

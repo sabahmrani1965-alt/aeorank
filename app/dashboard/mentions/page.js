@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { timeAgo } from "@/lib/reddit";
 import { hasActiveSubscription } from "@/lib/subscription";
+import { getActiveCompanyProfile } from "@/lib/brands";
 import MentionsRefreshButton from "@/components/MentionsRefreshButton";
 import RedeemCodeForm from "@/components/RedeemCodeForm";
 
@@ -42,17 +43,16 @@ export default async function MentionsPage() {
     );
   }
 
-  const { data: profile } = await supabase
-    .from("company_profiles")
-    .select("company_name")
-    .eq("user_id", user.id)
-    .maybeSingle();
+  const profile = await getActiveCompanyProfile(supabase, user.id);
 
-  const { data: mentions } = await supabase
-    .from("mentions")
-    .select("id, sub, title, snippet, permalink, ups, comments, post_created_at, sentiment, sentiment_reason, fetched_at")
-    .eq("user_id", user.id)
-    .order("post_created_at", { ascending: false, nullsFirst: false });
+  const { data: mentions } = profile
+    ? await supabase
+        .from("mentions")
+        .select("id, sub, title, snippet, permalink, ups, comments, post_created_at, sentiment, sentiment_reason, fetched_at")
+        .eq("user_id", user.id)
+        .eq("company_profile_id", profile.id)
+        .order("post_created_at", { ascending: false, nullsFirst: false })
+    : { data: [] };
 
   const hasProfile = Boolean(profile?.company_name);
   const classified = (mentions || []).filter((m) => m.sentiment);

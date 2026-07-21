@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { hasActiveSubscription } from "@/lib/subscription";
+import { getActiveCompanyProfile } from "@/lib/brands";
 import { checkPrompt, isAiVisibilityConfigured } from "@/lib/aivisibility";
 import { withCredits, getBalance, CREDIT_COSTS } from "@/lib/credits";
 
@@ -30,27 +31,27 @@ export async function POST(req, { params }) {
     return NextResponse.json({ error: "Not configured." }, { status: 500 });
   }
 
-  const { data: prompt } = await admin
-    .from("prompts")
-    .select("id, text")
-    .eq("id", params.id)
-    .eq("user_id", user.id)
-    .maybeSingle();
-  if (!prompt) {
-    return NextResponse.json({ error: "Prompt not found." }, { status: 404 });
-  }
-
-  const { data: profile } = await supabase
-    .from("company_profiles")
-    .select("company_name")
-    .eq("user_id", user.id)
-    .maybeSingle();
+  const profile = await getActiveCompanyProfile(supabase, user.id);
   const brand = profile?.company_name || "";
   if (!brand) {
     return NextResponse.json(
       { error: "Complete your company profile first (Settings) so we know which brand to check." },
       { status: 400 }
     );
+  }
+
+  // Scoped to the active brand, not just user_id — a user with 2+ brands
+  // could otherwise pass a prompt id that's still their own row but
+  // belongs to a different brand than the one currently active.
+  const { data: prompt } = await admin
+    .from("prompts")
+    .select("id, text")
+    .eq("id", params.id)
+    .eq("user_id", user.id)
+    .eq("company_profile_id", profile.id)
+    .maybeSingle();
+  if (!prompt) {
+    return NextResponse.json({ error: "Prompt not found." }, { status: 404 });
   }
 
   const outcome = await withCredits({

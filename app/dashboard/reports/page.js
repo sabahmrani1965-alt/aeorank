@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import DashboardAnalyzeForm from "@/components/DashboardAnalyzeForm";
 import AiVisibilityRecheckButton from "@/components/AiVisibilityRecheckButton";
+import { getActiveCompanyProfile } from "@/lib/brands";
 import { CREDIT_COSTS } from "@/lib/credits";
 
 export const dynamic = "force-dynamic";
@@ -12,11 +13,16 @@ export default async function DashboardReportsPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: reports } = await supabase
-    .from("reports")
-    .select("id, brand, url, score, created_at")
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false });
+  const profile = await getActiveCompanyProfile(supabase, user.id);
+
+  const { data: reports } = profile
+    ? await supabase
+        .from("reports")
+        .select("id, brand, url, score, created_at")
+        .eq("user_id", user.id)
+        .eq("company_profile_id", profile.id)
+        .order("created_at", { ascending: false })
+    : { data: [] };
 
   return (
     <section className="section">

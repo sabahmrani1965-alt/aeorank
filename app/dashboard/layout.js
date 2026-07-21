@@ -3,6 +3,7 @@ import DashboardShell from "@/components/DashboardShell";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { isAdminEmail } from "@/lib/adminAuth";
+import { getActiveCompanyProfile, listBrands, brandLimitForPlan } from "@/lib/brands";
 
 // Defense in depth on top of middleware.js — never renders dashboard
 // content for a logged-out visitor even if the middleware matcher drifts.
@@ -17,9 +18,10 @@ export default async function DashboardLayout({ children }) {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const [{ data: balanceRow }, { data: profile }, { data: subs }] = await Promise.all([
+  const [{ data: balanceRow }, activeProfile, brands, { data: subs }] = await Promise.all([
     supabase.from("credit_balances").select("balance").eq("user_id", user.id).maybeSingle(),
-    supabase.from("company_profiles").select("company_name, website").eq("user_id", user.id).maybeSingle(),
+    getActiveCompanyProfile(supabase, user.id),
+    listBrands(supabase, user.id),
     supabase
       .from("subscriptions")
       .select("plan, status")
@@ -29,14 +31,18 @@ export default async function DashboardLayout({ children }) {
   ]);
 
   const sub = subs?.[0] || null;
+  const plan = sub && ["active", "trialing"].includes(sub.status) ? sub.plan : null;
 
   return (
     <DashboardShell
       email={user.email}
       isAdmin={isAdminEmail(user.email)}
       creditBalance={balanceRow?.balance ?? 0}
-      project={{ name: profile?.company_name || "", website: profile?.website || "" }}
-      plan={sub && ["active", "trialing"].includes(sub.status) ? sub.plan : null}
+      project={{ name: activeProfile?.company_name || "", website: activeProfile?.website || "" }}
+      plan={plan}
+      brands={brands}
+      activeBrandId={activeProfile?.id || null}
+      brandLimit={{ count: brands.length, limit: brandLimitForPlan(plan) }}
     >
       {children}
     </DashboardShell>

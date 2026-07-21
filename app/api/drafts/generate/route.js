@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { getActiveCompanyProfile } from "@/lib/brands";
 import { generateRedditContent, isLlmConfigured } from "@/lib/llm";
 
 export const runtime = "nodejs";
@@ -25,11 +26,7 @@ export async function POST(req) {
     body = await req.json();
   } catch {}
 
-  const { data: profile } = await supabase
-    .from("company_profiles")
-    .select("company_name, description")
-    .eq("user_id", user.id)
-    .maybeSingle();
+  const profile = await getActiveCompanyProfile(supabase, user.id);
 
   const result = await generateRedditContent({
     type: body.type,

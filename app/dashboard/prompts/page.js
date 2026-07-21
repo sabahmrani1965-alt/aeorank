@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { hasActiveSubscription } from "@/lib/subscription";
+import { getActiveCompanyProfile } from "@/lib/brands";
 import { CREDIT_COSTS } from "@/lib/credits";
 import PromptsManager from "@/components/PromptsManager";
 import RedeemCodeForm from "@/components/RedeemCodeForm";
@@ -34,13 +35,18 @@ export default async function PromptsPage() {
     );
   }
 
-  const { data: prompts } = await supabase
-    .from("prompts")
-    .select(
-      "id, text, type, location, active, last_checked_at, last_mentioned, last_position, last_brands, last_answer, last_model, created_at"
-    )
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false });
+  const profile = await getActiveCompanyProfile(supabase, user.id);
+
+  const { data: prompts } = profile
+    ? await supabase
+        .from("prompts")
+        .select(
+          "id, text, type, location, active, last_checked_at, last_mentioned, last_position, last_brands, last_answer, last_model, created_at"
+        )
+        .eq("user_id", user.id)
+        .eq("company_profile_id", profile.id)
+        .order("created_at", { ascending: false })
+    : { data: [] };
 
   return (
     <section className="dashboard-page">

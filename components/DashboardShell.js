@@ -84,12 +84,25 @@ function displayDomain(website) {
   }
 }
 
-export default function DashboardShell({ email, isAdmin, creditBalance, project, plan, children }) {
+export default function DashboardShell({
+  email,
+  isAdmin,
+  creditBalance,
+  project,
+  plan,
+  brands = [],
+  activeBrandId,
+  brandLimit,
+  children,
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [brandMenuOpen, setBrandMenuOpen] = useState(false);
+  const [switching, setSwitching] = useState(false);
   const menuRef = useRef(null);
+  const brandMenuRef = useRef(null);
   const current = activeHref(pathname);
 
   useEffect(() => {
@@ -99,6 +112,7 @@ export default function DashboardShell({ email, isAdmin, creditBalance, project,
   useEffect(() => {
     function onClickOutside(e) {
       if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
+      if (brandMenuRef.current && !brandMenuRef.current.contains(e.target)) setBrandMenuOpen(false);
     }
     document.addEventListener("mousedown", onClickOutside);
     return () => document.removeEventListener("mousedown", onClickOutside);
@@ -109,6 +123,19 @@ export default function DashboardShell({ email, isAdmin, creditBalance, project,
     await supabase.auth.signOut();
     router.push("/login");
     router.refresh();
+  }
+
+  async function switchBrand(id) {
+    setBrandMenuOpen(false);
+    if (id === activeBrandId || switching) return;
+    setSwitching(true);
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user) await supabase.from("users").update({ active_company_profile_id: id }).eq("id", user.id);
+    router.refresh();
+    setSwitching(false);
   }
 
   const projectLabel = displayDomain(project?.website) || project?.name || "";
@@ -124,12 +151,55 @@ export default function DashboardShell({ email, isAdmin, creditBalance, project,
         </Link>
 
         {projectLabel && (
-          <div className="app-sidebar-project">
-            <span className="app-sidebar-project-icon">{projectLabel[0].toUpperCase()}</span>
-            <div className="app-sidebar-project-info">
-              <div className="app-sidebar-project-name">{projectLabel}</div>
-              <span className="app-sidebar-project-plan">{plan ? `${plan} Plan` : "No plan"}</span>
-            </div>
+          <div className="app-sidebar-project" ref={brandMenuRef}>
+            <button
+              type="button"
+              className="app-sidebar-project-trigger"
+              onClick={() => setBrandMenuOpen((v) => !v)}
+            >
+              <span className="app-sidebar-project-icon">{projectLabel[0].toUpperCase()}</span>
+              <div className="app-sidebar-project-info">
+                <div className="app-sidebar-project-name">{projectLabel}</div>
+                <span className="app-sidebar-project-plan">{plan ? `${plan} Plan` : "No plan"}</span>
+              </div>
+            </button>
+            {brandMenuOpen && (
+              <div className="brand-switcher-dropdown">
+                {brands.map((b) => {
+                  const label = displayDomain(b.website) || b.company_name || "Untitled brand";
+                  return (
+                    <button
+                      key={b.id}
+                      type="button"
+                      className={`account-menu-item${b.id === activeBrandId ? " is-active" : ""}`}
+                      onClick={() => switchBrand(b.id)}
+                      disabled={switching}
+                    >
+                      {label}
+                      {b.id === activeBrandId ? " ✓" : ""}
+                    </button>
+                  );
+                })}
+                <div style={{ borderTop: "1px solid var(--card-border-soft)", margin: "6px 0" }} />
+                {brandLimit && brandLimit.count < brandLimit.limit ? (
+                  <Link
+                    href="/dashboard/brands/new"
+                    className="account-menu-item"
+                    onClick={() => setBrandMenuOpen(false)}
+                  >
+                    + Add brand
+                  </Link>
+                ) : (
+                  <Link
+                    href="/dashboard/billing"
+                    className="account-menu-item"
+                    onClick={() => setBrandMenuOpen(false)}
+                  >
+                    Upgrade to add more brands
+                  </Link>
+                )}
+              </div>
+            )}
           </div>
         )}
 

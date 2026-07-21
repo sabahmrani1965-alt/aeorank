@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getActiveCompanyProfile } from "@/lib/brands";
 import { withCredits, getBalance, CREDIT_COSTS } from "@/lib/credits";
 
 export const runtime = "nodejs";
@@ -40,6 +41,11 @@ export async function POST(req) {
     return NextResponse.json({ error: "Not configured." }, { status: 500 });
   }
 
+  const profile = await getActiveCompanyProfile(supabase, user.id);
+  if (!profile) {
+    return NextResponse.json({ error: "Complete your company profile first." }, { status: 400 });
+  }
+
   const action = type === "post" ? "generate_post" : type === "reply" ? "generate_reply" : "generate_comment";
   const amount = CREDIT_COSTS[action];
 
@@ -53,7 +59,15 @@ export async function POST(req) {
     run: async () => {
       const { data, error } = await admin
         .from("report_drafts")
-        .insert({ user_id: user.id, report_id: null, type, subreddit, title: title || subreddit, body: bodyText })
+        .insert({
+          user_id: user.id,
+          company_profile_id: profile.id,
+          report_id: null,
+          type,
+          subreddit,
+          title: title || subreddit,
+          body: bodyText,
+        })
         .select("id")
         .single();
       if (error) {

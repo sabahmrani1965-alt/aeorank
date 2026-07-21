@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { getActiveCompanyProfile } from "@/lib/brands";
 import BillingPortalButton from "@/components/BillingPortalButton";
 import RedeemCodeForm from "@/components/RedeemCodeForm";
 import PricingTiers from "@/components/PricingTiers";
@@ -11,7 +12,7 @@ export default async function DashboardBillingPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const [{ data: sub }, { data: profile }] = await Promise.all([
+  const [{ data: sub }, profile] = await Promise.all([
     supabase
       .from("subscriptions")
       .select("plan, status, current_period_end, cancel_at_period_end")
@@ -19,7 +20,7 @@ export default async function DashboardBillingPage() {
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle(),
-    supabase.from("company_profiles").select("company_name").eq("user_id", user.id).maybeSingle(),
+    getActiveCompanyProfile(supabase, user.id),
   ]);
 
   return (

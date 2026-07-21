@@ -1518,14 +1518,38 @@ button { font-family: inherit; }
 .app-sidebar-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; letter-spacing: -.01em; padding: 0 8px; }
 
 .app-sidebar-project {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
+  position: relative;
   background: var(--card);
   border: 1px solid var(--card-border-soft);
   border-radius: 14px;
 }
+.app-sidebar-project-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+.brand-switcher-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 8px;
+  box-shadow: 0 20px 48px -12px rgba(0, 0, 0, .55);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+}
+.account-menu-item.is-active { color: var(--accent); font-weight: 600; }
 .app-sidebar-project-icon {
   flex-shrink: 0;
   width: 34px; height: 34px;

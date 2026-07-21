@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getActiveCompanyProfile } from "@/lib/brands";
 import TrackTasksTable from "@/components/TrackTasksTable";
 
 export const dynamic = "force-dynamic";
@@ -10,11 +11,16 @@ export default async function DashboardDraftsPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: drafts } = await supabase
-    .from("report_drafts")
-    .select("id, type, subreddit, title, body, permalink, posted_at, created_at")
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false });
+  const profile = await getActiveCompanyProfile(supabase, user.id);
+
+  const { data: drafts } = profile
+    ? await supabase
+        .from("report_drafts")
+        .select("id, type, subreddit, title, body, permalink, posted_at, created_at")
+        .eq("user_id", user.id)
+        .eq("company_profile_id", profile.id)
+        .order("created_at", { ascending: false })
+    : { data: [] };
 
   return (
     <section className="section">
