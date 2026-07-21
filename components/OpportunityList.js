@@ -62,12 +62,12 @@ export default function OpportunityList({ saved, rest, competitors, analyzeCost 
         {saved.length > 0 && (
           <div style={{ marginBottom: 24 }}>
             <h3 className="opp-list-col-heading">Saved</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>{saved.map(renderItem)}</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>{saved.map(renderItem)}</div>
           </div>
         )}
         <div>
           {saved.length > 0 && <h3 className="opp-list-col-heading">All opportunities</h3>}
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>{rest.map(renderItem)}</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>{rest.map(renderItem)}</div>
         </div>
       </div>
 
