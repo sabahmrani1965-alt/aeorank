@@ -12,7 +12,7 @@ export default async function DashboardDraftsPage() {
 
   const { data: drafts } = await supabase
     .from("report_drafts")
-    .select("id, subreddit, title, body, posted, permalink, created_at")
+    .select("id, type, subreddit, title, body, permalink, posted_at, created_at")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 

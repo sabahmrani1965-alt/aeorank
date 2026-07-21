@@ -20,15 +20,15 @@ export async function PATCH(req, { params }) {
   }
 
   const updates = {};
-  if ("posted" in body) {
-    const posted = Boolean(body.posted);
-    updates.posted = posted;
-    updates.posted_at = posted ? new Date().toISOString() : null;
-  }
   if ("permalink" in body) {
     // Self-reported link to the live post — not verified against Reddit,
     // same reasoning as the schema comment on report_drafts.permalink.
-    updates.permalink = String(body.permalink || "").trim().slice(0, 500) || null;
+    // Status ("posted") is derived from this, not user-settable on its
+    // own — a task is Published exactly when a link is attached.
+    const permalink = String(body.permalink || "").trim().slice(0, 500) || null;
+    updates.permalink = permalink;
+    updates.posted = Boolean(permalink);
+    updates.posted_at = permalink ? new Date().toISOString() : null;
   }
   if (Object.keys(updates).length === 0) {
     return NextResponse.json({ error: "Nothing to update." }, { status: 400 });
