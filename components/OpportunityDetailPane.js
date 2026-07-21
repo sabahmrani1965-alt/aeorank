@@ -22,7 +22,7 @@ function intentColor(intent) {
 }
 
 const labelStyle = {
-  fontSize: 11.5,
+  fontSize: 13,
   fontWeight: 700,
   textTransform: "uppercase",
   letterSpacing: ".04em",
@@ -178,7 +178,7 @@ export default function OpportunityDetailPane({ opportunity: o, competitorMatch,
           {intent && (
             <span
               style={{
-                fontSize: 11.5,
+                fontSize: 13,
                 fontWeight: 700,
                 padding: "3px 9px",
                 borderRadius: 999,
@@ -224,7 +224,7 @@ export default function OpportunityDetailPane({ opportunity: o, competitorMatch,
       )}
 
       {competitorMatch && (
-        <p style={{ marginTop: 6, marginBottom: 0, fontSize: 13, color: "var(--text-muted)" }}>
+        <p style={{ marginTop: 6, marginBottom: 0, fontSize: 14.5, color: "var(--text-muted)" }}>
           Competitor mentioned: <strong style={{ color: "var(--text-dim)" }}>{competitorMatch}</strong>
         </p>
       )}
@@ -245,7 +245,7 @@ export default function OpportunityDetailPane({ opportunity: o, competitorMatch,
             {thread?.selftext && (
               <div style={{ marginBottom: 16 }}>
                 <div style={labelStyle}>Post body</div>
-                <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.6, margin: 0, whiteSpace: "pre-wrap" }}>
+                <p style={{ fontSize: 15.5, color: "var(--text-dim)", lineHeight: 1.65, margin: 0, whiteSpace: "pre-wrap" }}>
                   {thread.selftext}
                 </p>
               </div>
@@ -267,12 +267,12 @@ export default function OpportunityDetailPane({ opportunity: o, competitorMatch,
               <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                 <div>
                   <div style={labelStyle}>AI summary</div>
-                  <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.55, margin: 0 }}>{analysis.summary}</p>
+                  <p style={{ fontSize: 15.5, color: "var(--text-dim)", lineHeight: 1.6, margin: 0 }}>{analysis.summary}</p>
                 </div>
                 {analysis.painPoints?.length > 0 && (
                   <div>
                     <div style={labelStyle}>Pain points</div>
-                    <ul style={{ margin: 0, paddingLeft: 18, fontSize: 14, color: "var(--text-dim)", lineHeight: 1.6 }}>
+                    <ul style={{ margin: 0, paddingLeft: 18, fontSize: 15.5, color: "var(--text-dim)", lineHeight: 1.65 }}>
                       {analysis.painPoints.map((p, i) => (
                         <li key={i}>{p}</li>
                       ))}
@@ -284,7 +284,7 @@ export default function OpportunityDetailPane({ opportunity: o, competitorMatch,
                     <div style={labelStyle}>Competitors mentioned</div>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                       {analysis.competitorsMentioned.map((c) => (
-                        <span key={c} style={{ fontSize: 12.5, background: "var(--bg-3)", padding: "4px 10px", borderRadius: 999, color: "var(--text-dim)" }}>
+                        <span key={c} style={{ fontSize: 13.5, background: "var(--bg-3)", padding: "4px 10px", borderRadius: 999, color: "var(--text-dim)" }}>
                           {c}
                         </span>
                       ))}
@@ -294,7 +294,7 @@ export default function OpportunityDetailPane({ opportunity: o, competitorMatch,
                 {analysis.responseAngle && (
                   <div>
                     <div style={labelStyle}>Recommended reply angle</div>
-                    <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.55, margin: 0 }}>{analysis.responseAngle}</p>
+                    <p style={{ fontSize: 15.5, color: "var(--text-dim)", lineHeight: 1.6, margin: 0 }}>{analysis.responseAngle}</p>
                   </div>
                 )}
               </div>
@@ -311,7 +311,7 @@ export default function OpportunityDetailPane({ opportunity: o, competitorMatch,
           </>
         )}
         {analyzeError && (
-          <p role="alert" style={{ color: "#ff8a8a", fontSize: 13.5, marginTop: 10 }}>
+          <p role="alert" style={{ color: "#ff8a8a", fontSize: 14.5, marginTop: 10 }}>
             {analyzeError}
           </p>
         )}
@@ -322,7 +322,7 @@ export default function OpportunityDetailPane({ opportunity: o, competitorMatch,
 
         {savedInfo ? (
           <div className="card" style={{ padding: 24, textAlign: "center" }}>
-            <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>✓ Saved to Track Task</div>
+            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>✓ Saved to Track Task</div>
             <p style={{ color: "var(--text-dim)", margin: "0 0 14px" }}>
               <strong style={{ color: "#ff8a8a" }}>−{savedInfo.creditsCharged} credits</strong>
               {typeof savedInfo.creditsRemaining === "number" && (
@@ -371,15 +371,15 @@ export default function OpportunityDetailPane({ opportunity: o, competitorMatch,
               placeholder="Write it yourself, or generate a starting point above"
               className="opp-textarea"
             />
-            <span style={{ fontSize: 12, color: "var(--text-muted)" }}>{body.length}/2000 characters</span>
+            <span style={{ fontSize: 13, color: "var(--text-muted)" }}>{body.length}/2000 characters</span>
 
             {generateError && (
-              <p role="alert" style={{ color: "#ff8a8a", fontSize: 13.5, marginTop: 8 }}>
+              <p role="alert" style={{ color: "#ff8a8a", fontSize: 14.5, marginTop: 8 }}>
                 {generateError}
               </p>
             )}
             {saveError && (
-              <p role="alert" style={{ color: "#ff8a8a", fontSize: 13.5, marginTop: 8 }}>
+              <p role="alert" style={{ color: "#ff8a8a", fontSize: 14.5, marginTop: 8 }}>
                 {saveError}
               </p>
             )}
