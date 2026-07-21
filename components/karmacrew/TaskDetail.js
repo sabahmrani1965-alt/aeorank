@@ -78,6 +78,32 @@ export default function TaskDetail({ task, reward }) {
             <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.6, margin: 0 }}>{task.title}</p>
           </div>
 
+          {/* Where this goes. First thing a poster needs, so it sits above
+              the draft itself. Older tasks predate target_url and have
+              none — say so plainly rather than rendering a dead link. */}
+          {task.type !== "post" && (
+            <div className="card" style={{ padding: 22 }}>
+              <div style={{ fontWeight: 700, marginBottom: 10 }}>
+                {task.type === "reply" ? "Comment to reply to" : "Thread to comment on"}
+              </div>
+              {task.target_url ? (
+                <a
+                  href={task.target_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "var(--accent)", fontSize: 14, wordBreak: "break-all" }}
+                >
+                  {task.target_url} ↗
+                </a>
+              ) : (
+                <p style={{ fontSize: 14, color: "var(--text-muted)", margin: 0, lineHeight: 1.6 }}>
+                  No link was given for this task — search r/{task.subreddit} for the
+                  thread described above, or release it and pick another.
+                </p>
+              )}
+            </div>
+          )}
+
           <div className="card" style={{ padding: 22 }}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
               <div>

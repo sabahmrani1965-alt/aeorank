@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getActiveCompanyProfile } from "@/lib/brands";
 import { withCredits, getBalance, CREDIT_COSTS } from "@/lib/credits";
+import { needsTargetUrl, normalizeRedditUrl } from "@/lib/format";
 
 export const runtime = "nodejs";
 
@@ -36,6 +37,28 @@ export async function POST(req) {
     return NextResponse.json({ error: "Subreddit and content are required." }, { status: 400 });
   }
 
+  // A comment/reply is aimed at a thread that already exists — without the
+  // link the poster who claims this task has no way to find it. Validated
+  // here and not just in the form, since this route is the only thing
+  // standing between a request and the credit charge below.
+  let targetUrl = null;
+  if (needsTargetUrl(type)) {
+    const rawTarget = String(body?.targetUrl || "").trim();
+    if (!rawTarget) {
+      return NextResponse.json(
+        { error: "Link to the Reddit thread is required for a comment or reply." },
+        { status: 400 }
+      );
+    }
+    targetUrl = normalizeRedditUrl(rawTarget);
+    if (!targetUrl) {
+      return NextResponse.json(
+        { error: "That doesn't look like a Reddit link. Paste the full URL of the thread." },
+        { status: 400 }
+      );
+    }
+  }
+
   const admin = createAdminClient();
   if (!admin) {
     return NextResponse.json({ error: "Not configured." }, { status: 500 });
@@ -67,6 +90,7 @@ export async function POST(req) {
           subreddit,
           title: title || subreddit,
           body: bodyText,
+          target_url: targetUrl,
         })
         .select("id")
         .single();

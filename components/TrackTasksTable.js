@@ -119,6 +119,18 @@ function TaskRow({ task }) {
           <p className="tt-detail-body">{task.body}</p>
 
           <div className="tt-meta-grid">
+            {task.type !== "post" && (
+              <div>
+                <div className="tt-meta-label">Replying to</div>
+                {task.target_url ? (
+                  <a href={task.target_url} target="_blank" rel="noopener noreferrer" className="tt-view-btn">
+                    Thread ↗
+                  </a>
+                ) : (
+                  <div className="tt-meta-value is-muted">Not set</div>
+                )}
+              </div>
+            )}
             <div>
               <div className="tt-meta-label">Created</div>
               <div className="tt-meta-value">{formatDate(task.created_at) || "—"}</div>

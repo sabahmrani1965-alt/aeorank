@@ -3,6 +3,7 @@
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CREDIT_COSTS } from "@/lib/credits";
+import { needsTargetUrl, normalizeRedditUrl } from "@/lib/format";
 
 const TYPES = [
   { key: "comment", label: "Post a Comment" },
@@ -46,6 +47,9 @@ function NewDraftForm() {
   const [type, setType] = useState("comment");
   const [subreddit, setSubreddit] = useState(searchParams.get("subreddit") || "");
   const [threadContext, setThreadContext] = useState(searchParams.get("context") || "");
+  // Prefilled when you arrive from an Opportunity card, which already knows
+  // the thread's permalink — typed by hand otherwise.
+  const [targetUrl, setTargetUrl] = useState(searchParams.get("url") || "");
   const [tone, setTone] = useState("Helpful");
   const [length, setLength] = useState("medium");
   const [title, setTitle] = useState("");
@@ -89,6 +93,16 @@ function NewDraftForm() {
       setError("Subreddit and content are required.");
       return;
     }
+    if (needsTargetUrl(type)) {
+      if (!targetUrl.trim()) {
+        setError("Paste the link to the Reddit thread you're replying to.");
+        return;
+      }
+      if (!normalizeRedditUrl(targetUrl)) {
+        setError("That doesn't look like a Reddit link. Paste the full URL of the thread.");
+        return;
+      }
+    }
     setSaving(true);
     try {
       const res = await fetch("/api/drafts", {
@@ -99,6 +113,7 @@ function NewDraftForm() {
           subreddit: subreddit.startsWith("r/") ? subreddit : `r/${subreddit}`,
           title: type === "post" ? title : title || threadContext,
           body,
+          targetUrl: needsTargetUrl(type) ? targetUrl.trim() : undefined,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -162,6 +177,26 @@ function NewDraftForm() {
               required
             />
           </label>
+
+          {needsTargetUrl(type) && (
+            <label className="auth-field">
+              <span>
+                Link to the {type === "reply" ? "comment" : "thread"}{" "}
+                <span style={{ color: "var(--accent)" }}>*</span>
+              </span>
+              <input
+                type="url"
+                inputMode="url"
+                placeholder="https://www.reddit.com/r/SaaS/comments/…"
+                value={targetUrl}
+                onChange={(e) => setTargetUrl(e.target.value)}
+                required
+              />
+              <span style={{ fontSize: 12, color: "var(--text-muted)" }}>
+                Whoever posts this needs to know exactly where it goes.
+              </span>
+            </label>
+          )}
 
           {type === "post" ? (
             <label className="auth-field">

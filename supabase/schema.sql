@@ -262,6 +262,12 @@ CREATE TABLE IF NOT EXISTS public.report_drafts (
   subreddit  TEXT NOT NULL,
   title      TEXT NOT NULL,
   body       TEXT NOT NULL,
+  -- INPUT link: the existing thread/comment this task is aimed at, so the
+  -- poster knows where to go. Required at the API for 'comment'/'reply'
+  -- (a 'post' is brand new and has no target); NULL on rows created before
+  -- this column existed. Do NOT confuse with `permalink` below, which is
+  -- the OUTPUT — where the task ended up once posted.
+  target_url TEXT,
   posted     BOOLEAN NOT NULL DEFAULT FALSE,
   posted_at  TIMESTAMPTZ,
   -- Self-reported link to the live post, once the customer has actually
@@ -333,6 +339,14 @@ CREATE POLICY "Posters can update claimed drafts"
 CREATE POLICY "Service role can do anything on report_drafts"
   ON public.report_drafts FOR ALL
   USING (auth.role() = 'service_role');
+
+-- ── REPORT DRAFTS: target thread link ────────────────────────
+-- Migration for databases created before target_url existed (the CREATE
+-- TABLE above only applies to a fresh database). Left nullable on purpose:
+-- existing 'comment'/'reply' rows predate the requirement and must keep
+-- working — the NOT NULL-ness is enforced at the API for new rows only.
+ALTER TABLE public.report_drafts
+  ADD COLUMN IF NOT EXISTS target_url TEXT;
 
 -- ── OPPORTUNITIES ────────────────────────────────────────────
 -- Cached Reddit threads matched + relevance-scored against a user's

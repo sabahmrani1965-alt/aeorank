@@ -191,7 +191,7 @@ export default async function DashboardOverviewPage() {
           )}
           <div className="opportunity-spotlight-actions">
             <Link
-              href={`/dashboard/drafts/new?subreddit=${encodeURIComponent(topOpportunity.sub || "")}&context=${encodeURIComponent(topOpportunity.title || "")}`}
+              href={`/dashboard/drafts/new?subreddit=${encodeURIComponent(topOpportunity.sub || "")}&context=${encodeURIComponent(topOpportunity.title || "")}&url=${encodeURIComponent(topOpportunity.permalink || "")}`}
               className="btn btn-primary btn-sm"
             >
               Generate Reply →

@@ -16,7 +16,7 @@ export default async function DashboardDraftsPage() {
   const { data: drafts } = profile
     ? await supabase
         .from("report_drafts")
-        .select("id, type, subreddit, title, body, permalink, posted_at, created_at")
+        .select("id, type, subreddit, title, body, permalink, target_url, posted_at, created_at")
         .eq("user_id", user.id)
         .eq("company_profile_id", profile.id)
         .order("created_at", { ascending: false })

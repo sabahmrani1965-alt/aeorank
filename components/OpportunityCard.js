@@ -41,7 +41,7 @@ export default function OpportunityCard({ opportunity: o, competitorMatch, fresh
   const [buyingIntent, setBuyingIntent] = useState(o.buying_intent);
 
   const intent = intentColor(buyingIntent);
-  const replyHref = `/dashboard/drafts/new?subreddit=${encodeURIComponent(o.sub || "")}&context=${encodeURIComponent(o.title || "")}`;
+  const replyHref = `/dashboard/drafts/new?subreddit=${encodeURIComponent(o.sub || "")}&context=${encodeURIComponent(o.title || "")}&url=${encodeURIComponent(o.permalink || "")}`;
   const reasons = o.relevance_reasons?.length ? o.relevance_reasons : o.relevance_reason ? [o.relevance_reason] : [];
   const panelId = `opp-preview-${o.id}`;
 
