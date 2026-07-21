@@ -8,8 +8,6 @@ export default function CrewQuestNav() {
         CrewQuest
       </Link>
       <nav className="cq-nav-links">
-        <a href="#creators">Creators</a>
-        <a href="#for-brands">Brands</a>
         <a href="#how-it-works">How it Works</a>
         <a href="#faq">FAQ</a>
       </nav>

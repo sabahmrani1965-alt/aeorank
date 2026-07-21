@@ -16,7 +16,7 @@ export default function FoundingBanner({ posterCount }) {
           </h2>
           <p className="section-sub">
             You'd be founding creator <AnimatedCounter value={posterCount + 1} prefix="#" /> — early
-            creators get first pick of new missions as more brands come on board.
+            creators get first pick of new missions as the platform grows.
           </p>
         </ScrollReveal>
 
@@ -24,9 +24,9 @@ export default function FoundingBanner({ posterCount }) {
           <ScrollReveal delay={0}>
             <div className="card cq-founding-card">
               <div className="cq-founding-card-icon">🎯</div>
-              <div className="cq-founding-card-title">Real brand missions</div>
+              <div className="cq-founding-card-title">Real missions</div>
               <div className="cq-founding-card-desc">
-                Every mission is a real posting or commenting task from an actual brand — no filler.
+                Every mission is a real posting or commenting task — no filler.
               </div>
             </div>
           </ScrollReveal>
@@ -44,7 +44,7 @@ export default function FoundingBanner({ posterCount }) {
               <div className="cq-founding-card-icon">🌱</div>
               <div className="cq-founding-card-title">Grow with us from day one</div>
               <div className="cq-founding-card-desc">
-                More brands and platforms are launching soon — early creators get first access.
+                More platforms are launching soon — early creators get first access.
               </div>
             </div>
           </ScrollReveal>

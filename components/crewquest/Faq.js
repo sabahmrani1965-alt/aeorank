@@ -6,7 +6,7 @@ import ScrollReveal from "./ScrollReveal";
 const FAQS = [
   {
     q: "What is CrewQuest?",
-    a: "CrewQuest is a marketplace connecting brands with creators. Creators complete real posting/commenting missions on Reddit and get paid per mission — no bots, no fake engagement.",
+    a: "CrewQuest is a creator marketplace. Creators complete real posting/commenting missions on Reddit and get paid per mission — no bots, no fake engagement.",
   },
   {
     q: "How do I get paid?",
@@ -14,7 +14,7 @@ const FAQS = [
   },
   {
     q: "Why do you check my Reddit account?",
-    a: "To keep missions genuine, your account needs to be active (not suspended), at least 6 months old, and have at least 50 combined karma. This keeps the platform trustworthy for the brands posting missions.",
+    a: "To keep missions genuine, your account needs to be active (not suspended), at least 6 months old, and have at least 50 combined karma. This keeps the platform trustworthy.",
   },
   {
     q: "What happens if I don't finish a mission in time?",

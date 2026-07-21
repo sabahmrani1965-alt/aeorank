@@ -10,8 +10,7 @@ export default function CrewQuestFooter() {
         CrewQuest
       </div>
       <p style={{ color: "var(--text-muted)", fontSize: 13.5, maxWidth: 420, margin: "0 auto 20px" }}>
-        A creator marketplace for real, brand-sponsored Reddit missions — part of the AEOrank
-        family.
+        A creator marketplace for real Reddit missions.
       </p>
       <div className="cq-footer-links">
         <Link href="/terms">Terms</Link>

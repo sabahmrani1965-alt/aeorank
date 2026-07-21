@@ -25,7 +25,7 @@ export default function Hero({ liveMissionCount, previewMission }) {
         </ScrollReveal>
         <ScrollReveal delay={160}>
           <p className="cq-hero-sub">
-            Complete authentic posting and commenting missions for brands on Reddit — from your
+            Complete authentic posting and commenting missions on Reddit — from your
             own real account. LinkedIn, X, and Discord missions are coming soon.
           </p>
         </ScrollReveal>
@@ -34,9 +34,6 @@ export default function Hero({ liveMissionCount, previewMission }) {
             <Link href="/apply-poster" className="btn btn-primary btn-large">
               Start Earning →
             </Link>
-            <a href="#for-brands" className="btn btn-ghost btn-large">
-              For Brands
-            </a>
           </div>
         </ScrollReveal>
         <ScrollReveal delay={320}>
@@ -76,7 +73,7 @@ export default function Hero({ liveMissionCount, previewMission }) {
             <>
               <div className="kc-task-card-head">
                 <span className="kc-task-subreddit">r/technology</span>
-                <span className="kc-task-reward">$0.50</span>
+                <span className="kc-task-reward">$2.50</span>
               </div>
               <div className="kc-task-meta">
                 <span className="kc-badge kc-badge-neutral">Comment</span>
