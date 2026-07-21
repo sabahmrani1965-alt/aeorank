@@ -58,7 +58,7 @@ export default async function OpportunitiesPage() {
   const rest = (opportunities || []).filter((o) => !o.saved);
 
   return (
-    <section className="dashboard-page">
+    <section className="dashboard-page-wide">
       <div className="app-sidebar-group-label" style={{ padding: 0, marginBottom: 6 }}>Discover</div>
       <h2 style={{ marginBottom: 8 }}>Reddit threads worth engaging with</h2>
       <p style={{ color: "var(--text-dim)", marginBottom: 28, maxWidth: 640 }}>

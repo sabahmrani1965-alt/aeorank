@@ -1644,6 +1644,11 @@ button { font-family: inherit; }
 .app-content { flex: 1; padding: 0; }
 
 .dashboard-page { max-width: 1120px; margin: 0 auto; padding: 32px 28px 60px; }
+/* For pages whose content genuinely benefits from more horizontal room
+   (e.g. Opportunities' two-pane list+detail) — same vertical rhythm as
+   .dashboard-page, just without the 1120px cap that leaves the wide
+   two-column layout stranded in a narrow centered box on bigger screens. */
+.dashboard-page-wide { max-width: 1600px; margin: 0 auto; padding: 32px 28px 60px; }
 
 .credit-badge {
   display: inline-flex;
@@ -1968,6 +1973,7 @@ button { font-family: inherit; }
   .command-summary-grid { grid-template-columns: 1fr 1fr; }
   .quick-actions { grid-template-columns: 1fr; }
   .dashboard-page { padding: 24px 16px 48px; }
+  .dashboard-page-wide { padding: 24px 16px 48px; }
   .app-topbar { padding: 12px 16px; }
 }
 @media (max-width: 480px) {
