@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import BillingPortalButton from "@/components/BillingPortalButton";
 import RedeemCodeForm from "@/components/RedeemCodeForm";
+import PricingTiers from "@/components/PricingTiers";
 
 export const dynamic = "force-dynamic";
 
@@ -10,13 +11,16 @@ export default async function DashboardBillingPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: sub } = await supabase
-    .from("subscriptions")
-    .select("plan, status, current_period_end, cancel_at_period_end")
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+  const [{ data: sub }, { data: profile }] = await Promise.all([
+    supabase
+      .from("subscriptions")
+      .select("plan, status, current_period_end, cancel_at_period_end")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
+    supabase.from("company_profiles").select("company_name").eq("user_id", user.id).maybeSingle(),
+  ]);
 
   return (
     <section className="section">
@@ -29,7 +33,10 @@ export default async function DashboardBillingPage() {
             <div className="card" style={{ textAlign: "center", color: "var(--text-dim)", marginBottom: 20 }}>
               No active subscription on this account.
             </div>
-            <RedeemCodeForm />
+            <PricingTiers brand={profile?.company_name || ""} />
+            <div style={{ marginTop: 20 }}>
+              <RedeemCodeForm />
+            </div>
           </>
         ) : (
           <div className="card" style={{ padding: 24, maxWidth: 480 }}>
