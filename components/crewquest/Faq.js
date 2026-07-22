@@ -14,7 +14,7 @@ const FAQS = [
   },
   {
     q: "Why do you check my Reddit account?",
-    a: "To keep missions genuine, your account needs to be active (not suspended), at least 6 months old, and have at least 50 combined karma. This keeps the platform trustworthy.",
+    a: "To keep missions genuine, your account needs to be active (not suspended), at least 1 month old, and have at least 5 combined karma. This keeps the platform trustworthy.",
   },
   {
     q: "What happens if I don't finish a mission in time?",

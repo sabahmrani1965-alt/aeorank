@@ -44,8 +44,8 @@ export default function RedditVerifyForm({ initialRef = "" }) {
           disabled={loading}
         />
         <p style={{ fontSize: 12, color: "var(--text-muted)", margin: "4px 0 0" }}>
-          This is the account you'll post from — it needs to be active, not suspended, at least 6
-          months old, with at least 50 karma.
+          This is the account you'll post from — it needs to be active, not suspended, at least 1
+          month old, with at least 5 karma.
         </p>
       </label>
 

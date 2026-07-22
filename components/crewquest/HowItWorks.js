@@ -2,7 +2,7 @@ import ScrollReveal from "./ScrollReveal";
 
 const STEPS = [
   { icon: "📝", title: "Create your account", desc: "Sign up with your email and your Reddit username or profile link." },
-  { icon: "✅", title: "Get verified", desc: "We confirm your Reddit account is active, at least 6 months old, and has real karma — this keeps missions genuine, not bot-farmed." },
+  { icon: "✅", title: "Get verified", desc: "We confirm your Reddit account is active, at least 1 month old, and has real karma — this keeps missions genuine, not bot-farmed." },
   { icon: "🎯", title: "Accept missions", desc: "Pick a mission from the marketplace, write it in your own voice, and post it from your own account." },
   { icon: "💰", title: "Get paid", desc: "Submit the link, it's logged to your earnings, and you withdraw once you've hit $10." },
 ];
