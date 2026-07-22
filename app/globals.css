@@ -940,6 +940,7 @@ button { font-family: inherit; }
 }
 .tt-badge-pending { background: rgba(242, 168, 59, 0.15); color: var(--accent); }
 .tt-badge-published { background: var(--state-success-bg); color: var(--state-success-fg); }
+.tt-badge-removed { background: rgba(255, 120, 120, 0.12); color: #ff8a8a; }
 .tt-view-btn {
   display: inline-flex; align-items: center; gap: 6px;
   font-size: 13px; font-weight: 700;

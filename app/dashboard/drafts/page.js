@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getActiveCompanyProfile } from "@/lib/brands";
 import TrackTasksTable from "@/components/TrackTasksTable";
+import ExportTasksCsvButton from "@/components/ExportTasksCsvButton";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +17,9 @@ export default async function DashboardDraftsPage() {
   const { data: drafts } = profile
     ? await supabase
         .from("report_drafts")
-        .select("id, type, subreddit, title, body, permalink, target_url, posted_at, created_at")
+        .select(
+          "id, type, subreddit, title, body, permalink, target_url, posted_at, created_at, live_score, live_reply_count, live_removed, live_checked_at"
+        )
         .eq("user_id", user.id)
         .eq("company_profile_id", profile.id)
         .order("created_at", { ascending: false })
@@ -34,10 +37,11 @@ export default async function DashboardDraftsPage() {
           content, copy it, and add the live link once you've posted it.
         </p>
 
-        <div style={{ marginBottom: 24 }}>
+        <div style={{ marginBottom: 24, display: "flex", gap: 10, flexWrap: "wrap" }}>
           <Link href="/dashboard/drafts/new" className="btn btn-primary">
             + New task
           </Link>
+          {drafts?.length > 0 && <ExportTasksCsvButton tasks={drafts} />}
         </div>
 
         {!drafts || drafts.length === 0 ? (

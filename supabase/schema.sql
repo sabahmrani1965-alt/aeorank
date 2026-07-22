@@ -271,11 +271,23 @@ CREATE TABLE IF NOT EXISTS public.report_drafts (
   posted     BOOLEAN NOT NULL DEFAULT FALSE,
   posted_at  TIMESTAMPTZ,
   -- Self-reported link to the live post, once the customer has actually
-  -- posted it themselves — lets Track Tasks show a "view live" link. We
-  -- don't auto-fetch upvotes/removal status here (Reddit blocks direct
-  -- fetches from cloud IPs, same constraint documented in lib/reddit.js),
-  -- so this stays a self-reported reference, not a scraped metric.
+  -- posted it themselves — lets Track Tasks show a "view live" link, and
+  -- is what live_* below gets re-fetched from (see fetchItemStats() in
+  -- lib/reddit.js — Apify only, direct fetches are blocked from cloud IPs).
   permalink  TEXT,
+  -- On-demand live re-fetch of this exact permalink (not automatic — see
+  -- app/api/drafts/[id]/refresh-stats, credit-metered like Opportunities'
+  -- thread analysis). live_reply_count is only ever populated for a
+  -- post-level permalink — comment-level reply counts aren't reliably
+  -- extractable from the scraper, so it stays NULL there rather than
+  -- showing a guessed number. live_removed is a best-effort signal (either
+  -- the item vanished from the scrape entirely, or its body reads
+  -- "[removed]"/"[deleted]") — false positives are possible if Apify just
+  -- failed to find it for an unrelated reason.
+  live_score        INTEGER,
+  live_reply_count  INTEGER,
+  live_removed      BOOLEAN,
+  live_checked_at   TIMESTAMPTZ,
   -- Poster (public.users.role = 'poster') who currently holds this task —
   -- see app/poster/**. NULL = sitting in the open marketplace pool,
   -- unclaimed. Still admin-settable directly for a manual override/VIP
@@ -347,6 +359,10 @@ CREATE POLICY "Service role can do anything on report_drafts"
 -- working — the NOT NULL-ness is enforced at the API for new rows only.
 ALTER TABLE public.report_drafts
   ADD COLUMN IF NOT EXISTS target_url TEXT;
+ALTER TABLE public.report_drafts ADD COLUMN IF NOT EXISTS live_score INTEGER;
+ALTER TABLE public.report_drafts ADD COLUMN IF NOT EXISTS live_reply_count INTEGER;
+ALTER TABLE public.report_drafts ADD COLUMN IF NOT EXISTS live_removed BOOLEAN;
+ALTER TABLE public.report_drafts ADD COLUMN IF NOT EXISTS live_checked_at TIMESTAMPTZ;
 
 -- ── OPPORTUNITIES ────────────────────────────────────────────
 -- Cached Reddit threads matched + relevance-scored against a user's

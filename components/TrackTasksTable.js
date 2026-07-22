@@ -1,8 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { CREDIT_COSTS } from "@/lib/credits";
 
 const TYPE_LABELS = { post: "Post", reply: "Reply", comment: "Comment" };
+const REFRESH_COST = CREDIT_COSTS.refresh_reddit_stats;
 
 function formatDate(value) {
   if (!value) return null;
@@ -13,9 +15,22 @@ function formatDate(value) {
   });
 }
 
+function formatDateTime(value) {
+  if (!value) return null;
+  return new Date(value).toLocaleString(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
 // Status is derived entirely from whether a link is attached — never a
 // separately-settable field, so it can't drift out of sync with reality.
-function StatusBadge({ published }) {
+// A live-confirmed removal overrides "Published" — the link exists, but
+// isn't really live anymore.
+function StatusBadge({ published, removed }) {
+  if (published && removed) return <span className="tt-badge tt-badge-removed">🔴 Removed</span>;
   return published ? (
     <span className="tt-badge tt-badge-published">🟢 Published</span>
   ) : (
@@ -70,6 +85,13 @@ function TaskRow({ task }) {
   const [postedAt, setPostedAt] = useState(task.posted_at);
   const [copied, setCopied] = useState(false);
 
+  const [liveScore, setLiveScore] = useState(task.live_score);
+  const [liveReplyCount, setLiveReplyCount] = useState(task.live_reply_count);
+  const [liveRemoved, setLiveRemoved] = useState(Boolean(task.live_removed));
+  const [liveCheckedAt, setLiveCheckedAt] = useState(task.live_checked_at);
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshError, setRefreshError] = useState("");
+
   const published = Boolean(permalink);
 
   async function copyContent() {
@@ -87,6 +109,24 @@ function TaskRow({ task }) {
     setPostedAt(new Date().toISOString());
   }
 
+  async function refreshStats() {
+    setRefreshError("");
+    setRefreshing(true);
+    try {
+      const res = await fetch(`/api/drafts/${task.id}/refresh-stats`, { method: "POST" });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || "Could not check this link.");
+      setLiveScore(data.liveScore);
+      setLiveReplyCount(data.liveReplyCount);
+      setLiveRemoved(Boolean(data.liveRemoved));
+      setLiveCheckedAt(data.liveCheckedAt);
+    } catch (e) {
+      setRefreshError(e?.message || "Something went wrong.");
+    } finally {
+      setRefreshing(false);
+    }
+  }
+
   return (
     <div className="tt-card">
       <button type="button" className="tt-row" onClick={() => setExpanded((v) => !v)}>
@@ -98,7 +138,7 @@ function TaskRow({ task }) {
           {!expanded && <span className="tt-snippet">{task.body}</span>}
         </div>
         <div className="tt-row-side">
-          <StatusBadge published={published} />
+          <StatusBadge published={published} removed={liveRemoved} />
           {published && (
             <a
               href={permalink}
@@ -151,6 +191,28 @@ function TaskRow({ task }) {
                 <div className="tt-meta-value is-muted">Not added yet</div>
               )}
             </div>
+            {published && (
+              <div>
+                <div className="tt-meta-label">Live stats</div>
+                {liveCheckedAt ? (
+                  <div className="tt-meta-value">
+                    {liveRemoved ? (
+                      <span style={{ color: "#ff8a8a" }}>Removed</span>
+                    ) : (
+                      <>
+                        ↑ {liveScore ?? "—"}
+                        {liveReplyCount != null && <> · 💬 {liveReplyCount}</>}
+                      </>
+                    )}
+                    <div style={{ fontSize: 11.5, color: "var(--text-muted)", marginTop: 2 }}>
+                      Checked {formatDateTime(liveCheckedAt)}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="tt-meta-value is-muted">Not checked yet</div>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="tt-actions">
@@ -158,7 +220,17 @@ function TaskRow({ task }) {
               {copied ? "Copied" : "Copy content"}
             </button>
             {!published && <AddLinkForm id={task.id} onSaved={handleSaved} />}
+            {published && (
+              <button type="button" onClick={refreshStats} disabled={refreshing} className="btn btn-ghost btn-sm">
+                {refreshing ? "Checking…" : `Refresh stats (${REFRESH_COST} credits)`}
+              </button>
+            )}
           </div>
+          {refreshError && (
+            <p role="alert" style={{ color: "#ff8a8a", fontSize: 13, marginTop: 8 }}>
+              {refreshError}
+            </p>
+          )}
         </div>
       )}
     </div>

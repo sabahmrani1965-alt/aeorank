@@ -21,10 +21,11 @@ export async function PATCH(req, { params }) {
 
   const updates = {};
   if ("permalink" in body) {
-    // Self-reported link to the live post — not verified against Reddit,
-    // same reasoning as the schema comment on report_drafts.permalink.
-    // Status ("posted") is derived from this, not user-settable on its
-    // own — a task is Published exactly when a link is attached.
+    // Self-reported link to the live post — not verified against Reddit at
+    // save time (see app/api/drafts/[id]/refresh-stats for the separate,
+    // on-demand, credit-metered live check). Status ("posted") is derived
+    // from this, not user-settable on its own — a task is Published
+    // exactly when a link is attached.
     const permalink = String(body.permalink || "").trim().slice(0, 500) || null;
     updates.permalink = permalink;
     updates.posted = Boolean(permalink);
