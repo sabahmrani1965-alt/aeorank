@@ -25,10 +25,17 @@ export default async function CampaignDetailPage({ params }) {
     .eq("campaign_id", campaign.id)
     .order("checked_at", { ascending: true });
 
+  const { data: orders } = await supabase
+    .from("campaign_orders")
+    .select("id, provider, provider_order_id, quantity, status, error, submitted_at, last_polled_at, completed_at")
+    .eq("campaign_id", campaign.id)
+    .order("created_at", { ascending: false });
+
   return (
     <CampaignDetail
       campaign={{ ...campaign, subreddit: campaign.subreddit ? displaySubreddit(campaign.subreddit) : null }}
       initialSnapshots={snapshots || []}
+      initialOrders={orders || []}
     />
   );
 }

@@ -5,7 +5,14 @@ import { useRouter } from "next/navigation";
 import { CREDIT_COSTS } from "@/lib/credits";
 
 const CHECK_COST = CREDIT_COSTS.campaign_check;
-const BOOST_COST = CREDIT_COSTS.campaign_boost_demo;
+const ORDER_COST = CREDIT_COSTS.campaign_order;
+
+const ORDER_STATUS_LABEL = {
+  pending: "Pending",
+  in_progress: "In progress",
+  completed: "Completed",
+  failed: "Failed",
+};
 
 function formatDateTime(value) {
   if (!value) return "—";
@@ -62,11 +69,14 @@ function Sparkline({ snapshots }) {
   );
 }
 
-export default function CampaignDetail({ campaign, initialSnapshots }) {
+export default function CampaignDetail({ campaign, initialSnapshots, initialOrders }) {
   const router = useRouter();
   const [snapshots, setSnapshots] = useState(initialSnapshots);
+  const [orders, setOrders] = useState(initialOrders);
+  const [quantity, setQuantity] = useState(1);
   const [checking, setChecking] = useState(false);
-  const [boosting, setBoosting] = useState(false);
+  const [submittingOrder, setSubmittingOrder] = useState(false);
+  const [pollingId, setPollingId] = useState(null);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
 
@@ -88,19 +98,44 @@ export default function CampaignDetail({ campaign, initialSnapshots }) {
     }
   }
 
-  async function boost() {
+  async function placeOrder() {
     setError("");
-    setBoosting(true);
+    setSubmittingOrder(true);
     try {
-      const res = await fetch(`/api/campaigns/${campaign.id}/boost`, { method: "POST" });
+      const res = await fetch(`/api/campaigns/${campaign.id}/orders`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ quantity }),
+      });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data?.error || "Could not simulate a boost.");
-      if (data.snapshot) setSnapshots((s) => [...s, data.snapshot]);
+      if (!res.ok) throw new Error(data?.error || "Could not submit order.");
+      if (data.order) setOrders((o) => [data.order, ...o]);
       router.refresh();
     } catch (e) {
       setError(e?.message || "Something went wrong.");
     } finally {
-      setBoosting(false);
+      setSubmittingOrder(false);
+    }
+  }
+
+  async function pollOrder(orderId) {
+    setError("");
+    setPollingId(orderId);
+    try {
+      const res = await fetch(`/api/campaigns/${campaign.id}/orders/${orderId}/poll`, { method: "POST" });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || "Could not check order status.");
+      if (data.order) {
+        setOrders((list) => list.map((o) => (o.id === data.order.id ? data.order : o)));
+      }
+      if (data.snapshot) {
+        setSnapshots((s) => [...s, data.snapshot]);
+        router.refresh();
+      }
+    } catch (e) {
+      setError(e?.message || "Something went wrong.");
+    } finally {
+      setPollingId(null);
     }
   }
 
@@ -166,7 +201,7 @@ export default function CampaignDetail({ campaign, initialSnapshots }) {
           <div style={{ fontWeight: 700, marginBottom: 4 }}>Score over time</div>
           <p style={{ fontSize: 12.5, color: "var(--text-muted)", marginTop: 0, marginBottom: 4 }}>
             <span style={{ color: "var(--accent)" }}>●</span> real check &nbsp;
-            <span style={{ color: "#8b8b8b" }}>●</span> simulated demo boost
+            <span style={{ color: "#8b8b8b" }}>●</span> simulated order (demo)
           </p>
           <Sparkline snapshots={snapshots} />
         </div>
@@ -175,13 +210,9 @@ export default function CampaignDetail({ campaign, initialSnapshots }) {
           <button type="button" onClick={check} disabled={checking} className="btn btn-primary">
             {checking ? "Checking…" : `Check now (${CHECK_COST} credits)`}
           </button>
-          <button type="button" onClick={boost} disabled={boosting} className="btn btn-secondary">
-            {boosting ? "Simulating…" : `Simulate Boost — Demo Mode (${BOOST_COST} credit)`}
-          </button>
         </div>
         <p style={{ fontSize: 12.5, color: "var(--text-muted)", marginTop: 6 }}>
-          "Simulate Boost" demonstrates the automation flow only — it never places a real vote or contacts Reddit.
-          Only "Check now" reads real data from Reddit.
+          "Check now" reads real, live data from Reddit for this exact post.
         </p>
 
         {error && (
@@ -189,6 +220,92 @@ export default function CampaignDetail({ campaign, initialSnapshots }) {
             {error}
           </p>
         )}
+
+        <div className="card" style={{ padding: 20, marginTop: 24 }}>
+          <div style={{ fontWeight: 700, marginBottom: 4 }}>Place an order</div>
+          <p style={{ fontSize: 12.5, color: "var(--text-muted)", marginTop: 0, marginBottom: 14 }}>
+            Submits through the configured order provider (currently the built-in <strong>simulated</strong> provider —
+            it demonstrates the submit → poll → complete pipeline only, it never contacts Reddit or any real vote service).
+          </p>
+          <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13.5 }}>
+              Quantity
+              <input
+                type="number"
+                min={1}
+                max={1000}
+                value={quantity}
+                onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value, 10) || 1))}
+                style={{
+                  width: 80,
+                  background: "var(--bg-3)",
+                  border: "1px solid var(--card-border)",
+                  borderRadius: 8,
+                  padding: "6px 10px",
+                  fontSize: 14,
+                  color: "var(--text)",
+                }}
+              />
+            </label>
+            <button type="button" onClick={placeOrder} disabled={submittingOrder} className="btn btn-secondary">
+              {submittingOrder ? "Submitting…" : `Place Order (${quantity * ORDER_COST} credits) →`}
+            </button>
+          </div>
+        </div>
+
+        <div className="card" style={{ padding: 0, marginTop: 20, overflow: "hidden" }}>
+          <div style={{ padding: "14px 20px", fontWeight: 700, borderBottom: "1px solid var(--card-border)" }}>
+            Orders ({orders.length})
+          </div>
+          {orders.length === 0 ? (
+            <div style={{ padding: 20, color: "var(--text-dim)", textAlign: "center" }}>No orders yet.</div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              {orders.map((o) => {
+                const terminal = o.status === "completed" || o.status === "failed";
+                return (
+                  <div
+                    key={o.id}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 16,
+                      padding: "10px 20px",
+                      borderTop: "1px solid var(--card-border-soft)",
+                      fontSize: 13.5,
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <span style={{ color: "var(--text-muted)", minWidth: 120 }}>{formatDateTime(o.submitted_at)}</span>
+                    <span style={{ fontFamily: "monospace", fontSize: 12 }}>{o.provider}</span>
+                    <span>×{o.quantity}</span>
+                    <span
+                      style={{
+                        fontWeight: 600,
+                        color:
+                          o.status === "completed" ? "var(--state-success-fg)" : o.status === "failed" ? "#ff8a8a" : "var(--text)",
+                      }}
+                    >
+                      {ORDER_STATUS_LABEL[o.status] || o.status}
+                    </span>
+                    <span style={{ marginLeft: "auto" }}>
+                      {!terminal && (
+                        <button
+                          type="button"
+                          onClick={() => pollOrder(o.id)}
+                          disabled={pollingId === o.id}
+                          className="btn btn-ghost btn-sm"
+                        >
+                          {pollingId === o.id ? "Checking…" : "Refresh status"}
+                        </button>
+                      )}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
 
         <div className="card" style={{ padding: 0, marginTop: 24, overflow: "hidden" }}>
           <div style={{ padding: "14px 20px", fontWeight: 700, borderBottom: "1px solid var(--card-border)" }}>

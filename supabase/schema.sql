@@ -883,3 +883,46 @@ CREATE POLICY "Users can read own campaign snapshots"
 CREATE POLICY "Service role can do anything on campaign_snapshots"
   ON public.campaign_snapshots FOR ALL
   USING (auth.role() = 'service_role');
+
+-- ── CAMPAIGN ORDERS ──────────────────────────────────────────
+-- Generic external-order lifecycle: submit -> store the provider's own
+-- order id -> poll (or receive a webhook) for status -> reflect the
+-- result on the campaign's chart. `provider` is just a string key into
+-- lib/orders' registry (see lib/orders/registry.js) — this table and
+-- every route that touches it are provider-agnostic; nothing here
+-- assumes anything about what a given provider actually does.
+-- `metadata`/`result` are opaque JSON owned entirely by the provider
+-- implementation (round-tripped between submitOrder/pollStatus calls),
+-- never interpreted by application code.
+CREATE TABLE IF NOT EXISTS public.campaign_orders (
+  id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  campaign_id       UUID NOT NULL REFERENCES public.campaigns(id) ON DELETE CASCADE,
+  provider          TEXT NOT NULL,
+  provider_order_id TEXT,
+  quantity          INTEGER NOT NULL DEFAULT 1,
+  -- 'pending' | 'in_progress' | 'completed' | 'failed'
+  status            TEXT NOT NULL DEFAULT 'pending',
+  metadata          JSONB,
+  result            JSONB,
+  error             TEXT,
+  submitted_at      TIMESTAMPTZ,
+  last_polled_at    TIMESTAMPTZ,
+  completed_at      TIMESTAMPTZ,
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS campaign_orders_campaign_id_idx ON public.campaign_orders(campaign_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS campaign_orders_provider_order_idx ON public.campaign_orders(provider, provider_order_id);
+
+ALTER TABLE public.campaign_orders ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can read own campaign orders"
+  ON public.campaign_orders FOR SELECT
+  USING (EXISTS (
+    SELECT 1 FROM public.campaigns c
+    WHERE c.id = campaign_orders.campaign_id AND c.user_id = auth.uid()
+  ));
+
+CREATE POLICY "Service role can do anything on campaign_orders"
+  ON public.campaign_orders FOR ALL
+  USING (auth.role() = 'service_role');
