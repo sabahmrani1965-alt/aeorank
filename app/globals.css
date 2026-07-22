@@ -1332,6 +1332,16 @@ button { font-family: inherit; }
 .auth-links { display: flex; justify-content: space-between; margin-top: 16px; font-size: 13.5px; color: var(--text-dim); }
 .auth-links a { color: var(--accent); font-weight: 600; }
 
+.btn-google {
+  background: #fff;
+  color: #1f1f1f;
+  border: 1px solid var(--card-border);
+}
+.btn-google:hover { background: #f5f5f5; }
+
+.auth-divider { display: flex; align-items: center; gap: 12px; margin: 18px 0; color: var(--text-muted); font-size: 12.5px; }
+.auth-divider::before, .auth-divider::after { content: ""; flex: 1; height: 1px; background: var(--card-border); }
+
 /* ----------------- Loading ----------------- */
 .loader {
   display: inline-block;

@@ -14,15 +14,28 @@ export async function GET(req) {
     if (!error) {
       // First-time signup confirmations (no explicit `next`, e.g. password
       // reset sets its own) go to onboarding if they haven't done it yet.
+      // A returning poster (e.g. signing back in via Google) lands on
+      // /poster instead — mirrors app/login/page.js's role check, so
+      // every auth path (password, magic link, OAuth) agrees on where a
+      // poster ends up.
       let next = explicitNext || "/dashboard";
       if (!explicitNext && data?.user) {
-        // Existence check only — .eq("user_id", ...).maybeSingle() would
-        // throw once a user can have more than one company_profiles row.
-        const { count } = await supabase
-          .from("company_profiles")
-          .select("id", { count: "exact", head: true })
-          .eq("user_id", data.user.id);
-        if (!count) next = "/onboarding";
+        const { data: profile } = await supabase
+          .from("users")
+          .select("role")
+          .eq("id", data.user.id)
+          .maybeSingle();
+        if (profile?.role === "poster") {
+          next = "/poster";
+        } else {
+          // Existence check only — .eq("user_id", ...).maybeSingle() would
+          // throw once a user can have more than one company_profiles row.
+          const { count } = await supabase
+            .from("company_profiles")
+            .select("id", { count: "exact", head: true })
+            .eq("user_id", data.user.id);
+          if (!count) next = "/onboarding";
+        }
       }
       return NextResponse.redirect(`${origin}${next}`);
     }

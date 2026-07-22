@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AuthSplitLayout from "@/components/AuthSplitLayout";
+import GoogleAuthButton from "@/components/GoogleAuthButton";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
@@ -69,6 +70,9 @@ function LoginForm() {
       <p className="section-sub" style={{ marginBottom: 24 }}>
         Enter the email and password you used to subscribe.
       </p>
+
+      <GoogleAuthButton label="Log in with Google" />
+      <div className="auth-divider"><span>or</span></div>
 
       <form onSubmit={submit}>
         <label className="auth-field">

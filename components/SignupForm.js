@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import GoogleAuthButton from "@/components/GoogleAuthButton";
 
 // Extracted from app/signup/page.js so the same real signup logic (auth
 // account creation, not just UI) is shared with app/apply-poster/page.js's
@@ -70,7 +71,11 @@ export default function SignupForm({ redirectTo = "/onboarding" }) {
   }
 
   return (
-    <form onSubmit={submit}>
+    <>
+      <GoogleAuthButton label="Sign up with Google" redirectTo={redirectTo} />
+      <div className="auth-divider"><span>or</span></div>
+
+      <form onSubmit={submit}>
       <label className="auth-field">
         <span>Email</span>
         <input
@@ -125,6 +130,7 @@ export default function SignupForm({ redirectTo = "/onboarding" }) {
           Already have an account? <Link href="/login">Log in</Link>
         </span>
       </div>
-    </form>
+      </form>
+    </>
   );
 }
