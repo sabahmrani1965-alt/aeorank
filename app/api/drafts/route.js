@@ -16,6 +16,15 @@ const TYPES = new Set(["comment", "post", "reply", "upvote"]);
 // `body` string keeps working without a special case for this type.
 const UPVOTE_BODY = "Upvote this post.";
 
+// One Reddit account can only upvote a given post once, so a real order
+// needs multiple posters — each one fulfills exactly one upvote. Modeled
+// as `qty` identical report_drafts rows (one per poster slot), which
+// lib/posterTasks.js's getAvailableMissions() already groups into a single
+// marketplace listing with "N/qty slots" via its existing
+// (user_id, subreddit, type) grouping — no new mechanism needed.
+const MIN_UPVOTE_QTY = 10;
+const MAX_UPVOTE_QTY = 500;
+
 // Credits are charged here, on save — not on generate (see
 // app/api/drafts/generate/route.js) — so regenerating/tweaking a preview
 // is free and you only pay once you actually commit to keeping it.
@@ -73,6 +82,18 @@ export async function POST(req) {
     return NextResponse.json({ error: "Subreddit and content are required." }, { status: 400 });
   }
 
+  let qty = 1;
+  if (type === "upvote") {
+    qty = parseInt(body?.qty, 10);
+    if (!Number.isFinite(qty) || qty < MIN_UPVOTE_QTY) {
+      return NextResponse.json(
+        { error: `Minimum order is ${MIN_UPVOTE_QTY} upvotes.` },
+        { status: 400 }
+      );
+    }
+    qty = Math.min(qty, MAX_UPVOTE_QTY);
+  }
+
   const admin = createAdminClient();
   if (!admin) {
     return NextResponse.json({ error: "Not configured." }, { status: 500 });
@@ -88,30 +109,27 @@ export async function POST(req) {
     type === "reply" ? "generate_reply" :
     type === "upvote" ? "generate_upvote" :
     "generate_comment";
-  const amount = CREDIT_COSTS[action];
+  const amount = CREDIT_COSTS[action] * qty;
 
   const outcome = await withCredits({
     admin,
     userId: user.id,
     action,
     amount,
-    description: `Saved a ${type || "comment"} for ${subreddit}`,
-    metadata: { subreddit, type },
+    description: type === "upvote" ? `Ordered ${qty} upvotes for ${subreddit}` : `Saved a ${type || "comment"} for ${subreddit}`,
+    metadata: { subreddit, type, qty },
     run: async () => {
-      const { data, error } = await admin
-        .from("report_drafts")
-        .insert({
-          user_id: user.id,
-          company_profile_id: profile.id,
-          report_id: null,
-          type,
-          subreddit,
-          title: title || subreddit,
-          body: bodyText,
-          target_url: targetUrl,
-        })
-        .select("id")
-        .single();
+      const rows = Array.from({ length: qty }, () => ({
+        user_id: user.id,
+        company_profile_id: profile.id,
+        report_id: null,
+        type,
+        subreddit,
+        title: title || subreddit,
+        body: bodyText,
+        target_url: targetUrl,
+      }));
+      const { data, error } = await admin.from("report_drafts").insert(rows).select("id");
       if (error) {
         console.error("[drafts] create failed:", error.message);
         return null;
@@ -133,7 +151,7 @@ export async function POST(req) {
 
   return NextResponse.json({
     ok: true,
-    id: outcome.result.id,
+    id: outcome.result[0].id,
     creditsCharged: amount,
     creditsRemaining: outcome.balance,
   });

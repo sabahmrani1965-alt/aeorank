@@ -980,6 +980,47 @@ button { font-family: inherit; }
   .tt-snippet { display: none; }
 }
 
+.camp-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.camp-card {
+  display: block;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 18px;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color 0.15s;
+}
+.camp-card:hover { border-color: rgba(242, 168, 59, 0.3); }
+.camp-card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+.camp-subreddit { font-weight: 700; font-size: 14px; color: var(--text-dim); }
+.camp-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+.camp-card-stats { display: flex; gap: 12px; align-items: center; font-size: 13.5px; color: var(--text-muted); }
+.camp-source-tag {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--state-success-bg);
+  color: var(--state-success-fg);
+}
+.camp-source-tag.is-demo { background: rgba(139, 139, 139, 0.18); color: #a8a8a8; }
+
+.camp-stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 20px; }
+.camp-stat-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px 16px; }
+.camp-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 20px; }
+
 /* Audience block */
 .audience-block {
   background: linear-gradient(135deg, var(--accent), var(--accent-3));

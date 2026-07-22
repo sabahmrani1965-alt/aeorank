@@ -802,3 +802,84 @@ CREATE POLICY "Posters can read own payouts"
 CREATE POLICY "Service role can do anything on poster_payouts"
   ON public.poster_payouts FOR ALL
   USING (auth.role() = 'service_role');
+
+-- ── CAMPAIGNS ────────────────────────────────────────────────
+-- Reddit campaign tracking: a user points this at an existing Reddit post
+-- and the app tracks its real upvote/reply/removal status over time via
+-- fetchItemStats() (lib/reddit.js, Apify-backed — same mechanism as
+-- report_drafts.live_score). No automated voting and no third-party
+-- vote-selling integration of any kind — "boost" is a clearly-labeled
+-- simulation (campaign_snapshots.source = 'simulated') for demonstrating
+-- the flow end-to-end; it never contacts Reddit or any vote vendor.
+CREATE TABLE IF NOT EXISTS public.campaigns (
+  id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id            UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  company_profile_id UUID REFERENCES public.company_profiles(id) ON DELETE CASCADE,
+  target_url         TEXT NOT NULL,
+  subreddit          TEXT,
+  title              TEXT,
+  -- 'active' | 'archived' — archived campaigns keep their snapshot history,
+  -- just drop out of the main list.
+  status             TEXT NOT NULL DEFAULT 'active',
+  created_at         TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS campaigns_user_id_idx ON public.campaigns(user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS campaigns_company_profile_id_idx ON public.campaigns(company_profile_id);
+
+ALTER TABLE public.campaigns ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can read own campaigns"
+  ON public.campaigns FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own campaigns"
+  ON public.campaigns FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own campaigns"
+  ON public.campaigns FOR UPDATE
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own campaigns"
+  ON public.campaigns FOR DELETE
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Service role can do anything on campaigns"
+  ON public.campaigns FOR ALL
+  USING (auth.role() = 'service_role');
+
+-- ── CAMPAIGN SNAPSHOTS ───────────────────────────────────────
+-- One row per point-in-time check — the time-series history that
+-- report_drafts' single live_* columns don't provide (that's a
+-- "current value" cache; this is "how it changed"). `source`
+-- distinguishes a real Apify-verified reading from a clearly-labeled
+-- simulated demo boost — the two are never conflated in the UI or in
+-- analytics math.
+CREATE TABLE IF NOT EXISTS public.campaign_snapshots (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  campaign_id UUID NOT NULL REFERENCES public.campaigns(id) ON DELETE CASCADE,
+  score       INTEGER,
+  reply_count INTEGER,
+  removed     BOOLEAN NOT NULL DEFAULT FALSE,
+  -- 'real' (fetchItemStats via Apify, app/api/campaigns/[id]/check) |
+  -- 'simulated' (demo boost, app/api/campaigns/[id]/boost — never a real
+  -- vote, never contacts Reddit or a vote vendor).
+  source      TEXT NOT NULL,
+  checked_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS campaign_snapshots_campaign_id_idx ON public.campaign_snapshots(campaign_id, checked_at);
+
+ALTER TABLE public.campaign_snapshots ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can read own campaign snapshots"
+  ON public.campaign_snapshots FOR SELECT
+  USING (EXISTS (
+    SELECT 1 FROM public.campaigns c
+    WHERE c.id = campaign_snapshots.campaign_id AND c.user_id = auth.uid()
+  ));
+
+CREATE POLICY "Service role can do anything on campaign_snapshots"
+  ON public.campaign_snapshots FOR ALL
+  USING (auth.role() = 'service_role');

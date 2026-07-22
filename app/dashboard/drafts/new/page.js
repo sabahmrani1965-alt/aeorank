@@ -32,8 +32,9 @@ const SAVE_COST = {
   comment: CREDIT_COSTS.generate_comment,
   reply: CREDIT_COSTS.generate_reply,
   post: CREDIT_COSTS.generate_post,
-  upvote: CREDIT_COSTS.generate_upvote,
 };
+
+const MIN_UPVOTE_QTY = 10;
 
 export default function NewDraftPage() {
   return (
@@ -57,12 +58,14 @@ function NewDraftForm() {
   const [length, setLength] = useState("medium");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
+  const [qty, setQty] = useState(MIN_UPVOTE_QTY);
   const [generating, setGenerating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [savedInfo, setSavedInfo] = useState(null); // { creditsCharged, creditsRemaining }
 
   const ready = needsTargetUrl(type) ? Boolean(normalizeRedditUrl(targetUrl)) : Boolean(subreddit.trim());
+  const totalCost = type === "upvote" ? qty * CREDIT_COSTS.generate_upvote : SAVE_COST[type];
 
   async function generate() {
     setError("");
@@ -115,6 +118,10 @@ function NewDraftForm() {
       setError("Subreddit is required.");
       return;
     }
+    if (type === "upvote" && (!Number.isFinite(qty) || qty < MIN_UPVOTE_QTY)) {
+      setError(`Minimum order is ${MIN_UPVOTE_QTY} upvotes.`);
+      return;
+    }
     setSaving(true);
     try {
       const res = await fetch("/api/drafts", {
@@ -128,6 +135,7 @@ function NewDraftForm() {
           title,
           body: type === "upvote" ? undefined : body,
           targetUrl: needsTargetUrl(type) ? targetUrl.trim() : undefined,
+          qty: type === "upvote" ? qty : undefined,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -226,6 +234,26 @@ function NewDraftForm() {
             </label>
           )}
 
+          {type === "upvote" && (
+            <label className="auth-field">
+              <span>
+                Quantity <span style={{ color: "var(--accent)" }}>*</span>
+              </span>
+              <input
+                type="number"
+                min={MIN_UPVOTE_QTY}
+                step={1}
+                value={qty}
+                onChange={(e) => setQty(parseInt(e.target.value, 10))}
+                required
+              />
+              <span style={{ fontSize: 12, color: "var(--text-muted)" }}>
+                One Reddit account can only upvote a post once, so each upvote needs its own poster.
+                Minimum order is {MIN_UPVOTE_QTY}.
+              </span>
+            </label>
+          )}
+
           {type !== "upvote" && (
             <>
               <div style={{ display: "flex", gap: 12, marginBottom: 14, flexWrap: "wrap" }}>
@@ -288,7 +316,7 @@ function NewDraftForm() {
               ← Cancel
             </button>
             <button type="submit" className="btn btn-primary" disabled={saving}>
-              {saving ? "Creating…" : `Create Task (−${SAVE_COST[type]} credits) →`}
+              {saving ? "Creating…" : `Create Task (−${totalCost} credits) →`}
             </button>
           </div>
         </form>
