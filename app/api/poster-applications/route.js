@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { checkRedditAccount, MIN_ACCOUNT_AGE_MONTHS, MIN_KARMA } from "@/lib/reddit";
+import { resolveReferrerId } from "@/lib/posterPay";
 
 export const runtime = "nodejs";
 
@@ -60,19 +61,7 @@ export async function POST(req) {
   const admin = createAdminClient();
   if (!admin) return NextResponse.json({ error: "Not configured." }, { status: 500 });
 
-  // Resolve ref -> a real poster id. Silently ignored (not an error) if
-  // missing, malformed, or doesn't belong to a poster — never blocks the
-  // applicant over a bad/absent referral link.
-  let referredBy = null;
-  if (refParam) {
-    const { data: referrer } = await admin
-      .from("users")
-      .select("id")
-      .eq("id", refParam)
-      .eq("role", "poster")
-      .maybeSingle();
-    if (referrer?.id) referredBy = referrer.id;
-  }
+  const referredBy = await resolveReferrerId(admin, refParam);
 
   const { error } = await admin.from("poster_applications").insert({
     email,

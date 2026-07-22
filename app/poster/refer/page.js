@@ -4,8 +4,10 @@ import {
   rateForType,
   REFERRAL_COMMISSION_RATE,
   REFERRAL_WINDOW_MONTHS,
+  REFERRAL_SIGNUP_BONUS,
   referralWindowEnd,
   isWithinReferralWindow,
+  ensureReferralCode,
 } from "@/lib/posterPay";
 import CopyReferralLink from "@/components/CopyReferralLink";
 
@@ -18,6 +20,8 @@ export default async function ReferAFriendPage() {
   } = await supabase.auth.getUser();
 
   const admin = createAdminClient();
+
+  const referralCode = admin ? await ensureReferralCode(admin, user.id) : null;
 
   // Everyone this poster referred — scoped server-side to referred_by =
   // this authenticated poster's own id (never a client-supplied value).
@@ -61,12 +65,13 @@ export default async function ReferAFriendPage() {
       <span className="section-tag">( poster )</span>
       <h2>Refer a friend</h2>
       <p className="section-sub">
-        Share your link. When someone you refer becomes a poster, you earn {Math.round(REFERRAL_COMMISSION_RATE * 100)}%
-        of everything they earn in their first {REFERRAL_WINDOW_MONTHS} months — a running total, not a payout record.
+        Share your link or code. When someone you refer becomes a poster, they get a ${REFERRAL_SIGNUP_BONUS} signup
+        bonus, and you earn {Math.round(REFERRAL_COMMISSION_RATE * 100)}% of everything they earn in their first{" "}
+        {REFERRAL_WINDOW_MONTHS} months — a running total, not a payout record.
       </p>
 
       <div style={{ marginTop: 20, marginBottom: 28 }}>
-        <CopyReferralLink userId={user.id} fallbackOrigin={fallbackOrigin} />
+        <CopyReferralLink userId={user.id} referralCode={referralCode} fallbackOrigin={fallbackOrigin} />
       </div>
 
       <div className="kpi-row" style={{ gridTemplateColumns: "repeat(2, 1fr)", maxWidth: 420, marginBottom: 32 }}>

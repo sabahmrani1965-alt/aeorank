@@ -30,7 +30,7 @@ const FAQS = [
   },
   {
     q: "Can I earn from referrals?",
-    a: "Yes — share your referral link, and you'll earn 15% of everything your referred creator makes in their first 3 months.",
+    a: "Yes — share your referral link or code, and you'll earn 15% of everything your referred creator makes in their first 3 months. They also get a $5 signup bonus.",
   },
 ];
 

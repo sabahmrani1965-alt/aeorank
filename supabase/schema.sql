@@ -719,6 +719,16 @@ ALTER TABLE public.users
 
 CREATE INDEX IF NOT EXISTS users_referred_by_idx ON public.users(referred_by);
 
+-- Short, human-shareable code (e.g. "K7QX3M") standing in for a poster's
+-- own account id in a referral link/field — a raw UUID can't practically
+-- be spoken or typed by hand. Generated lazily (lib/posterPay.js's
+-- ensureReferralCode) the first time a poster views /poster/refer, not at
+-- signup — most users never need one. Partial unique index since almost
+-- every row is NULL (only posters who've viewed that page have one).
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS referral_code TEXT;
+CREATE UNIQUE INDEX IF NOT EXISTS users_referral_code_uidx
+  ON public.users(referral_code) WHERE referral_code IS NOT NULL;
+
 -- ── POSTER APPLICATIONS ──────────────────────────────────────
 -- Pending signups from the public "Refer a friend" apply form
 -- (app/apply-poster). No self-signup exists for posters — an application
