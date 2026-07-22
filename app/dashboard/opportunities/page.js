@@ -3,7 +3,6 @@ import { createClient } from "@/lib/supabase/server";
 import { timeAgo } from "@/lib/reddit";
 import { hasActiveSubscription } from "@/lib/subscription";
 import { getActiveCompanyProfile } from "@/lib/brands";
-import { CREDIT_COSTS } from "@/lib/credits";
 import OpportunityRefreshButton from "@/components/OpportunityRefreshButton";
 import OpportunityList from "@/components/OpportunityList";
 import RedeemCodeForm from "@/components/RedeemCodeForm";
@@ -43,7 +42,7 @@ export default async function OpportunitiesPage() {
     ? await supabase
         .from("opportunities")
         .select(
-          "id, sub, title, snippet, permalink, ups, comments, post_created_at, relevance_score, relevance_reason, relevance_reasons, buying_intent, saved, analysis_summary, analysis_pain_points, analysis_competitors_mentioned, analysis_response_angle, thread_selftext, thread_comments, analyzed_at, fetched_at"
+          "id, sub, title, snippet, permalink, ups, comments, post_created_at, relevance_score, relevance_reason, relevance_reasons, buying_intent, saved, fetched_at"
         )
         .eq("user_id", user.id)
         .eq("company_profile_id", profile.id)
@@ -52,7 +51,6 @@ export default async function OpportunitiesPage() {
 
   const hasProfile = Boolean(profile?.description || profile?.company_name);
   const competitors = profile?.competitors || [];
-  const analyzeCost = CREDIT_COSTS.thread_analysis;
 
   const saved = (opportunities || []).filter((o) => o.saved);
   const rest = (opportunities || []).filter((o) => !o.saved);
@@ -89,7 +87,7 @@ export default async function OpportunitiesPage() {
               No opportunities yet — click "Refresh opportunities" to search Reddit.
             </div>
           ) : (
-            <OpportunityList saved={saved} rest={rest} competitors={competitors} analyzeCost={analyzeCost} />
+            <OpportunityList saved={saved} rest={rest} competitors={competitors} />
           )}
         </>
       )}

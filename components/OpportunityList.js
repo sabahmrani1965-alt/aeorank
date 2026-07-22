@@ -39,7 +39,7 @@ function freshnessLabel(postCreatedAt) {
 // inline draft-and-create-task composer on the right for whichever
 // opportunity is selected. Defaults to the first item so the pane is never
 // empty on load.
-export default function OpportunityList({ saved, rest, competitors, analyzeCost }) {
+export default function OpportunityList({ saved, rest, competitors }) {
   const all = [...saved, ...rest];
   const [selectedId, setSelectedId] = useState(all[0]?.id ?? null);
   const selected = all.find((o) => o.id === selectedId) || null;
@@ -78,7 +78,6 @@ export default function OpportunityList({ saved, rest, competitors, analyzeCost 
             opportunity={selected}
             competitorMatch={findCompetitorMention(`${selected.title} ${selected.snippet || ""}`, competitors)}
             freshness={freshnessLabel(selected.post_created_at)}
-            analyzeCost={analyzeCost}
           />
         ) : (
           <div className="card" style={{ textAlign: "center", color: "var(--text-dim)", padding: 32 }}>

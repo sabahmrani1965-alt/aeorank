@@ -1894,22 +1894,6 @@ button { font-family: inherit; }
 .opp-detail-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
 .opp-detail-title { font-size: 23px; font-weight: 700; line-height: 1.35; margin: 0 0 14px; }
 .opp-detail-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
-.opp-detail-section {
-  border-top: 1px solid var(--card-border-soft);
-  padding-top: 18px;
-  margin-top: 4px;
-  margin-bottom: 20px;
-}
-.opp-thread-comment {
-  background: var(--bg-3);
-  border: 1px solid var(--card-border-soft);
-  border-radius: 10px;
-  padding: 10px 12px;
-  font-size: 15px;
-  color: var(--text-dim);
-  line-height: 1.55;
-}
-.opp-thread-comment-ups { display: block; margin-top: 6px; color: var(--text-muted); font-size: 13px; }
 
 .opp-composer { border-top: 1px solid var(--card-border-soft); padding-top: 18px; }
 .opp-select {

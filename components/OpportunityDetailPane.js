@@ -35,26 +35,11 @@ const labelStyle = {
 // *comment* on the thread (not "reply" or "post") — an opportunity IS a
 // Reddit post, so responding to it is inherently commenting on it; there's
 // no separate comment-id to target the way a true "reply" would need.
-export default function OpportunityDetailPane({ opportunity: o, competitorMatch, freshness, analyzeCost }) {
+export default function OpportunityDetailPane({ opportunity: o, competitorMatch, freshness }) {
   const [saved, setSaved] = useState(Boolean(o.saved));
   const [savingToggle, setSavingToggle] = useState(false);
 
-  const [analyzing, setAnalyzing] = useState(false);
-  const [analyzeError, setAnalyzeError] = useState("");
-  const [analysis, setAnalysis] = useState(
-    o.analyzed_at
-      ? {
-          summary: o.analysis_summary,
-          painPoints: o.analysis_pain_points || [],
-          competitorsMentioned: o.analysis_competitors_mentioned || [],
-          responseAngle: o.analysis_response_angle,
-        }
-      : null
-  );
-  const [thread, setThread] = useState(
-    o.thread_selftext || o.thread_comments ? { selftext: o.thread_selftext, comments: o.thread_comments || [] } : null
-  );
-  const [buyingIntent, setBuyingIntent] = useState(o.buying_intent);
+  const buyingIntent = o.buying_intent;
 
   const [tone, setTone] = useState("Helpful");
   const [length, setLength] = useState("medium");
@@ -85,27 +70,6 @@ export default function OpportunityDetailPane({ opportunity: o, competitorMatch,
       setSaved(!next);
     } finally {
       setSavingToggle(false);
-    }
-  }
-
-  async function analyze() {
-    setAnalyzeError("");
-    setAnalyzing(true);
-    try {
-      const res = await fetch("/api/opportunities/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ opportunityId: o.id }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data?.error || "Could not analyze this thread.");
-      setAnalysis(data.analysis);
-      setThread(data.thread || null);
-      if (data.analysis?.buyingIntent) setBuyingIntent(data.analysis.buyingIntent);
-    } catch (e) {
-      setAnalyzeError(e?.message || "Something went wrong.");
-    } finally {
-      setAnalyzing(false);
     }
   }
 
@@ -228,94 +192,6 @@ export default function OpportunityDetailPane({ opportunity: o, competitorMatch,
           Competitor mentioned: <strong style={{ color: "var(--text-dim)" }}>{competitorMatch}</strong>
         </p>
       )}
-
-      <div className="opp-detail-section">
-        {!analysis && !thread ? (
-          <button type="button" onClick={analyze} disabled={analyzing} className="btn btn-secondary">
-            {analyzing ? (
-              <>
-                <span className="loader" /> Fetching thread…
-              </>
-            ) : (
-              `Fetch full thread + AI analysis (${analyzeCost} credits)`
-            )}
-          </button>
-        ) : (
-          <>
-            {thread?.selftext && (
-              <div style={{ marginBottom: 16 }}>
-                <div style={labelStyle}>Post body</div>
-                <p style={{ fontSize: 15.5, color: "var(--text-dim)", lineHeight: 1.65, margin: 0, whiteSpace: "pre-wrap" }}>
-                  {thread.selftext}
-                </p>
-              </div>
-            )}
-            {thread?.comments?.length > 0 && (
-              <div style={{ marginBottom: 16 }}>
-                <div style={labelStyle}>Top comments</div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {thread.comments.map((c, i) => (
-                    <div key={i} className="opp-thread-comment">
-                      <p style={{ margin: 0 }}>{c.body}</p>
-                      {c.ups > 0 && <span className="opp-thread-comment-ups">↑ {c.ups.toLocaleString()}</span>}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            {analysis && (
-              <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                <div>
-                  <div style={labelStyle}>AI summary</div>
-                  <p style={{ fontSize: 15.5, color: "var(--text-dim)", lineHeight: 1.6, margin: 0 }}>{analysis.summary}</p>
-                </div>
-                {analysis.painPoints?.length > 0 && (
-                  <div>
-                    <div style={labelStyle}>Pain points</div>
-                    <ul style={{ margin: 0, paddingLeft: 18, fontSize: 15.5, color: "var(--text-dim)", lineHeight: 1.65 }}>
-                      {analysis.painPoints.map((p, i) => (
-                        <li key={i}>{p}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {analysis.competitorsMentioned?.length > 0 && (
-                  <div>
-                    <div style={labelStyle}>Competitors mentioned</div>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                      {analysis.competitorsMentioned.map((c) => (
-                        <span key={c} style={{ fontSize: 13.5, background: "var(--bg-3)", padding: "4px 10px", borderRadius: 999, color: "var(--text-dim)" }}>
-                          {c}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {analysis.responseAngle && (
-                  <div>
-                    <div style={labelStyle}>Recommended reply angle</div>
-                    <p style={{ fontSize: 15.5, color: "var(--text-dim)", lineHeight: 1.6, margin: 0 }}>{analysis.responseAngle}</p>
-                  </div>
-                )}
-              </div>
-            )}
-            <button
-              type="button"
-              onClick={analyze}
-              disabled={analyzing}
-              className="btn btn-ghost btn-sm"
-              style={{ marginTop: 14 }}
-            >
-              {analyzing ? "Re-fetching…" : `Re-fetch thread + re-analyze (${analyzeCost} credits)`}
-            </button>
-          </>
-        )}
-        {analyzeError && (
-          <p role="alert" style={{ color: "#ff8a8a", fontSize: 14.5, marginTop: 10 }}>
-            {analyzeError}
-          </p>
-        )}
-      </div>
 
       <div className="opp-composer">
         <div style={labelStyle}>Draft a comment</div>
