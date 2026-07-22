@@ -6,7 +6,12 @@ export const runtime = "nodejs";
 export async function GET(req) {
   const { searchParams, origin } = new URL(req.url);
   const code = searchParams.get("code");
-  const explicitNext = searchParams.get("next");
+  // The cookie (set right before starting the Google OAuth redirect — see
+  // GoogleAuthButton.js) is the reliable source for where an OAuth sign-in
+  // should land; the query param is a fallback for non-OAuth flows (e.g.
+  // password reset) that redirect straight here without that extra hop.
+  const cookieNext = req.cookies.get("oauth_next")?.value;
+  const explicitNext = (cookieNext && decodeURIComponent(cookieNext)) || searchParams.get("next");
 
   if (code) {
     const supabase = createClient();
@@ -37,7 +42,9 @@ export async function GET(req) {
           if (!count) next = "/onboarding";
         }
       }
-      return NextResponse.redirect(`${origin}${next}`);
+      const response = NextResponse.redirect(`${origin}${next}`);
+      if (cookieNext) response.cookies.set("oauth_next", "", { path: "/", maxAge: 0 });
+      return response;
     }
   }
 

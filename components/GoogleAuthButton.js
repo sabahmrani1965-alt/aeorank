@@ -20,6 +20,19 @@ export default function GoogleAuthButton({ label = "Continue with Google", redir
     setLoading(true);
     try {
       const supabase = createClient();
+      // The ?next= query param alone isn't reliable here: unlike a magic
+      // link (where Supabase redirects straight to our redirectTo with
+      // ?code= appended), Google's OAuth round-trip goes through Supabase's
+      // own intermediate callback first, and extra query params tacked onto
+      // redirectTo don't reliably survive that hop. A cookie does, since
+      // it's still our own domain's cookie jar by the time the browser
+      // lands back on us — read by app/auth/callback/route.js, which also
+      // clears it right after so a stale value can't leak into a later,
+      // unrelated login. Query param kept too (harmless, still used by the
+      // password-reset flow's own redirectTo, which doesn't hit this code).
+      if (redirectTo) {
+        document.cookie = `oauth_next=${encodeURIComponent(redirectTo)}; path=/; max-age=600; SameSite=Lax`;
+      }
       const params = redirectTo ? `?next=${encodeURIComponent(redirectTo)}` : "";
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: "google",
