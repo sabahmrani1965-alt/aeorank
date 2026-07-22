@@ -1,6 +1,13 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import AssignDraftControl from "@/components/AssignDraftControl";
+import AdminReviewControl from "@/components/AdminReviewControl";
 import { displaySubreddit } from "@/lib/format";
+
+const VERIFICATION_LABEL = {
+  verified: { label: "Verified", color: "var(--state-success-fg)" },
+  needs_review: { label: "Needs review", color: "var(--accent)" },
+  rejected: { label: "Rejected", color: "#ff8a8a" },
+};
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +33,7 @@ export default async function AdminDraftsPage() {
   const [{ data: drafts }, { data: users }, { data: posters }] = await Promise.all([
     admin
       .from("report_drafts")
-      .select("id, user_id, type, subreddit, title, body, posted, posted_at, permalink, claimed_by, created_at")
+      .select("id, user_id, type, subreddit, title, body, posted, posted_at, permalink, claimed_by, created_at, verification_status")
       .order("created_at", { ascending: false }),
     admin.from("users").select("id, email"),
     admin.from("users").select("id, email").eq("role", "poster"),
@@ -56,6 +63,7 @@ export default async function AdminDraftsPage() {
                   <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Subreddit</th>
                   <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Content</th>
                   <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Status</th>
+                  <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Verification</th>
                   <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Assigned to</th>
                 </tr>
               </thead>
@@ -91,6 +99,18 @@ export default async function AdminDraftsPage() {
                         </span>
                       ) : (
                         <span style={{ color: "var(--text-dim)" }}>Draft</span>
+                      )}
+                    </td>
+                    <td style={{ padding: "10px 12px" }}>
+                      {d.verification_status ? (
+                        <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "flex-start" }}>
+                          <span style={{ color: VERIFICATION_LABEL[d.verification_status]?.color, fontWeight: 600, fontSize: 13 }}>
+                            {VERIFICATION_LABEL[d.verification_status]?.label || d.verification_status}
+                          </span>
+                          {d.verification_status === "needs_review" && <AdminReviewControl draftId={d.id} />}
+                        </div>
+                      ) : (
+                        <span style={{ color: "var(--text-muted)", fontSize: 13 }}>—</span>
                       )}
                     </td>
                     <td style={{ padding: "10px 12px" }}>

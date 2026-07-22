@@ -84,21 +84,19 @@ export async function POST(req, { params }) {
   // Required liveness check, not the optional/credit-metered one
   // (app/api/drafts/[id]/refresh-stats) — free for the poster (posters
   // don't have a credit account; this is an operational cost the
-  // business absorbs, same as claim/regenerate). A CONFIRMED removal
-  // blocks the submission. `stats === null` means the check itself
-  // couldn't run (Apify not configured, or the call failed/timed out) —
-  // that's this app's own infrastructure being unavailable, not evidence
-  // against the poster, so it lets the submission through unverified
-  // (live_checked_at stays null) rather than blocking the entire
-  // marketplace whenever Apify has a bad moment. See fetchItemStats'
-  // own comment for why null and {removed:true} must never be conflated.
+  // business absorbs, same as claim/regenerate). Only a CONFIRMED live
+  // result auto-completes the submission. Everything else — a confirmed
+  // "removed," or `stats === null` (the check itself couldn't run: Apify
+  // not configured, or the call failed/timed out) — goes to manual
+  // review instead of an automatic reject/accept: fetchItemStats has
+  // documented reliability gaps (see its own comment), so a "removed"
+  // signal isn't reliable enough on its own to block a poster with no
+  // recourse, and an infrastructure hiccup shouldn't either. The task
+  // still moves to 'submitted' either way (the poster isn't left stuck
+  // holding a claim) — it just doesn't count toward real earnings until
+  // an admin approves it (see getEarningsSummary, lib/posterPay.js).
   const stats = await fetchItemStats(permalink);
-  if (stats?.removed) {
-    return NextResponse.json(
-      { error: "That link doesn't appear to be live on Reddit. Double-check it and resubmit." },
-      { status: 400 }
-    );
-  }
+  const verified = Boolean(stats && stats.removed === false);
 
   const nowIso = new Date().toISOString();
   const updates = {
@@ -106,6 +104,7 @@ export async function POST(req, { params }) {
     posted: true,
     posted_at: nowIso,
     permalink: permalink.slice(0, 500),
+    verification_status: verified ? "verified" : "needs_review",
   };
   if (stats) {
     updates.live_score = stats.score;

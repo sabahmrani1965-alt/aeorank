@@ -20,14 +20,17 @@ export default function TaskDetail({ task, reward }) {
   const [expired, setExpired] = useState(false);
 
   if (task.status === "submitted") {
+    const pendingReview = task.verification_status === "needs_review";
     return (
       <section>
         <span className="section-tag">( submitted )</span>
         <h2>r/{task.subreddit}</h2>
         <div className="card" style={{ padding: 24, marginTop: 20 }}>
-          <StatusBadge status="submitted" />
+          <StatusBadge status={pendingReview ? "pending_review" : "submitted"} />
           <p style={{ marginTop: 14, color: "var(--text-dim)" }}>
-            Nice work — this one's in. It'll show up in your Earnings and History.
+            {pendingReview
+              ? "Submitted — we couldn't automatically confirm this one's live, so it's waiting on a quick manual check before it counts toward your earnings. You'll see it move to Approved once that's done."
+              : "Nice work — this one's in. It'll show up in your Earnings and History."}
           </p>
           {task.permalink && (
             <a href={task.permalink} target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)", fontSize: 14 }}>

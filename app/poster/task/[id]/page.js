@@ -18,7 +18,7 @@ export default async function PosterTaskDetailPage({ params }) {
 
   const { data: task } = await admin
     .from("report_drafts")
-    .select("id, subreddit, type, title, body, status, claimed_at, claim_expires_at, permalink, target_url")
+    .select("id, subreddit, type, title, body, status, claimed_at, claim_expires_at, permalink, target_url, verification_status")
     .eq("id", params.id)
     .eq("claimed_by", user.id)
     .maybeSingle();
