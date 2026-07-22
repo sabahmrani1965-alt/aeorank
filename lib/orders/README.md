@@ -64,6 +64,14 @@ plain object:
 (to bump the campaign's score when an order completes) — everything else
 in `result`/`metadata` is opaque and just stored/displayed as-is.
 
+## Reference template
+
+`lib/orders/providers/exampleRealProvider.js` shows the exact shape a real
+adapter would take — same method signatures, same spot to read an API key
+from an env var, same spot to make the HTTP call — with the actual
+`fetch()` calls commented out and replaced by a stub that refuses to run.
+Copy it as a starting point; it isn't a working integration on its own.
+
 ## Adding a real provider
 
 1. Create `lib/orders/providers/yourProvider.js` implementing the shape
