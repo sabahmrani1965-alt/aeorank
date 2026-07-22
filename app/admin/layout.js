@@ -20,9 +20,9 @@ export default async function AdminLayout({ children }) {
         <div className="container">
           <div style={{ display: "flex", gap: 20, flexWrap: "wrap", marginBottom: 8 }}>
             <Link href="/admin" className="header-link">Overview</Link>
-            <Link href="/admin/users" className="header-link">Users</Link>
+            <Link href="/admin/users" className="header-link">AEOrank Users</Link>
             <Link href="/admin/drafts" className="header-link">Drafts</Link>
-            <Link href="/admin/posters" className="header-link">Posters</Link>
+            <Link href="/admin/posters" className="header-link">CrewQuest Users</Link>
             <Link href="/admin/credits" className="header-link">Credits</Link>
           </div>
         </div>

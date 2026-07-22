@@ -22,7 +22,7 @@ export default async function AdminOverviewPage() {
 
   const [{ data: users }, { data: subs }, { data: reports }, { data: drafts }] =
     await Promise.all([
-      admin.from("users").select("id, email, created_at"),
+      admin.from("users").select("id, email, created_at, role"),
       admin
         .from("subscriptions")
         .select("user_id, plan, status, created_at")
@@ -49,6 +49,9 @@ export default async function AdminOverviewPage() {
   const postedDrafts = (drafts || []).filter((d) => d.posted).length;
   const unpostedDrafts = (drafts || []).length - postedDrafts;
 
+  const aeorankUserCount = (users || []).filter((u) => u.role === "customer").length;
+  const crewquestUserCount = (users || []).filter((u) => u.role === "poster").length;
+
   return (
     <section className="section">
       <div className="container">
@@ -57,8 +60,12 @@ export default async function AdminOverviewPage() {
 
         <div className="kpi-row">
           <div className="kpi">
-            <div className="kpi-label">Total users</div>
-            <div className="kpi-value">{users?.length || 0}</div>
+            <div className="kpi-label">AEOrank users</div>
+            <div className="kpi-value">{aeorankUserCount}</div>
+          </div>
+          <div className="kpi">
+            <div className="kpi-label">CrewQuest users</div>
+            <div className="kpi-value">{crewquestUserCount}</div>
           </div>
           <div className="kpi">
             <div className="kpi-label">Active subscriptions</div>

@@ -21,7 +21,15 @@ export default async function AdminUsersPage() {
 
   const [{ data: users }, { data: subs }, { data: reports }, { data: drafts }, { data: balances }] =
     await Promise.all([
-      admin.from("users").select("id, email, created_at").order("created_at", { ascending: false }),
+      // CrewQuest accounts (role='poster') have their own page — see
+      // /admin/posters — since Stripe plan/reports/drafts-authored below
+      // don't mean anything for them (they fulfill drafts, they don't
+      // create them). This page is AEOrank customers only.
+      admin
+        .from("users")
+        .select("id, email, created_at")
+        .eq("role", "customer")
+        .order("created_at", { ascending: false }),
       admin
         .from("subscriptions")
         .select("user_id, plan, status, created_at")
@@ -55,7 +63,11 @@ export default async function AdminUsersPage() {
     <section className="section">
       <div className="container">
         <span className="section-tag">( admin )</span>
-        <h2>Users</h2>
+        <h2>AEOrank Users</h2>
+        <p className="section-sub">
+          Customer accounts only — CrewQuest posters (accounts that fulfill
+          tasks for pay) are tracked separately under "CrewQuest Users".
+        </p>
 
         {!users || users.length === 0 ? (
           <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>

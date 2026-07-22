@@ -75,9 +75,10 @@ export default async function AdminPostersPage() {
     <section className="section">
       <div className="container">
         <span className="section-tag">( admin )</span>
-        <h2>Posters</h2>
+        <h2>CrewQuest Users</h2>
         <p className="section-sub">
-          Accounts that fulfill drafts you assign them, across any customer — not their own account.
+          Poster accounts (role='poster') — they fulfill tasks claimed from the marketplace, across
+          any AEOrank customer, for pay. Customer accounts are tracked separately under "AEOrank Users".
         </p>
 
         <div style={{ marginBottom: 32 }}>
