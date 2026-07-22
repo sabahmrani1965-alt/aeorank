@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { CREDIT_COSTS } from "@/lib/credits";
 
-const TYPE_LABELS = { post: "Post", reply: "Reply", comment: "Comment" };
+const TYPE_LABELS = { post: "Post", reply: "Reply", comment: "Comment", upvote: "Upvote" };
 const REFRESH_COST = CREDIT_COSTS.refresh_reddit_stats;
 
 function formatDate(value) {
@@ -161,7 +161,7 @@ function TaskRow({ task }) {
           <div className="tt-meta-grid">
             {task.type !== "post" && (
               <div>
-                <div className="tt-meta-label">Replying to</div>
+                <div className="tt-meta-label">{task.type === "upvote" ? "Link to upvote" : "Replying to"}</div>
                 {task.target_url ? (
                   <a href={task.target_url} target="_blank" rel="noopener noreferrer" className="tt-view-btn">
                     Thread ↗
@@ -216,9 +216,11 @@ function TaskRow({ task }) {
           </div>
 
           <div className="tt-actions">
-            <button type="button" onClick={copyContent} className="btn btn-secondary btn-sm">
-              {copied ? "Copied" : "Copy content"}
-            </button>
+            {task.type !== "upvote" && (
+              <button type="button" onClick={copyContent} className="btn btn-secondary btn-sm">
+                {copied ? "Copied" : "Copy content"}
+              </button>
+            )}
             {!published && <AddLinkForm id={task.id} onSaved={handleSaved} />}
             {published && (
               <button type="button" onClick={refreshStats} disabled={refreshing} className="btn btn-ghost btn-sm">

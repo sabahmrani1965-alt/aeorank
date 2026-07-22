@@ -10,10 +10,11 @@ const CHECKLIST = [
   { key: "paste", label: "Paste Reddit URL" },
 ];
 
-export default function SubmissionForm({ taskId }) {
+export default function SubmissionForm({ taskId, type }) {
   const router = useRouter();
   const [checked, setChecked] = useState({});
   const [permalink, setPermalink] = useState("");
+  const [confirmed, setConfirmed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -29,7 +30,7 @@ export default function SubmissionForm({ taskId }) {
       const res = await fetch(`/api/poster/tasks/${taskId}/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ permalink }),
+        body: JSON.stringify(type === "upvote" ? {} : { permalink }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data?.error || "Could not submit.");
@@ -39,6 +40,27 @@ export default function SubmissionForm({ taskId }) {
       setError(err?.message || "Something went wrong.");
       setSubmitting(false);
     }
+  }
+
+  if (type === "upvote") {
+    return (
+      <form onSubmit={submit} className="card" style={{ padding: 22, display: "flex", flexDirection: "column", gap: 16 }}>
+        <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14, cursor: "pointer" }}>
+          <input type="checkbox" checked={confirmed} onChange={() => setConfirmed((v) => !v)} />
+          I've upvoted it from my own Reddit account
+        </label>
+
+        <button type="submit" className="btn btn-primary btn-large" disabled={submitting || !confirmed}>
+          {submitting ? "Submitting…" : "Submit"}
+        </button>
+
+        {error && (
+          <p role="alert" style={{ color: "var(--msg-danger)", fontSize: 13.5, margin: 0 }}>
+            {error}
+          </p>
+        )}
+      </form>
+    );
   }
 
   return (

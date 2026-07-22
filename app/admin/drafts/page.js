@@ -4,7 +4,7 @@ import { displaySubreddit } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
-const TYPE_LABELS = { comment: "Comment", post: "Post", reply: "Reply" };
+const TYPE_LABELS = { comment: "Comment", post: "Post", reply: "Reply", upvote: "Upvote" };
 
 export default async function AdminDraftsPage() {
   const admin = createAdminClient();

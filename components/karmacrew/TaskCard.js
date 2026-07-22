@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const TYPE_LABEL = { comment: "Comment", reply: "Reply", post: "Post" };
+const TYPE_LABEL = { comment: "Comment", reply: "Reply", post: "Post", upvote: "Upvote" };
 
 export default function TaskCard({ task, onCoolingDown, disabledReason }) {
   const router = useRouter();

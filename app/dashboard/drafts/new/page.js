@@ -9,6 +9,7 @@ const TYPES = [
   { key: "comment", label: "Post a Comment" },
   { key: "post", label: "Create a Post" },
   { key: "reply", label: "Reply to a Comment" },
+  { key: "upvote", label: "Order Upvote" },
 ];
 const TONES = ["Helpful", "Casual", "Expert", "Enthusiastic"];
 const LENGTHS = [
@@ -31,6 +32,7 @@ const SAVE_COST = {
   comment: CREDIT_COSTS.generate_comment,
   reply: CREDIT_COSTS.generate_reply,
   post: CREDIT_COSTS.generate_post,
+  upvote: CREDIT_COSTS.generate_upvote,
 };
 
 export default function NewDraftPage() {
@@ -92,17 +94,21 @@ function NewDraftForm() {
   async function save(e) {
     e.preventDefault();
     setError("");
-    if (!body.trim()) {
+    if (type !== "upvote" && !body.trim()) {
       setError("Content is required.");
       return;
     }
     if (needsTargetUrl(type)) {
       if (!targetUrl.trim()) {
-        setError("Paste the link to the Reddit thread you're replying to.");
+        setError(
+          type === "upvote"
+            ? "Paste the link to the post or comment to upvote."
+            : "Paste the link to the Reddit thread you're replying to."
+        );
         return;
       }
       if (!normalizeRedditUrl(targetUrl)) {
-        setError("That doesn't look like a Reddit link. Paste the full URL of the thread.");
+        setError("That doesn't look like a Reddit link. Paste the full URL.");
         return;
       }
     } else if (!subreddit.trim()) {
@@ -120,7 +126,7 @@ function NewDraftForm() {
             ? undefined
             : subreddit.startsWith("r/") ? subreddit : `r/${subreddit}`,
           title,
-          body,
+          body: type === "upvote" ? undefined : body,
           targetUrl: needsTargetUrl(type) ? targetUrl.trim() : undefined,
         }),
       });
@@ -178,7 +184,7 @@ function NewDraftForm() {
           {needsTargetUrl(type) ? (
             <label className="auth-field">
               <span>
-                Link to the {type === "reply" ? "comment" : "thread"}{" "}
+                Link to the {type === "reply" ? "comment" : type === "upvote" ? "post or comment to upvote" : "thread"}{" "}
                 <span style={{ color: "var(--accent)" }}>*</span>
               </span>
               <input
@@ -190,7 +196,9 @@ function NewDraftForm() {
                 required
               />
               <span style={{ fontSize: 12, color: "var(--text-muted)" }}>
-                Whoever posts this needs to know exactly where it goes.
+                {type === "upvote"
+                  ? "Whoever picks this up will upvote it from their own account."
+                  : "Whoever posts this needs to know exactly where it goes."}
               </span>
             </label>
           ) : (
@@ -218,52 +226,56 @@ function NewDraftForm() {
             </label>
           )}
 
-          <div style={{ display: "flex", gap: 12, marginBottom: 14, flexWrap: "wrap" }}>
-            <label className="auth-field" style={{ flex: "1 1 160px", marginBottom: 0 }}>
-              <span>Tone</span>
-              <select value={tone} onChange={(e) => setTone(e.target.value)} style={selectStyle}>
-                {TONES.map((t) => <option key={t} value={t}>{t}</option>)}
-              </select>
-            </label>
-            <label className="auth-field" style={{ flex: "1 1 160px", marginBottom: 0 }}>
-              <span>Length</span>
-              <select value={length} onChange={(e) => setLength(e.target.value)} style={selectStyle}>
-                {LENGTHS.map((l) => <option key={l.key} value={l.key}>{l.label}</option>)}
-              </select>
-            </label>
-          </div>
+          {type !== "upvote" && (
+            <>
+              <div style={{ display: "flex", gap: 12, marginBottom: 14, flexWrap: "wrap" }}>
+                <label className="auth-field" style={{ flex: "1 1 160px", marginBottom: 0 }}>
+                  <span>Tone</span>
+                  <select value={tone} onChange={(e) => setTone(e.target.value)} style={selectStyle}>
+                    {TONES.map((t) => <option key={t} value={t}>{t}</option>)}
+                  </select>
+                </label>
+                <label className="auth-field" style={{ flex: "1 1 160px", marginBottom: 0 }}>
+                  <span>Length</span>
+                  <select value={length} onChange={(e) => setLength(e.target.value)} style={selectStyle}>
+                    {LENGTHS.map((l) => <option key={l.key} value={l.key}>{l.label}</option>)}
+                  </select>
+                </label>
+              </div>
 
-          <button
-            type="button"
-            onClick={generate}
-            className="btn btn-secondary"
-            disabled={generating || !ready}
-            style={{ marginBottom: 14 }}
-          >
-            {generating ? "Generating…" : body ? "Improve with AI ✨" : "Generate with AI ✨"}
-          </button>
+              <button
+                type="button"
+                onClick={generate}
+                className="btn btn-secondary"
+                disabled={generating || !ready}
+                style={{ marginBottom: 14 }}
+              >
+                {generating ? "Generating…" : body ? "Improve with AI ✨" : "Generate with AI ✨"}
+              </button>
 
-          <label className="auth-field">
-            <span>Content</span>
-            <textarea
-              value={body}
-              onChange={(e) => setBody(e.target.value.slice(0, 2000))}
-              rows={8}
-              placeholder="Write it yourself, or generate a starting point above"
-              style={{
-                background: "var(--bg-3)",
-                border: "1px solid var(--card-border)",
-                borderRadius: 10,
-                padding: "12px 14px",
-                fontSize: 15,
-                color: "var(--text)",
-                fontFamily: "inherit",
-                width: "100%",
-                resize: "vertical",
-              }}
-            />
-            <span style={{ fontSize: 12, color: "var(--text-muted)" }}>{body.length}/2000 characters</span>
-          </label>
+              <label className="auth-field">
+                <span>Content</span>
+                <textarea
+                  value={body}
+                  onChange={(e) => setBody(e.target.value.slice(0, 2000))}
+                  rows={8}
+                  placeholder="Write it yourself, or generate a starting point above"
+                  style={{
+                    background: "var(--bg-3)",
+                    border: "1px solid var(--card-border)",
+                    borderRadius: 10,
+                    padding: "12px 14px",
+                    fontSize: 15,
+                    color: "var(--text)",
+                    fontFamily: "inherit",
+                    width: "100%",
+                    resize: "vertical",
+                  }}
+                />
+                <span style={{ fontSize: 12, color: "var(--text-muted)" }}>{body.length}/2000 characters</span>
+              </label>
+            </>
+          )}
 
           {error && (
             <p role="alert" style={{ color: "#ff8a8a", marginBottom: 12, fontSize: 14 }}>

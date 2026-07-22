@@ -14,13 +14,36 @@ export async function POST(req, { params }) {
   try {
     body = await req.json();
   } catch {}
-  const permalink = String(body?.permalink || "").trim();
-  if (!permalink) {
-    return NextResponse.json({ error: "Paste the live Reddit link before submitting." }, { status: 400 });
-  }
 
   const admin = createAdminClient();
   if (!admin) return NextResponse.json({ error: "Not configured." }, { status: 500 });
+
+  const { data: task } = await admin
+    .from("report_drafts")
+    .select("type, target_url")
+    .eq("id", params.id)
+    .eq("claimed_by", user.id)
+    .eq("status", "claimed")
+    .maybeSingle();
+  if (!task) {
+    return NextResponse.json(
+      { error: "Could not submit — this task may have expired or already been submitted." },
+      { status: 409 }
+    );
+  }
+
+  // Upvoting doesn't create a new URL to prove — the target already
+  // exists — so it's confirmed on trust (same self-report basis the rest
+  // of the app runs on) rather than requiring a pasted link.
+  let permalink;
+  if (task.type === "upvote") {
+    permalink = task.target_url;
+  } else {
+    permalink = String(body?.permalink || "").trim();
+    if (!permalink) {
+      return NextResponse.json({ error: "Paste the live Reddit link before submitting." }, { status: 400 });
+    }
+  }
 
   const nowIso = new Date().toISOString();
   const { data, error } = await admin

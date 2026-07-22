@@ -8,7 +8,13 @@ import { parseRedditUrl } from "@/lib/reddit";
 
 export const runtime = "nodejs";
 
-const TYPES = new Set(["comment", "post", "reply"]);
+const TYPES = new Set(["comment", "post", "reply", "upvote"]);
+
+// Upvoting has no written content — a fixed placeholder stands in for
+// `body` so every downstream display path (Track Tasks snippet/search,
+// the poster's DraftViewer "copy content") that assumes a meaningful
+// `body` string keeps working without a special case for this type.
+const UPVOTE_BODY = "Upvote this post.";
 
 // Credits are charged here, on save — not on generate (see
 // app/api/drafts/generate/route.js) — so regenerating/tweaking a preview
@@ -31,8 +37,8 @@ export async function POST(req) {
 
   let subreddit = String(body?.subreddit || "").trim().slice(0, 80);
   const title = String(body?.title || "").trim().slice(0, 200);
-  const bodyText = String(body?.body || "").trim().slice(0, 2000);
   const type = TYPES.has(body?.type) ? body.type : null;
+  const bodyText = type === "upvote" ? UPVOTE_BODY : String(body?.body || "").trim().slice(0, 2000);
 
   // A comment/reply is aimed at a thread that already exists — without the
   // link the poster who claims this task has no way to find it. Validated
@@ -77,7 +83,11 @@ export async function POST(req) {
     return NextResponse.json({ error: "Complete your company profile first." }, { status: 400 });
   }
 
-  const action = type === "post" ? "generate_post" : type === "reply" ? "generate_reply" : "generate_comment";
+  const action =
+    type === "post" ? "generate_post" :
+    type === "reply" ? "generate_reply" :
+    type === "upvote" ? "generate_upvote" :
+    "generate_comment";
   const amount = CREDIT_COSTS[action];
 
   const outcome = await withCredits({

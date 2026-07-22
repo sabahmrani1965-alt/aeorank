@@ -8,7 +8,7 @@ import SubmissionForm from "./SubmissionForm";
 import StatusBadge from "./StatusBadge";
 import RewardBadge from "./RewardBadge";
 
-const TYPE_LABEL = { comment: "Comment", reply: "Reply", post: "Post" };
+const TYPE_LABEL = { comment: "Comment", reply: "Reply", post: "Post", upvote: "Upvote" };
 
 const DOS_DONTS = {
   dos: ["Sound like a real person, not an ad", "Keep it on-topic for the subreddit", "Only post once — no duplicates"],
@@ -84,7 +84,11 @@ export default function TaskDetail({ task, reward }) {
           {task.type !== "post" && (
             <div className="card" style={{ padding: 22 }}>
               <div style={{ fontWeight: 700, marginBottom: 10 }}>
-                {task.type === "reply" ? "Comment to reply to" : "Thread to comment on"}
+                {task.type === "reply"
+                  ? "Comment to reply to"
+                  : task.type === "upvote"
+                  ? "Post or comment to upvote"
+                  : "Thread to comment on"}
               </div>
               {task.target_url ? (
                 <a
@@ -104,33 +108,45 @@ export default function TaskDetail({ task, reward }) {
             </div>
           )}
 
-          <div className="card" style={{ padding: 22 }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
-              <div>
-                <div style={{ fontWeight: 700, marginBottom: 8, fontSize: 13.5, color: "var(--msg-success)" }}>Do</div>
-                <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: "var(--text-dim)", lineHeight: 1.7 }}>
-                  {DOS_DONTS.dos.map((d) => (
-                    <li key={d}>{d}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <div style={{ fontWeight: 700, marginBottom: 8, fontSize: 13.5, color: "var(--msg-danger)" }}>Don't</div>
-                <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: "var(--text-dim)", lineHeight: 1.7 }}>
-                  {DOS_DONTS.donts.map((d) => (
-                    <li key={d}>{d}</li>
-                  ))}
-                </ul>
-              </div>
+          {task.type === "upvote" ? (
+            <div className="card" style={{ padding: 22 }}>
+              <div style={{ fontWeight: 700, marginBottom: 10 }}>How this works</div>
+              <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.6, margin: 0 }}>
+                Open the link above on Reddit from your own account and upvote it.
+                That's it — no draft to write, no comment to post. Confirm below once you've done it.
+              </p>
             </div>
-          </div>
+          ) : (
+            <>
+              <div className="card" style={{ padding: 22 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+                  <div>
+                    <div style={{ fontWeight: 700, marginBottom: 8, fontSize: 13.5, color: "var(--msg-success)" }}>Do</div>
+                    <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: "var(--text-dim)", lineHeight: 1.7 }}>
+                      {DOS_DONTS.dos.map((d) => (
+                        <li key={d}>{d}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 700, marginBottom: 8, fontSize: 13.5, color: "var(--msg-danger)" }}>Don't</div>
+                    <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: "var(--text-dim)", lineHeight: 1.7 }}>
+                      {DOS_DONTS.donts.map((d) => (
+                        <li key={d}>{d}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
 
-          <div className="card" style={{ padding: 22 }}>
-            <DraftViewer taskId={task.id} initialTitle={task.title} initialBody={task.body} type={task.type} />
-          </div>
+              <div className="card" style={{ padding: 22 }}>
+                <DraftViewer taskId={task.id} initialTitle={task.title} initialBody={task.body} type={task.type} />
+              </div>
+            </>
+          )}
         </div>
 
-        <SubmissionForm taskId={task.id} />
+        <SubmissionForm taskId={task.id} type={task.type} />
       </div>
     </section>
   );
