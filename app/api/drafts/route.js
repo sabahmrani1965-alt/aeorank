@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getActiveCompanyProfile } from "@/lib/brands";
 import { withCredits, getBalance, CREDIT_COSTS } from "@/lib/credits";
 import { needsTargetUrl, normalizeRedditUrl } from "@/lib/format";
+import { parseRedditUrl } from "@/lib/reddit";
 
 export const runtime = "nodejs";
 
@@ -28,19 +29,17 @@ export async function POST(req) {
     return NextResponse.json({ error: "Invalid JSON." }, { status: 400 });
   }
 
-  const subreddit = String(body?.subreddit || "").trim().slice(0, 80);
+  let subreddit = String(body?.subreddit || "").trim().slice(0, 80);
   const title = String(body?.title || "").trim().slice(0, 200);
   const bodyText = String(body?.body || "").trim().slice(0, 2000);
   const type = TYPES.has(body?.type) ? body.type : null;
 
-  if (!subreddit || !bodyText) {
-    return NextResponse.json({ error: "Subreddit and content are required." }, { status: 400 });
-  }
-
   // A comment/reply is aimed at a thread that already exists — without the
   // link the poster who claims this task has no way to find it. Validated
   // here and not just in the form, since this route is the only thing
-  // standing between a request and the credit charge below.
+  // standing between a request and the credit charge below. There's no
+  // separate subreddit input for these types — the thread link IS where it
+  // goes, so the subreddit is derived from it instead of asked twice.
   let targetUrl = null;
   if (needsTargetUrl(type)) {
     const rawTarget = String(body?.targetUrl || "").trim();
@@ -57,6 +56,15 @@ export async function POST(req) {
         { status: 400 }
       );
     }
+    const parsed = parseRedditUrl(targetUrl);
+    if (!parsed) {
+      return NextResponse.json({ error: "Could not determine the subreddit from that link." }, { status: 400 });
+    }
+    subreddit = parsed.sub;
+  }
+
+  if (!subreddit || !bodyText) {
+    return NextResponse.json({ error: "Subreddit and content are required." }, { status: 400 });
   }
 
   const admin = createAdminClient();

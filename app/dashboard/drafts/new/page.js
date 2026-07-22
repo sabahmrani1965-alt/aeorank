@@ -45,8 +45,9 @@ function NewDraftForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [type, setType] = useState("comment");
+  // Only used for "post" — comment/reply have no separate subreddit input,
+  // it's derived server-side from the required thread link instead.
   const [subreddit, setSubreddit] = useState(searchParams.get("subreddit") || "");
-  const [threadContext, setThreadContext] = useState(searchParams.get("context") || "");
   // Prefilled when you arrive from an Opportunity card, which already knows
   // the thread's permalink — typed by hand otherwise.
   const [targetUrl, setTargetUrl] = useState(searchParams.get("url") || "");
@@ -59,6 +60,8 @@ function NewDraftForm() {
   const [error, setError] = useState("");
   const [savedInfo, setSavedInfo] = useState(null); // { creditsCharged, creditsRemaining }
 
+  const ready = needsTargetUrl(type) ? Boolean(normalizeRedditUrl(targetUrl)) : Boolean(subreddit.trim());
+
   async function generate() {
     setError("");
     setGenerating(true);
@@ -69,7 +72,7 @@ function NewDraftForm() {
         body: JSON.stringify({
           type,
           subreddit,
-          threadContext,
+          targetUrl,
           tone: tone.toLowerCase(),
           length,
           existingText: body,
@@ -89,8 +92,8 @@ function NewDraftForm() {
   async function save(e) {
     e.preventDefault();
     setError("");
-    if (!subreddit.trim() || !body.trim()) {
-      setError("Subreddit and content are required.");
+    if (!body.trim()) {
+      setError("Content is required.");
       return;
     }
     if (needsTargetUrl(type)) {
@@ -102,6 +105,9 @@ function NewDraftForm() {
         setError("That doesn't look like a Reddit link. Paste the full URL of the thread.");
         return;
       }
+    } else if (!subreddit.trim()) {
+      setError("Subreddit is required.");
+      return;
     }
     setSaving(true);
     try {
@@ -110,8 +116,10 @@ function NewDraftForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type,
-          subreddit: subreddit.startsWith("r/") ? subreddit : `r/${subreddit}`,
-          title: type === "post" ? title : title || threadContext,
+          subreddit: needsTargetUrl(type)
+            ? undefined
+            : subreddit.startsWith("r/") ? subreddit : `r/${subreddit}`,
+          title,
           body,
           targetUrl: needsTargetUrl(type) ? targetUrl.trim() : undefined,
         }),
@@ -167,18 +175,7 @@ function NewDraftForm() {
           </div>
         ) : (
         <form onSubmit={save} className="card" style={{ padding: 24 }}>
-          <label className="auth-field">
-            <span>Subreddit</span>
-            <input
-              type="text"
-              placeholder="r/SaaS"
-              value={subreddit}
-              onChange={(e) => setSubreddit(e.target.value)}
-              required
-            />
-          </label>
-
-          {needsTargetUrl(type) && (
+          {needsTargetUrl(type) ? (
             <label className="auth-field">
               <span>
                 Link to the {type === "reply" ? "comment" : "thread"}{" "}
@@ -196,9 +193,20 @@ function NewDraftForm() {
                 Whoever posts this needs to know exactly where it goes.
               </span>
             </label>
+          ) : (
+            <label className="auth-field">
+              <span>Subreddit</span>
+              <input
+                type="text"
+                placeholder="r/SaaS"
+                value={subreddit}
+                onChange={(e) => setSubreddit(e.target.value)}
+                required
+              />
+            </label>
           )}
 
-          {type === "post" ? (
+          {type === "post" && (
             <label className="auth-field">
               <span>Post title</span>
               <input
@@ -206,16 +214,6 @@ function NewDraftForm() {
                 placeholder="A title for your post"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-              />
-            </label>
-          ) : (
-            <label className="auth-field">
-              <span>What's the thread/comment about?</span>
-              <input
-                type="text"
-                placeholder="e.g. someone asking for a tool recommendation for X"
-                value={threadContext}
-                onChange={(e) => setThreadContext(e.target.value)}
               />
             </label>
           )}
@@ -239,7 +237,7 @@ function NewDraftForm() {
             type="button"
             onClick={generate}
             className="btn btn-secondary"
-            disabled={generating || !subreddit.trim()}
+            disabled={generating || !ready}
             style={{ marginBottom: 14 }}
           >
             {generating ? "Generating…" : body ? "Improve with AI ✨" : "Generate with AI ✨"}

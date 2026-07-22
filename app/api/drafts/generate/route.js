@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getActiveCompanyProfile } from "@/lib/brands";
 import { generateRedditContent, isLlmConfigured } from "@/lib/llm";
+import { normalizeRedditUrl } from "@/lib/format";
+import { parseRedditUrl } from "@/lib/reddit";
 
 export const runtime = "nodejs";
 
@@ -28,9 +30,19 @@ export async function POST(req) {
 
   const profile = await getActiveCompanyProfile(supabase, user.id);
 
+  // Comment/reply have no separate subreddit input — derived from the
+  // required thread link instead (see app/api/drafts/route.js for the
+  // save-time equivalent).
+  let subreddit = String(body.subreddit || "").trim();
+  if (!subreddit && body.targetUrl) {
+    const normalized = normalizeRedditUrl(String(body.targetUrl));
+    const parsed = normalized ? parseRedditUrl(normalized) : null;
+    if (parsed) subreddit = parsed.sub;
+  }
+
   const result = await generateRedditContent({
     type: body.type,
-    subreddit: body.subreddit,
+    subreddit,
     threadContext: body.threadContext,
     tone: body.tone,
     length: body.length,
