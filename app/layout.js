@@ -1,6 +1,9 @@
 import "./globals.css";
+import Script from "next/script";
 import { Inter, Caveat } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+
+const GA_MEASUREMENT_ID = "G-D8ZMJKS5NF";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -29,6 +32,18 @@ export default function RootLayout({ children }) {
       <body>
         {children}
         <Analytics />
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
       </body>
     </html>
   );
