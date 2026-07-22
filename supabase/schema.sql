@@ -352,6 +352,53 @@ CREATE POLICY "Service role can do anything on report_drafts"
   ON public.report_drafts FOR ALL
   USING (auth.role() = 'service_role');
 
+-- The RLS policies above scope rows by ownership (auth.uid() = user_id /
+-- = claimed_by) but don't restrict which COLUMNS an owner can write —
+-- Postgres RLS can't express that on its own. Every legitimate mutation
+-- of the marketplace-critical fields (status/claimed_by/claimed_at/
+-- claim_expires_at) already goes through the service-role-mediated app
+-- routes (app/api/poster/tasks/[id]/claim, .../submit,
+-- app/api/admin/drafts/[id]) — a customer's own direct write only ever
+-- needs permalink/posted/posted_at (app/api/drafts/[id]/route.js).
+-- Without this trigger, a customer could call the Supabase REST API
+-- directly with their own session and INSERT/UPDATE a row with
+-- status='submitted' + claimed_by=<a poster they control>, bypassing
+-- credits, atomic claiming, and daily/cooldown limits entirely — and
+-- since getEarningsSummary (lib/posterPay.js) treats any
+-- claimed_by=X AND status='submitted' row as real completed work, that
+-- becomes a real, withdrawable payout for zero actual Reddit activity.
+CREATE OR REPLACE FUNCTION public.protect_report_drafts_marketplace_fields()
+RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER AS $$
+BEGIN
+  IF auth.role() = 'service_role' THEN
+    RETURN NEW;
+  END IF;
+
+  IF TG_OP = 'INSERT' THEN
+    IF NEW.status IS DISTINCT FROM 'available'
+       OR NEW.claimed_by IS NOT NULL
+       OR NEW.claim_expires_at IS NOT NULL
+       OR NEW.claimed_at IS NOT NULL THEN
+      RAISE EXCEPTION 'Cannot set marketplace fields directly.';
+    END IF;
+  ELSIF TG_OP = 'UPDATE' THEN
+    IF NEW.status IS DISTINCT FROM OLD.status
+       OR NEW.claimed_by IS DISTINCT FROM OLD.claimed_by
+       OR NEW.claim_expires_at IS DISTINCT FROM OLD.claim_expires_at
+       OR NEW.claimed_at IS DISTINCT FROM OLD.claimed_at THEN
+      RAISE EXCEPTION 'Not allowed to modify marketplace fields directly.';
+    END IF;
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS report_drafts_protect_marketplace_fields ON public.report_drafts;
+CREATE TRIGGER report_drafts_protect_marketplace_fields
+  BEFORE INSERT OR UPDATE ON public.report_drafts
+  FOR EACH ROW EXECUTE FUNCTION public.protect_report_drafts_marketplace_fields();
+
 -- ── REPORT DRAFTS: target thread link ────────────────────────
 -- Migration for databases created before target_url existed (the CREATE
 -- TABLE above only applies to a fresh database). Left nullable on purpose:
