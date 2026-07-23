@@ -13,18 +13,6 @@ export async function GET(req) {
   const cookieNext = req.cookies.get("oauth_next")?.value;
   const explicitNext = (cookieNext && decodeURIComponent(cookieNext)) || searchParams.get("next");
 
-  // TEMPORARY diagnostic — remove once the CrewQuest-signup-lands-on-
-  // AEOrank-dashboard bug is confirmed fixed. Logs to Vercel's function
-  // logs, not visible to the end user.
-  console.log("[auth/callback debug]", {
-    origin,
-    rawCookieHeader: req.headers.get("cookie"),
-    cookieNext,
-    queryNext: searchParams.get("next"),
-    explicitNext,
-    hasCode: Boolean(code),
-  });
-
   if (code) {
     const supabase = createClient();
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
