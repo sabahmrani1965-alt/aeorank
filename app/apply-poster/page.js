@@ -24,7 +24,7 @@ export default function ApplyPosterPage({ searchParams }) {
           </p>
 
           <div className="card" style={{ padding: 30, maxWidth: 420, margin: "0 auto" }}>
-            <SignupForm redirectTo={redirectTo} />
+            <SignupForm redirectTo={redirectTo} intent="crewquest" />
           </div>
         </div>
       </section>

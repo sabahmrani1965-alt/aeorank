@@ -12,6 +12,7 @@ export async function GET(req) {
   // password reset) that redirect straight here without that extra hop.
   const cookieNext = req.cookies.get("oauth_next")?.value;
   const explicitNext = (cookieNext && decodeURIComponent(cookieNext)) || searchParams.get("next");
+  const cookieIntent = req.cookies.get("oauth_intent")?.value;
 
   if (code) {
     const supabase = createClient();
@@ -27,9 +28,15 @@ export async function GET(req) {
       if (!explicitNext && data?.user) {
         const { data: profile } = await supabase
           .from("users")
-          .select("role")
+          .select("role, signup_source")
           .eq("id", data.user.id)
           .maybeSingle();
+        // Only ever set once, by whichever flow created the account — see
+        // signup_source in supabase/schema.sql. A later login (no cookie,
+        // or one already set) never overwrites it.
+        if (cookieIntent && !profile?.signup_source) {
+          await supabase.from("users").update({ signup_source: cookieIntent }).eq("id", data.user.id);
+        }
         if (profile?.role === "poster") {
           next = "/poster";
         } else {
@@ -44,6 +51,7 @@ export async function GET(req) {
       }
       const response = NextResponse.redirect(`${origin}${next}`);
       if (cookieNext) response.cookies.set("oauth_next", "", { path: "/", maxAge: 0 });
+      if (cookieIntent) response.cookies.set("oauth_intent", "", { path: "/", maxAge: 0 });
       return response;
     }
   }

@@ -28,6 +28,17 @@ CREATE TABLE IF NOT EXISTS public.users (
   -- 'suspended'/'unavailable'/'too_new'/'low_karma'/'not_found'/'invalid'
   -- — those are rejected before the role ever flips.
   reddit_check_status TEXT,
+  -- 'aeorank' | 'crewquest' | NULL (historical rows predating this column) —
+  -- which signup flow created this account (components/SignupForm.js's
+  -- `intent` prop, both the password/magic-link path and the Google OAuth
+  -- path via an `oauth_intent` cookie read by app/auth/callback/route.js).
+  -- Independent of `role`: role only ever flips to 'poster' after real
+  -- Reddit verification (a deliberate anti-fraud gate), so someone who
+  -- signs up via /apply-poster but never finishes verification stays
+  -- role='customer' forever — this column is what lets admin/posters
+  -- still show them as a CrewQuest signup instead of looking exactly
+  -- like a genuine AEOrank customer.
+  signup_source      TEXT,
   -- Which of this user's company_profiles ("brands") is currently active —
   -- resolved via lib/brands.js's getActiveCompanyProfile, which
   -- self-heals this to the user's oldest brand if it's ever null/stale/

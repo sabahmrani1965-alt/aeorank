@@ -11,8 +11,11 @@ import GoogleAuthButton from "@/components/GoogleAuthButton";
 // creator signup step 1 — one code path, not two copies that could drift.
 // New accounts default to role='customer' (see supabase/schema.sql) — the
 // creator flow promotes to 'poster' in a separate step 2, only once their
-// Reddit account actually passes verification.
-export default function SignupForm({ redirectTo = "/onboarding" }) {
+// Reddit account actually passes verification. `intent` just tags which
+// flow the signup came from (signup_source) so an incomplete CrewQuest
+// signup (never finished verification) is still recognizable as one,
+// rather than looking exactly like a genuine AEOrank customer.
+export default function SignupForm({ redirectTo = "/onboarding", intent = "aeorank" }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -44,6 +47,12 @@ export default function SignupForm({ redirectTo = "/onboarding" }) {
       });
       if (signUpError) throw signUpError;
       if (data?.session) {
+        // Best-effort — never blocks navigation on failure.
+        if (data.user) {
+          try {
+            await supabase.from("users").update({ signup_source: intent }).eq("id", data.user.id);
+          } catch {}
+        }
         // Email confirmation is off — signUp already returned a live
         // session, so go straight to the next step.
         router.push(redirectTo);
@@ -72,7 +81,7 @@ export default function SignupForm({ redirectTo = "/onboarding" }) {
 
   return (
     <>
-      <GoogleAuthButton label="Sign up with Google" redirectTo={redirectTo} />
+      <GoogleAuthButton label="Sign up with Google" redirectTo={redirectTo} intent={intent} />
       <div className="auth-divider"><span>or</span></div>
 
       <form onSubmit={submit}>

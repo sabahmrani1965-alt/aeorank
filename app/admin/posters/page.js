@@ -24,14 +24,20 @@ export default async function AdminPostersPage() {
     );
   }
 
+  // Verified posters (role='poster') plus anyone who signed up via the
+  // CrewQuest flow but never finished Reddit verification (still
+  // role='customer' — see signup_source in supabase/schema.sql) — without
+  // this, an incomplete CrewQuest signup is invisible here and only shows
+  // up looking exactly like a generic AEOrank customer.
   const { data: posters } = await admin
     .from("users")
-    .select("id, email, reddit_username, created_at")
-    .eq("role", "poster")
+    .select("id, email, role, signup_source, reddit_username, created_at")
+    .or("role.eq.poster,signup_source.eq.crewquest")
     .order("created_at", { ascending: false });
 
   const postersWithPending = await Promise.all(
     (posters || []).map(async (p) => {
+      if (p.role !== "poster") return { ...p, pending: 0 };
       const summary = await getEarningsSummary(admin, p.id);
       return { ...p, pending: summary.pending };
     })
@@ -77,8 +83,10 @@ export default async function AdminPostersPage() {
         <span className="section-tag">( admin )</span>
         <h2>CrewQuest Users</h2>
         <p className="section-sub">
-          Poster accounts (role='poster'). They fulfill tasks claimed from the marketplace, across
-          any AEOrank customer, for pay. Customer accounts are tracked separately under "AEOrank Users".
+          Verified posters fulfill tasks claimed from the marketplace, across any AEOrank customer,
+          for pay. Also includes CrewQuest signups still stuck at "not verified", so an incomplete
+          signup doesn't get mistaken for a genuine AEOrank customer. Customer accounts are tracked
+          separately under "AEOrank Users".
         </p>
 
         <div style={{ marginBottom: 32 }}>
@@ -92,6 +100,7 @@ export default async function AdminPostersPage() {
                 <thead>
                   <tr style={{ borderBottom: "1px solid var(--border, rgba(255,255,255,.1))" }}>
                     <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Email</th>
+                    <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Status</th>
                     <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Reddit</th>
                     <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Added</th>
                     <th style={{ textAlign: "right", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Pending</th>
@@ -102,6 +111,13 @@ export default async function AdminPostersPage() {
                   {postersWithPending.map((p) => (
                     <tr key={p.id} style={{ borderBottom: "1px solid var(--border, rgba(255,255,255,.06))" }}>
                       <td style={{ padding: "10px 12px" }}>{p.email}</td>
+                      <td style={{ padding: "10px 12px" }}>
+                        {p.role === "poster" ? (
+                          <span style={{ color: "#6EE7B7", fontSize: 13, fontWeight: 600 }}>Verified poster</span>
+                        ) : (
+                          <span style={{ color: "var(--text-muted)", fontSize: 13 }}>Signed up, not verified</span>
+                        )}
+                      </td>
                       <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>
                         {p.reddit_username ? (
                           <a
@@ -121,7 +137,11 @@ export default async function AdminPostersPage() {
                       </td>
                       <td style={{ padding: "10px 12px", textAlign: "right", fontWeight: 600 }}>${p.pending.toFixed(2)}</td>
                       <td style={{ padding: "10px 12px" }}>
-                        <PosterPayoutControl posterId={p.id} pending={p.pending} />
+                        {p.role === "poster" ? (
+                          <PosterPayoutControl posterId={p.id} pending={p.pending} />
+                        ) : (
+                          "-"
+                        )}
                       </td>
                     </tr>
                   ))}

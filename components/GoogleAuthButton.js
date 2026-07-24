@@ -11,7 +11,7 @@ import { createClient } from "@/lib/supabase/client";
 // dashboard (Authentication → Providers → Google) with a real Google
 // Cloud OAuth client id/secret — that's a one-time dashboard/Google
 // Cloud Console setup, not something in this codebase.
-export default function GoogleAuthButton({ label = "Continue with Google", redirectTo }) {
+export default function GoogleAuthButton({ label = "Continue with Google", redirectTo, intent }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -30,6 +30,12 @@ export default function GoogleAuthButton({ label = "Continue with Google", redir
       // into a later, unrelated login.
       if (redirectTo) {
         document.cookie = `oauth_next=${encodeURIComponent(redirectTo)}; path=/; max-age=600; SameSite=Lax`;
+      }
+      // Only set on a signup flow (SignupForm passes this; /login doesn't)
+      // — carries which flow this was through the OAuth round-trip the
+      // same way oauth_next does, read by app/auth/callback/route.js.
+      if (intent) {
+        document.cookie = `oauth_intent=${encodeURIComponent(intent)}; path=/; max-age=600; SameSite=Lax`;
       }
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: "google",

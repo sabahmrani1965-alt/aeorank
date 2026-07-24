@@ -21,14 +21,18 @@ export default async function AdminUsersPage() {
 
   const [{ data: users }, { data: subs }, { data: reports }, { data: drafts }, { data: balances }] =
     await Promise.all([
-      // CrewQuest accounts (role='poster') have their own page — see
-      // /admin/posters — since Stripe plan/reports/drafts-authored below
-      // don't mean anything for them (they fulfill drafts, they don't
-      // create them). This page is AEOrank customers only.
+      // CrewQuest accounts (role='poster', plus anyone who signed up via
+      // the CrewQuest flow but hasn't verified yet — signup_source,
+      // see supabase/schema.sql) have their own page — see /admin/posters
+      // — since Stripe plan/reports/drafts-authored below don't mean
+      // anything for them (they fulfill drafts, they don't create them).
+      // This page is AEOrank customers only, so an unverified CrewQuest
+      // signup doesn't get double-counted here too.
       admin
         .from("users")
         .select("id, email, created_at")
         .eq("role", "customer")
+        .or("signup_source.is.null,signup_source.eq.aeorank")
         .order("created_at", { ascending: false }),
       admin
         .from("subscriptions")
