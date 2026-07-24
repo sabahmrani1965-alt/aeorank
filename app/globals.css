@@ -80,6 +80,10 @@
 
   background: var(--bg);
   color: var(--text);
+  /* Contains child margin-collapse (e.g. .header's margin-top) inside this
+     box instead of letting it escape and expose <body>'s own background —
+     see the longer explanation on .light-theme below. */
+  display: flow-root;
 }
 
 /* ── Light marketing theme ─────────────────────────────────────
@@ -117,6 +121,14 @@
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
+  /* Without this, .header's own margin-top (margin: 16px auto 0) collapses
+     straight through this div (no padding/border stops it) and becomes a
+     margin on the OUTSIDE of .light-theme instead — exposing <body>'s own
+     background (still the old dark theme, never overridden) in that gap.
+     display: flow-root establishes a new block formatting context, which
+     contains child margins instead of letting them escape. Same fix
+     applies to .kc-theme below for the same underlying reason. */
+  display: flow-root;
 }
 .light-theme .header {
   background: rgba(255, 255, 255, 0.82);
