@@ -120,7 +120,12 @@ export async function POST(req) {
         brand: brand || "",
       },
       ...(planConfig.mode === "subscription"
-        ? { subscription_data: { metadata: { plan, brand: brand || "" } } }
+        ? {
+            subscription_data: {
+              metadata: { plan, brand: brand || "" },
+              ...(planConfig.trialDays ? { trial_period_days: planConfig.trialDays } : {}),
+            },
+          }
         : {}),
     });
 

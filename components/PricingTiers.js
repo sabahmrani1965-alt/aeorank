@@ -57,9 +57,10 @@ const TIERS = [
     name: "Max",
     tagline: "Our most advanced features.",
     price: "$449",
-    cta: "Get Max",
+    cta: "Start 3-Day Free Trial",
     ctaClass: "btn btn-primary",
     badge: "Best Value",
+    trialNote: "3 days free, then $449/mo. Card required, cancel anytime before the trial ends.",
     features: [
       { text: "$300 Monthly Credits Included", type: "metered" },
       { text: "$5 Per Comment | $10 Per Post", type: "metered" },
@@ -134,6 +135,11 @@ export default function PricingTiers({ brand = "" }) {
                 {loading === tier.plan ? "Redirecting…" : `${tier.cta} →`}
               </button>
             </div>
+            {tier.trialNote && (
+              <p style={{ fontSize: 12, color: "var(--text-muted)", textAlign: "center", marginTop: 8 }}>
+                {tier.trialNote}
+              </p>
+            )}
 
             <ul className="pricing-features">
               {tier.features.map((f) => (
