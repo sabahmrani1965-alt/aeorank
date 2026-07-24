@@ -42,6 +42,30 @@ export default function CompanyProfileForm({ initialProfile, mode = "edit", prof
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
+  const [autofilling, setAutofilling] = useState(false);
+  const [autofillError, setAutofillError] = useState("");
+
+  async function autofill() {
+    if (!website.trim() || autofilling) return;
+    setAutofillError("");
+    setAutofilling(true);
+    try {
+      const res = await fetch("/api/brands/autofill", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: website }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || "Could not look up that website.");
+      if (data.companyName) setCompanyName(data.companyName);
+      if (data.description) setDescription(data.description);
+      if (Array.isArray(data.variations) && data.variations.length) setVariations(data.variations);
+    } catch (err) {
+      setAutofillError(err?.message || "Could not look up that website.");
+    } finally {
+      setAutofilling(false);
+    }
+  }
 
   function addVariation(e) {
     e.preventDefault();
@@ -113,7 +137,27 @@ export default function CompanyProfileForm({ initialProfile, mode = "edit", prof
     <form onSubmit={save} className="card" style={{ padding: 24, maxWidth: 640, display: "flex", flexDirection: "column", gap: 18 }}>
       <label className="auth-field">
         <span>Website</span>
-        <input type="text" value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="yourbrand.com" />
+        <div style={{ display: "flex", gap: 8 }}>
+          <input
+            type="text"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
+            placeholder="yourbrand.com"
+            style={{ flex: 1 }}
+          />
+          <button
+            type="button"
+            onClick={autofill}
+            disabled={autofilling || !website.trim()}
+            className="btn btn-ghost btn-sm"
+            style={{ whiteSpace: "nowrap" }}
+          >
+            {autofilling ? "Filling…" : "✨ Auto-fill with AI"}
+          </button>
+        </div>
+        {autofillError && (
+          <span style={{ fontSize: 12.5, color: "#ff8a8a" }}>{autofillError}</span>
+        )}
       </label>
 
       <label className="auth-field">
