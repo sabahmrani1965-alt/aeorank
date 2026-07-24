@@ -1,5 +1,10 @@
 // Illustrative product preview for the homepage hero — explicitly labeled
 // as sample data, never presented as a real customer's real score.
+//
+// Colors are fixed (not theme variables): this always renders as a dark
+// dashboard screenshot, the same way it would embedded on a dark or a
+// light page — it must not flip to dark-on-light text when the light
+// marketing theme wraps it (see .light-theme in app/globals.css).
 const SAMPLE = {
   score: 62,
   delta: "+14%",
@@ -16,11 +21,14 @@ export default function HeroVisual() {
   const max = Math.max(...SAMPLE.engines.map((e) => e.value));
 
   return (
-    <div className="card" style={{ padding: 28, maxWidth: 440, width: "100%" }}>
+    <div
+      className="dashboard-mock-card"
+      style={{ padding: 28, maxWidth: 440, width: "100%" }}
+    >
       <div
         style={{
           fontSize: 12,
-          color: "var(--text-muted)",
+          color: "#8a96b0",
           letterSpacing: "0.06em",
           textTransform: "uppercase",
           marginBottom: 16,
@@ -56,15 +64,15 @@ export default function HeroVisual() {
           {SAMPLE.delta} this month
         </span>
         <div style={{ marginLeft: "auto", textAlign: "right" }}>
-          <div style={{ fontSize: 20, fontWeight: 800, color: "var(--text)" }}>{SAMPLE.rank}</div>
-          <div style={{ fontSize: 11.5, color: "var(--text-muted)" }}>vs. tracked competitors</div>
+          <div style={{ fontSize: 20, fontWeight: 800, color: "#ffffff" }}>{SAMPLE.rank}</div>
+          <div style={{ fontSize: 11.5, color: "#8a96b0" }}>vs. tracked competitors</div>
         </div>
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 10, margin: "22px 0 6px" }}>
         {SAMPLE.engines.map((e) => (
           <div key={e.label} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ width: 74, fontSize: 12.5, color: "var(--text-dim)", flexShrink: 0 }}>
+            <span style={{ width: 74, fontSize: 12.5, color: "#a8b2c8", flexShrink: 0 }}>
               {e.label}
             </span>
             <div
@@ -90,7 +98,7 @@ export default function HeroVisual() {
                 width: 30,
                 textAlign: "right",
                 fontSize: 12.5,
-                color: "var(--text)",
+                color: "#ffffff",
                 fontVariantNumeric: "tabular-nums",
               }}
             >
@@ -100,7 +108,7 @@ export default function HeroVisual() {
         ))}
       </div>
 
-      <div style={{ fontSize: 11.5, color: "var(--text-muted)", marginTop: 16, textAlign: "center" }}>
+      <div style={{ fontSize: 11.5, color: "#8a96b0", marginTop: 16, textAlign: "center" }}>
         Sample dashboard, illustrative data, not a live customer's real score.
       </div>
     </div>

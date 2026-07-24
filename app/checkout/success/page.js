@@ -1,5 +1,4 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import MarketingLayout from "@/components/MarketingLayout";
 import Link from "next/link";
 import { stripe, isStripeConfigured } from "@/lib/stripe";
 import { CALENDLY_URL } from "@/lib/links";
@@ -34,8 +33,7 @@ export default async function CheckoutSuccess({ searchParams }) {
     session?.customer_details?.email || session?.customer_email || "";
 
   return (
-    <>
-      <Header />
+    <MarketingLayout>
       <section className="section">
         <div className="container-narrow">
           <span className="section-tag">( payment confirmed )</span>
@@ -90,7 +88,6 @@ export default async function CheckoutSuccess({ searchParams }) {
           </div>
         </div>
       </section>
-      <Footer />
-    </>
+    </MarketingLayout>
   );
 }

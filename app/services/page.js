@@ -1,5 +1,4 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import MarketingLayout from "@/components/MarketingLayout";
 import Link from "next/link";
 import { CALENDLY_URL } from "@/lib/links";
 
@@ -85,8 +84,7 @@ const services = [
 
 export default function Services() {
   return (
-    <>
-      <Header />
+    <MarketingLayout>
       <section className="section">
         <div className="container-narrow" style={{ textAlign: "center" }}>
           <span className="section-tag">( aeo services )</span>
@@ -260,7 +258,6 @@ export default function Services() {
           .services-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
-      <Footer />
-    </>
+    </MarketingLayout>
   );
 }

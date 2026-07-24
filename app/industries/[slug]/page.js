@@ -1,5 +1,4 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import MarketingLayout from "@/components/MarketingLayout";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -148,8 +147,7 @@ export default function IndustryPage({ params }) {
   const heroHtml = industry.hero;
 
   return (
-    <>
-      <Header />
+    <MarketingLayout>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
@@ -369,7 +367,6 @@ export default function IndustryPage({ params }) {
           .stats-band-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
-      <Footer />
-    </>
+    </MarketingLayout>
   );
 }

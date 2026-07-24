@@ -1,5 +1,4 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import MarketingLayout from "@/components/MarketingLayout";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CALENDLY_URL } from "@/lib/links";
@@ -186,8 +185,7 @@ export default function ServicePage({ params }) {
   }
 
   return (
-    <>
-      <Header />
+    <MarketingLayout>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
@@ -373,7 +371,6 @@ export default function ServicePage({ params }) {
           .four-col { grid-template-columns: 1fr !important; }
         }
       `}</style>
-      <Footer />
-    </>
+    </MarketingLayout>
   );
 }

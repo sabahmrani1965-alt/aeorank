@@ -82,6 +82,56 @@
   color: var(--text);
 }
 
+/* ── Light marketing theme ─────────────────────────────────────
+   Scoped re-skin for public marketing pages (homepage, about, services,
+   industries, blog, contact, terms, privacy, checkout, and the AEOrank
+   branch of /login+/signup+/forgot-password+/reset-password) — see
+   components/MarketingLayout.js. The logged-in dashboard, admin, and
+   CrewQuest/poster pages keep the original dark theme; this exists only
+   to make the pre-signup site read as more trustworthy at a glance.
+   accent/accent-2/accent-3/accent-ink are deliberately NOT overridden —
+   the same gold accent and dark-on-gold button text work unchanged on a
+   light background. Every class below is unchanged — only the CSS
+   variables they read are overridden within this scope. */
+.light-theme {
+  --bg: #ffffff;
+  --bg-2: #faf9f6;
+  --bg-3: #f2f1ec;
+  --card: #ffffff;
+  --card-2: #f7f6f2;
+  --card-border: #e6e4dd;
+  --card-border-soft: #edece5;
+  --text: #14161b;
+  --text-dim: #4d5361;
+  --text-muted: #767c8c;
+
+  --msg-success: #16a34a;
+  --msg-danger: #dc2626;
+  --state-neutral-bg: rgba(20, 22, 27, 0.05);
+  --state-neutral-fg: var(--text-dim);
+  --state-success-bg: rgba(22, 163, 74, 0.1);
+  --state-success-fg: #16a34a;
+  --state-danger-bg: rgba(220, 38, 38, 0.08);
+  --state-danger-fg: #dc2626;
+
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+.light-theme .header {
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 8px 32px -16px rgba(20, 22, 27, 0.12);
+}
+.light-theme .hero::before {
+  background: radial-gradient(600px 300px at 50% 30%, rgba(242, 168, 59, 0.14), transparent 70%);
+}
+/* Logo wordmark is white for the dark theme — swap for a dark-text
+   variant here instead (see components/Header.js / Footer.js /
+   AuthSplitLayout.js, which render both and let this toggle visibility). */
+.logo-on-light { display: none; }
+.light-theme .logo-on-dark { display: none; }
+.light-theme .logo-on-light { display: inline-flex; }
+
 /* Hardcoded (not variable-driven) elsewhere in this file since they were
    written for AEOrank's dark-navy shell specifically — re-pinned here so
    the KarmaCrew sidebar shell (reusing .app-shell/.app-sidebar/.app-topbar
@@ -1086,9 +1136,18 @@ button { font-family: inherit; }
   line-height: 1.65;
   margin: 0 0 24px;
 }
+/* Fixed dark colors, not theme variables — these render as an embedded
+   dashboard screenshot and must look identical whether the surrounding
+   page is the dark app theme or the light marketing theme (see
+   .light-theme above). Used by HeroVisual.js and ProductShowcase.js. */
+.dashboard-mock-card {
+  background: #0e1c3d;
+  border: 1px solid #1d2c54;
+  border-radius: var(--radius);
+}
 .showcase-mock {
-  background: var(--bg);
-  border: 1px solid var(--card-border-soft);
+  background: #06112a;
+  border: 1px solid #1d2c54;
   border-radius: 14px;
   padding: 24px;
   margin-top: auto;

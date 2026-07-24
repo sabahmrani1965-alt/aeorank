@@ -8,7 +8,8 @@ export default function Footer() {
         <div className="footer-grid">
           <div>
             <Link href="/" className="logo" aria-label="AEOrank home">
-              <Image src="/logo.svg" alt="AEOrank" width={150} height={34} />
+              <Image src="/logo.svg" alt="AEOrank" width={150} height={34} className="logo-on-dark" />
+              <Image src="/logo-light.svg" alt="AEOrank" width={150} height={34} className="logo-on-light" />
             </Link>
             <p style={{ color: "var(--text-muted)", fontSize: 14, marginTop: 12, maxWidth: 320 }}>
               Help your brand show up in ChatGPT, Claude, and Gemini answers

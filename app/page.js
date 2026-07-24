@@ -1,6 +1,5 @@
 import Link from "next/link";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import MarketingLayout from "@/components/MarketingLayout";
 import StepsSection from "@/components/StepsSection";
 import HeroVisual from "@/components/HeroVisual";
 import FeatureGrid from "@/components/FeatureGrid";
@@ -8,9 +7,7 @@ import ProductShowcase from "@/components/ProductShowcase";
 
 export default function Home() {
   return (
-    <>
-      <Header />
-
+    <MarketingLayout>
       {/* HERO */}
       <section className="hero">
         <div className="container">
@@ -191,8 +188,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <Footer />
-    </>
+    </MarketingLayout>
   );
 }

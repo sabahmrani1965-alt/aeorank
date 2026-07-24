@@ -1,5 +1,4 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import MarketingLayout from "@/components/MarketingLayout";
 import ContactForm from "@/components/ContactForm";
 import { CALENDLY_URL } from "@/lib/links";
 
@@ -21,8 +20,7 @@ export default function ContactPage({ searchParams }) {
   const plan = PLANS[planKey] || PLANS.general;
 
   return (
-    <>
-      <Header />
+    <MarketingLayout>
       <section className="section">
         <div className="container-narrow">
           <span className="section-tag">( contact )</span>
@@ -71,7 +69,6 @@ export default function ContactPage({ searchParams }) {
           </div>
         </div>
       </section>
-      <Footer />
-    </>
+    </MarketingLayout>
   );
 }

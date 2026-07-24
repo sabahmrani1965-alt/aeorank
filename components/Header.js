@@ -6,13 +6,8 @@ export default function Header() {
   return (
     <header className="header">
       <Link href="/" className="logo" aria-label="AEOrank home">
-        <Image
-          src="/logo.svg"
-          alt="AEOrank"
-          width={170}
-          height={38}
-          priority
-        />
+        <Image src="/logo.svg" alt="AEOrank" width={170} height={38} priority className="logo-on-dark" />
+        <Image src="/logo-light.svg" alt="AEOrank" width={170} height={38} priority className="logo-on-light" />
       </Link>
       <div className="header-actions">
         <HeaderAuthLink />

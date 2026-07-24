@@ -1,5 +1,4 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import MarketingLayout from "@/components/MarketingLayout";
 import Link from "next/link";
 
 export const metadata = {
@@ -10,8 +9,7 @@ export const metadata = {
 
 export default function About() {
   return (
-    <>
-      <Header />
+    <MarketingLayout>
       <section className="section">
         <div className="container-narrow">
           <span className="section-tag">( about )</span>
@@ -67,7 +65,6 @@ export default function About() {
           </div>
         </div>
       </section>
-      <Footer />
-    </>
+    </MarketingLayout>
   );
 }

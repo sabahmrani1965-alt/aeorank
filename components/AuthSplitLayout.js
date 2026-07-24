@@ -65,11 +65,12 @@ export default function AuthSplitLayout({ children }) {
   }
 
   return (
-    <div className="auth-split">
+    <div className="auth-split light-theme">
       <div className="auth-split-form">
         <div className="auth-split-form-inner">
           <Link href="/" className="logo" aria-label="AEOrank home" style={{ display: "inline-flex", marginBottom: 32 }}>
-            <Image src="/logo.svg" alt="AEOrank" width={150} height={34} priority />
+            <Image src="/logo.svg" alt="AEOrank" width={150} height={34} priority className="logo-on-dark" />
+            <Image src="/logo-light.svg" alt="AEOrank" width={150} height={34} priority className="logo-on-light" />
           </Link>
           {children}
         </div>

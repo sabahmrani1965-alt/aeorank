@@ -1,5 +1,4 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import MarketingLayout from "@/components/MarketingLayout";
 
 export const metadata = {
   title: "Terms of Service - AEOrank",
@@ -7,8 +6,7 @@ export const metadata = {
 
 export default function Terms() {
   return (
-    <>
-      <Header />
+    <MarketingLayout>
       <section className="section">
         <div className="container-narrow">
           <h2 style={{ textAlign: "left", marginBottom: 8 }}>Terms of Service</h2>
@@ -56,7 +54,6 @@ export default function Terms() {
           </div>
         </div>
       </section>
-      <Footer />
-    </>
+    </MarketingLayout>
   );
 }

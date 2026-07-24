@@ -1,5 +1,4 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import MarketingLayout from "@/components/MarketingLayout";
 import Link from "next/link";
 
 export const metadata = {
@@ -88,9 +87,7 @@ const posts = [
 export default function Blog() {
   const [featured, ...rest] = posts;
   return (
-    <>
-      <Header />
-
+    <MarketingLayout>
       <section className="section">
         <div className="container-narrow" style={{ textAlign: "center" }}>
           <span className="section-tag">( the blog )</span>
@@ -207,8 +204,6 @@ export default function Blog() {
           </div>
         </div>
       </section>
-
-      <Footer />
-    </>
+    </MarketingLayout>
   );
 }

@@ -2,6 +2,12 @@
 // feature with an illustrative dashboard mockup, not a small icon list.
 // All numbers/examples below are explicitly sample data, never presented
 // as a real customer's real results.
+//
+// Colors inside each .showcase-mock are fixed (not theme variables): they
+// render as an embedded dark dashboard screenshot and must look identical
+// regardless of the surrounding page's theme (see .light-theme in
+// app/globals.css). Only the outer panel's own title/description use the
+// theme variables, since those should adapt to the page.
 
 function VisibilityMock() {
   return (
@@ -33,8 +39,8 @@ function VisibilityMock() {
           ↑ 12% vs last month
         </span>
         <div style={{ marginLeft: "auto", textAlign: "right" }}>
-          <div style={{ fontSize: 22, fontWeight: 800, color: "var(--text)" }}>#4</div>
-          <div style={{ fontSize: 12, color: "var(--text-muted)" }}>vs. tracked competitors</div>
+          <div style={{ fontSize: 22, fontWeight: 800, color: "#ffffff" }}>#4</div>
+          <div style={{ fontSize: 12, color: "#8a96b0" }}>vs. tracked competitors</div>
         </div>
       </div>
 
@@ -63,7 +69,7 @@ function VisibilityMock() {
           { label: "Perplexity", value: 63 },
         ].map((e) => (
           <div key={e.label} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ width: 78, fontSize: 13, color: "var(--text-dim)", flexShrink: 0 }}>{e.label}</span>
+            <span style={{ width: 78, fontSize: 13, color: "#a8b2c8", flexShrink: 0 }}>{e.label}</span>
             <div style={{ flex: 1, height: 7, borderRadius: 999, background: "rgba(255,255,255,.06)", overflow: "hidden" }}>
               <div
                 style={{
@@ -74,7 +80,7 @@ function VisibilityMock() {
                 }}
               />
             </div>
-            <span style={{ width: 30, textAlign: "right", fontSize: 13, color: "var(--text)", fontVariantNumeric: "tabular-nums" }}>
+            <span style={{ width: 30, textAlign: "right", fontSize: 13, color: "#ffffff", fontVariantNumeric: "tabular-nums" }}>
               {e.value}
             </span>
           </div>
@@ -108,7 +114,7 @@ const SAMPLE_OPPORTUNITIES = [
 const INTENT_COLOR = {
   High: { fg: "#6EE7B7", bg: "rgba(110,231,183,.12)" },
   Medium: { fg: "var(--accent)", bg: "var(--accent-dim)" },
-  Low: { fg: "var(--text-muted)", bg: "rgba(255,255,255,.06)" },
+  Low: { fg: "#8a96b0", bg: "rgba(255,255,255,.06)" },
 };
 
 function OpportunityMock() {
@@ -120,8 +126,8 @@ function OpportunityMock() {
           <div
             key={o.title}
             style={{
-              background: "var(--bg-2)",
-              border: "1px solid var(--card-border-soft)",
+              background: "#102043",
+              border: "1px solid #18254a",
               borderRadius: 12,
               padding: 16,
             }}
@@ -140,12 +146,12 @@ function OpportunityMock() {
               >
                 {o.intent} intent
               </span>
-              <span style={{ marginLeft: "auto", fontSize: 13, fontWeight: 800, color: "var(--text)" }}>
+              <span style={{ marginLeft: "auto", fontSize: 13, fontWeight: 800, color: "#ffffff" }}>
                 {o.score}
-                <span style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 500 }}>/100</span>
+                <span style={{ fontSize: 11, color: "#8a96b0", fontWeight: 500 }}>/100</span>
               </span>
             </div>
-            <div style={{ fontSize: 14, color: "var(--text)", lineHeight: 1.4 }}>{o.title}</div>
+            <div style={{ fontSize: 14, color: "#ffffff", lineHeight: 1.4 }}>{o.title}</div>
           </div>
         );
       })}
