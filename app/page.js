@@ -4,6 +4,7 @@ import StepsSection from "@/components/StepsSection";
 import HeroVisual from "@/components/HeroVisual";
 import FeatureGrid from "@/components/FeatureGrid";
 import ProductShowcase from "@/components/ProductShowcase";
+import AnnotatedTour from "@/components/AnnotatedTour";
 
 export default function Home() {
   return (
@@ -63,6 +64,8 @@ export default function Home() {
       </section>
 
       <ProductShowcase />
+
+      <AnnotatedTour />
 
       <FeatureGrid />
 

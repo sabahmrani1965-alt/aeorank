@@ -1182,6 +1182,131 @@ button { font-family: inherit; }
   .showcase-grid { grid-template-columns: 1fr; }
 }
 
+/* ----------------- Annotated product tour ----------------- */
+.tour-wrap {
+  position: relative;
+  max-width: 1040px;
+  margin: 48px auto 0;
+  padding: 0 250px;
+}
+.tour-mock {
+  background: #06112a;
+  border: 1px solid #1d2c54;
+  border-radius: 16px;
+  padding: 24px;
+  position: relative;
+  z-index: 1;
+}
+.tour-mock-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.tour-mock-brand { font-size: 14px; font-weight: 800; color: #f2a83b; letter-spacing: -0.01em; }
+.tour-mock-pill {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #f2a83b;
+  background: rgba(242, 168, 59, 0.12);
+  border: 1px solid rgba(242, 168, 59, 0.3);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.tour-mock-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #8a96b0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+.tour-mock-card {
+  background: #102043;
+  border: 1px solid #18254a;
+  border-radius: 12px;
+  padding: 14px;
+}
+.tour-mock-notif {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #102043;
+  border: 1px solid #18254a;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #c7cede;
+  margin-bottom: 20px;
+}
+.tour-mock-draft {
+  background: #102043;
+  border: 1px solid #18254a;
+  border-radius: 12px;
+  padding: 16px;
+}
+.tour-mock-btn {
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: 1px solid #2a3a66;
+  color: #c7cede;
+}
+.tour-mock-btn-primary {
+  background: #f2a83b;
+  border-color: #f2a83b;
+  color: #14161b;
+}
+.tour-callout {
+  position: absolute;
+  width: 220px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 14px 34px rgba(6, 17, 42, 0.14);
+  z-index: 2;
+}
+.tour-callout::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 40px;
+  height: 0;
+  border-top: 2px dashed var(--accent);
+}
+.tour-callout-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(242, 168, 59, 0.12);
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+.tour-callout h4 { font-size: 14px; font-weight: 700; color: #14161b; margin: 0 0 6px; }
+.tour-callout p { font-size: 12.5px; color: #5b6272; line-height: 1.5; margin: 0; }
+.tour-callout-a { top: 4px; left: 0; }
+.tour-callout-a::after { right: -40px; }
+.tour-callout-b { top: 170px; left: 0; }
+.tour-callout-b::after { right: -40px; }
+.tour-callout-c { top: 100px; right: 0; }
+.tour-callout-c::after { left: -40px; }
+@media (max-width: 1000px) {
+  .tour-wrap { padding: 0; }
+  .tour-callout {
+    position: static;
+    width: auto;
+    margin-bottom: 14px;
+    box-shadow: none;
+    border: 1px solid var(--card-border);
+  }
+  .tour-callout::after { display: none; }
+  .tour-mock { margin-top: 14px; }
+}
+
 /* ----------------- LLM mock cards ----------------- */
 .llm-grid {
   display: grid;
