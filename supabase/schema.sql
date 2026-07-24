@@ -579,6 +579,14 @@ CREATE TABLE IF NOT EXISTS public.company_profiles (
   description       TEXT,
   competitors       TEXT[] NOT NULL DEFAULT '{}',
   completed         BOOLEAN NOT NULL DEFAULT FALSE,
+  -- Furthest step of app/onboarding/page.js's 4-step wizard this row's
+  -- owner ever reached: 1 (clicked "Skip onboarding" on step 1) | 2
+  -- (reached step 2 after step 1's "Continue") | 3 (reached step 3) | 4
+  -- (reached step 4/pricing — same event as completed becoming true).
+  -- NULL for rows created outside onboarding (e.g. "+ Add brand"), where
+  -- this funnel doesn't apply. Lets drop-off be measured precisely
+  -- instead of inferred from which optional fields happen to be filled.
+  onboarding_step_reached SMALLINT,
   created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

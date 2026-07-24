@@ -29,10 +29,17 @@ export default function OnboardingPage() {
   const [variations, setVariations] = useState([]);
   const [description, setDescription] = useState("");
   const [competitors, setCompetitors] = useState(["", "", ""]);
+  // Set once the very first checkpoint save creates a row, then reused for
+  // every later checkpoint (an update, not a new row) — see saveProfile.
+  const [profileId, setProfileId] = useState(null);
 
   // Onboarding is strictly a first-brand, one-time flow — a user who
-  // already has a brand always adds more via /dashboard/brands/new
+  // already has a COMPLETED brand always adds more via /dashboard/brands/new
   // instead, so this never creates a confusing duplicate "first" brand.
+  // A brand that exists but isn't completed is this same wizard's own
+  // in-progress checkpoint save (see saveProfile below) from an earlier
+  // abandoned attempt — resume onto it instead of redirecting away or
+  // creating a duplicate draft.
   useEffect(() => {
     (async () => {
       const supabase = createClient();
@@ -41,33 +48,68 @@ export default function OnboardingPage() {
       } = await supabase.auth.getUser();
       if (!user) return;
       const brands = await listBrands(supabase, user.id);
-      if (brands.length > 0) router.replace("/dashboard");
+      if (brands.some((b) => b.completed)) {
+        router.replace("/dashboard");
+        return;
+      }
+      const draft = brands.find((b) => !b.completed);
+      if (draft) setProfileId(draft.id);
     })();
   }, [router]);
 
-  async function saveProfile(completed) {
+  // Also acts as a progress checkpoint: called with completed=false at
+  // every step transition (not just the final save) so the furthest step
+  // reached survives even if the user abandons before finishing — see
+  // onboarding_step_reached in supabase/schema.sql. `overrides` covers
+  // values not yet committed to state (e.g. the site-meta lookup's result,
+  // which resolves in the same tick it needs to be saved in).
+  async function saveProfile(completed, onboardingStep, overrides = {}) {
+    const fields = {
+      website: overrides.website ?? (website || null),
+      companyName: overrides.companyName ?? (companyName || null),
+      targetLocation: overrides.targetLocation ?? (targetLocation || null),
+      brandVariations: overrides.brandVariations ?? variations,
+      description: overrides.description ?? (description || null),
+      competitors: overrides.competitors ?? competitors.map((c) => c.trim()).filter(Boolean),
+      completed,
+      onboardingStep,
+    };
+
+    if (profileId) {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from("company_profiles")
+        .update({
+          website: fields.website,
+          company_name: fields.companyName,
+          target_location: fields.targetLocation,
+          brand_variations: fields.brandVariations,
+          description: fields.description,
+          competitors: fields.competitors,
+          completed: fields.completed,
+          onboarding_step_reached: fields.onboardingStep,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", profileId);
+      if (error) throw error;
+      return;
+    }
+
     const res = await fetch("/api/brands", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        website: website || null,
-        companyName: companyName || null,
-        targetLocation: targetLocation || null,
-        brandVariations: variations,
-        description: description || null,
-        competitors: competitors.map((c) => c.trim()).filter(Boolean),
-        completed,
-      }),
+      body: JSON.stringify(fields),
     });
+    const data = await res.json().catch(() => ({}));
     if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
       throw new Error(data?.error || "Could not save your profile.");
     }
+    if (data?.id) setProfileId(data.id);
   }
 
   async function skip() {
     setLoading(true);
-    await saveProfile(true).catch(() => {});
+    await saveProfile(true, 1).catch(() => {});
     router.push("/dashboard");
   }
 
@@ -79,6 +121,9 @@ export default function OnboardingPage() {
       return;
     }
     setLoading(true);
+    let resolvedCompanyName = companyName;
+    let resolvedDescription = description;
+    let resolvedVariations = variations;
     try {
       const res = await fetch("/api/site-meta", {
         method: "POST",
@@ -87,16 +132,24 @@ export default function OnboardingPage() {
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok) {
-        setCompanyName(data.brand || "");
-        setDescription(data.description || "");
-        setVariations(data.variations || []);
+        resolvedCompanyName = data.brand || "";
+        resolvedDescription = data.description || "";
+        resolvedVariations = data.variations || [];
+        setCompanyName(resolvedCompanyName);
+        setDescription(resolvedDescription);
+        setVariations(resolvedVariations);
       }
     } catch {
       // Fetch failing shouldn't block onboarding — user fills the fields in manually.
-    } finally {
-      setLoading(false);
-      setStep(2);
     }
+    // Best-effort checkpoint — never blocks the step transition on failure.
+    await saveProfile(false, 2, {
+      companyName: resolvedCompanyName,
+      description: resolvedDescription,
+      brandVariations: resolvedVariations,
+    }).catch(() => {});
+    setLoading(false);
+    setStep(2);
   }
 
   function removeVariation(v) {
@@ -105,6 +158,7 @@ export default function OnboardingPage() {
 
   function goToStep3(e) {
     e.preventDefault();
+    saveProfile(false, 3).catch(() => {});
     setStep(3);
   }
 
@@ -112,7 +166,7 @@ export default function OnboardingPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      await saveProfile(true);
+      await saveProfile(true, 4);
       setStep(4);
     } catch (err) {
       setError(err?.message || "Something went wrong. Please try again.");

@@ -53,6 +53,7 @@ export async function POST(req) {
       description: body.description || null,
       competitors: Array.isArray(body.competitors) ? body.competitors.filter(Boolean) : [],
       completed: Boolean(body.completed ?? true),
+      onboarding_step_reached: Number.isInteger(body.onboardingStep) ? body.onboardingStep : null,
     })
     .select("id")
     .single();
