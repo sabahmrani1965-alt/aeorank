@@ -1288,12 +1288,16 @@ button { font-family: inherit; }
 }
 .tour-callout h4 { font-size: 14px; font-weight: 700; color: #14161b; margin: 0 0 6px; }
 .tour-callout p { font-size: 12.5px; color: #5b6272; line-height: 1.5; margin: 0; }
-.tour-callout-a { top: 4px; left: 0; }
-.tour-callout-a::after { right: -40px; }
-.tour-callout-b { top: 170px; left: 0; }
-.tour-callout-b::after { right: -40px; }
-.tour-callout-c { top: 100px; right: 0; }
-.tour-callout-c::after { left: -40px; }
+.tour-callout-visibility { top: 0; right: 0; }
+.tour-callout-visibility::after { left: -40px; }
+.tour-callout-opportunities { top: 4px; left: 0; }
+.tour-callout-opportunities::after { right: -40px; }
+.tour-callout-prompts { top: 226px; left: 0; }
+.tour-callout-prompts::after { right: -40px; }
+.tour-callout-mentions { top: 430px; left: 0; }
+.tour-callout-mentions::after { right: -40px; }
+.tour-callout-writing { top: 240px; right: 0; }
+.tour-callout-writing::after { left: -40px; }
 @media (max-width: 1000px) {
   .tour-wrap { padding: 0; }
   .tour-callout {

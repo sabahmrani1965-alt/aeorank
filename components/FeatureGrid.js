@@ -24,8 +24,8 @@ const FEATURES = [
   },
   {
     icon: "✍️",
-    title: "AI-Assisted Drafting",
-    desc: "Draft comments, replies, and posts with AI. You always review, edit, and publish from your own account.",
+    title: "AI Writing Assistant",
+    desc: "Write comments, replies, and posts with AI. You always review, edit, and publish from your own account.",
   },
   {
     icon: "⚖️",
@@ -58,7 +58,7 @@ export default function FeatureGrid() {
           Everything you need for <span className="accent">AI visibility</span>
         </h2>
         <p className="section-sub">
-          From tracking where you stand today, to drafting the content that moves the needle tomorrow.
+          From tracking where you stand today, to writing the content that moves the needle tomorrow.
         </p>
 
         <div className="feature-grid">

@@ -1,9 +1,10 @@
 // Single annotated "product tour" mockup: one dashboard screenshot with
-// floating callouts pointing at real, shipped features (same names as
-// FeatureGrid.js: Reddit Opportunities, Mention Tracking, AI-Assisted
-// Drafting). Colors inside .tour-mock are fixed hex (not theme variables)
-// for the same reason as ProductShowcase/HeroVisual: it must look like an
-// embedded dark screenshot regardless of the surrounding page theme.
+// floating callouts pointing at real, shipped features (names match
+// FeatureGrid.js: AI Visibility Score, Reddit Opportunities, Mention
+// Tracking, Prompt Tracking, AI Writing Assistant). Colors inside
+// .tour-mock are fixed hex (not theme variables) for the same reason as
+// ProductShowcase/HeroVisual: it must look like an embedded dark
+// screenshot regardless of the surrounding page theme.
 
 const SAMPLE = [
   { sub: "r/SaaS", title: "What's the best tool for tracking AI visibility?", score: 92, intent: "High" },
@@ -34,19 +35,25 @@ export default function AnnotatedTour() {
           Everything happens in <span className="accent">one place</span>
         </h2>
         <p className="section-sub">
-          Find the conversation, see who's already talking about you, and get an AI-drafted reply
-          ready for your review, all from the same screen.
+          Track your score, find the conversation, see who's already talking about you, and get an
+          AI-written reply ready for your review, all from the same screen.
         </p>
 
-        <div className="tour-wrap">
-          <Callout className="tour-callout-a" icon="🔎" title="Reddit Opportunities">
+        <div className="tour-wrap tour-wrap-5">
+          <Callout className="tour-callout-visibility" icon="🎯" title="AI Visibility Score">
+            Track how ChatGPT, Claude, Gemini, and Perplexity talk about your brand over time.
+          </Callout>
+          <Callout className="tour-callout-opportunities" icon="🔎" title="Reddit Opportunities">
             High-intent threads where your buyers are already asking, ranked by relevance.
           </Callout>
-          <Callout className="tour-callout-b" icon="💬" title="Mention Tracking">
+          <Callout className="tour-callout-prompts" icon="🧠" title="Prompt Tracking">
+            Track the exact buyer questions that should mention your brand, and see if AI answers with it.
+          </Callout>
+          <Callout className="tour-callout-mentions" icon="💬" title="Mention Tracking">
             Get notified the moment someone mentions your brand on Reddit.
           </Callout>
-          <Callout className="tour-callout-c" icon="✍️" title="AI-Assisted Drafting">
-            AI drafts the reply. Nothing posts until you review and approve it.
+          <Callout className="tour-callout-writing" icon="✍️" title="AI Writing Assistant">
+            AI writes the reply. Nothing posts until you review and approve it.
           </Callout>
 
           <div className="tour-mock">
@@ -82,6 +89,25 @@ export default function AnnotatedTour() {
               ))}
             </div>
 
+            <div className="tour-mock-label">Prompt Tracking</div>
+            <div className="tour-mock-card" style={{ marginBottom: 20 }}>
+              <div style={{ fontSize: 13, color: "#e8ecf5", marginBottom: 8 }}>
+                "best AI visibility tool for SaaS"
+              </div>
+              <span
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  padding: "2px 8px",
+                  borderRadius: 999,
+                  background: "rgba(110,231,183,.12)",
+                  color: "#6EE7B7",
+                }}
+              >
+                ✓ Mentioned in ChatGPT
+              </span>
+            </div>
+
             <div className="tour-mock-notif">
               <span style={{ fontSize: 15 }}>💬</span>
               <span style={{ flex: 1 }}>Someone mentioned <strong style={{ color: "#fff" }}>YourBrand</strong> on r/SaaS</span>
@@ -90,7 +116,7 @@ export default function AnnotatedTour() {
 
             <div className="tour-mock-draft">
               <div style={{ fontSize: 11.5, color: "#8a96b0", marginBottom: 8, textTransform: "uppercase", letterSpacing: ".04em" }}>
-                Draft reply · needs your approval
+                AI-written reply · needs your approval
               </div>
               <div style={{ fontSize: 13, color: "#c7cede", lineHeight: 1.5, marginBottom: 12 }}>
                 "We ran into this too, ended up comparing a few options before settling on one that
