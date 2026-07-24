@@ -7,7 +7,7 @@ import { hasActiveSubscription } from "@/lib/subscription";
 import { getActiveCompanyProfile } from "@/lib/brands";
 
 export const runtime = "nodejs";
-export const maxDuration = 30;
+export const maxDuration = 60;
 
 const SEARCH_LIMIT = 20;
 // Soft cap on stored (non-saved) rows per brand — old ones beyond this get
@@ -56,19 +56,20 @@ export async function POST() {
   const perQueryLimit = Math.max(6, Math.ceil(SEARCH_LIMIT / queries.length));
 
   try {
-    const results = await Promise.all(queries.map((q) => searchPosts(q, perQueryLimit)));
-    const found = [...new Map(results.flat().map((p) => [p.permalink, p])).values()].slice(0, SEARCH_LIMIT + 10);
-
     // Accumulate, don't replace — Engain-style: a growing pool of discovered
     // opportunities, not a single point-in-time snapshot that gets wiped on
     // every refresh. Only genuinely new permalinks get scored/inserted;
-    // anything already on file (saved or not) is left untouched.
-    const { data: existing } = await supabase
-      .from("opportunities")
-      .select("permalink")
-      .eq("user_id", user.id)
-      .eq("company_profile_id", profile.id);
-    const existingPermalinks = new Set((existing || []).map((r) => r.permalink));
+    // anything already on file (saved or not) is left untouched. The
+    // existing-permalinks lookup doesn't depend on the search results, so
+    // it runs concurrently with the search fan-out rather than after it —
+    // this route is already close to the timeout ceiling between the query-
+    // generation LLM call, the search fan-out, and the scoring LLM call.
+    const [results, existingRes] = await Promise.all([
+      Promise.all(queries.map((q) => searchPosts(q, perQueryLimit))),
+      supabase.from("opportunities").select("permalink").eq("user_id", user.id).eq("company_profile_id", profile.id),
+    ]);
+    const found = [...new Map(results.flat().map((p) => [p.permalink, p])).values()].slice(0, SEARCH_LIMIT + 10);
+    const existingPermalinks = new Set((existingRes.data || []).map((r) => r.permalink));
     const fresh = found.filter((p) => !existingPermalinks.has(p.permalink));
 
     if (fresh.length === 0) {

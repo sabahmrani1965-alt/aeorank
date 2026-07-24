@@ -6,7 +6,7 @@ import { hasActiveSubscription } from "@/lib/subscription";
 import { getActiveCompanyProfile } from "@/lib/brands";
 
 export const runtime = "nodejs";
-export const maxDuration = 30;
+export const maxDuration = 60;
 
 const SEARCH_LIMIT = 20;
 // Soft cap on stored rows per brand — old ones beyond this get pruned,
@@ -47,7 +47,12 @@ export async function POST() {
   const perQueryLimit = Math.max(8, Math.ceil(SEARCH_LIMIT / queries.length));
 
   try {
-    const results = await Promise.all(queries.map((q) => searchPosts(q, perQueryLimit)));
+    // The existing-permalinks lookup doesn't depend on the search results,
+    // so it runs concurrently with the search fan-out rather than after it.
+    const [results, existingRes] = await Promise.all([
+      Promise.all(queries.map((q) => searchPosts(q, perQueryLimit))),
+      supabase.from("mentions").select("permalink").eq("user_id", user.id).eq("company_profile_id", profile.id),
+    ]);
     const merged = [...new Map(results.flat().map((p) => [p.permalink, p])).values()];
 
     // searchPosts's underlying providers rank by topical relevance, not
@@ -67,12 +72,7 @@ export async function POST() {
     // Accumulate, don't replace — a growing pool of discovered mentions
     // instead of a single point-in-time snapshot wiped on every refresh.
     // Only genuinely new permalinks get scored/inserted.
-    const { data: existing } = await supabase
-      .from("mentions")
-      .select("permalink")
-      .eq("user_id", user.id)
-      .eq("company_profile_id", profile.id);
-    const existingPermalinks = new Set((existing || []).map((r) => r.permalink));
+    const existingPermalinks = new Set((existingRes.data || []).map((r) => r.permalink));
     const fresh = found.filter((p) => !existingPermalinks.has(p.permalink));
 
     if (fresh.length === 0) {

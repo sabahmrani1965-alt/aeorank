@@ -158,8 +158,8 @@ function NewDraftForm() {
         <span className="section-tag">( create post )</span>
         <h2>Create a Reddit post</h2>
         <p className="section-sub">
-          AI-assisted writing to help you create it, nothing here posts for
-          you, copy the result and publish it yourself from your own
+          AI-assisted writing to help you create it. Nothing here posts for
+          you: copy the result and publish it yourself from your own
           account.
         </p>
 
