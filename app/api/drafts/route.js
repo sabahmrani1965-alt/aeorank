@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getActiveCompanyProfile } from "@/lib/brands";
-import { withCredits, getBalance, CREDIT_COSTS } from "@/lib/credits";
+import { withCredits, getBalance, CREDIT_COSTS, upvoteCreditCost } from "@/lib/credits";
 import { needsTargetUrl, normalizeRedditUrl } from "@/lib/format";
 import { parseRedditUrl } from "@/lib/reddit";
 
@@ -109,7 +109,7 @@ export async function POST(req) {
     type === "reply" ? "generate_reply" :
     type === "upvote" ? "generate_upvote" :
     "generate_comment";
-  const amount = CREDIT_COSTS[action] * qty;
+  const amount = type === "upvote" ? upvoteCreditCost(qty) : CREDIT_COSTS[action] * qty;
 
   const outcome = await withCredits({
     admin,

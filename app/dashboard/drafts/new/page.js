@@ -2,7 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { CREDIT_COSTS } from "@/lib/credits";
+import { CREDIT_COSTS, upvoteCreditCost } from "@/lib/credits";
 import { needsTargetUrl, normalizeRedditUrl } from "@/lib/format";
 
 const TYPES = [
@@ -65,7 +65,7 @@ function NewDraftForm() {
   const [savedInfo, setSavedInfo] = useState(null); // { creditsCharged, creditsRemaining }
 
   const ready = needsTargetUrl(type) ? Boolean(normalizeRedditUrl(targetUrl)) : Boolean(subreddit.trim());
-  const totalCost = type === "upvote" ? qty * CREDIT_COSTS.generate_upvote : SAVE_COST[type];
+  const totalCost = type === "upvote" ? upvoteCreditCost(qty) : SAVE_COST[type];
 
   async function generate() {
     setError("");
@@ -249,7 +249,7 @@ function NewDraftForm() {
               />
               <span style={{ fontSize: 12, color: "var(--text-muted)" }}>
                 One Reddit account can only upvote a post once, so each upvote needs its own poster.
-                Minimum order is {MIN_UPVOTE_QTY}.
+                Minimum order is {MIN_UPVOTE_QTY} — priced at 10 upvotes per credit.
               </span>
             </label>
           )}
