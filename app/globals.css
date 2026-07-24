@@ -121,17 +121,30 @@
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
-  /* Without this, .header's own margin-top (margin: 16px auto 0) collapses
-     straight through this div (no padding/border stops it) and becomes a
-     margin on the OUTSIDE of .light-theme instead — exposing <body>'s own
-     background (still the old dark theme, never overridden) in that gap.
-     display: flow-root establishes a new block formatting context, which
-     contains child margins instead of letting them escape. Same fix
-     applies to .kc-theme below for the same underlying reason. */
+  /* .header is position:sticky — verified live (pixel-sampled a real
+     screenshot, not just DOM inspection) that once it's "stuck" mid-scroll,
+     its own margin-top (margin: 16px auto 0) exposes <body>'s own dark
+     background instead of this div's white, rather than showing this
+     div's background the way a plain static-flow margin would. flow-root
+     alone wasn't sufficient once the element is actually stuck (it only
+     fixed the unscrolled/static case) — the margin is killed entirely
+     below and moved to padding-top here instead, which a sticky element
+     can't collapse through no matter what. Same reasoning applies to
+     .kc-theme below. */
   display: flow-root;
+  padding-top: 16px;
 }
 .light-theme .header {
-  background: rgba(255, 255, 255, 0.82);
+  margin-top: 0;
+  /* Fully opaque, no backdrop-filter — a translucent+blurred sticky header
+     was ALSO compositing incorrectly once stuck (confirmed the same way):
+     the blur's backdrop sample exposed <body>'s dark background instead of
+     the page content behind it, a known sticky+backdrop-filter category of
+     bug. An opaque background has nothing to sample, sidestepping it too —
+     both fixes were needed, neither alone fully resolved it. */
+  background: #ffffff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   box-shadow: 0 8px 32px -16px rgba(20, 22, 27, 0.12);
 }
 .light-theme .hero::before {
