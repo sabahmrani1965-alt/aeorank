@@ -36,9 +36,16 @@ export async function POST() {
     );
   }
 
+  // Search the brand name plus any distinct name variations on file (e.g.
+  // abbreviations, alternate spellings) so mentions using a variant instead
+  // of the exact company_name string still get caught.
+  const variations = Array.isArray(profile?.brand_variations) ? profile.brand_variations.filter(Boolean) : [];
+  const queries = [brand, ...variations].filter((v, i, a) => a.findIndex((x) => x.toLowerCase() === v.toLowerCase()) === i).slice(0, 3);
+  const perQueryLimit = Math.max(8, Math.ceil(SEARCH_LIMIT / queries.length));
+
   try {
-    const posts = await searchPosts(brand, SEARCH_LIMIT);
-    const deduped = [...new Map(posts.map((p) => [p.permalink, p])).values()];
+    const results = await Promise.all(queries.map((q) => searchPosts(q, perQueryLimit)));
+    const deduped = [...new Map(results.flat().map((p) => [p.permalink, p])).values()].slice(0, SEARCH_LIMIT + 10);
 
     if (deduped.length === 0) {
       await supabase.from("mentions").delete().eq("user_id", user.id).eq("company_profile_id", profile.id);

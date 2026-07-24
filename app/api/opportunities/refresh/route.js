@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { searchPosts } from "@/lib/reddit";
 import { pickCategoryQuery } from "@/lib/keywords";
-import { scoreOpportunities, isLlmConfigured } from "@/lib/llm";
+import { scoreOpportunities, generateOpportunityQueries, isLlmConfigured } from "@/lib/llm";
 import { hasActiveSubscription } from "@/lib/subscription";
 import { getActiveCompanyProfile } from "@/lib/brands";
 
@@ -43,11 +43,17 @@ export async function POST() {
     );
   }
 
-  const categoryQuery = pickCategoryQuery(description, brand);
+  // Prefer specific, description-grounded queries over the single generic
+  // category bucket pickCategoryQuery falls back to (e.g. any "SaaS" mention
+  // locks onto "SaaS startup", drowning out what the company actually does —
+  // see lib/llm.js's generateOpportunityQueries for the full reasoning).
+  const aiQueries = isLlmConfigured() ? await generateOpportunityQueries(brand, description) : null;
+  const queries = aiQueries?.length ? aiQueries : [pickCategoryQuery(description, brand)];
+  const perQueryLimit = Math.max(6, Math.ceil(SEARCH_LIMIT / queries.length));
 
   try {
-    const posts = await searchPosts(categoryQuery, SEARCH_LIMIT);
-    const deduped = [...new Map(posts.map((p) => [p.permalink, p])).values()];
+    const results = await Promise.all(queries.map((q) => searchPosts(q, perQueryLimit)));
+    const deduped = [...new Map(results.flat().map((p) => [p.permalink, p])).values()].slice(0, SEARCH_LIMIT + 10);
 
     if (deduped.length === 0) {
       await supabase
