@@ -158,9 +158,8 @@ function NewDraftForm() {
         <span className="section-tag">( create post )</span>
         <h2>Create a Reddit post</h2>
         <p className="section-sub">
-          AI-assisted writing to help you create it. Nothing here posts for
-          you: copy the result and publish it yourself from your own
-          account.
+          Create and submit a new Reddit task here, choose the type of post,
+          write your comment to get it published.
         </p>
 
         <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
