@@ -2,6 +2,8 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StepsSection from "@/components/StepsSection";
+import HeroVisual from "@/components/HeroVisual";
+import FeatureGrid from "@/components/FeatureGrid";
 
 export default function Home() {
   return (
@@ -11,25 +13,33 @@ export default function Home() {
       {/* HERO */}
       <section className="hero">
         <div className="container">
-          <div className="hero-pill fade-in">
-            <span className="dot" /> Live data: fetched from Reddit's public API
-          </div>
-          <div className="hero-tag fade-in">( AEOrank: Answer Engine Optimization )</div>
-          <h1 className="fade-in">
-            Rank in <span className="accent">AI Answers</span>
-            <br />
-            via Reddit signals
-          </h1>
-          <p className="fade-in">
-            See the subreddits, threads, and keywords that influence how
-            ChatGPT, Claude, and Gemini talk about your brand, then turn
-            that visibility into measurable engagement.
-          </p>
+          <div className="hero-grid">
+            <div className="hero-copy">
+              <div className="hero-pill fade-in">
+                <span className="dot" /> Live data: fetched from Reddit's public API
+              </div>
+              <div className="hero-tag fade-in">( AEOrank: Answer Engine Optimization )</div>
+              <h1 className="fade-in">
+                Rank in <span className="accent">AI Answers</span>
+                <br />
+                via Reddit signals
+              </h1>
+              <p className="fade-in">
+                See the subreddits, threads, and keywords that influence how
+                ChatGPT, Claude, and Gemini talk about your brand, then turn
+                that visibility into measurable engagement.
+              </p>
 
-          <div className="fade-in" style={{ marginTop: 8 }}>
-            <Link href="/signup" className="btn btn-primary btn-large">
-              Get Started →
-            </Link>
+              <div className="fade-in" style={{ marginTop: 8 }}>
+                <Link href="/signup" className="btn btn-primary btn-large">
+                  Get Started →
+                </Link>
+              </div>
+            </div>
+
+            <div className="hero-visual fade-in">
+              <HeroVisual />
+            </div>
           </div>
 
           {/* Stats strip */}
@@ -53,6 +63,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <FeatureGrid />
 
       {/* WHY THIS MATTERS NOW — replaces the old LLM-mock section. The mocks
           referenced SaaSOffers as if cited by AI, which a curious visitor
