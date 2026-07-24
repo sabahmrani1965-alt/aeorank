@@ -15,7 +15,7 @@ export default function LoginPage() {
         <span className="section-tag">( account )</span>
         <h2>Accounts are coming soon</h2>
         <p className="section-sub">
-          Customer login isn't set up yet — check back soon, or reach out
+          Customer login isn't set up yet. Check back soon, or reach out
           via the contact page.
         </p>
       </AuthSplitLayout>

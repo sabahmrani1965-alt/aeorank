@@ -34,11 +34,11 @@ export default async function PosterLayout({ children }) {
   // and sorted, not a decorative bell with nothing behind it.
   const submissionEvents = summary.tasks.slice(0, 5).map((t) => ({
     at: t.posted_at,
-    text: `Submitted r/${t.subreddit} — $${t.rate.toFixed(2)} ${t.displayStatus === "paid" ? "(paid)" : "(pending payout)"}`,
+    text: `Submitted r/${t.subreddit}: $${t.rate.toFixed(2)} ${t.displayStatus === "paid" ? "(paid)" : "(pending payout)"}`,
   }));
   const payoutEvents = summary.payouts.slice(0, 5).map((p) => ({
     at: p.created_at,
-    text: `Payout received: $${Number(p.amount).toFixed(2)}${p.note ? ` — ${p.note}` : ""}`,
+    text: `Payout received: $${Number(p.amount).toFixed(2)}${p.note ? ` - ${p.note}` : ""}`,
   }));
   const notifications = [...submissionEvents, ...payoutEvents]
     .sort((a, b) => new Date(b.at) - new Date(a.at))

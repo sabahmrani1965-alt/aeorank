@@ -61,7 +61,7 @@ export default async function OpportunitiesPage() {
       <h2 style={{ marginBottom: 8 }}>Reddit threads worth engaging with</h2>
       <p style={{ color: "var(--text-dim)", marginBottom: 28, maxWidth: 640 }}>
         Real threads matched to your company profile, scored for relevance. Nothing here is
-        posted automatically — browse and decide what's worth a reply from your own account.
+        posted automatically. Browse and decide what's worth a reply from your own account.
       </p>
 
       {!hasProfile ? (
@@ -84,7 +84,7 @@ export default async function OpportunitiesPage() {
 
           {!opportunities || opportunities.length === 0 ? (
             <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
-              No opportunities yet — click "Refresh opportunities" to search Reddit.
+              No opportunities yet. Click "Refresh opportunities" to search Reddit.
             </div>
           ) : (
             <OpportunityList saved={saved} rest={rest} competitors={competitors} />

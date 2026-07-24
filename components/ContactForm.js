@@ -8,7 +8,7 @@ export default function ContactForm({ defaultPlan = "general", planLabel = "" })
   const [company, setCompany] = useState("");
   const [message, setMessage] = useState(
     planLabel
-      ? `Hi — I'm interested in the ${planLabel} plan. Please reach out.`
+      ? `Hi, I'm interested in the ${planLabel} plan. Please reach out.`
       : ""
   );
   const [status, setStatus] = useState("idle"); // idle | submitting | success | error
@@ -39,7 +39,7 @@ export default function ContactForm({ defaultPlan = "general", planLabel = "" })
     return (
       <div className="card" style={{ textAlign: "center", padding: 32 }}>
         <div style={{ fontSize: 40 }}>✓</div>
-        <h3 style={{ marginTop: 12 }}>Thanks — we'll be in touch.</h3>
+        <h3 style={{ marginTop: 12 }}>Thanks, we'll be in touch.</h3>
         <p style={{ color: "var(--text-dim)", marginTop: 8 }}>
           We received your message and will reply within one business day.
         </p>

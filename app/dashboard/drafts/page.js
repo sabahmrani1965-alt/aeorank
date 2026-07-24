@@ -32,7 +32,7 @@ export default async function DashboardDraftsPage() {
         <h2>Your tasks</h2>
         <p className="section-sub">
           AI-suggested replies and posts from your reports, plus anything you
-          compose yourself. Copy one and post it from your own account —
+          compose yourself. Copy one and post it from your own account,
           nothing here is posted automatically. Expand a row to read the
           content, copy it, and add the live link once you've posted it.
         </p>
@@ -46,7 +46,7 @@ export default async function DashboardDraftsPage() {
 
         {!drafts || drafts.length === 0 ? (
           <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
-            No tasks yet — generate a report, or click "+ New task" above to write one.
+            No tasks yet. Generate a report, or click "+ New task" above to write one.
           </div>
         ) : (
           <TrackTasksTable tasks={drafts} />

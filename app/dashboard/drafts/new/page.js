@@ -159,7 +159,7 @@ function NewDraftForm() {
         <h2>Create a Reddit post</h2>
         <p className="section-sub">
           AI-assisted writing to help you create it, nothing here posts for
-          you — copy the result and publish it yourself from your own
+          you, copy the result and publish it yourself from your own
           account.
         </p>
 
@@ -249,7 +249,7 @@ function NewDraftForm() {
               />
               <span style={{ fontSize: 12, color: "var(--text-muted)" }}>
                 One Reddit account can only upvote a post once, so each upvote needs its own poster.
-                Minimum order is {MIN_UPVOTE_QTY} — priced at 10 upvotes per credit.
+                Minimum order is {MIN_UPVOTE_QTY}, priced at 10 upvotes per credit.
               </span>
             </label>
           )}

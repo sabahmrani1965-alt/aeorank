@@ -20,7 +20,7 @@ const caveat = Caveat({
 });
 
 export const metadata = {
-  title: "AEOrank — Reddit & AI Visibility Report",
+  title: "AEOrank: Reddit & AI Visibility Report",
   description:
     "Help your brand show up in ChatGPT, Claude, and Gemini answers through measurable Reddit engagement. Free report from any URL.",
   icons: { icon: "/icon.svg" },

@@ -31,7 +31,7 @@ export default function OpportunityListItem({ opportunity: o, freshness, isSelec
       <div className="opp-list-item-title">{o.title}</div>
       <div className="opp-list-item-footer">
         <span className="opp-list-item-score" style={{ color: tier.fg, background: tier.bg }}>
-          {o.relevance_score ?? "—"}
+          {o.relevance_score ?? "-"}
         </span>
         {(o.ups > 0 || o.comments > 0) && (
           <span className="opp-list-item-stats">

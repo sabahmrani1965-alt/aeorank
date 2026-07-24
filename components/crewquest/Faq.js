@@ -6,7 +6,7 @@ import ScrollReveal from "./ScrollReveal";
 const FAQS = [
   {
     q: "What is CrewQuest?",
-    a: "CrewQuest is a creator marketplace. Creators complete real posting/commenting missions on Reddit and get paid per mission — no bots, no fake engagement.",
+    a: "CrewQuest is a creator marketplace. Creators complete real posting/commenting missions on Reddit and get paid per mission: no bots, no fake engagement.",
   },
   {
     q: "How do I get paid?",
@@ -22,15 +22,15 @@ const FAQS = [
   },
   {
     q: "Can I do more than one mission at once?",
-    a: "One at a time — finishing a mission briefly cools that mission type down for you specifically, but other types stay open right away.",
+    a: "One at a time: finishing a mission briefly cools that mission type down for you specifically, but other types stay open right away.",
   },
   {
     q: "Is this just Reddit?",
-    a: "Reddit missions are live today. LinkedIn, X, and Discord support is coming — we'll only say a platform is live once it actually is.",
+    a: "Reddit missions are live today. LinkedIn, X, and Discord support is coming. We'll only say a platform is live once it actually is.",
   },
   {
     q: "Can I earn from referrals?",
-    a: "Yes — share your referral link or code, and you'll earn 15% of everything your referred creator makes in their first 3 months. They also get a $5 signup bonus.",
+    a: "Yes, share your referral link or code, and you'll earn 15% of everything your referred creator makes in their first 3 months. They also get a $5 signup bonus.",
   },
 ];
 

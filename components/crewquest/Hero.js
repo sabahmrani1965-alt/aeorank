@@ -23,7 +23,7 @@ export default function Hero({ liveMissionCount }) {
         </ScrollReveal>
         <ScrollReveal delay={160}>
           <p className="cq-hero-sub">
-            Complete authentic posting and commenting missions on Reddit — from your
+            Complete authentic posting and commenting missions on Reddit, from your
             own real account. LinkedIn, X, and Discord missions are coming soon.
           </p>
         </ScrollReveal>
@@ -38,8 +38,8 @@ export default function Hero({ liveMissionCount }) {
           <div className="cq-hero-platforms">
             <span>Available on</span>
             <span className="kc-badge kc-badge-available">Reddit</span>
-            <span className="kc-badge kc-badge-neutral">LinkedIn — soon</span>
-            <span className="kc-badge kc-badge-neutral">X — soon</span>
+            <span className="kc-badge kc-badge-neutral">LinkedIn - soon</span>
+            <span className="kc-badge kc-badge-neutral">X - soon</span>
           </div>
         </ScrollReveal>
       </div>
@@ -61,7 +61,7 @@ export default function Hero({ liveMissionCount }) {
             <span>⏱ 10 min</span>
           </div>
           <p className="cq-hero-preview-desc">
-            Share a genuine take on a trending discussion — this is what a real mission looks
+            Share a genuine take on a trending discussion: this is what a real mission looks
             like once you're in.
           </p>
 

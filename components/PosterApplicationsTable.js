@@ -24,7 +24,7 @@ function ApplicationRow({ application }) {
       } else if (data.emailSent) {
         setMessage(`Password emailed to ${application.email}.`);
       } else {
-        setMessage("Account created, but the email couldn't be sent — share this password manually:");
+        setMessage("Account created, but the email couldn't be sent. Share this password manually:");
         setTempPassword(data.temporaryPassword || "");
       }
       router.refresh();
@@ -56,11 +56,11 @@ function ApplicationRow({ application }) {
             u/{application.reddit_username}
           </a>
         ) : (
-          "—"
+          "-"
         )}
         {application.reddit_check_status === "unverified" && (
           <span
-            title="Neither Reddit's API, a direct fetch, nor Pullpush's archive could confirm this account's status — worth a manual look."
+            title="Neither Reddit's API, a direct fetch, nor Pullpush's archive could confirm this account's status. Worth a manual look."
             style={{ marginLeft: 6, fontSize: 11, fontWeight: 700, color: "var(--warn, #ffc857)" }}
           >
             unverified
@@ -68,14 +68,14 @@ function ApplicationRow({ application }) {
         )}
         {application.reddit_check_status === "active_approx" && (
           <span
-            title="Confirmed active via Pullpush's historical archive (age + karma), not Reddit's own API — can't confirm it isn't currently suspended."
+            title="Confirmed active via Pullpush's historical archive (age + karma), not Reddit's own API. Can't confirm it isn't currently suspended."
             style={{ marginLeft: 6, fontSize: 11, fontWeight: 700, color: "var(--text-muted)" }}
           >
             approx.
           </span>
         )}
       </td>
-      <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>{application.referrerEmail || "—"}</td>
+      <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>{application.referrerEmail || "-"}</td>
       <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>
         {new Date(application.created_at).toLocaleDateString()}
       </td>

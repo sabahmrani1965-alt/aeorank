@@ -60,7 +60,7 @@ export default async function DashboardBillingPage() {
             <div style={{ marginTop: 20 }}>
               {sub.plan === "comp" ? (
                 <p style={{ fontSize: 13.5, color: "var(--text-muted)" }}>
-                  Complimentary access — no billing attached to this plan.
+                  Complimentary access, no billing attached to this plan.
                 </p>
               ) : (
                 <BillingPortalButton />

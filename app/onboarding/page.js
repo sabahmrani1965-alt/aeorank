@@ -10,10 +10,10 @@ import { createClient } from "@/lib/supabase/client";
 import { listBrands } from "@/lib/brands";
 
 const LOCATIONS = [
-  "United States — English",
-  "United Kingdom — English",
-  "Canada — English",
-  "Australia — English",
+  "United States - English",
+  "United Kingdom - English",
+  "Canada - English",
+  "Australia - English",
   "Other",
 ];
 
@@ -225,7 +225,7 @@ export default function OnboardingPage() {
                 <div className="auth-field">
                   <span>Brand name variations</span>
                   <p style={{ fontSize: 12.5, color: "var(--text-muted)", marginBottom: 8 }}>
-                    Generated from your website URL — remove any that don't fit.
+                    Generated from your website URL. Remove any that don't fit.
                   </p>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                     {variations.map((v) => (
@@ -298,7 +298,7 @@ export default function OnboardingPage() {
               <h2>Enter your competitors</h2>
               <p className="section-sub">
                 We'll track how you compare to these brands in AI answers.
-                Optional — leave blank to skip any.
+                Optional: leave blank to skip any.
               </p>
 
               <form onSubmit={goToStep4}>

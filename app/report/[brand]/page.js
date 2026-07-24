@@ -23,7 +23,7 @@ export const revalidate = 0;
 export async function generateMetadata({ params }) {
   const brand = prettyBrand(params.brand);
   return {
-    title: `${brand} — Reddit & AI Visibility Report | AEOrank`,
+    title: `${brand} - Reddit & AI Visibility Report | AEOrank`,
   };
 }
 
@@ -156,7 +156,7 @@ export default async function ReportPage({ params, searchParams }) {
       <section className="report-hero">
         <div className="container">
           <div className="hero-pill" style={{ marginBottom: 16 }}>
-            <span className="dot" /> Live report — generated {new Date().toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
+            <span className="dot" /> Live report: generated {new Date().toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
           </div>
           <div className="hero-tag">( Your custom report )</div>
           <h1>
@@ -168,7 +168,7 @@ export default async function ReportPage({ params, searchParams }) {
             We scanned Reddit for threads related to <strong>{brand}</strong>
             {meta.ok && meta.description ? (
               <>
-                {" "}— a site described as “
+                , a site described as “
                 <em style={{ color: "var(--text)" }}>
                   {meta.description.slice(0, 140)}
                   {meta.description.length > 140 ? "…" : ""}
@@ -294,7 +294,7 @@ export default async function ReportPage({ params, searchParams }) {
                 Threads where <span className="accent">{brand}</span> can win attention
               </h2>
               <p className="section-sub">
-                No one's mentioning <strong>{brand}</strong> on Reddit yet — that's the gap. These are popular threads in your category right now: prime targets to <strong>reply with value</strong>, or to inspire <strong>posts of your own</strong> that own the same topic.
+                No one's mentioning <strong>{brand}</strong> on Reddit yet. That's the gap. These are popular threads in your category right now: prime targets to <strong>reply with value</strong>, or to inspire <strong>posts of your own</strong> that own the same topic.
               </p>
             </>
           ) : (

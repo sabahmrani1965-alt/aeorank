@@ -41,7 +41,7 @@ export default function WithdrawControl({ pending }) {
   }
 
   if (done) {
-    return <p style={{ color: "var(--msg-success)", fontSize: 13.5, margin: 0 }}>Withdrawal requested — an admin will process it soon.</p>;
+    return <p style={{ color: "var(--msg-success)", fontSize: 13.5, margin: 0 }}>Withdrawal requested. An admin will process it soon.</p>;
   }
 
   if (!open) {
@@ -52,7 +52,7 @@ export default function WithdrawControl({ pending }) {
         </button>
         {belowMinimum && (
           <p style={{ fontSize: 12.5, color: "var(--text-muted)", marginTop: 8 }}>
-            Minimum withdrawal is ${MIN_WITHDRAWAL_AMOUNT.toFixed(2)} — you have ${pending.toFixed(2)} pending.
+            Minimum withdrawal is ${MIN_WITHDRAWAL_AMOUNT.toFixed(2)}. You have ${pending.toFixed(2)} pending.
           </p>
         )}
       </div>

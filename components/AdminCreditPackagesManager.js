@@ -188,7 +188,7 @@ export default function AdminCreditPackagesManager({ initialPackages }) {
                         currency: pkg.currency.toUpperCase(),
                       })}
                     </td>
-                    <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>{pkg.badge || "—"}</td>
+                    <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>{pkg.badge || "-"}</td>
                     <td style={{ padding: "10px 12px" }}>{pkg.active ? "Active" : "Inactive"}</td>
                     <td style={{ padding: "10px 12px", textAlign: "right", whiteSpace: "nowrap" }}>
                       <button type="button" className="btn btn-ghost btn-sm" onClick={() => startEdit(pkg)} style={{ marginRight: 6 }}>

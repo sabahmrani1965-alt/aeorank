@@ -27,11 +27,11 @@ export default function InvitePosterForm() {
       if (!res.ok) throw new Error(data?.error || "Could not create this account.");
 
       if (!data.isNewAccount) {
-        setMessage("Existing account granted poster access — they can log in with their current password.");
+        setMessage("Existing account granted poster access. They can log in with their current password.");
       } else if (data.emailSent) {
         setMessage(`Password emailed to ${email}.`);
       } else {
-        setMessage("Account created, but the email couldn't be sent — share this password manually:");
+        setMessage("Account created, but the email couldn't be sent. Share this password manually:");
         setTempPassword(data.temporaryPassword || "");
       }
       setEmail("");

@@ -46,7 +46,7 @@ export default function CopyReferralLink({ userId, referralCode, fallbackOrigin 
         <div className="card" style={{ padding: 14, display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
           <div style={{ flex: "1 1 220px" }}>
             <div style={{ fontSize: 11.5, color: "var(--text-muted)", marginBottom: 2 }}>
-              Or just share this code — easier to say or type than the full link
+              Or just share this code, easier to say or type than the full link
             </div>
             <code style={{ background: "var(--bg-3)", padding: "6px 12px", borderRadius: 8, fontSize: 16, fontWeight: 700, letterSpacing: "0.08em" }}>
               {referralCode}

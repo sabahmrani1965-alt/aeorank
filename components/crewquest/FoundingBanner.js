@@ -15,7 +15,7 @@ export default function FoundingBanner({ posterCount }) {
             Be one of the first to earn with <span className="accent">CrewQuest</span>
           </h2>
           <p className="section-sub">
-            You'd be founding creator <AnimatedCounter value={posterCount + 1} prefix="#" /> — early
+            You'd be founding creator <AnimatedCounter value={posterCount + 1} prefix="#" />, early
             creators get first pick of new missions as the platform grows.
           </p>
         </ScrollReveal>
@@ -26,7 +26,7 @@ export default function FoundingBanner({ posterCount }) {
               <div className="cq-founding-card-icon">🎯</div>
               <div className="cq-founding-card-title">Real missions</div>
               <div className="cq-founding-card-desc">
-                Every mission is a real posting or commenting task — no filler.
+                Every mission is a real posting or commenting task, no filler.
               </div>
             </div>
           </ScrollReveal>
@@ -35,7 +35,7 @@ export default function FoundingBanner({ posterCount }) {
               <div className="cq-founding-card-icon">💸</div>
               <div className="cq-founding-card-title">Fast, low-minimum payouts</div>
               <div className="cq-founding-card-desc">
-                Withdraw once you've earned $10 — no waiting for a huge balance to cash out.
+                Withdraw once you've earned $10, no waiting for a huge balance to cash out.
               </div>
             </div>
           </ScrollReveal>
@@ -44,7 +44,7 @@ export default function FoundingBanner({ posterCount }) {
               <div className="cq-founding-card-icon">🌱</div>
               <div className="cq-founding-card-title">Grow with us from day one</div>
               <div className="cq-founding-card-desc">
-                More platforms are launching soon — early creators get first access.
+                More platforms are launching soon, early creators get first access.
               </div>
             </div>
           </ScrollReveal>

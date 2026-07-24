@@ -111,7 +111,7 @@ export default async function DashboardCreditsPage() {
       <div className="container">
         <span className="section-tag">( credits )</span>
         <h2>AI credits</h2>
-        <p className="section-sub">Every AI-assisted action — drafts, opportunity scoring, reports — spends credits.</p>
+        <p className="section-sub">Every AI-assisted action, drafts, opportunity scoring, reports, spends credits.</p>
 
         <div style={{ display: "grid", gridTemplateColumns: "2.2fr 1fr", gap: 20, alignItems: "start" }}>
           <div>
@@ -136,7 +136,7 @@ export default async function DashboardCreditsPage() {
               </div>
               <div className="kpi">
                 <div className="kpi-label">Next reset</div>
-                <div className="kpi-value" style={{ fontSize: 18 }}>{resetAt ? new Date(resetAt).toLocaleDateString() : "—"}</div>
+                <div className="kpi-value" style={{ fontSize: 18 }}>{resetAt ? new Date(resetAt).toLocaleDateString() : "-"}</div>
               </div>
               <div className="kpi" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <Link href="/dashboard/billing" className="btn btn-primary btn-sm">Upgrade plan →</Link>
@@ -214,7 +214,7 @@ export default async function DashboardCreditsPage() {
                         {new Date(t.created_at).toLocaleDateString()}
                       </td>
                       <td style={{ padding: "10px 12px" }}>{actionLabel(t.action)}</td>
-                      <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>{t.description || "—"}</td>
+                      <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>{t.description || "-"}</td>
                       <td
                         style={{
                           padding: "10px 12px",
@@ -236,7 +236,7 @@ export default async function DashboardCreditsPage() {
         <div className="card" style={{ marginTop: 36, padding: 28, textAlign: "center" }}>
           <h3 style={{ marginBottom: 8 }}>Need more credits?</h3>
           <p style={{ color: "var(--text-dim)", marginBottom: 18 }}>
-            Top up any time — purchased credits never expire.
+            Top up any time, purchased credits never expire.
           </p>
           <Link href="/dashboard/credits/buy" className="btn btn-primary">
             Buy more credits →

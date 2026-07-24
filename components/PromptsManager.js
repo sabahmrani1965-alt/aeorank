@@ -145,7 +145,7 @@ function PromptRow({ prompt, onUpdated, onDeleted }) {
           <span
             style={{ fontSize: 12, fontWeight: 700, padding: "4px 10px", borderRadius: 999, background: posColors.bg, color: posColors.fg, whiteSpace: "nowrap" }}
           >
-            {prompt.last_position ? `#${prompt.last_position}` : "—"}
+            {prompt.last_position ? `#${prompt.last_position}` : "-"}
           </span>
           <span
             style={{
@@ -401,7 +401,7 @@ export default function PromptsManager({ initialPrompts }) {
 
       {prompts.length === 0 ? (
         <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
-          No prompts yet — add one above to start tracking your AI visibility for it.
+          No prompts yet. Add one above to start tracking your AI visibility for it.
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>

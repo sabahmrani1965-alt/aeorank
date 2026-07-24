@@ -173,7 +173,7 @@ function TaskRow({ task }) {
             )}
             <div>
               <div className="tt-meta-label">Created</div>
-              <div className="tt-meta-value">{formatDate(task.created_at) || "—"}</div>
+              <div className="tt-meta-value">{formatDate(task.created_at) || "-"}</div>
             </div>
             <div>
               <div className="tt-meta-label">Published</div>
@@ -200,7 +200,7 @@ function TaskRow({ task }) {
                       <span style={{ color: "#ff8a8a" }}>Removed</span>
                     ) : (
                       <>
-                        ↑ {liveScore ?? "—"}
+                        ↑ {liveScore ?? "-"}
                         {liveReplyCount != null && <> · 💬 {liveReplyCount}</>}
                       </>
                     )}

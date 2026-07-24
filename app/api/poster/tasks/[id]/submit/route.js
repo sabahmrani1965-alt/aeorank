@@ -30,7 +30,7 @@ export async function POST(req, { params }) {
     .maybeSingle();
   if (!task) {
     return NextResponse.json(
-      { error: "Could not submit — this task may have expired or already been submitted." },
+      { error: "Could not submit: this task may have expired or already been submitted." },
       { status: 409 }
     );
   }
@@ -124,7 +124,7 @@ export async function POST(req, { params }) {
 
   if (error || !data) {
     return NextResponse.json(
-      { error: "Could not submit — this task may have expired or already been submitted." },
+      { error: "Could not submit: this task may have expired or already been submitted." },
       { status: 409 }
     );
   }

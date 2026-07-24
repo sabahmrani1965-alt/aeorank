@@ -10,7 +10,7 @@ import CrewQuestFooter from "@/components/crewquest/Footer";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "CrewQuest — Complete Missions. Get Paid.",
+  title: "CrewQuest: Complete Missions. Get Paid.",
   description:
     "CrewQuest is a creator marketplace. Complete real posting and commenting missions on Reddit and get paid per mission.",
 };

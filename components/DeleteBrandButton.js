@@ -36,7 +36,7 @@ export default function DeleteBrandButton({ brandId, brandName }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "flex-start" }}>
       <p style={{ fontSize: 13.5, color: "var(--text-dim)", margin: 0 }}>
         Delete {brandName || "this brand"}? Its opportunities, mentions, prompts, reports, and tasks
-        are deleted with it — this can't be undone.
+        are deleted with it. This can't be undone.
       </p>
       <div style={{ display: "flex", gap: 8 }}>
         <button type="button" onClick={del} disabled={loading} className="btn btn-primary btn-sm">

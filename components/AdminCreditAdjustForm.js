@@ -21,7 +21,7 @@ export default function AdminCreditAdjustForm() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data?.error || "Adjustment failed.");
-      setMessage({ ok: true, text: `Done — new balance: ${data.balance}.` });
+      setMessage({ ok: true, text: `Done. New balance: ${data.balance}.` });
       setAmount("");
       setReason("");
     } catch (err) {

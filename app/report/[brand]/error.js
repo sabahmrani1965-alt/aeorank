@@ -25,7 +25,7 @@ export default function ReportError({ error, reset }) {
           </h2>
           <p className="section-sub">
             One of our data sources timed out. This is usually a transient
-            spike — try again in a moment, or pick a different brand to
+            spike, try again in a moment, or pick a different brand to
             continue.
           </p>
 

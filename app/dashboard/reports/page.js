@@ -40,7 +40,7 @@ export default async function DashboardReportsPage() {
 
         {!reports || reports.length === 0 ? (
           <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
-            No reports yet — analyze a website above to generate your first one.
+            No reports yet. Analyze a website above to generate your first one.
           </div>
         ) : (
           <div className="post-grid">

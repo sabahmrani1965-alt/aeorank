@@ -2,7 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export const metadata = {
-  title: "Privacy Policy — AEOrank",
+  title: "Privacy Policy - AEOrank",
 };
 
 export default function Privacy() {

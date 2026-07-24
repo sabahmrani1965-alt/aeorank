@@ -67,7 +67,7 @@ export default async function MentionsPage() {
         <h2>Brand mention tracking</h2>
         <p className="section-sub">
           Real Reddit posts and comments that already mention your brand,
-          with sentiment. Read-only monitoring — nothing here posts,
+          with sentiment. Read-only monitoring, nothing here posts,
           votes, or replies on your behalf.
         </p>
 
@@ -103,7 +103,7 @@ export default async function MentionsPage() {
 
             {!mentions || mentions.length === 0 ? (
               <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
-                No mentions found yet — click "Refresh mentions" to search Reddit.
+                No mentions found yet. Click "Refresh mentions" to search Reddit.
               </div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>

@@ -3,7 +3,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Checkout cancelled — AEOrank",
+  title: "Checkout cancelled: AEOrank",
   description: "No charge was made. You can pick up where you left off any time.",
   robots: { index: false, follow: false },
 };
@@ -16,7 +16,7 @@ export default function CheckoutCancel() {
         <div className="container-narrow">
           <span className="section-tag">( checkout cancelled )</span>
           <h2 style={{ textAlign: "center" }}>
-            No charge — <span className="accent">no worries.</span>
+            No charge, <span className="accent">no worries.</span>
           </h2>
           <p className="section-sub">
             You closed the checkout before finishing. Nothing was charged. If

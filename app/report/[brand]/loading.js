@@ -101,7 +101,7 @@ export default function Loading() {
 
           <p className="loading-tip">
             This usually takes 20–30 seconds. We're scanning Reddit and running
-            the report through our AI engine — feel free to keep this tab open.
+            the report through our AI engine, feel free to keep this tab open.
           </p>
         </div>
       </div>

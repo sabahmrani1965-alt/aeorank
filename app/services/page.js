@@ -4,7 +4,7 @@ import Link from "next/link";
 import { CALENDLY_URL } from "@/lib/links";
 
 export const metadata = {
-  title: "Services — AEOrank",
+  title: "Services: AEOrank",
   description:
     "AEO services for B2B SaaS: entity authority, citation building, schema, content, and full-service management. Built around the work that actually moves AI citations.",
   alternates: { canonical: "https://www.aeorank.tech/services" },
@@ -17,7 +17,7 @@ const services = [
     slug: "aeo-management",
     price: "From $3,000/mo",
     blurb:
-      "Full-service. We run the whole program — strategy, execution, monitoring — with a senior AEO strategist owning your account.",
+      "Full-service. We run the whole program (strategy, execution, monitoring) with a senior AEO strategist owning your account.",
     bullets: [
       "Monthly citation audits",
       "Entity work, citation outreach, content",
@@ -212,7 +212,7 @@ export default function Services() {
               Most new engagements start with the{" "}
               <strong style={{ color: "var(--text)" }}>AI Visibility Audit</strong>.
               It's a flat $500, takes about two weeks, and you get back a real
-              diagnostic of where you stand — not a sales deck dressed as an
+              diagnostic of where you stand, not a sales deck dressed as an
               audit. About half of audit clients then decide AEO management
               makes sense. The other half don't, and we're fine with that.
             </p>

@@ -101,11 +101,11 @@ export default async function PromptDetailPage({ params }) {
       <div className="kpi-row" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
         <div className="kpi">
           <div className="kpi-label">Avg. position</div>
-          <div className="kpi-value">{avgPosition != null ? `#${avgPosition}` : "—"}</div>
+          <div className="kpi-value">{avgPosition != null ? `#${avgPosition}` : "-"}</div>
         </div>
         <div className="kpi">
           <div className="kpi-label">Visibility ({visibilityLabel})</div>
-          <div className="kpi-value">{visibilityPct != null ? `${visibilityPct}%` : "—"}</div>
+          <div className="kpi-value">{visibilityPct != null ? `${visibilityPct}%` : "-"}</div>
         </div>
         <div className="kpi">
           <div className="kpi-label">Total checks</div>
@@ -117,7 +117,7 @@ export default async function PromptDetailPage({ params }) {
         <h3 style={{ marginBottom: 14 }}>Visibility over time</h3>
         {points.length === 0 ? (
           <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
-            No checks yet — run "Check now" from the Prompts list to start tracking this.
+            No checks yet. Run "Check now" from the Prompts list to start tracking this.
           </div>
         ) : (
           <div className="card" style={{ padding: 20 }}>
@@ -179,7 +179,7 @@ export default async function PromptDetailPage({ params }) {
                         color: c.position ? "#6EE7B7" : "var(--text-dim)",
                       }}
                     >
-                      {c.position ? `#${c.position}` : "—"}
+                      {c.position ? `#${c.position}` : "-"}
                     </span>
                     <span
                       style={{

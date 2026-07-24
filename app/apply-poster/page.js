@@ -2,7 +2,7 @@ import CrewQuestHeader from "@/components/CrewQuestHeader";
 import SignupForm from "@/components/SignupForm";
 
 export const metadata = {
-  title: "Become a creator — CrewQuest",
+  title: "Become a creator: CrewQuest",
   description: "Sign up to become a CrewQuest creator and get paid for real Reddit missions.",
 };
 
@@ -20,7 +20,7 @@ export default function ApplyPosterPage({ searchParams }) {
             Join <span className="accent">CrewQuest</span>
           </h2>
           <p className="section-sub" style={{ marginBottom: 28 }}>
-            Create your account — we'll check your Reddit account right after.
+            Create your account, we'll check your Reddit account right after.
           </p>
 
           <div className="card" style={{ padding: 30, maxWidth: 420, margin: "0 auto" }}>

@@ -13,9 +13,9 @@ const services = {
     intro: 'Our AEO Management service is a complete done-for-you program. You focus on your product; we focus on making sure every AI engine cites your brand when buyers ask.',
     benefits: [
       { title: 'Dedicated AEO Strategist', desc: 'A senior strategist who owns your AEO roadmap, reports weekly, and adjusts based on real data.' },
-      { title: 'Full-Stack Execution', desc: 'Entity optimization, citation building, content creation, schema implementation — all in one package.' },
+      { title: 'Full-Stack Execution', desc: 'Entity optimization, citation building, content creation, schema implementation: all in one package.' },
       { title: 'Multi-Platform Optimization', desc: 'We track and optimize for ChatGPT, Perplexity, Google AI Overviews, Bing Copilot, and Claude simultaneously.' },
-      { title: 'Monthly Executive Reports', desc: 'Clear reporting tied to pipeline metrics — not vanity metrics. See exactly what your AEO investment returns.' },
+      { title: 'Monthly Executive Reports', desc: 'Clear reporting tied to pipeline metrics, not vanity metrics. See exactly what your AEO investment returns.' },
     ],
     process: [
       { num: '01', title: 'Audit & Baseline', desc: 'We audit your current AI citation presence across every major platform and establish a measurement baseline.' },
@@ -35,7 +35,7 @@ const services = {
     tag: 'Strategic Advisory',
     description: 'Strategic AEO consulting for B2B SaaS teams who want to execute internally. We provide the roadmap, frameworks, and expertise; you execute with our guidance.',
     hero: 'Strategic <em>AEO Consulting</em> for In-House Teams',
-    intro: 'For SaaS companies with strong in-house marketing teams, AEO consulting gives you the strategy, frameworks, and expert guidance to build AEO capability internally — without outsourcing execution.',
+    intro: 'For SaaS companies with strong in-house marketing teams, AEO consulting gives you the strategy, frameworks, and expert guidance to build AEO capability internally, without outsourcing execution.',
     benefits: [
       { title: 'Custom AEO Roadmap', desc: 'A prioritized 12-month roadmap built around your specific product, market, and competitive landscape.' },
       { title: 'Team Training & Enablement', desc: 'Workshops and frameworks that upskill your content, SEO, and demand gen teams on AEO best practices.' },
@@ -49,7 +49,7 @@ const services = {
       { num: '04', title: 'Ongoing Advisory', desc: 'Monthly strategy calls, async Slack access, and quarterly reviews to keep you on track.' },
     ],
     faqs: [
-      { q: 'Is consulting cheaper than full management?', a: 'Typically yes — consulting is 30–50% less than managed services. You save on execution fees by using your in-house team.' },
+      { q: 'Is consulting cheaper than full management?', a: 'Typically yes, consulting is 30–50% less than managed services. You save on execution fees by using your in-house team.' },
       { q: 'What if we don\'t have an in-house team?', a: 'We recommend AEO Management in that case. Consulting works best when you have at least 2–3 marketing team members who can execute.' },
       { q: 'Can we upgrade to full management later?', a: 'Yes. Many clients start with consulting and upgrade to full management as AEO becomes a priority channel.' },
     ],
@@ -74,9 +74,9 @@ const services = {
       { num: '04', title: 'Amplify & Monitor', desc: 'Once citations land, we amplify them and monitor how AI engines surface the new mentions.' },
     ],
     faqs: [
-      { q: 'How many citations do I get per month?', a: 'Depends on the plan — typically 10–25 new high-quality citations per month for active campaigns.' },
-      { q: 'Are these paid placements?', a: 'No. All citations are earned — expert commentary, original research placements, directory optimization. No paid link schemes.' },
-      { q: 'Do citations actually move the needle?', a: 'Yes — AI engines heavily weight third-party citations. Most clients see 200–400% increase in AI citation frequency within 6 months.' },
+      { q: 'How many citations do I get per month?', a: 'Depends on the plan: typically 10–25 new high-quality citations per month for active campaigns.' },
+      { q: 'Are these paid placements?', a: 'No. All citations are earned: expert commentary, original research placements, directory optimization. No paid link schemes.' },
+      { q: 'Do citations actually move the needle?', a: 'Yes, AI engines heavily weight third-party citations. Most clients see 200–400% increase in AI citation frequency within 6 months.' },
     ],
   },
 
@@ -101,7 +101,7 @@ const services = {
     faqs: [
       { q: 'Do I need entity optimization if I already have a Google Knowledge Panel?', a: 'Almost certainly yes. Most panels are incomplete or inaccurate. Optimization ensures AI engines pull the right data.' },
       { q: 'How long does entity authority take to build?', a: 'Foundation work takes 60–90 days. Full entity authority across all AI platforms typically takes 6–12 months.' },
-      { q: 'Can you get us a Wikipedia page?', a: 'We can help you qualify by securing notable coverage, but Wikipedia has strict notability requirements — no agency can guarantee Wikipedia inclusion.' },
+      { q: 'Can you get us a Wikipedia page?', a: 'We can help you qualify by securing notable coverage, but Wikipedia has strict notability requirements. No agency can guarantee Wikipedia inclusion.' },
     ],
   },
 
@@ -126,7 +126,7 @@ const services = {
     faqs: [
       { q: 'How long does the audit take?', a: 'Typically 10–14 business days from kickoff to delivery.' },
       { q: 'What do I get at the end?', a: 'A detailed PDF report, raw query data, competitor benchmarks, and a 60-minute walkthrough call.' },
-      { q: 'Is this the same as the free audit?', a: 'No — the free audit is a lighter 30-minute assessment. The paid audit is comprehensive and includes 100+ queries, full benchmarking, and a detailed action plan.' },
+      { q: 'Is this the same as the free audit?', a: 'No, the free audit is a lighter 30-minute assessment. The paid audit is comprehensive and includes 100+ queries, full benchmarking, and a detailed action plan.' },
     ],
   },
 }

@@ -4,7 +4,7 @@ import ContactForm from "@/components/ContactForm";
 import { CALENDLY_URL } from "@/lib/links";
 
 export const metadata = {
-  title: "Contact — AEOrank",
+  title: "Contact - AEOrank",
   description: "Get in touch with the AEOrank team about Reddit + AI visibility services.",
 };
 
@@ -32,7 +32,7 @@ export default function ContactPage({ searchParams }) {
           <p className="section-sub" style={{ marginBottom: 28 }}>
             {planKey === "general"
               ? "Tell us about your brand and what you'd like AI assistants to say about it."
-              : <>You're requesting: <strong>{plan.label}{plan.price ? ` — ${plan.price}` : ""}</strong>. Fill in the form and we'll be in touch within one business day.</>
+              : <>You're requesting: <strong>{plan.label}{plan.price ? ` - ${plan.price}` : ""}</strong>. Fill in the form and we'll be in touch within one business day.</>
             }
           </p>
 
@@ -53,7 +53,7 @@ export default function ContactPage({ searchParams }) {
                 Prefer a quick call?
               </div>
               <div style={{ fontSize: 14, color: "var(--text-dim)" }}>
-                Skip the form — book 30 minutes directly on my calendar.
+                Skip the form, book 30 minutes directly on my calendar.
               </div>
             </div>
             <a

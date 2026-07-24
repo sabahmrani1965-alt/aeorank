@@ -6,7 +6,7 @@ import RedditVerifyForm from "@/components/RedditVerifyForm";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Verify your Reddit account — CrewQuest",
+  title: "Verify your Reddit account: CrewQuest",
 };
 
 export default async function ApplyPosterVerifyPage({ searchParams }) {
@@ -29,7 +29,7 @@ export default async function ApplyPosterVerifyPage({ searchParams }) {
           <span className="section-tag">( almost there )</span>
           <h2 style={{ textAlign: "center" }}>Verify your Reddit account</h2>
           <p className="section-sub" style={{ marginBottom: 28 }}>
-            One last step — tell us which Reddit account you'll post from.
+            One last step: tell us which Reddit account you'll post from.
           </p>
 
           <div className="card" style={{ padding: 30, maxWidth: 420, margin: "0 auto" }}>

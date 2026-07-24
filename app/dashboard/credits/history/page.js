@@ -88,7 +88,7 @@ export default async function CreditHistoryPage({ searchParams }) {
                       >
                         {t.amount > 0 ? `+${t.amount}` : t.amount}
                       </td>
-                      <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>{t.description || "—"}</td>
+                      <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>{t.description || "-"}</td>
                       <td style={{ padding: "10px 12px" }}>{transactionType(t.action)}</td>
                     </tr>
                   ))}

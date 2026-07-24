@@ -19,7 +19,7 @@ export default async function BuyCreditsPage() {
         <span className="section-tag">( credits )</span>
         <h2>Buy credits</h2>
         <p className="section-sub">
-          One-time top-ups on top of your plan's monthly allowance — purchased credits never expire.{" "}
+          One-time top-ups on top of your plan's monthly allowance, purchased credits never expire.{" "}
           <Link href="/dashboard/credits" className="header-link">← Back to credits</Link>
         </p>
 

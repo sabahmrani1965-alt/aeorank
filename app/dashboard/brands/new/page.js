@@ -44,7 +44,7 @@ export default async function NewBrandPage() {
     <section className="dashboard-page">
       <h2 style={{ marginBottom: 8 }}>Add a brand</h2>
       <p style={{ color: "var(--text-dim)", marginBottom: 28, maxWidth: 640 }}>
-        Set up another brand — its opportunities, mentions, prompts, reports, and tasks are tracked
+        Set up another brand: its opportunities, mentions, prompts, reports, and tasks are tracked
         separately from your other brands.
       </p>
       <CompanyProfileForm mode="create" />

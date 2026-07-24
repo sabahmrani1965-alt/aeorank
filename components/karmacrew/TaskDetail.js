@@ -11,7 +11,7 @@ import RewardBadge from "./RewardBadge";
 const TYPE_LABEL = { comment: "Comment", reply: "Reply", post: "Post", upvote: "Upvote" };
 
 const DOS_DONTS = {
-  dos: ["Sound like a real person, not an ad", "Keep it on-topic for the subreddit", "Only post once — no duplicates"],
+  dos: ["Sound like a real person, not an ad", "Keep it on-topic for the subreddit", "Only post once, no duplicates"],
   donts: ["Don't mention you were paid to post this", "Don't spam the same content elsewhere", "Don't use engagement-bait phrasing"],
 };
 
@@ -29,8 +29,8 @@ export default function TaskDetail({ task, reward }) {
           <StatusBadge status={pendingReview ? "pending_review" : "submitted"} />
           <p style={{ marginTop: 14, color: "var(--text-dim)" }}>
             {pendingReview
-              ? "Submitted — we couldn't automatically confirm this one's live, so it's waiting on a quick manual check before it counts toward your earnings. You'll see it move to Approved once that's done."
-              : "Nice work — this one's in. It'll show up in your Earnings and History."}
+              ? "Submitted. We couldn't automatically confirm this one's live, so it's waiting on a quick manual check before it counts toward your earnings. You'll see it move to Approved once that's done."
+              : "Nice work. This one's in. It'll show up in your Earnings and History."}
           </p>
           {task.permalink && (
             <a href={task.permalink} target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)", fontSize: 14 }}>
@@ -53,7 +53,7 @@ export default function TaskDetail({ task, reward }) {
         <div className="kc-empty-state fade-in">
           <div className="kc-empty-state-icon">⏰</div>
           <div style={{ fontWeight: 700, fontSize: 16, color: "var(--text)" }}>Time's up on this one.</div>
-          <div style={{ fontSize: 13.5, maxWidth: 340 }}>It's back in the pool for someone else — grab a new task.</div>
+          <div style={{ fontSize: 13.5, maxWidth: 340 }}>It's back in the pool for someone else. Grab a new task.</div>
           <button type="button" onClick={() => router.push("/poster")} className="btn btn-primary btn-sm" style={{ marginTop: 14 }}>
             Back to tasks →
           </button>
@@ -104,7 +104,7 @@ export default function TaskDetail({ task, reward }) {
                 </a>
               ) : (
                 <p style={{ fontSize: 14, color: "var(--text-muted)", margin: 0, lineHeight: 1.6 }}>
-                  No link was given for this task — search r/{task.subreddit} for the
+                  No link was given for this task. Search r/{task.subreddit} for the
                   thread described above, or release it and pick another.
                 </p>
               )}
@@ -116,7 +116,7 @@ export default function TaskDetail({ task, reward }) {
               <div style={{ fontWeight: 700, marginBottom: 10 }}>How this works</div>
               <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.6, margin: 0 }}>
                 Open the link above on Reddit from your own account and upvote it.
-                That's it — no draft to write, no comment to post. Confirm below once you've done it.
+                That's it: no draft to write, no comment to post. Confirm below once you've done it.
               </p>
             </div>
           ) : (

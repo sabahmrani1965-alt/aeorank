@@ -67,7 +67,7 @@ export default async function ReferAFriendPage() {
       <p className="section-sub">
         Share your link or code. When someone you refer becomes a poster, they get a ${REFERRAL_SIGNUP_BONUS} signup
         bonus, and you earn {Math.round(REFERRAL_COMMISSION_RATE * 100)}% of everything they earn in their first{" "}
-        {REFERRAL_WINDOW_MONTHS} months — a running total, not a payout record.
+        {REFERRAL_WINDOW_MONTHS} months: a running total, not a payout record.
       </p>
 
       <div style={{ marginTop: 20, marginBottom: 28 }}>

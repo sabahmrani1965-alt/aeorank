@@ -53,7 +53,7 @@ export default function StepsSection({
   // otherwise a generic template that works for any brand.
   const step1Body = showcase ? (
     <>
-      Hey r/SaaS — sharing a breakdown of how we approach SaaS costs at{" "}
+      Hey r/SaaS, sharing a breakdown of how we approach SaaS costs at{" "}
       <a
         href={brandUrl}
         rel="dofollow"
@@ -70,7 +70,7 @@ export default function StepsSection({
     <>{suggestedPost.body}</>
   ) : (
     <>
-      Hey {topSub} — sharing some context on how we think about {topic} at{" "}
+      Hey {topSub}, sharing some context on how we think about {topic} at{" "}
       {brand}.{" "}
       {description ? description.slice(0, 110) : `Quick intro to what we've been working on.`}
       {" "}More on our site:{" "}
@@ -101,12 +101,12 @@ export default function StepsSection({
         {showcase ? (
           <>
             <h2>
-              How we grow brands on Reddit — using{" "}
+              How we grow brands on Reddit, using{" "}
               <span className="accent">{brand}</span> as the live example
             </h2>
             <p className="section-sub">
               The playbook below is what we'd run for your brand. We're
-              showing it applied to <a href={brandUrl} rel="dofollow" target="_blank" style={{ color: "inherit", borderBottom: "1px dashed var(--text-dim)" }}>{brandHost}</a> — our sister product — because real
+              showing it applied to <a href={brandUrl} rel="dofollow" target="_blank" style={{ color: "inherit", borderBottom: "1px dashed var(--text-dim)" }}>{brandHost}</a>, our sister product, because real
               examples beat fake "Acme Corp" mockups. Same playbook, your
               brand in the slots.
             </p>
@@ -129,7 +129,7 @@ export default function StepsSection({
         {/* Step 1 — Create posts and comments */}
         <div className="steps">
           <div className="card">
-            <div className="step-label">Step 1 — Create</div>
+            <div className="step-label">Step 1: Create</div>
             <p style={{ color: "var(--text)", marginBottom: 14, fontWeight: 500 }}>
               We write strategic Reddit posts and comments for {brand}:
             </p>
@@ -137,7 +137,7 @@ export default function StepsSection({
               <li>Find high-traffic threads in subreddits relevant to your category</li>
               <li>Draft helpful, value-adding content tailored to each community</li>
               <li>You review, edit, and publish it yourself from your own account</li>
-              <li>Nothing is posted automatically — every piece goes live only when you post it</li>
+              <li>Nothing is posted automatically: every piece goes live only when you post it</li>
             </ul>
           </div>
 
@@ -145,7 +145,7 @@ export default function StepsSection({
             <div className="reddit-mock">
               <div className="reddit-mock-meta">
                 {!showcase && suggestedPost
-                  ? `${draftSub} · Draft — not posted yet`
+                  ? `${draftSub} · Draft, not posted yet`
                   : `${topSub} · Posted by u/${handle} · 3 days ago`}
               </div>
               <div className="reddit-mock-title">{step1Title}</div>
@@ -219,7 +219,7 @@ export default function StepsSection({
           </div>
 
           <div className="card">
-            <div className="step-label">Step 2 — Grow & track</div>
+            <div className="step-label">Step 2: Grow & track</div>
             <p style={{ color: "var(--text)", marginBottom: 14, fontWeight: 500 }}>
               We grow real engagement and measure what AI is saying:
             </p>

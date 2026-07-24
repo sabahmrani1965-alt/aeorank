@@ -44,7 +44,7 @@ export default async function PosterEarningsPage() {
       <span className="section-tag">( earnings )</span>
       <h2>Your earnings</h2>
       <p className="section-sub" style={{ marginBottom: 24 }}>
-        Real payout ledger — Pending is what's owed but not yet paid out.
+        Real payout ledger. Pending is what's owed but not yet paid out.
       </p>
 
       <div className="kpi-row" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", marginBottom: 20 }}>

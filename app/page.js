@@ -12,9 +12,9 @@ export default function Home() {
       <section className="hero">
         <div className="container">
           <div className="hero-pill fade-in">
-            <span className="dot" /> Live data — fetched from Reddit's public API
+            <span className="dot" /> Live data: fetched from Reddit's public API
           </div>
-          <div className="hero-tag fade-in">( AEOrank — Answer Engine Optimization )</div>
+          <div className="hero-tag fade-in">( AEOrank: Answer Engine Optimization )</div>
           <h1 className="fade-in">
             Rank in <span className="accent">AI Answers</span>
             <br />
@@ -22,7 +22,7 @@ export default function Home() {
           </h1>
           <p className="fade-in">
             See the subreddits, threads, and keywords that influence how
-            ChatGPT, Claude, and Gemini talk about your brand — then turn
+            ChatGPT, Claude, and Gemini talk about your brand, then turn
             that visibility into measurable engagement.
           </p>
 
@@ -66,7 +66,7 @@ export default function Home() {
           </h2>
           <p className="section-sub">
             Your buyers are asking ChatGPT, Claude, and Gemini the same
-            questions they used to type into Google — and clicking maybe two
+            questions they used to type into Google, and clicking maybe two
             links from the answer. The brands those models cite get the
             consideration. The rest don't.
           </p>
@@ -89,7 +89,7 @@ export default function Home() {
               <p>
                 For category questions like <em>"what's the best X for Y"</em>,
                 leading AI assistants pull heavily from Reddit threads,
-                comparison guides, and earned media — not from company
+                comparison guides, and earned media, not from company
                 landing pages. If your category is being discussed on
                 Reddit and you're not in those threads, you're invisible to AI.
               </p>
@@ -136,14 +136,14 @@ export default function Home() {
                 We help brands show up in AI chat answers (ChatGPT, Claude,
                 Gemini) by getting them mentioned in the Reddit conversations
                 those models train on. Each engagement is reviewed by you
-                before it goes live — no spam, no shortcuts.
+                before it goes live: no spam, no shortcuts.
               </div>
             </details>
             <details>
               <summary>Where does the Reddit data come from?</summary>
               <div className="faq-body">
                 Reddit's public JSON endpoints (the same data Reddit's own
-                search uses). It's purely read-only — we don't post, vote, or
+                search uses). It's purely read-only. We don't post, vote, or
                 modify anything in your name without explicit approval.
               </div>
             </details>
@@ -158,7 +158,7 @@ export default function Home() {
             <details>
               <summary>Do you guarantee citations in ChatGPT or Claude?</summary>
               <div className="faq-body">
-                No — nobody can guarantee what an LLM will say. We focus on
+                No, nobody can guarantee what an LLM will say. We focus on
                 measurable signals: Reddit visibility, branded search lift, and
                 tracked references over time. The "AI Visibility Score" in
                 paid plans tracks these movements transparently.

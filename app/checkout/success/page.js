@@ -5,7 +5,7 @@ import { stripe, isStripeConfigured } from "@/lib/stripe";
 import { CALENDLY_URL } from "@/lib/links";
 
 export const metadata = {
-  title: "Welcome aboard — AEOrank",
+  title: "Welcome aboard: AEOrank",
   description: "Your AEOrank plan is active. Here's what happens next.",
   robots: { index: false, follow: false },
 };

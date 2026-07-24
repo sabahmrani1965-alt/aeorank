@@ -158,7 +158,7 @@ export default function PricingTiers({ brand = "" }) {
       </div>
 
       <p className="pricing-topup">
-        Need more credits? Top up anytime inside your dashboard — pay only for what you use.
+        Need more credits? Top up anytime inside your dashboard. Pay only for what you use.
       </p>
 
       {error ? (

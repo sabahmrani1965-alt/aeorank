@@ -51,7 +51,7 @@ export default async function AdminPostersPage() {
   }
   const enrichedRequests = (payoutRequests || []).map((r) => ({
     ...r,
-    posterEmail: requesterEmailById.get(r.poster_id) || "—",
+    posterEmail: requesterEmailById.get(r.poster_id) || "-",
   }));
 
   const { data: applications } = await admin
@@ -77,7 +77,7 @@ export default async function AdminPostersPage() {
         <span className="section-tag">( admin )</span>
         <h2>CrewQuest Users</h2>
         <p className="section-sub">
-          Poster accounts (role='poster') — they fulfill tasks claimed from the marketplace, across
+          Poster accounts (role='poster'). They fulfill tasks claimed from the marketplace, across
           any AEOrank customer, for pay. Customer accounts are tracked separately under "AEOrank Users".
         </p>
 

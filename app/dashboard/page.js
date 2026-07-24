@@ -137,7 +137,7 @@ export default async function DashboardOverviewPage() {
         </div>
         <div className="kpi">
           <div className="kpi-label">AI visibility</div>
-          <div className="kpi-value">{visibilityScore == null ? "—" : `${visibilityScore}%`}</div>
+          <div className="kpi-value">{visibilityScore == null ? "-" : `${visibilityScore}%`}</div>
         </div>
         <div className="kpi">
           <div className="kpi-label">Prompts tracked</div>
@@ -212,7 +212,7 @@ export default async function DashboardOverviewPage() {
         </div>
         {latestByBrand.length === 0 ? (
           <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
-            No reports yet — analyze a website above to generate your first one.
+            No reports yet. Analyze a website above to generate your first one.
           </div>
         ) : (
           <div className="sub-grid">

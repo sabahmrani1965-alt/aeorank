@@ -10,13 +10,13 @@ export default function AiVisibilityScoreCard({ brand, aiVisibility }) {
       <div className="container">
         <span className="section-tag">( live AI visibility check )</span>
         <h2>
-          How AI Answers About Your Category —{" "}
+          How AI Answers About Your Category:{" "}
           <span className="accent">Right Now</span>
         </h2>
         <p className="section-sub">
           We just asked Gemini (with live Google Search grounding) and
           Claude the questions your buyers actually ask. These are their{" "}
-          <strong>real, unedited answers</strong> — run them yourself and
+          <strong>real, unedited answers</strong>. Run them yourself and
           you'll get the same. Here's whether <strong>{brand}</strong>{" "}
           showed up.
         </p>
@@ -55,7 +55,7 @@ export default function AiVisibilityScoreCard({ brand, aiVisibility }) {
           </div>
           <p style={{ marginTop: 14, color: "var(--text-muted)", fontSize: 14, maxWidth: 560, margin: "14px auto 0" }}>
             {aiVisibility.score === 0
-              ? `AI is recommending other brands to your buyers — and not naming ${brand} at all. That's the gap we close.`
+              ? `AI is recommending other brands to your buyers, and not naming ${brand} at all. That's the gap we close.`
               : aiVisibility.score < 50
               ? `AI mentions ${brand} occasionally, but your competitors are getting named more often. There's clear room to dominate.`
               : `${brand} already shows up in AI answers. The work now is defending that position and widening the lead before competitors catch up.`}
@@ -88,7 +88,7 @@ export default function AiVisibilityScoreCard({ brand, aiVisibility }) {
               ))}
             </div>
             <p style={{ marginTop: 12, color: "var(--text-muted)", fontSize: 13 }}>
-              These are the specific competitors AI named across the real answers below — the names your buyers hear instead of <strong>{brand}</strong>.
+              These are the specific competitors AI named across the real answers below: the names your buyers hear instead of <strong>{brand}</strong>.
             </p>
           </div>
         )}

@@ -41,7 +41,7 @@ export default async function PosterPlayPage() {
       <h2>Pick a task</h2>
       <p className="section-sub" style={{ marginBottom: 28 }}>
         Grab one anytime. You get {CLAIM_WINDOW_MINUTES} minutes to post and submit the link. Finishing a task
-        briefly cools that task type down — other types stay open.
+        briefly cools that task type down. Other types stay open.
       </p>
 
       {tasks.length === 0 ? (

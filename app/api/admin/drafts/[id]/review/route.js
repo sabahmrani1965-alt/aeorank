@@ -44,7 +44,7 @@ export async function POST(req, { params }) {
 
   if (error || !data) {
     return NextResponse.json(
-      { error: "Could not update — this task may not be pending review anymore." },
+      { error: "Could not update: this task may not be pending review anymore." },
       { status: 409 }
     );
   }

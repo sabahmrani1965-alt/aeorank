@@ -37,11 +37,11 @@ export async function POST(req) {
     return NextResponse.json({ error: "We couldn't find that Reddit account. Double-check the username." }, { status: 400 });
   }
   if (check.status === "suspended") {
-    return NextResponse.json({ error: "That Reddit account is suspended — you'll need an active account to post from." }, { status: 400 });
+    return NextResponse.json({ error: "That Reddit account is suspended: you'll need an active account to post from." }, { status: 400 });
   }
   if (check.status === "unavailable") {
     return NextResponse.json(
-      { error: "That Reddit account couldn't be found — it may be suspended, deleted, or the username may be wrong." },
+      { error: "That Reddit account couldn't be found: it may be suspended, deleted, or the username may be wrong." },
       { status: 400 }
     );
   }

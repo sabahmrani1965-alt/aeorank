@@ -21,7 +21,7 @@ export default async function SettingsPage() {
       <div className="app-sidebar-group-label" style={{ padding: 0, marginBottom: 6 }}>Knowledge</div>
       <h2 style={{ marginBottom: 8 }}>Company profile</h2>
       <p style={{ color: "var(--text-dim)", marginBottom: 28, maxWidth: 640 }}>
-        This edits your currently active brand — switch brands from the sidebar. AEOrank uses this
+        This edits your currently active brand. Switch brands from the sidebar. AEOrank uses this
         to find relevant Reddit threads, draft on-brand responses, and check your AI visibility.
       </p>
       {activeProfile ? (

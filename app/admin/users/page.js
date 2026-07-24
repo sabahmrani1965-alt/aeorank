@@ -65,7 +65,7 @@ export default async function AdminUsersPage() {
         <span className="section-tag">( admin )</span>
         <h2>AEOrank Users</h2>
         <p className="section-sub">
-          Customer accounts only — CrewQuest posters (accounts that fulfill
+          Customer accounts only: CrewQuest posters (accounts that fulfill
           tasks for pay) are tracked separately under "CrewQuest Users".
         </p>
 
@@ -98,10 +98,10 @@ export default async function AdminUsersPage() {
                         {new Date(u.created_at).toLocaleDateString()}
                       </td>
                       <td style={{ padding: "10px 12px", textTransform: "capitalize" }}>
-                        {sub?.plan || "—"}
+                        {sub?.plan || "-"}
                       </td>
                       <td style={{ padding: "10px 12px", textTransform: "capitalize" }}>
-                        {sub?.status || "—"}
+                        {sub?.status || "-"}
                       </td>
                       <td style={{ padding: "10px 12px", textAlign: "right" }}>
                         {reportCountByUser.get(u.id) || 0}

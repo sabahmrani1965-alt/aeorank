@@ -142,7 +142,7 @@ export async function POST(req) {
     if (outcome.error === "insufficient_credits") {
       const { balance } = await getBalance(supabase, user.id);
       return NextResponse.json(
-        { error: `Not enough credits — saving this costs ${amount} credits.`, balance },
+        { error: `Not enough credits: saving this costs ${amount} credits.`, balance },
         { status: 402 }
       );
     }

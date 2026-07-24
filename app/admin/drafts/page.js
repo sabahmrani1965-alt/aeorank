@@ -73,8 +73,8 @@ export default async function AdminDraftsPage() {
                     <td style={{ padding: "10px 12px", color: "var(--text-dim)", whiteSpace: "nowrap" }}>
                       {new Date(d.created_at).toLocaleString()}
                     </td>
-                    <td style={{ padding: "10px 12px" }}>{emailByUser.get(d.user_id) || "—"}</td>
-                    <td style={{ padding: "10px 12px" }}>{TYPE_LABELS[d.type] || "—"}</td>
+                    <td style={{ padding: "10px 12px" }}>{emailByUser.get(d.user_id) || "-"}</td>
+                    <td style={{ padding: "10px 12px" }}>{TYPE_LABELS[d.type] || "-"}</td>
                     <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>r/{displaySubreddit(d.subreddit)}</td>
                     <td style={{ padding: "10px 12px", maxWidth: 420 }}>
                       {d.title && d.title !== d.subreddit && (
@@ -110,7 +110,7 @@ export default async function AdminDraftsPage() {
                           {d.verification_status === "needs_review" && <AdminReviewControl draftId={d.id} />}
                         </div>
                       ) : (
-                        <span style={{ color: "var(--text-muted)", fontSize: 13 }}>—</span>
+                        <span style={{ color: "var(--text-muted)", fontSize: 13 }}>-</span>
                       )}
                     </td>
                     <td style={{ padding: "10px 12px" }}>

@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 const LOCATIONS = [
-  "United States — English",
-  "United Kingdom — English",
-  "Canada — English",
-  "Australia — English",
+  "United States - English",
+  "United Kingdom - English",
+  "Canada - English",
+  "Australia - English",
   "Other",
 ];
 

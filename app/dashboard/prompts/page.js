@@ -52,7 +52,7 @@ export default async function PromptsPage() {
       <div className="app-sidebar-group-label" style={{ padding: 0, marginBottom: 6 }}>Analyze</div>
       <h2 style={{ marginBottom: 8 }}>Prompts</h2>
       <p style={{ color: "var(--text-dim)", marginBottom: 28, maxWidth: 640 }}>
-        Real questions checked against live AI models — see whether, and where, your brand
+        Real questions checked against live AI models: see whether, and where, your brand
         actually gets mentioned when someone asks.
       </p>
 

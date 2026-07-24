@@ -35,7 +35,7 @@ const industries = {
     tag: 'Startup Companies',
     description: 'AEO for early and growth-stage startups. Build category authority faster than competitors and establish your brand as the AI-recommended choice before you\'re a household name.',
     hero: 'AEO for <em>Fast-Growing Startups</em>',
-    intro: 'Startups can\'t outspend incumbents on paid channels. But with the right AEO strategy, you can outrank them in AI answers — becoming the default recommendation even before you have brand recognition.',
+    intro: 'Startups can\'t outspend incumbents on paid channels. But with the right AEO strategy, you can outrank them in AI answers, becoming the default recommendation even before you have brand recognition.',
     challenges: [
       { title: 'Limited Marketing Budget', desc: 'Every dollar needs to work hard. AEO delivers compounding returns far beyond what paid ads can match.' },
       { title: 'Weak Brand Recognition', desc: 'AI engines need signals to trust a new brand. We build those signals systematically across citations and entity data.' },
@@ -43,7 +43,7 @@ const industries = {
       { title: 'Need for Rapid Growth', desc: 'You don\'t have years. Our 90-day sprint model gets you initial wins quickly while building toward long-term authority.' },
     ],
     approach: [
-      'Category ownership strategy — be the brand AI engines default to for new or emerging categories.',
+      'Category ownership strategy: be the brand AI engines default to for new or emerging categories.',
       'Fast-win citation placements in startup-focused media: TechCrunch, The Information, Hacker News, Indie Hackers.',
       'Founder-led content programs that leverage your unique perspective and technical depth.',
       'Lean but comprehensive schema and entity setup that competes with much larger brands.',
@@ -61,7 +61,7 @@ const industries = {
     tag: 'Tech & IT',
     description: 'AEO for cybersecurity, DevOps, cloud, and infrastructure companies. Get cited in the technical AI research queries that drive enterprise purchase decisions.',
     hero: 'AEO for <em>Tech & IT</em> Companies',
-    intro: 'Technical buyers — CIOs, CISOs, platform engineers, DevOps leads — rely heavily on AI tools for research. We help tech and IT companies become the brand AI cites for high-intent technical queries.',
+    intro: 'Technical buyers, CIOs, CISOs, platform engineers, DevOps leads, rely heavily on AI tools for research. We help tech and IT companies become the brand AI cites for high-intent technical queries.',
     challenges: [
       { title: 'Technical Buyer Complexity', desc: 'Your buyers ask detailed technical questions. Our content strategy answers those questions with real technical depth.' },
       { title: 'High-Stakes Evaluation', desc: 'Tech purchase decisions are high-risk. Citation placements in trusted technical publications carry enormous weight.' },
@@ -71,7 +71,7 @@ const industries = {
     approach: [
       'Technical authority building through original research, benchmarks, and security whitepapers.',
       'Citation placements in technical publications: Dark Reading, The Register, InfoWorld, DZone, CNCF blogs.',
-      'Deep product documentation optimized for AI extraction — setup guides, architecture docs, integration references.',
+      'Deep product documentation optimized for AI extraction: setup guides, architecture docs, integration references.',
       'Security and compliance schema markup (SOC 2, ISO 27001, GDPR) that AI engines can clearly identify.',
       'Monitoring of technical-specific queries and competitor positioning in enterprise AI research.',
     ],
@@ -85,7 +85,7 @@ const industries = {
   'software': {
     title: 'AEO for Software Companies',
     tag: 'Software Companies',
-    description: 'AEO for software companies across every vertical. Whether you\'re building HR tech, fintech, edtech, or vertical SaaS — we help you dominate AI answers in your niche.',
+    description: 'AEO for software companies across every vertical. Whether you\'re building HR tech, fintech, edtech, or vertical SaaS, we help you dominate AI answers in your niche.',
     hero: 'AEO for <em>Software Companies</em>',
     intro: 'From vertical SaaS to horizontal platforms, software companies across every market face the same question: will AI engines recommend us when buyers ask? We make sure the answer is yes.',
     challenges: [
@@ -342,7 +342,7 @@ export default function IndustryPage({ params }) {
           </h2>
           <p className="section-sub">
             Run a free AEOrank report tailored to your URL. You'll see exactly
-            where you stand and what's possible — no commitment.
+            where you stand and what's possible, no commitment.
           </p>
           <div
             style={{
