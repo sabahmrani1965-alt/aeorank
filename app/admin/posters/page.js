@@ -26,7 +26,7 @@ export default async function AdminPostersPage() {
 
   const { data: posters } = await admin
     .from("users")
-    .select("id, email, created_at")
+    .select("id, email, reddit_username, created_at")
     .eq("role", "poster")
     .order("created_at", { ascending: false });
 
@@ -92,6 +92,7 @@ export default async function AdminPostersPage() {
                 <thead>
                   <tr style={{ borderBottom: "1px solid var(--border, rgba(255,255,255,.1))" }}>
                     <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Email</th>
+                    <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Reddit</th>
                     <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Added</th>
                     <th style={{ textAlign: "right", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Pending</th>
                     <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Payout</th>
@@ -101,6 +102,9 @@ export default async function AdminPostersPage() {
                   {postersWithPending.map((p) => (
                     <tr key={p.id} style={{ borderBottom: "1px solid var(--border, rgba(255,255,255,.06))" }}>
                       <td style={{ padding: "10px 12px" }}>{p.email}</td>
+                      <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>
+                        {p.reddit_username ? `u/${p.reddit_username}` : "-"}
+                      </td>
                       <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>
                         {new Date(p.created_at).toLocaleDateString()}
                       </td>
