@@ -55,6 +55,14 @@ export default async function MentionsPage() {
     : { data: [] };
 
   const hasProfile = Boolean(profile?.company_name);
+  // Mentions accumulate across refreshes (see app/api/mentions/refresh),
+  // so the list is ordered by post date, not fetch recency — the most
+  // recent fetch time has to be found explicitly rather than read off the
+  // first row.
+  const lastRefreshedAt = (mentions || []).reduce(
+    (max, m) => (!max || new Date(m.fetched_at) > new Date(max) ? m.fetched_at : max),
+    null
+  );
   const classified = (mentions || []).filter((m) => m.sentiment);
   const positivePct = classified.length
     ? Math.round((classified.filter((m) => m.sentiment === "positive").length / classified.length) * 100)
@@ -80,9 +88,9 @@ export default async function MentionsPage() {
           <>
             <div style={{ marginBottom: 24, display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
               <MentionsRefreshButton />
-              {mentions?.length > 0 && (
+              {lastRefreshedAt && (
                 <span style={{ fontSize: 13, color: "var(--text-muted)" }}>
-                  Last refreshed {timeAgo(new Date(mentions[0].fetched_at).getTime())}
+                  Last refreshed {timeAgo(new Date(lastRefreshedAt).getTime())}
                 </span>
               )}
             </div>

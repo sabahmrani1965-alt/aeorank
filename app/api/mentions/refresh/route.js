@@ -9,6 +9,9 @@ export const runtime = "nodejs";
 export const maxDuration = 30;
 
 const SEARCH_LIMIT = 20;
+// Soft cap on stored rows per brand — old ones beyond this get pruned,
+// oldest first, so the accumulated pool doesn't grow unbounded.
+const MAX_STORED = 300;
 
 // Free — unlike Opportunities/AI-visibility, this is a plain Reddit search
 // + sentiment classification, not a per-thread Apify fetch, so there's no
@@ -54,21 +57,31 @@ export async function POST() {
     // known variation genuinely appears in the fetched title/snippet text,
     // so "mentions" means an actual mention, not a loose topical match.
     const needles = queries.map((q) => q.toLowerCase());
-    const deduped = merged
+    const found = merged
       .filter((p) => {
         const haystack = `${p.title} ${p.snippet || ""}`.toLowerCase();
         return needles.some((n) => haystack.includes(n));
       })
       .slice(0, SEARCH_LIMIT + 10);
 
-    if (deduped.length === 0) {
-      await supabase.from("mentions").delete().eq("user_id", user.id).eq("company_profile_id", profile.id);
-      return NextResponse.json({ ok: true, count: 0 });
+    // Accumulate, don't replace — a growing pool of discovered mentions
+    // instead of a single point-in-time snapshot wiped on every refresh.
+    // Only genuinely new permalinks get scored/inserted.
+    const { data: existing } = await supabase
+      .from("mentions")
+      .select("permalink")
+      .eq("user_id", user.id)
+      .eq("company_profile_id", profile.id);
+    const existingPermalinks = new Set((existing || []).map((r) => r.permalink));
+    const fresh = found.filter((p) => !existingPermalinks.has(p.permalink));
+
+    if (fresh.length === 0) {
+      return NextResponse.json({ ok: true, added: 0 });
     }
 
-    const sentiments = isLlmConfigured() ? await scoreMentionSentiment(deduped, brand) : null;
+    const sentiments = isLlmConfigured() ? await scoreMentionSentiment(fresh, brand) : null;
 
-    const rows = deduped.map((p, i) => ({
+    const rows = fresh.map((p, i) => ({
       user_id: user.id,
       company_profile_id: profile.id,
       sub: p.sub,
@@ -82,11 +95,23 @@ export async function POST() {
       sentiment_reason: sentiments?.[i]?.reason || null,
     }));
 
-    await supabase.from("mentions").delete().eq("user_id", user.id).eq("company_profile_id", profile.id);
     const { error: insertError } = await supabase.from("mentions").insert(rows);
     if (insertError) throw insertError;
 
-    return NextResponse.json({ ok: true, count: rows.length });
+    // Prune oldest rows beyond the soft cap so the pool doesn't grow
+    // unbounded.
+    const { data: all } = await supabase
+      .from("mentions")
+      .select("id, fetched_at")
+      .eq("user_id", user.id)
+      .eq("company_profile_id", profile.id)
+      .order("fetched_at", { ascending: true });
+    if (all && all.length > MAX_STORED) {
+      const staleIds = all.slice(0, all.length - MAX_STORED).map((r) => r.id);
+      await supabase.from("mentions").delete().in("id", staleIds);
+    }
+
+    return NextResponse.json({ ok: true, added: rows.length });
   } catch (e) {
     console.error("[mentions/refresh] failed:", e?.message || e);
     return NextResponse.json({ error: "Could not refresh mentions." }, { status: 500 });

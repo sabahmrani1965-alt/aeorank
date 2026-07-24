@@ -55,6 +55,15 @@ export default async function OpportunitiesPage() {
   const saved = (opportunities || []).filter((o) => o.saved);
   const rest = (opportunities || []).filter((o) => !o.saved);
 
+  // Opportunities now accumulate across refreshes instead of being replaced
+  // each time (see app/api/opportunities/refresh/route.js), so the list is
+  // ordered by relevance, not recency — the most recent fetch time has to
+  // be found explicitly rather than read off the first row.
+  const lastRefreshedAt = (opportunities || []).reduce(
+    (max, o) => (!max || new Date(o.fetched_at) > new Date(max) ? o.fetched_at : max),
+    null
+  );
+
   return (
     <section className="dashboard-page-wide">
       <div className="app-sidebar-group-label" style={{ padding: 0, marginBottom: 6 }}>Discover</div>
@@ -75,9 +84,9 @@ export default async function OpportunitiesPage() {
         <>
           <div style={{ marginBottom: 24, display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
             <OpportunityRefreshButton />
-            {opportunities?.length > 0 && (
+            {lastRefreshedAt && (
               <span style={{ fontSize: 13, color: "var(--text-muted)" }}>
-                Last refreshed {timeAgo(new Date(opportunities[0].fetched_at).getTime())}
+                Last refreshed {timeAgo(new Date(lastRefreshedAt).getTime())}
               </span>
             )}
           </div>
