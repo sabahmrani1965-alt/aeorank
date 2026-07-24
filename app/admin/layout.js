@@ -29,6 +29,7 @@ export default async function AdminLayout({ children }) {
             <a href="/admin/users" className="header-link">AEOrank Users</a>
             <a href="/admin/drafts" className="header-link">Posts</a>
             <a href="/admin/posters" className="header-link">CrewQuest Users</a>
+            <a href="/admin/referrals" className="header-link">Referrals</a>
             <a href="/admin/credits" className="header-link">Credits</a>
           </div>
         </div>
