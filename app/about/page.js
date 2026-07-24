@@ -41,7 +41,7 @@ export default function About() {
           <div className="card" style={{ marginBottom: 24 }}>
             <h3 style={{ marginBottom: 12 }}>How it works</h3>
             <ol style={{ color: "var(--text-dim)", paddingLeft: 22, lineHeight: 1.8 }}>
-              <li><strong>Free report</strong>: enter your URL, get an instant scan of relevant subreddits, posts, and keyword angles.</li>
+              <li><strong>Sign up</strong>: create your account and tell us your website, we get an instant scan of relevant subreddits, posts, and keyword angles.</li>
               <li><strong>Onboarding call</strong>: we align on tone, target communities, and goals.</li>
               <li><strong>Content + engagement</strong>: every comment or post is drafted, reviewed by you, and only published if you approve.</li>
               <li><strong>Reporting</strong>: weekly visibility reports plus an AI-visibility score tracking branded references in LLM outputs.</li>

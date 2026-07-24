@@ -219,8 +219,8 @@ export default function ServicePage({ params }) {
             >
               Book a Free Strategy Call →
             </a>
-            <Link href="/" className="btn btn-ghost">
-              Run a Free Report
+            <Link href="/signup" className="btn btn-ghost">
+              Get Started
             </Link>
           </div>
         </div>
@@ -355,8 +355,8 @@ export default function ServicePage({ params }) {
             >
               Book a Strategy Call →
             </a>
-            <Link href="/" className="btn btn-ghost">
-              Run a Free Report
+            <Link href="/signup" className="btn btn-ghost">
+              Get Started
             </Link>
           </div>
         </div>

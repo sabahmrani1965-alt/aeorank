@@ -175,8 +175,8 @@ export default function IndustryPage({ params }) {
             <Link href="/contact" className="btn btn-primary">
               Book a Free Audit →
             </Link>
-            <Link href="/" className="btn btn-ghost">
-              Run a Free Report
+            <Link href="/signup" className="btn btn-ghost">
+              Get Started
             </Link>
           </div>
         </div>
@@ -339,8 +339,8 @@ export default function IndustryPage({ params }) {
             Let's build your <span className="accent">AEO advantage</span>
           </h2>
           <p className="section-sub">
-            Run a free AEOrank report tailored to your URL. You'll see exactly
-            where you stand and what's possible, no commitment.
+            Sign up and get an instant AI-visibility scan tailored to your
+            site. You'll see exactly where you stand and what's possible.
           </p>
           <div
             style={{
@@ -351,8 +351,8 @@ export default function IndustryPage({ params }) {
               flexWrap: "wrap",
             }}
           >
-            <Link href="/" className="btn btn-primary">
-              Run a Free Report →
+            <Link href="/signup" className="btn btn-primary">
+              Get Started →
             </Link>
             <Link href="/contact" className="btn btn-ghost">
               Talk to Us

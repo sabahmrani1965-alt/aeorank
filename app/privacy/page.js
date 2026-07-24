@@ -18,9 +18,9 @@ export default function Privacy() {
             <h3 style={{ marginBottom: 10 }}>What we collect</h3>
             <p style={{ color: "var(--text-dim)" }}>
               When you submit the contact form, we collect the name, email,
-              company, and message you provide. When you generate a free
-              report, we receive the URL you entered. We do not use cookies
-              for tracking or advertising.
+              company, and message you provide. When you run a website
+              analysis from your dashboard, we receive the URL you entered.
+              We do not use cookies for tracking or advertising.
             </p>
           </div>
 

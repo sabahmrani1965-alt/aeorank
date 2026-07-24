@@ -18,9 +18,9 @@ export default function Terms() {
             <h3 style={{ marginBottom: 10 }}>Service description</h3>
             <p style={{ color: "var(--text-dim)" }}>
               AEOrank provides Reddit-engagement and AI-visibility services
-              under written agreement. The free report tool on this site is a
-              non-binding overview based on public Reddit data and your site's
-              public metadata.
+              under written agreement. The "Analyze a website" report tool
+              in your dashboard is a non-binding overview based on public
+              Reddit data and your site's public metadata.
             </p>
           </div>
 
@@ -47,7 +47,7 @@ export default function Terms() {
           <div className="card">
             <h3 style={{ marginBottom: 10 }}>Liability</h3>
             <p style={{ color: "var(--text-dim)" }}>
-              The free report is provided "as is" without warranty. Liability
+              Reports are provided "as is" without warranty. Liability
               under any paid engagement is governed by your service agreement
               and capped at fees paid in the prior three months.
             </p>

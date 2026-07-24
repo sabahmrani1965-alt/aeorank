@@ -98,8 +98,8 @@ export default function Services() {
             free call.
           </p>
           <div style={{ marginTop: 28 }}>
-            <Link href="/" className="btn btn-primary">
-              Start with a Free Report →
+            <Link href="/signup" className="btn btn-primary">
+              Get Started →
             </Link>
           </div>
         </div>
