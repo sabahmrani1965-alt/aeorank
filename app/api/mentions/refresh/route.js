@@ -45,7 +45,21 @@ export async function POST() {
 
   try {
     const results = await Promise.all(queries.map((q) => searchPosts(q, perQueryLimit)));
-    const deduped = [...new Map(results.flat().map((p) => [p.permalink, p])).values()].slice(0, SEARCH_LIMIT + 10);
+    const merged = [...new Map(results.flat().map((p) => [p.permalink, p])).values()];
+
+    // searchPosts's underlying providers rank by topical relevance, not
+    // literal string match — a post can come back for query "SaaSOffers"
+    // just for mentioning "SaaS" generically nearby, with no actual
+    // reference to the brand. Only keep results where the brand name or a
+    // known variation genuinely appears in the fetched title/snippet text,
+    // so "mentions" means an actual mention, not a loose topical match.
+    const needles = queries.map((q) => q.toLowerCase());
+    const deduped = merged
+      .filter((p) => {
+        const haystack = `${p.title} ${p.snippet || ""}`.toLowerCase();
+        return needles.some((n) => haystack.includes(n));
+      })
+      .slice(0, SEARCH_LIMIT + 10);
 
     if (deduped.length === 0) {
       await supabase.from("mentions").delete().eq("user_id", user.id).eq("company_profile_id", profile.id);
