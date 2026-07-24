@@ -30,12 +30,6 @@ export default async function DashboardDraftsPage() {
       <div className="container">
         <span className="section-tag">( track task )</span>
         <h2>Your tasks</h2>
-        <p className="section-sub">
-          AI-suggested replies and posts from your reports, plus anything you
-          compose yourself. Copy one and post it from your own account,
-          nothing here is posted automatically. Expand a row to read the
-          content, copy it, and add the live link once you've posted it.
-        </p>
 
         <div style={{ marginBottom: 24, display: "flex", gap: 10, flexWrap: "wrap" }}>
           <Link href="/dashboard/drafts/new" className="btn btn-primary">
