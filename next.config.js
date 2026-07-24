@@ -8,12 +8,17 @@ const nextConfig = {
   // ~30s on any client-side navigation (Link/router.push/redirect after
   // login — anything short of a hard reload). That's exactly why admin
   // pages showed stale data right after logging in but fresh data on a
-  // manual refresh. Setting this to 0 makes every client-side navigation
-  // to a dynamic route re-fetch from the server, matching what
-  // force-dynamic already implies server-side.
+  // manual refresh.
+  //
+  // Deliberately 1, not 0: confirmed live that 0 doesn't actually disable
+  // this in Next 14.2.5 (still served ~30s-stale data on navigation after
+  // deploying it) — a known falsy-value quirk in how this framework
+  // version reads staleTimes.dynamic, worked around by the community with
+  // any small positive number instead. 1 second is imperceptible but
+  // isn't falsy, so it reliably takes effect.
   experimental: {
     staleTimes: {
-      dynamic: 0,
+      dynamic: 1,
     },
   },
 };
