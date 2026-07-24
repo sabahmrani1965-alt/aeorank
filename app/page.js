@@ -1,6 +1,6 @@
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import UrlForm from "@/components/UrlForm";
 import StepsSection from "@/components/StepsSection";
 
 export default function Home() {
@@ -21,21 +21,15 @@ export default function Home() {
             via Reddit signals
           </h1>
           <p className="fade-in">
-            Enter your website and instantly see the subreddits, threads, and
-            keywords that influence how ChatGPT, Claude, and Gemini talk about
-            your brand. Custom report in seconds.
+            See the subreddits, threads, and keywords that influence how
+            ChatGPT, Claude, and Gemini talk about your brand — then turn
+            that visibility into measurable engagement.
           </p>
 
-          <UrlForm />
-
-          <div className="hero-trust">
-            <div>Try it with a popular brand:</div>
-            <div className="hero-tries">
-              <a className="hero-try" href="/report/notion?url=https%3A%2F%2Fnotion.so">notion.so</a>
-              <a className="hero-try" href="/report/linear?url=https%3A%2F%2Flinear.app">linear.app</a>
-              <a className="hero-try" href="/report/shopify?url=https%3A%2F%2Fshopify.com">shopify.com</a>
-              <a className="hero-try" href="/report/saasoffers?url=https%3A%2F%2Fsaasoffers.tech">saasoffers.tech</a>
-            </div>
+          <div className="fade-in" style={{ marginTop: 8 }}>
+            <Link href="/signup" className="btn btn-primary btn-large">
+              Get Started →
+            </Link>
           </div>
 
           {/* Stats strip */}
@@ -146,22 +140,19 @@ export default function Home() {
               </div>
             </details>
             <details>
-              <summary>Where does the Reddit data in the report come from?</summary>
+              <summary>Where does the Reddit data come from?</summary>
               <div className="faq-body">
                 Reddit's public JSON endpoints (the same data Reddit's own
-                search uses). The free report is purely read-only — we don't
-                post, vote, or modify anything in your name without explicit
-                approval on a paid plan.
+                search uses). It's purely read-only — we don't post, vote, or
+                modify anything in your name without explicit approval.
               </div>
             </details>
             <details>
-              <summary>How accurate is the keyword chart?</summary>
+              <summary>How accurate is the keyword data?</summary>
               <div className="faq-body">
-                The keyword chart is a directional <strong>estimate</strong>{" "}
-                generated from your site's metadata and Reddit signals. We
-                don't pull paid SEO data into the free report. Customers on
-                paid plans get audit-grade keyword data sourced from
-                third-party providers.
+                Base estimates are directional, generated from your site's
+                metadata and Reddit signals. Paid plans get audit-grade
+                keyword data sourced from third-party providers.
               </div>
             </details>
             <details>
