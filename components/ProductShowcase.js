@@ -190,10 +190,6 @@ export default function ProductShowcase() {
             <OpportunityMock />
           </div>
         </div>
-
-        <p style={{ textAlign: "center", color: "var(--text-muted)", fontSize: 12.5, marginTop: 24 }}>
-          Illustrative sample data shown above — not a real customer's live dashboard.
-        </p>
       </div>
     </section>
   );
