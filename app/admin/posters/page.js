@@ -103,7 +103,18 @@ export default async function AdminPostersPage() {
                     <tr key={p.id} style={{ borderBottom: "1px solid var(--border, rgba(255,255,255,.06))" }}>
                       <td style={{ padding: "10px 12px" }}>{p.email}</td>
                       <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>
-                        {p.reddit_username ? `u/${p.reddit_username}` : "-"}
+                        {p.reddit_username ? (
+                          <a
+                            href={`https://www.reddit.com/user/${p.reddit_username}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ color: "var(--accent)" }}
+                          >
+                            u/{p.reddit_username}
+                          </a>
+                        ) : (
+                          "-"
+                        )}
                       </td>
                       <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>
                         {new Date(p.created_at).toLocaleDateString()}
