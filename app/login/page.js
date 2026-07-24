@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AuthSplitLayout from "@/components/AuthSplitLayout";
 import GoogleAuthButton from "@/components/GoogleAuthButton";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { isPosterHost } from "@/lib/posterBrand";
 
 export default function LoginPage() {
   if (!isSupabaseConfigured()) {
@@ -31,6 +32,16 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+
+  // /login is shared across both domains (see AuthSplitLayout) — Google
+  // OAuth creates a brand-new account transparently on first use even
+  // from a "log in" button, so this needs the same signup_source tagging
+  // SignupForm's intent prop provides, just resolved from which domain
+  // the visitor is actually on rather than a fixed default.
+  const [intent, setIntent] = useState(undefined);
+  useEffect(() => {
+    setIntent(isPosterHost(window.location.hostname) ? "crewquest" : "aeorank");
+  }, []);
 
   async function submit(e) {
     e.preventDefault();
@@ -71,7 +82,7 @@ function LoginForm() {
         Enter the email and password you used to subscribe.
       </p>
 
-      <GoogleAuthButton label="Log in with Google" />
+      <GoogleAuthButton label="Log in with Google" intent={intent} />
       <div className="auth-divider"><span>or</span></div>
 
       <form onSubmit={submit}>
