@@ -30,7 +30,7 @@ function positionColor(position) {
   return { bg: "rgba(255, 120, 120, 0.12)", fg: "#ff8a8a" };
 }
 
-function PromptRow({ prompt, checkCost, onUpdated, onDeleted }) {
+function PromptRow({ prompt, onUpdated, onDeleted }) {
   const [checking, setChecking] = useState(false);
   const [checkError, setCheckError] = useState("");
   const [expanded, setExpanded] = useState(false);
@@ -180,7 +180,7 @@ function PromptRow({ prompt, checkCost, onUpdated, onDeleted }) {
               <span className="loader" /> Checking…
             </>
           ) : (
-            `Check now (${checkCost} credits)`
+            "Check now"
           )}
         </button>
         {prompt.last_answer && (
@@ -214,7 +214,7 @@ function PromptRow({ prompt, checkCost, onUpdated, onDeleted }) {
   );
 }
 
-export default function PromptsManager({ initialPrompts, checkCost }) {
+export default function PromptsManager({ initialPrompts }) {
   const [prompts, setPrompts] = useState(initialPrompts || []);
   const [showAddForm, setShowAddForm] = useState(false);
   const [text, setText] = useState("");
@@ -406,7 +406,7 @@ export default function PromptsManager({ initialPrompts, checkCost }) {
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {prompts.map((p) => (
-            <PromptRow key={p.id} prompt={p} checkCost={checkCost} onUpdated={handleUpdated} onDeleted={handleDeleted} />
+            <PromptRow key={p.id} prompt={p} onUpdated={handleUpdated} onDeleted={handleDeleted} />
           ))}
         </div>
       )}

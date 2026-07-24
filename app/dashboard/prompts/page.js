@@ -2,7 +2,6 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { hasActiveSubscription } from "@/lib/subscription";
 import { getActiveCompanyProfile } from "@/lib/brands";
-import { CREDIT_COSTS } from "@/lib/credits";
 import PromptsManager from "@/components/PromptsManager";
 import RedeemCodeForm from "@/components/RedeemCodeForm";
 
@@ -57,7 +56,7 @@ export default async function PromptsPage() {
         actually gets mentioned when someone asks.
       </p>
 
-      <PromptsManager initialPrompts={prompts || []} checkCost={CREDIT_COSTS.prompt_check} />
+      <PromptsManager initialPrompts={prompts || []} />
     </section>
   );
 }

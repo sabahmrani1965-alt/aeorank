@@ -11,7 +11,6 @@ const USAGE_ANALYTICS = [
   { action: "generate_comment", label: "Comments Generated" },
   { action: "generate_post", label: "Posts Generated" },
   { action: "generate_reply", label: "Replies Generated" },
-  { action: "ai_visibility_report", label: "Reports Generated" },
   { action: "thread_analysis", label: "Thread Analyses" },
 ];
 

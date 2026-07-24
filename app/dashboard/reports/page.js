@@ -3,7 +3,6 @@ import { createClient } from "@/lib/supabase/server";
 import DashboardAnalyzeForm from "@/components/DashboardAnalyzeForm";
 import AiVisibilityRecheckButton from "@/components/AiVisibilityRecheckButton";
 import { getActiveCompanyProfile } from "@/lib/brands";
-import { CREDIT_COSTS } from "@/lib/credits";
 
 export const dynamic = "force-dynamic";
 
@@ -36,7 +35,7 @@ export default async function DashboardReportsPage() {
         <DashboardAnalyzeForm />
 
         <div style={{ margin: "20px 0" }}>
-          <AiVisibilityRecheckButton cost={CREDIT_COSTS.ai_visibility_report} />
+          <AiVisibilityRecheckButton />
         </div>
 
         {!reports || reports.length === 0 ? (

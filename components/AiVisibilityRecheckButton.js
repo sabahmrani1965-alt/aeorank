@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function AiVisibilityRecheckButton({ cost = 10 }) {
+export default function AiVisibilityRecheckButton() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
@@ -26,7 +26,7 @@ export default function AiVisibilityRecheckButton({ cost = 10 }) {
   return (
     <div>
       <button type="button" className="btn btn-secondary" onClick={run} disabled={loading}>
-        {loading ? "Checking…" : `Re-check my brand's AI visibility (${cost} credits)`}
+        {loading ? "Checking…" : "Re-check my brand's AI visibility"}
       </button>
       {error && (
         <p role="alert" style={{ color: "#ff8a8a", marginTop: 8, fontSize: 13.5 }}>

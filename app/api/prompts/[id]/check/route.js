@@ -4,7 +4,6 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { hasActiveSubscription } from "@/lib/subscription";
 import { getActiveCompanyProfile } from "@/lib/brands";
 import { checkPrompt, isAiVisibilityConfigured } from "@/lib/aivisibility";
-import { withCredits, getBalance, CREDIT_COSTS } from "@/lib/credits";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -54,28 +53,13 @@ export async function POST(req, { params }) {
     return NextResponse.json({ error: "Prompt not found." }, { status: 404 });
   }
 
-  const outcome = await withCredits({
-    admin,
-    userId: user.id,
-    action: "prompt_check",
-    amount: CREDIT_COSTS.prompt_check,
-    description: `Checked prompt: ${prompt.text.slice(0, 60)}`,
-    metadata: { promptId: prompt.id },
-    run: () => checkPrompt(prompt.text, brand),
-  });
-
-  if (!outcome.ok) {
-    if (outcome.error === "insufficient_credits") {
-      const { balance } = await getBalance(supabase, user.id);
-      return NextResponse.json({ error: "Not enough credits.", balance }, { status: 402 });
-    }
+  const result = await checkPrompt(prompt.text, brand);
+  if (!result) {
     return NextResponse.json(
       { error: "Couldn't check this prompt right now. Try again." },
       { status: 502 }
     );
   }
-
-  const result = outcome.result;
   const checkedAt = new Date().toISOString();
 
   const { error: updateError } = await admin
@@ -112,6 +96,5 @@ export async function POST(req, { params }) {
   return NextResponse.json({
     ok: true,
     result: { ...result, checkedAt },
-    creditsRemaining: outcome.balance,
   });
 }
