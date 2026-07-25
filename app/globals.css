@@ -1179,6 +1179,59 @@ button { font-family: inherit; }
   .results-grid { grid-template-columns: 1fr; }
 }
 
+/* ----------------- Business models tabs (homepage) ----------------- */
+.bm-panel {
+  background: var(--bg-2);
+  border: 1px solid var(--card-border-soft);
+  border-radius: 20px;
+  padding: 20px;
+  margin-top: 40px;
+}
+.bm-tabbar {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 6px;
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.bm-tab {
+  flex: 1;
+  min-width: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 16px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 14.5px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+  white-space: nowrap;
+}
+.bm-tab:hover { color: var(--text); }
+.bm-tab.is-active {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-3) 100%);
+  color: var(--accent-ink);
+}
+.bm-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.bm-post-card { padding: 22px; min-width: 0; }
+@media (max-width: 900px) {
+  .bm-grid { grid-template-columns: 1fr; }
+  .bm-tab { min-width: 46%; }
+}
+
 /* ----------------- Feature grid ----------------- */
 .feature-grid {
   display: grid;
