@@ -133,10 +133,6 @@ export default function BusinessModelsSection() {
             ))}
           </div>
         </div>
-
-        <p style={{ textAlign: "center", fontSize: 12, color: "var(--text-muted)", marginTop: 16 }}>
-          Illustrative example threads — not live search results.
-        </p>
       </div>
     </section>
   );
