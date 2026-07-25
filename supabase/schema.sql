@@ -249,6 +249,49 @@ CREATE POLICY "Service role can do anything on prompt_checks"
   ON public.prompt_checks FOR ALL
   USING (auth.role() = 'service_role');
 
+-- ── TRACKED KEYWORDS ─────────────────────────────────────────
+-- Customer-managed list of keywords/phrases to track real Reddit
+-- conversation volume for (see lib/keywordVolume.js) — genuine counts
+-- from Reddit's own search (via lib/reddit.js's searchPosts), not a
+-- third-party SEO/Google-search-volume estimate like the anonymous
+-- report page's heuristic numbers (lib/keywords.js).
+CREATE TABLE IF NOT EXISTS public.tracked_keywords (
+  id                   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id              UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  company_profile_id   UUID,
+  keyword              TEXT NOT NULL,
+  last_checked_at      TIMESTAMPTZ,
+  last_post_count      INTEGER,
+  last_top_subreddits  TEXT[],
+  last_sample_posts    JSONB,
+  created_at           TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS tracked_keywords_user_id_idx ON public.tracked_keywords(user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS tracked_keywords_company_profile_id_idx ON public.tracked_keywords(company_profile_id);
+
+ALTER TABLE public.tracked_keywords ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can read own tracked keywords"
+  ON public.tracked_keywords FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own tracked keywords"
+  ON public.tracked_keywords FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own tracked keywords"
+  ON public.tracked_keywords FOR UPDATE
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own tracked keywords"
+  ON public.tracked_keywords FOR DELETE
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Service role can do anything on tracked_keywords"
+  ON public.tracked_keywords FOR ALL
+  USING (auth.role() = 'service_role');
+
 -- ── REPORT DRAFTS ────────────────────────────────────────────
 -- Persisted version of the AI-drafted Reddit post suggestion + posted
 -- status. Anonymous visitors never write here — PostDraftActions.js keeps

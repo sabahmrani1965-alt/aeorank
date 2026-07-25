@@ -18,6 +18,11 @@ const FEATURES = [
     desc: "Every Reddit post or comment that already references your brand, with sentiment: positive, neutral, or negative.",
   },
   {
+    icon: "🏷️",
+    title: "Keyword Tracking",
+    desc: "Real Reddit conversation volume for the keywords that matter to your category, not a generic SEO estimate.",
+  },
+  {
     icon: "🧠",
     title: "Prompt Tracking",
     desc: "Track the exact buyer questions that should mention your brand, and see whether AI actually answers with it.",
