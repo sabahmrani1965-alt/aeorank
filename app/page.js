@@ -198,9 +198,7 @@ export default function Home() {
               <summary>Is this allowed under Reddit's rules?</summary>
               <div className="faq-body">
                 We follow each subreddit's posting guidelines and disclose
-                affiliations where required. We do not run vote rings or
-                operate fake accounts. If a community doesn't want commercial
-                content, we don't post there.
+                affiliations where required.
               </div>
             </details>
           </div>
