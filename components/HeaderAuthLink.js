@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { CALENDLY_URL } from "@/lib/links";
 
 // Kept as its own tiny client component so Header.js can stay a server
 // component — checking auth state here means Header doesn't need cookies(),
@@ -60,6 +61,9 @@ export default function HeaderAuthLink() {
     return (
       <>
         <Link href="/login" className="header-link">Log in</Link>
+        <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer" className="header-link">
+          Book a Call
+        </a>
         <Link href="/signup" className="btn btn-primary">Get Started →</Link>
       </>
     );
