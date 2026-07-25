@@ -90,7 +90,7 @@ function TrafficChart() {
       </div>
       <div style={{ fontSize: 34, fontWeight: 800, letterSpacing: "-.02em", color: "var(--accent-3)" }}>5.5B+</div>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
-        <span style={{ fontSize: 13, color: "#4d5361" }}>Monthly Visitors</span>
+        <span style={{ fontSize: 13, color: "#4d5361" }}>Monthly Visits</span>
         <Pill>↑ +43% YoY Growth</Pill>
       </div>
       <div style={{ display: "flex", alignItems: "flex-end", gap: 10, height: 90 }}>
