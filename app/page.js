@@ -5,6 +5,7 @@ import HeroVisual from "@/components/HeroVisual";
 import FeatureGrid from "@/components/FeatureGrid";
 import ProductShowcase from "@/components/ProductShowcase";
 import AnnotatedTour from "@/components/AnnotatedTour";
+import { CALENDLY_URL } from "@/lib/links";
 
 export default function Home() {
   return (
@@ -29,10 +30,18 @@ export default function Home() {
                 that visibility into measurable engagement.
               </p>
 
-              <div className="fade-in" style={{ marginTop: 8 }}>
+              <div className="fade-in" style={{ marginTop: 8, display: "flex", gap: 12, flexWrap: "wrap" }}>
                 <Link href="/signup" className="btn btn-primary btn-large">
                   Get Started →
                 </Link>
+                <a
+                  href={CALENDLY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-ghost btn-large"
+                >
+                  Book a Call
+                </a>
               </div>
             </div>
 
