@@ -153,6 +153,53 @@ export default function KeywordsManager({ initialKeywords }) {
   const [adding, setAdding] = useState(false);
   const [addError, setAddError] = useState("");
 
+  const [suggesting, setSuggesting] = useState(false);
+  const [suggestError, setSuggestError] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [addingSuggestions, setAddingSuggestions] = useState(() => new Set());
+
+  async function suggestKeywordsNow() {
+    setSuggestError("");
+    setSuggesting(true);
+    try {
+      const res = await fetch("/api/keywords/suggest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ existing: keywords.map((k) => k.keyword) }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || "Could not generate suggestions.");
+      setSuggestions(data.suggestions || []);
+    } catch (err) {
+      setSuggestError(err?.message || "Something went wrong.");
+    } finally {
+      setSuggesting(false);
+    }
+  }
+
+  async function addSuggestion(suggestion) {
+    setAddingSuggestions((prev) => new Set(prev).add(suggestion));
+    try {
+      const res = await fetch("/api/keywords", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ keyword: suggestion }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || "Could not add this keyword.");
+      setKeywords((prev) => [data.keyword, ...prev]);
+      setSuggestions((prev) => prev.filter((s) => s !== suggestion));
+    } catch (err) {
+      setSuggestError(err?.message || "Something went wrong.");
+    } finally {
+      setAddingSuggestions((prev) => {
+        const next = new Set(prev);
+        next.delete(suggestion);
+        return next;
+      });
+    }
+  }
+
   async function addKeyword(e) {
     e.preventDefault();
     setAddError("");
@@ -203,6 +250,49 @@ export default function KeywordsManager({ initialKeywords }) {
           {addError}
         </p>
       )}
+
+      <div style={{ marginBottom: 20 }}>
+        <button type="button" className="btn btn-ghost" onClick={suggestKeywordsNow} disabled={suggesting}>
+          {suggesting ? (
+            <>
+              <span className="loader" /> Analyzing your site & competitors…
+            </>
+          ) : (
+            "✨ Suggest keywords from my website, description & competitors"
+          )}
+        </button>
+
+        {suggestError && (
+          <p role="alert" style={{ color: "var(--state-danger-fg)", fontSize: 13.5, marginTop: 10 }}>
+            {suggestError}
+          </p>
+        )}
+
+        {suggestions.length > 0 && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 14 }}>
+            {suggestions.map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => addSuggestion(s)}
+                disabled={addingSuggestions.has(s)}
+                style={{
+                  fontSize: 13,
+                  padding: "7px 14px",
+                  borderRadius: 999,
+                  border: "1px solid var(--card-border)",
+                  background: "var(--bg-3)",
+                  color: "var(--text)",
+                  cursor: addingSuggestions.has(s) ? "default" : "pointer",
+                  opacity: addingSuggestions.has(s) ? 0.6 : 1,
+                }}
+              >
+                {addingSuggestions.has(s) ? "Adding…" : `+ ${s}`}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
 
       {keywords.length === 0 ? (
         <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
