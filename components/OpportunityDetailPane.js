@@ -194,7 +194,7 @@ export default function OpportunityDetailPane({ opportunity: o, competitorMatch,
       )}
 
       <div className="opp-composer">
-        <div style={labelStyle}>Draft a comment</div>
+        <div style={labelStyle}>Write a comment</div>
 
         {savedInfo ? (
           <div className="card" style={{ padding: 24, textAlign: "center" }}>

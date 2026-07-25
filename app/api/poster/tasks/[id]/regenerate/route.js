@@ -17,7 +17,7 @@ export async function POST(req, { params }) {
   if (!user) return NextResponse.json({ error: "Not authorized." }, { status: 403 });
 
   if (!isLlmConfigured()) {
-    return NextResponse.json({ error: "AI drafting isn't configured." }, { status: 500 });
+    return NextResponse.json({ error: "AI writing isn't configured." }, { status: 500 });
   }
 
   const admin = createAdminClient();
@@ -53,7 +53,7 @@ export async function POST(req, { params }) {
     existingText: task.body,
   });
   if (!content) {
-    return NextResponse.json({ error: "Could not generate a new draft. Try again." }, { status: 502 });
+    return NextResponse.json({ error: "Could not generate new content. Try again." }, { status: 502 });
   }
 
   const newTitle = content.title || task.title;
@@ -62,7 +62,7 @@ export async function POST(req, { params }) {
     .update({ title: newTitle, body: content.body })
     .eq("id", task.id);
   if (error) {
-    return NextResponse.json({ error: "Could not save the new draft." }, { status: 500 });
+    return NextResponse.json({ error: "Could not save the new content." }, { status: 500 });
   }
 
   return NextResponse.json({ ok: true, title: newTitle, body: content.body });

@@ -111,7 +111,7 @@ export default async function DashboardCreditsPage() {
       <div className="container">
         <span className="section-tag">( credits )</span>
         <h2>AI credits</h2>
-        <p className="section-sub">Every AI-assisted action, drafts, opportunity scoring, reports, spends credits.</p>
+        <p className="section-sub">Every AI-assisted action, content, opportunity scoring, reports, spends credits.</p>
 
         <div style={{ display: "grid", gridTemplateColumns: "2.2fr 1fr", gap: 20, alignItems: "start" }}>
           <div>

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 const CHECKLIST = [
   { key: "rules", label: "Read rules" },
-  { key: "copy", label: "Copy draft" },
+  { key: "copy", label: "Copy text" },
   { key: "publish", label: "Publish" },
   { key: "paste", label: "Paste Reddit URL" },
 ];

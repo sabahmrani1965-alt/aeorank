@@ -22,7 +22,7 @@ export default async function SettingsPage() {
       <h2 style={{ marginBottom: 8 }}>Company profile</h2>
       <p style={{ color: "var(--text-dim)", marginBottom: 28, maxWidth: 640 }}>
         This edits your currently active brand. Switch brands from the sidebar. AEOrank uses this
-        to find relevant Reddit threads, draft on-brand responses, and check your AI visibility.
+        to find relevant Reddit threads, write on-brand responses, and check your AI visibility.
       </p>
       {activeProfile ? (
         <CompanyProfileForm mode="edit" profileId={activeProfile.id} initialProfile={activeProfile} />

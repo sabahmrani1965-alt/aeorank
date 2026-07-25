@@ -45,7 +45,7 @@ export async function PATCH(req, { params }) {
 
   if (error) {
     console.error("[drafts] update failed:", error.message);
-    return NextResponse.json({ error: "Could not update draft." }, { status: 500 });
+    return NextResponse.json({ error: "Could not update task." }, { status: 500 });
   }
 
   return NextResponse.json({ ok: true });

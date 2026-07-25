@@ -83,11 +83,11 @@ export default async function AdminOverviewPage() {
             <div className="kpi-value">{reports?.length || 0}</div>
           </div>
           <div className="kpi">
-            <div className="kpi-label">Drafts posted</div>
+            <div className="kpi-label">Posted</div>
             <div className="kpi-value">{postedDrafts}</div>
           </div>
           <div className="kpi">
-            <div className="kpi-label">Drafts pending</div>
+            <div className="kpi-label">Pending</div>
             <div className="kpi-value">{unpostedDrafts}</div>
           </div>
         </div>

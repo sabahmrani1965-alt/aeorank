@@ -85,7 +85,7 @@ export default function PostDraftActions({
         className="btn btn-secondary"
         style={{ fontSize: 13, padding: "8px 16px" }}
       >
-        {copied ? "Copied" : "Copy draft"}
+        {copied ? "Copied" : "Copy text"}
       </button>
       <button
         type="button"

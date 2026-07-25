@@ -135,7 +135,7 @@ export default function StepsSection({
             </p>
             <ul className="step">
               <li>Find high-traffic threads in subreddits relevant to your category</li>
-              <li>Draft helpful, value-adding content tailored to each community</li>
+              <li>Write helpful, value-adding content tailored to each community</li>
               <li>You review, edit, and publish it yourself from your own account</li>
               <li>Nothing is posted automatically: every piece goes live only when you post it</li>
             </ul>
@@ -145,7 +145,7 @@ export default function StepsSection({
             <div className="reddit-mock">
               <div className="reddit-mock-meta">
                 {!showcase && suggestedPost
-                  ? `${draftSub} · Draft, not posted yet`
+                  ? `${draftSub} · Pending, not posted yet`
                   : `${topSub} · Posted by u/${handle} · 3 days ago`}
               </div>
               <div className="reddit-mock-title">{step1Title}</div>

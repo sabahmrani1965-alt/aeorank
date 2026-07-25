@@ -116,7 +116,7 @@ export default function TaskDetail({ task, reward }) {
               <div style={{ fontWeight: 700, marginBottom: 10 }}>How this works</div>
               <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.6, margin: 0 }}>
                 Open the link above on Reddit from your own account and upvote it.
-                That's it: no draft to write, no comment to post. Confirm below once you've done it.
+                That's it: nothing to write, no comment to post. Confirm below once you've done it.
               </p>
             </div>
           ) : (

@@ -17,7 +17,7 @@ export default function DraftViewer({ taskId, initialTitle, initialBody, type })
     try {
       const res = await fetch(`/api/poster/tasks/${taskId}/regenerate`, { method: "POST" });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data?.error || "Could not generate a new draft.");
+      if (!res.ok) throw new Error(data?.error || "Could not generate new content.");
       setTitle(data.title || title);
       setBody(data.body || body);
     } catch (err) {
@@ -31,11 +31,11 @@ export default function DraftViewer({ taskId, initialTitle, initialBody, type })
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
         <span style={{ fontSize: 11.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".04em", color: "var(--text-muted)" }}>
-          Generated Draft
+          Generated Content
         </span>
         <div style={{ display: "flex", gap: 8 }}>
           <button type="button" onClick={regenerate} disabled={regenerating} className="btn btn-ghost btn-sm">
-            {regenerating ? "Generating…" : "🔄 Generate another draft"}
+            {regenerating ? "Generating…" : "🔄 Generate another version"}
           </button>
           <CopyButton text={fullText} />
         </div>

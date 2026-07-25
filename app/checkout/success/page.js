@@ -56,7 +56,7 @@ export default async function CheckoutSuccess({ searchParams }) {
             <h3 style={{ marginBottom: 8 }}>Book your kickoff call</h3>
             <p style={{ color: "var(--text-dim)", marginBottom: 18 }}>
               Pick a 30-minute slot that works for you. We'll align on tone,
-              target subreddits, and your first batch of drafts on the call.
+              target subreddits, and your first batch of content on the call.
             </p>
             <a
               href={CALENDLY_URL}
@@ -73,7 +73,7 @@ export default async function CheckoutSuccess({ searchParams }) {
             <ol style={{ color: "var(--text-dim)", paddingLeft: 18, lineHeight: 1.7 }}>
               <li>You'll get a welcome email{email ? ` at ${email}` : ""} within minutes confirming the charge.</li>
               <li>Book the kickoff call above (or reply to the welcome email if you prefer async).</li>
-              <li>We'll share your first batch of post and comment drafts within 48 hours of the call, ready for your approval before anything goes live.</li>
+              <li>We'll share your first batch of posts and comments within 48 hours of the call, ready for your approval before anything goes live.</li>
             </ol>
           </div>
 
