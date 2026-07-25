@@ -5,6 +5,7 @@ import HeroVisual from "@/components/HeroVisual";
 import FeatureGrid from "@/components/FeatureGrid";
 import ProductShowcase from "@/components/ProductShowcase";
 import AnnotatedTour from "@/components/AnnotatedTour";
+import ResultsSection from "@/components/ResultsSection";
 import { CALENDLY_URL } from "@/lib/links";
 
 export default function Home() {
@@ -77,6 +78,8 @@ export default function Home() {
       <AnnotatedTour />
 
       <FeatureGrid />
+
+      <ResultsSection />
 
       {/* WHY THIS MATTERS NOW — replaces the old LLM-mock section. The mocks
           referenced SaaSOffers as if cited by AI, which a curious visitor
