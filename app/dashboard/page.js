@@ -102,69 +102,101 @@ export default async function DashboardOverviewPage() {
   }
 
   const sub = subs?.[0] || null;
+  const hasPlan = Boolean(sub && ["active", "trialing"].includes(sub.status));
   const topOpportunity = opportunities?.[0] || null;
   const highPriorityCount = (opportunities || []).filter((o) => o.relevance_score >= 80).length;
   const visibilityScore = latestByBrand[0]?.score ?? null;
-  const firstName = (user.email || "").split("@")[0];
+  const displayName = (user.email || "")
+    .split("@")[0]
+    .replace(/[._-]+/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
 
   return (
     <section className="dashboard-page">
       <h1 className="command-greeting">
-        {greeting()}, {firstName}
+        {greeting()}, {displayName}
       </h1>
       <p className="command-greeting-sub">Here's what's worth your attention today.</p>
 
-      <div className="command-summary-grid">
-        <div className="kpi">
-          <div className="kpi-label">New opportunities</div>
-          <div className="kpi-value">{opportunities?.length || 0}</div>
+      {!profile ? (
+        <div className="card" style={{ textAlign: "center", padding: "40px 32px", maxWidth: 560 }}>
+          <div style={{ fontSize: 32, marginBottom: 12 }}>👋</div>
+          <h3 style={{ marginBottom: 8 }}>Let's set up your brand</h3>
+          <p style={{ color: "var(--text-dim)", marginBottom: 20 }}>
+            Tell us about your company so we can start finding real Reddit opportunities and
+            tracking your AI visibility.
+          </p>
+          <Link href="/onboarding" className="btn btn-primary btn-large">
+            Finish setup →
+          </Link>
         </div>
-        <div className="kpi">
-          <div className="kpi-label">High priority threads</div>
-          <div className="kpi-value">{highPriorityCount}</div>
+      ) : !hasPlan ? (
+        <div className="card" style={{ textAlign: "center", padding: "40px 32px", maxWidth: 560 }}>
+          <div style={{ fontSize: 32, marginBottom: 12 }}>🚀</div>
+          <h3 style={{ marginBottom: 8 }}>Choose a plan to get started</h3>
+          <p style={{ color: "var(--text-dim)", marginBottom: 20 }}>
+            {profile.company_name || "Your brand"}'s profile is ready. Pick a plan to start
+            tracking opportunities, mentions, prompts, and AI visibility.
+          </p>
+          <Link href="/dashboard/billing" className="btn btn-primary btn-large">
+            View plans →
+          </Link>
         </div>
-        <div className="kpi">
-          <div className="kpi-label">Brand mentions</div>
-          <div className="kpi-value">{mentionsCount || 0}</div>
-        </div>
-        <div className="kpi">
-          <div className="kpi-label">Tasks waiting</div>
-          <div className="kpi-value">{unpostedCount || 0}</div>
-        </div>
-        <div className="kpi">
-          <div className="kpi-label">Credits remaining</div>
-          <div className="kpi-value">{balanceRow?.balance ?? 0}</div>
-        </div>
-        <div className="kpi">
-          <div className="kpi-label">AI visibility</div>
-          <div className="kpi-value">{visibilityScore == null ? "-" : `${visibilityScore}%`}</div>
-        </div>
-        <div className="kpi">
-          <div className="kpi-label">Prompts tracked</div>
-          <div className="kpi-value">{activePromptsCount || 0}</div>
-        </div>
-      </div>
+      ) : (
+        <>
+          <div className="command-summary-grid">
+            <div className="kpi">
+              <div className="kpi-label">New opportunities</div>
+              <div className="kpi-value">{opportunities?.length || 0}</div>
+            </div>
+            <div className="kpi">
+              <div className="kpi-label">High priority threads</div>
+              <div className="kpi-value">{highPriorityCount}</div>
+            </div>
+            <div className="kpi">
+              <div className="kpi-label">Brand mentions</div>
+              <div className="kpi-value">{mentionsCount || 0}</div>
+            </div>
+            <div className="kpi">
+              <div className="kpi-label">Tasks waiting</div>
+              <div className="kpi-value">{unpostedCount || 0}</div>
+            </div>
+            <div className="kpi">
+              <div className="kpi-label">Credits remaining</div>
+              <div className="kpi-value">{balanceRow?.balance ?? 0}</div>
+            </div>
+            <div className="kpi">
+              <div className="kpi-label">AI visibility</div>
+              <div className="kpi-value">{visibilityScore == null ? "-" : `${visibilityScore}%`}</div>
+            </div>
+            <div className="kpi">
+              <div className="kpi-label">Prompts tracked</div>
+              <div className="kpi-value">{activePromptsCount || 0}</div>
+            </div>
+          </div>
 
-      <div className="quick-actions">
-        <Link href="/dashboard/opportunities" className="quick-action">
-          <span className="quick-action-icon">◎</span>
-          <span className="quick-action-label">Find opportunities</span>
-        </Link>
-        <Link href="/dashboard/drafts/new" className="quick-action">
-          <span className="quick-action-icon">✎</span>
-          <span className="quick-action-label">Add task</span>
-        </Link>
-        <Link href="/dashboard/prompts" className="quick-action">
-          <span className="quick-action-icon">❓</span>
-          <span className="quick-action-label">Check a prompt</span>
-        </Link>
-        <Link href="/dashboard/reports" className="quick-action">
-          <span className="quick-action-icon">▲</span>
-          <span className="quick-action-label">Generate report</span>
-        </Link>
-      </div>
+          <div className="quick-actions">
+            <Link href="/dashboard/opportunities" className="quick-action">
+              <span className="quick-action-icon">◎</span>
+              <span className="quick-action-label">Find opportunities</span>
+            </Link>
+            <Link href="/dashboard/drafts/new" className="quick-action">
+              <span className="quick-action-icon">✎</span>
+              <span className="quick-action-label">Add task</span>
+            </Link>
+            <Link href="/dashboard/prompts" className="quick-action">
+              <span className="quick-action-icon">❓</span>
+              <span className="quick-action-label">Check a prompt</span>
+            </Link>
+            <Link href="/dashboard/reports" className="quick-action">
+              <span className="quick-action-icon">▲</span>
+              <span className="quick-action-label">Generate report</span>
+            </Link>
+          </div>
+        </>
+      )}
 
-      {topOpportunity && (
+      {hasPlan && topOpportunity && (
         <div className="opportunity-spotlight">
           <span className="opportunity-spotlight-eyebrow">Top opportunity right now</span>
           <div className="opportunity-spotlight-meta">
@@ -203,6 +235,7 @@ export default async function DashboardOverviewPage() {
         </div>
       )}
 
+      {hasPlan && (
       <div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 14 }}>
           <h3 style={{ margin: 0 }}>Your brands</h3>
@@ -212,7 +245,7 @@ export default async function DashboardOverviewPage() {
         </div>
         {latestByBrand.length === 0 ? (
           <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
-            No reports yet. Analyze a website above to generate your first one.
+            No reports yet. <Link href="/dashboard/reports" style={{ color: "var(--accent)" }}>Generate your first one</Link>.
           </div>
         ) : (
           <div className="sub-grid">
@@ -229,6 +262,7 @@ export default async function DashboardOverviewPage() {
           </div>
         )}
       </div>
+      )}
     </section>
   );
 }

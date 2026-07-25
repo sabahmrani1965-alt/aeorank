@@ -2070,7 +2070,7 @@ button { font-family: inherit; }
 .command-greeting { font-size: clamp(22px, 3vw, 30px); font-weight: 800; letter-spacing: -.02em; margin-bottom: 4px; }
 .command-greeting-sub { color: var(--text-dim); font-size: 15px; margin-bottom: 28px; }
 
-.command-summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 32px; }
+.command-summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 32px; }
 .command-summary-grid .kpi { padding: 18px; }
 .command-summary-grid .kpi-value { font-size: 26px; }
 
