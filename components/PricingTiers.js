@@ -57,10 +57,10 @@ const TIERS = [
     name: "Max",
     tagline: "Our most advanced features.",
     price: "$449",
-    cta: "Start 3-Day Free Trial",
+    cta: "Start 7-Day Free Trial",
     ctaClass: "btn btn-primary",
     badge: "Best Value",
-    trialNote: "3 days free, then $449/mo. Card required, cancel anytime before the trial ends.",
+    trialNote: "7 days free, then $449/mo. Card required, cancel anytime before the trial ends.",
     features: [
       { text: "$300 Monthly Credits Included", type: "metered" },
       { text: "$5 Per Comment | $10 Per Post", type: "metered" },
