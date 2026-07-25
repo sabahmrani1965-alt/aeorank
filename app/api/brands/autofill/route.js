@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { fetchSiteMeta, prettyBrand, extractBrandFromTitle, urlToSlug } from "@/lib/site";
+import { prettyBrand, extractBrandFromTitle, urlToSlug } from "@/lib/site";
+import { fetchSiteMeta } from "@/lib/siteFetch";
 import { generateCompanyDescription, isLlmConfigured } from "@/lib/llm";
 
 export const runtime = "nodejs";

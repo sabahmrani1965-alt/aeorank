@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
 
@@ -35,7 +36,14 @@ export async function GET(req) {
         // signup_source in supabase/schema.sql. A later login (no cookie,
         // or one already set) never overwrites it.
         if (cookieIntent && !profile?.signup_source) {
-          await supabase.from("users").update({ signup_source: cookieIntent }).eq("id", data.user.id);
+          // Uses the admin client, not the session client — users.signup_source
+          // is one of the fields a customer's own RLS UPDATE policy is no
+          // longer allowed to touch directly (see the
+          // protect_users_privileged_fields trigger in supabase/schema.sql).
+          const admin = createAdminClient();
+          if (admin) {
+            await admin.from("users").update({ signup_source: cookieIntent }).eq("id", data.user.id);
+          }
         }
         if (profile?.role === "poster") {
           next = "/poster";

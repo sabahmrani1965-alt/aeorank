@@ -6,7 +6,8 @@ import StepsSection from "@/components/StepsSection";
 import AiVisibilityScoreCard from "@/components/AiVisibilityScoreCard";
 import { createClient } from "@/lib/supabase/server";
 import { getActiveCompanyProfile } from "@/lib/brands";
-import { fetchSiteMeta, prettyBrand, extractBrandFromTitle } from "@/lib/site";
+import { prettyBrand, extractBrandFromTitle } from "@/lib/site";
+import { fetchSiteMeta } from "@/lib/siteFetch";
 import {
   heuristicKeywords,
   enrichKeywordsWithVolumes,

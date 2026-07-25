@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { fetchSiteMeta, prettyBrand, extractBrandFromTitle, urlToSlug } from "@/lib/site";
+import { prettyBrand, extractBrandFromTitle, urlToSlug } from "@/lib/site";
+import { fetchSiteMeta } from "@/lib/siteFetch";
 
 export const runtime = "nodejs";
 

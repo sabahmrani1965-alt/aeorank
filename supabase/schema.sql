@@ -811,6 +811,43 @@ ALTER TABLE public.users ADD COLUMN IF NOT EXISTS referral_code TEXT;
 CREATE UNIQUE INDEX IF NOT EXISTS users_referral_code_uidx
   ON public.users(referral_code) WHERE referral_code IS NOT NULL;
 
+-- "Users can update own record" above only restricts WHICH ROW a user can
+-- update (auth.uid() = id), not WHICH COLUMNS — without this trigger, a
+-- logged-in customer could call the Supabase REST API directly with
+-- their own session and set role='poster' on their own row, bypassing
+-- the real Reddit-verification gate (app/api/poster/verify-reddit)
+-- entirely, or tamper with signup_source/referred_by/stripe_customer_id.
+-- Same pattern as protect_report_drafts_marketplace_fields above.
+-- active_company_profile_id is the one field a customer's own session is
+-- actually meant to write (the sidebar brand switcher, app/api/brands),
+-- so it's the only column left unguarded.
+CREATE OR REPLACE FUNCTION public.protect_users_privileged_fields()
+RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER AS $$
+BEGIN
+  IF auth.role() = 'service_role' THEN
+    RETURN NEW;
+  END IF;
+
+  IF NEW.role IS DISTINCT FROM OLD.role
+     OR NEW.email IS DISTINCT FROM OLD.email
+     OR NEW.stripe_customer_id IS DISTINCT FROM OLD.stripe_customer_id
+     OR NEW.reddit_username IS DISTINCT FROM OLD.reddit_username
+     OR NEW.reddit_check_status IS DISTINCT FROM OLD.reddit_check_status
+     OR NEW.signup_source IS DISTINCT FROM OLD.signup_source
+     OR NEW.referred_by IS DISTINCT FROM OLD.referred_by
+     OR NEW.referral_code IS DISTINCT FROM OLD.referral_code THEN
+    RAISE EXCEPTION 'Not allowed to modify privileged fields directly.';
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS users_protect_privileged_fields ON public.users;
+CREATE TRIGGER users_protect_privileged_fields
+  BEFORE UPDATE ON public.users
+  FOR EACH ROW EXECUTE FUNCTION public.protect_users_privileged_fields();
+
 -- ── POSTER APPLICATIONS ──────────────────────────────────────
 -- Pending signups from the public "Refer a friend" apply form
 -- (app/apply-poster). No self-signup exists for posters — an application
