@@ -24,7 +24,6 @@ const IconBook = () => <IconProps><path d="M4 4h9a3 3 0 013 3v9.5H7a3 3 0 00-3 3
 const IconCoin = () => <IconProps><circle cx="10" cy="10" r="6.5" /><path d="M10 6.5v7M7.7 12.5c0 1 1 1.5 2.3 1.5s2.3-.6 2.3-1.5-1-1.2-2.3-1.5-2.3-.5-2.3-1.4S9 8 10.3 8s2 .4 2.2 1.2" /></IconProps>;
 const IconCard = () => <IconProps><rect x="3" y="5" width="14" height="10" rx="2" /><path d="M3 8.5h14" /></IconProps>;
 const IconMenu = () => <IconProps><path d="M3 5.5h14M3 10h14M3 14.5h14" /></IconProps>;
-const IconTag = () => <IconProps><path d="M4 4h6l7 7-6 6-7-7V4z" /><circle cx="7.5" cy="7.5" r="1" fill="currentColor" /></IconProps>;
 
 const NAV_GROUPS = [
   { label: null, links: [{ href: "/dashboard", label: "Dashboard", icon: IconGrid }] },
@@ -33,7 +32,6 @@ const NAV_GROUPS = [
     links: [
       { href: "/dashboard/opportunities", label: "Opportunities", icon: IconSearch },
       { href: "/dashboard/mentions", label: "Mentions", icon: IconChat },
-      { href: "/dashboard/keywords", label: "Keywords", icon: IconTag },
     ],
   },
   {
