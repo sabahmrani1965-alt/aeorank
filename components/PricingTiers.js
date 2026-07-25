@@ -20,8 +20,9 @@ const TIERS = [
     name: "Lite",
     tagline: "Access to core features.",
     price: "$199",
-    cta: "Get Lite",
+    cta: "Start 7-Day Free Trial",
     ctaClass: "btn btn-ghost",
+    trialNote: "7 days free, then $199/mo. Card required, cancel anytime before the trial ends.",
     features: [
       { text: "$100 Monthly Credits Included", type: "metered" },
       { text: "$10 Per Comment | $20 Per Post", type: "metered" },
@@ -38,8 +39,9 @@ const TIERS = [
     name: "Pro",
     tagline: "Get more out of Reddit.",
     price: "$299",
-    cta: "Get Pro",
+    cta: "Start 7-Day Free Trial",
     ctaClass: "btn btn-ghost",
+    trialNote: "7 days free, then $299/mo. Card required, cancel anytime before the trial ends.",
     features: [
       { text: "$200 Monthly Credits Included", type: "metered" },
       { text: "$7 Per Comment | $15 Per Post", type: "metered" },
