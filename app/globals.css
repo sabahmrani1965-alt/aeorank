@@ -1323,9 +1323,55 @@ button { font-family: inherit; }
   background: #06112a;
   border: 1px solid #1d2c54;
   border-radius: 16px;
-  padding: 24px;
   position: relative;
   z-index: 1;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+}
+.tour-app-sidebar {
+  width: 132px;
+  flex-shrink: 0;
+  background: #0a1732;
+  border-right: 1px solid #1d2c54;
+  padding: 18px 12px;
+}
+.tour-app-logo {
+  font-size: 14px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin-bottom: 20px;
+  padding: 0 4px;
+}
+.tour-app-logo .accent { color: #f2a83b; }
+.tour-app-navgroup-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #5b6a91;
+  margin: 14px 4px 6px;
+}
+.tour-app-navgroup-label:first-of-type { margin-top: 0; }
+.tour-app-navitem {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: #a8b2c8;
+  padding: 7px 8px;
+  border-radius: 7px;
+}
+.tour-app-navitem.is-active {
+  background: rgba(242, 168, 59, 0.14);
+  color: #f2a83b;
+  font-weight: 700;
+}
+.tour-app-main {
+  flex: 1;
+  min-width: 0;
+  padding: 20px 22px;
 }
 .tour-mock-header {
   display: flex;
@@ -1439,6 +1485,10 @@ button { font-family: inherit; }
   }
   .tour-callout::after { display: none; }
   .tour-mock { margin-top: 14px; }
+}
+@media (max-width: 640px) {
+  .tour-app-sidebar { display: none; }
+  .tour-app-main { padding: 18px 16px; }
 }
 
 /* ----------------- LLM mock cards ----------------- */
