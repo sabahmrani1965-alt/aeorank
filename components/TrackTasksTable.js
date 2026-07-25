@@ -66,6 +66,7 @@ function AddLinkForm({ id, onSaved }) {
     <div className="tt-add-link">
       <input
         type="text"
+        className="input"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Paste the live Reddit link once you've posted it"

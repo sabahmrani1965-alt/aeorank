@@ -1582,6 +1582,26 @@ button { font-family: inherit; }
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-dim);
 }
+
+/* Same treatment as .auth-field input, as a standalone class — for one-off
+   inputs outside a form wrapper (e.g. an inline "Analyze a website" or
+   "Add a tag" input) that would otherwise fall back to unstyled browser
+   defaults (thin gray border, no radius, no theme background). */
+.input {
+  background: var(--bg-3);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 15px;
+  color: var(--text);
+  font-family: inherit;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
 .auth-links { display: flex; justify-content: space-between; margin-top: 16px; font-size: 13.5px; color: var(--text-dim); }
 .auth-links a { color: var(--accent); font-weight: 600; }
 

@@ -222,6 +222,8 @@ export default function CompanyProfileForm({ initialProfile, mode = "edit", prof
         <div style={{ display: "flex", gap: 8 }}>
           <input
             type="text"
+            className="input"
+            style={{ flex: 1 }}
             value={variationInput}
             onChange={(e) => setVariationInput(e.target.value)}
             placeholder="Add a variation"
@@ -290,6 +292,8 @@ export default function CompanyProfileForm({ initialProfile, mode = "edit", prof
         <div style={{ display: "flex", gap: 8 }}>
           <input
             type="text"
+            className="input"
+            style={{ flex: 1 }}
             value={competitorInput}
             onChange={(e) => setCompetitorInput(e.target.value)}
             placeholder="Add a competitor (e.g. Linear)"

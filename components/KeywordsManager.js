@@ -234,11 +234,12 @@ export default function KeywordsManager({ initialKeywords }) {
       <form onSubmit={addKeyword} className="card" style={{ padding: 20, display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 20, maxWidth: 560 }}>
         <input
           type="text"
+          className="input"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
           placeholder="best AI visibility tool for SaaS"
           required
-          style={{ flex: "1 1 240px", background: "var(--bg-3)", border: "1px solid var(--card-border)", borderRadius: 10, padding: "10px 12px", fontSize: 14, color: "var(--text)" }}
+          style={{ flex: "1 1 240px" }}
         />
         <button type="submit" className="btn btn-primary" disabled={adding || !keyword.trim()}>
           {adding ? "Adding…" : "+ Add keyword"}

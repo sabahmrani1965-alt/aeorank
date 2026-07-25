@@ -35,6 +35,7 @@ export default function DashboardAnalyzeForm() {
       <form onSubmit={submit} style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
         <input
           type="text"
+          className="input"
           placeholder="yourbrand.com"
           value={website}
           onChange={(e) => setWebsite(e.target.value)}
