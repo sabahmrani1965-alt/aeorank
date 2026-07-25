@@ -49,7 +49,6 @@ const TIERS = [
       { text: "Monitor 75 Keywords", type: "feature" },
       { text: "Connect Up to 6 Brands", type: "feature" },
       { text: "Add Unlimited Team Members", type: "feature" },
-      { text: "Dedicated Slack Channel", type: "metered" },
     ],
   },
   {
@@ -70,7 +69,6 @@ const TIERS = [
       { text: "Monitor 100 Keywords", type: "feature" },
       { text: "Connect Up to 10 Brands", type: "feature" },
       { text: "Add Unlimited Team Members", type: "feature" },
-      { text: "Dedicated Slack Channel", type: "metered" },
     ],
   },
 ];
