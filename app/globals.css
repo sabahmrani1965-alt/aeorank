@@ -1234,12 +1234,17 @@ button { font-family: inherit; }
 
 /* ----------------- Feature grid ----------------- */
 .feature-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 16px;
   margin-top: 40px;
 }
-.feature-card { padding: 26px 24px; }
+.feature-card {
+  padding: 26px 24px;
+  flex: 1 1 360px;
+  max-width: calc(33.333% - 11px);
+}
 .feature-icon {
   width: 44px;
   height: 44px;
@@ -1264,7 +1269,7 @@ button { font-family: inherit; }
   margin: 0;
 }
 @media (max-width: 1000px) {
-  .feature-grid { grid-template-columns: 1fr; }
+  .feature-card { max-width: 100%; }
 }
 
 /* ----------------- Product showcase (big detailed panels) ----------------- */
