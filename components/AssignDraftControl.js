@@ -41,6 +41,8 @@ export default function AssignDraftControl({ draftId, posters, initialClaimedBy 
           fontSize: 12.5,
           color: "var(--text)",
           fontFamily: "inherit",
+          width: "100%",
+          maxWidth: 170,
         }}
       >
         <option value="">Unassigned</option>

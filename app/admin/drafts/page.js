@@ -54,7 +54,17 @@ export default async function AdminDraftsPage() {
           </div>
         ) : (
           <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed", minWidth: 1150 }}>
+              <colgroup>
+                <col style={{ width: 140 }} />
+                <col style={{ width: 190 }} />
+                <col style={{ width: 85 }} />
+                <col style={{ width: 120 }} />
+                <col />
+                <col style={{ width: 90 }} />
+                <col style={{ width: 110 }} />
+                <col style={{ width: 190 }} />
+              </colgroup>
               <thead>
                 <tr style={{ borderBottom: "1px solid var(--border, rgba(255,255,255,.1))" }}>
                   <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Date</th>
@@ -70,19 +80,35 @@ export default async function AdminDraftsPage() {
               <tbody>
                 {drafts.map((d) => (
                   <tr key={d.id} style={{ borderBottom: "1px solid var(--border, rgba(255,255,255,.06))" }}>
-                    <td style={{ padding: "10px 12px", color: "var(--text-dim)", whiteSpace: "nowrap" }}>
+                    <td style={{ padding: "10px 12px", color: "var(--text-dim)", fontSize: 13, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                       {new Date(d.created_at).toLocaleString()}
                     </td>
-                    <td style={{ padding: "10px 12px" }}>{emailByUser.get(d.user_id) || "-"}</td>
-                    <td style={{ padding: "10px 12px" }}>{TYPE_LABELS[d.type] || "-"}</td>
-                    <td style={{ padding: "10px 12px", color: "var(--text-dim)" }}>r/{displaySubreddit(d.subreddit)}</td>
-                    <td style={{ padding: "10px 12px", maxWidth: 420 }}>
-                      {d.title && d.title !== d.subreddit && (
-                        <div style={{ fontWeight: 600, marginBottom: 3 }}>{d.title}</div>
-                      )}
-                      <div style={{ color: "var(--text-dim)", fontSize: 13, lineHeight: 1.5 }}>
-                        {d.body.length > 160 ? `${d.body.slice(0, 160)}…` : d.body}
-                      </div>
+                    <td style={{ padding: "10px 12px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      {emailByUser.get(d.user_id) || "-"}
+                    </td>
+                    <td style={{ padding: "10px 12px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      {TYPE_LABELS[d.type] || "-"}
+                    </td>
+                    <td style={{ padding: "10px 12px", color: "var(--text-dim)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      r/{displaySubreddit(d.subreddit)}
+                    </td>
+                    <td style={{ padding: "10px 12px" }}>
+                      <details>
+                        <summary
+                          style={{
+                            cursor: "pointer",
+                            fontWeight: 600,
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          {d.title && d.title !== d.subreddit ? d.title : d.body.slice(0, 80)}
+                        </summary>
+                        <div style={{ color: "var(--text-dim)", fontSize: 13, lineHeight: 1.5, marginTop: 6, whiteSpace: "pre-wrap" }}>
+                          {d.body}
+                        </div>
+                      </details>
                     </td>
                     <td style={{ padding: "10px 12px", whiteSpace: "nowrap" }}>
                       {d.posted ? (
