@@ -33,9 +33,7 @@ export default function Footer() {
         </div>
 
         <div className="footer-meta">
-          © {new Date().getFullYear()} AEOrank. Reddit data fetched via
-          public read-only API. AEOrank is independently operated and is not
-          affiliated with Reddit, OpenAI, Anthropic, or Google.
+          © {new Date().getFullYear()} AEOrank.
         </div>
       </div>
     </footer>
