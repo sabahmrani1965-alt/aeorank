@@ -34,11 +34,8 @@ export default function CompanyProfileForm({ initialProfile, mode = "edit", prof
   const [variations, setVariations] = useState(p.brand_variations || []);
   const [variationInput, setVariationInput] = useState("");
   const [description, setDescription] = useState(p.description || "");
-  const [competitors, setCompetitors] = useState([
-    p.competitors?.[0] || "",
-    p.competitors?.[1] || "",
-    p.competitors?.[2] || "",
-  ]);
+  const [competitors, setCompetitors] = useState(p.competitors || []);
+  const [competitorInput, setCompetitorInput] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
@@ -82,6 +79,21 @@ export default function CompanyProfileForm({ initialProfile, mode = "edit", prof
     setVariations((prev) => prev.filter((x) => x !== v));
   }
 
+  function addCompetitor(e) {
+    e.preventDefault();
+    const c = competitorInput.trim();
+    if (!c || competitors.includes(c)) {
+      setCompetitorInput("");
+      return;
+    }
+    setCompetitors((prev) => [...prev, c]);
+    setCompetitorInput("");
+  }
+
+  function removeCompetitor(c) {
+    setCompetitors((prev) => prev.filter((x) => x !== c));
+  }
+
   async function save(e) {
     e.preventDefault();
     setError("");
@@ -94,7 +106,7 @@ export default function CompanyProfileForm({ initialProfile, mode = "edit", prof
         targetLocation: targetLocation || null,
         brandVariations: variations,
         description: description || null,
-        competitors: competitors.map((c) => c.trim()).filter(Boolean),
+        competitors,
       };
 
       if (mode === "create") {
@@ -246,16 +258,48 @@ export default function CompanyProfileForm({ initialProfile, mode = "edit", prof
 
       <div>
         <span style={{ display: "block", marginBottom: 8, fontSize: 14 }}>Competitors (optional)</span>
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {competitors.map((c, i) => (
-            <input
-              key={i}
-              type="text"
-              value={c}
-              onChange={(e) => setCompetitors((prev) => prev.map((x, idx) => (idx === i ? e.target.value : x)))}
-              placeholder={`Competitor ${i + 1} URL`}
-            />
-          ))}
+        {competitors.length > 0 && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
+            {competitors.map((c) => (
+              <span
+                key={c}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  background: "var(--bg-3)",
+                  border: "1px solid var(--card-border)",
+                  borderRadius: 999,
+                  padding: "5px 10px",
+                  fontSize: 13,
+                }}
+              >
+                {c}
+                <button
+                  type="button"
+                  onClick={() => removeCompetitor(c)}
+                  aria-label={`Remove ${c}`}
+                  style={{ background: "none", border: "none", color: "var(--text-dim)", cursor: "pointer", fontSize: 13, padding: 0 }}
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+        <div style={{ display: "flex", gap: 8 }}>
+          <input
+            type="text"
+            value={competitorInput}
+            onChange={(e) => setCompetitorInput(e.target.value)}
+            placeholder="Add a competitor (e.g. Linear)"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") addCompetitor(e);
+            }}
+          />
+          <button type="button" onClick={addCompetitor} className="btn btn-ghost btn-sm">
+            Add
+          </button>
         </div>
       </div>
 
