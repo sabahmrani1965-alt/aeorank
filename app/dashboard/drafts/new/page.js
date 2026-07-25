@@ -180,7 +180,7 @@ function NewDraftForm() {
           <div className="card" style={{ padding: 32, textAlign: "center" }}>
             <div style={{ fontSize: 17, fontWeight: 700, marginBottom: 8 }}>✓ Saved to Track Task</div>
             <p style={{ color: "var(--text-dim)", margin: 0 }}>
-              <strong style={{ color: "#ff8a8a" }}>−{savedInfo.creditsCharged} credits</strong>
+              <strong style={{ color: "var(--state-danger-fg)" }}>−{savedInfo.creditsCharged} credits</strong>
               {typeof savedInfo.creditsRemaining === "number" && (
                 <> · {savedInfo.creditsRemaining} credits remaining</>
               )}
@@ -305,7 +305,7 @@ function NewDraftForm() {
           )}
 
           {error && (
-            <p role="alert" style={{ color: "#ff8a8a", marginBottom: 12, fontSize: 14 }}>
+            <p role="alert" style={{ color: "var(--state-danger-fg)", marginBottom: 12, fontSize: 14 }}>
               {error}
             </p>
           )}

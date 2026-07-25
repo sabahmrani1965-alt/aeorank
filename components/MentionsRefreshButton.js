@@ -29,7 +29,7 @@ export default function MentionsRefreshButton() {
         {loading ? "Searching Reddit…" : "Refresh mentions →"}
       </button>
       {error && (
-        <p role="alert" style={{ color: "#ff8a8a", marginTop: 10, fontSize: 14 }}>
+        <p role="alert" style={{ color: "var(--state-danger-fg)", marginTop: 10, fontSize: 14 }}>
           {error}
         </p>
       )}

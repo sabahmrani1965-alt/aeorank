@@ -196,7 +196,7 @@ export default function StepsSection({
                       {row.label}
                     </span>
                     <div style={{
-                      flex: 1, height: 8, background: "rgba(255,255,255,.06)",
+                      flex: 1, height: 8, background: "var(--state-neutral-bg)",
                       borderRadius: 999, overflow: "hidden",
                     }}>
                       <div style={{

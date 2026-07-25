@@ -127,7 +127,7 @@ export default function SignupForm({ redirectTo = "/onboarding", intent = "aeora
         {loading ? "Creating account…" : "Sign up →"}
       </button>
       {error && (
-        <p role="alert" style={{ color: "#ff8a8a", marginTop: 12, fontSize: 14 }}>
+        <p role="alert" style={{ color: "var(--state-danger-fg)", marginTop: 12, fontSize: 14 }}>
           {error}
         </p>
       )}

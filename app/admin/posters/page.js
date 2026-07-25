@@ -113,7 +113,7 @@ export default async function AdminPostersPage() {
                       <td style={{ padding: "10px 12px" }}>{p.email}</td>
                       <td style={{ padding: "10px 12px" }}>
                         {p.role === "poster" ? (
-                          <span style={{ color: "#6EE7B7", fontSize: 13, fontWeight: 600 }}>Verified poster</span>
+                          <span style={{ color: "var(--state-success-fg)", fontSize: 13, fontWeight: 600 }}>Verified poster</span>
                         ) : (
                           <span style={{ color: "var(--text-muted)", fontSize: 13 }}>Signed up, not verified</span>
                         )}

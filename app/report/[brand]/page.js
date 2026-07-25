@@ -149,7 +149,7 @@ export default async function ReportPage({ params, searchParams }) {
   }
 
   return (
-    <>
+    <div className="light-theme">
       <Header />
 
       {/* Hero */}
@@ -403,6 +403,6 @@ export default async function ReportPage({ params, searchParams }) {
       </section>
 
       <Footer />
-    </>
+    </div>
   );
 }

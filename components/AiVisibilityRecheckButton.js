@@ -29,7 +29,7 @@ export default function AiVisibilityRecheckButton() {
         {loading ? "Checking…" : "Re-check my brand's AI visibility"}
       </button>
       {error && (
-        <p role="alert" style={{ color: "#ff8a8a", marginTop: 8, fontSize: 13.5 }}>
+        <p role="alert" style={{ color: "var(--state-danger-fg)", marginTop: 8, fontSize: 13.5 }}>
           {error}
         </p>
       )}

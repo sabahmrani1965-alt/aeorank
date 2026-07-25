@@ -156,7 +156,7 @@ export default function CompanyProfileForm({ initialProfile, mode = "edit", prof
           </button>
         </div>
         {autofillError && (
-          <span style={{ fontSize: 12.5, color: "#ff8a8a" }}>{autofillError}</span>
+          <span style={{ fontSize: 12.5, color: "var(--state-danger-fg)" }}>{autofillError}</span>
         )}
       </label>
 
@@ -260,12 +260,12 @@ export default function CompanyProfileForm({ initialProfile, mode = "edit", prof
       </div>
 
       {error && (
-        <p role="alert" style={{ color: "#ff8a8a", fontSize: 14, margin: 0 }}>
+        <p role="alert" style={{ color: "var(--state-danger-fg)", fontSize: 14, margin: 0 }}>
           {error}
         </p>
       )}
       {saved && (
-        <p style={{ color: "#7ee3a3", fontSize: 14, margin: 0 }}>
+        <p style={{ color: "var(--msg-success)", fontSize: 14, margin: 0 }}>
           Saved.
         </p>
       )}

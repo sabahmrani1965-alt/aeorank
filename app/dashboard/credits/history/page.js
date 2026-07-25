@@ -82,7 +82,7 @@ export default async function CreditHistoryPage({ searchParams }) {
                         style={{
                           padding: "10px 12px",
                           textAlign: "right",
-                          color: t.amount < 0 ? "#ff8a8a" : "#7ee3a3",
+                          color: t.amount < 0 ? "var(--state-danger-fg)" : "var(--msg-success)",
                           fontWeight: 600,
                         }}
                       >

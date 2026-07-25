@@ -75,7 +75,7 @@ export default async function BuyCreditsPage() {
                     <span style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-.02em" }}>{pkg.credits}</span>
                     <span style={{ color: "var(--text-dim)", fontSize: 14, marginLeft: 6 }}>credits</span>
                     {pkg.bonus_credits > 0 && (
-                      <div style={{ fontSize: 13, color: "#6EE7B7", marginTop: 2 }}>+{pkg.bonus_credits} bonus credits</div>
+                      <div style={{ fontSize: 13, color: "var(--state-success-fg)", marginTop: 2 }}>+{pkg.bonus_credits} bonus credits</div>
                     )}
                   </div>
                   <div style={{ fontSize: 22, fontWeight: 700 }}>{price}</div>

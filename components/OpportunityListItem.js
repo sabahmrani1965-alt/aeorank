@@ -1,10 +1,10 @@
 "use client";
 
 function tierColor(score) {
-  if (score == null) return { fg: "var(--text-dim)", bg: "rgba(255,255,255,.06)" };
-  if (score >= 85) return { fg: "#6EE7B7", bg: "rgba(110,231,183,.15)" };
+  if (score == null) return { fg: "var(--text-dim)", bg: "var(--state-neutral-bg)" };
+  if (score >= 85) return { fg: "var(--state-success-fg)", bg: "var(--state-success-bg)" };
   if (score >= 60) return { fg: "var(--accent)", bg: "rgba(242,168,59,.15)" };
-  return { fg: "#ff8a8a", bg: "rgba(255,120,120,.12)" };
+  return { fg: "var(--state-danger-fg)", bg: "var(--state-danger-bg)" };
 }
 
 // Compact row for the left-hand list — full detail lives in

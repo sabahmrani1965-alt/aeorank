@@ -6,7 +6,7 @@ import { displaySubreddit } from "@/lib/format";
 const VERIFICATION_LABEL = {
   verified: { label: "Verified", color: "var(--state-success-fg)" },
   needs_review: { label: "Needs review", color: "var(--accent)" },
-  rejected: { label: "Rejected", color: "#ff8a8a" },
+  rejected: { label: "Rejected", color: "var(--state-danger-fg)" },
 };
 
 export const dynamic = "force-dynamic";
@@ -86,7 +86,7 @@ export default async function AdminDraftsPage() {
                     </td>
                     <td style={{ padding: "10px 12px", whiteSpace: "nowrap" }}>
                       {d.posted ? (
-                        <span style={{ color: "#7ee3a3" }}>
+                        <span style={{ color: "var(--msg-success)" }}>
                           Posted
                           {d.permalink && (
                             <>

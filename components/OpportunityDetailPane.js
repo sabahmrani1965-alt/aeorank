@@ -15,9 +15,9 @@ const LENGTHS = [
 const SAVE_COST = CREDIT_COSTS.generate_comment;
 
 function intentColor(intent) {
-  if (intent === "high") return { bg: "rgba(110, 231, 183, 0.15)", fg: "#6EE7B7" };
-  if (intent === "medium") return { bg: "rgba(242, 168, 59, 0.15)", fg: "var(--accent)" };
-  if (intent === "low") return { bg: "rgba(255,255,255,.06)", fg: "var(--text-dim)" };
+  if (intent === "high") return { bg: "var(--state-success-bg)", fg: "var(--state-success-fg)" };
+  if (intent === "medium") return { bg: "var(--accent-dim)", fg: "var(--accent)" };
+  if (intent === "low") return { bg: "var(--state-neutral-bg)", fg: "var(--text-dim)" };
   return null;
 }
 
@@ -200,7 +200,7 @@ export default function OpportunityDetailPane({ opportunity: o, competitorMatch,
           <div className="card" style={{ padding: 24, textAlign: "center" }}>
             <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>✓ Saved to Track Task</div>
             <p style={{ color: "var(--text-dim)", margin: "0 0 14px" }}>
-              <strong style={{ color: "#ff8a8a" }}>−{savedInfo.creditsCharged} credits</strong>
+              <strong style={{ color: "var(--state-danger-fg)" }}>−{savedInfo.creditsCharged} credits</strong>
               {typeof savedInfo.creditsRemaining === "number" && (
                 <> · {savedInfo.creditsRemaining} credits remaining</>
               )}
@@ -250,12 +250,12 @@ export default function OpportunityDetailPane({ opportunity: o, competitorMatch,
             <span style={{ fontSize: 13, color: "var(--text-muted)" }}>{body.length}/2000 characters</span>
 
             {generateError && (
-              <p role="alert" style={{ color: "#ff8a8a", fontSize: 14.5, marginTop: 8 }}>
+              <p role="alert" style={{ color: "var(--state-danger-fg)", fontSize: 14.5, marginTop: 8 }}>
                 {generateError}
               </p>
             )}
             {saveError && (
-              <p role="alert" style={{ color: "#ff8a8a", fontSize: 14.5, marginTop: 8 }}>
+              <p role="alert" style={{ color: "var(--state-danger-fg)", fontSize: 14.5, marginTop: 8 }}>
                 {saveError}
               </p>
             )}

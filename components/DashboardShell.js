@@ -141,7 +141,7 @@ export default function DashboardShell({
   const projectLabel = displayDomain(project?.website) || project?.name || "";
 
   return (
-    <div className="app-shell">
+    <div className="app-shell light-theme">
       {sidebarOpen && <div className="app-sidebar-backdrop" onClick={() => setSidebarOpen(false)} />}
 
       <aside className={`app-sidebar${sidebarOpen ? " is-open" : ""}`}>

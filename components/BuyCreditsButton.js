@@ -36,7 +36,7 @@ export default function BuyCreditsButton({ packageId, className, children, style
         {loading ? "Redirecting…" : children || "Buy"}
       </button>
       {error && (
-        <p role="alert" style={{ color: "#ff8a8a", marginTop: 8, fontSize: 13 }}>
+        <p role="alert" style={{ color: "var(--state-danger-fg)", marginTop: 8, fontSize: 13 }}>
           {error}
         </p>
       )}

@@ -74,7 +74,7 @@ function AddLinkForm({ id, onSaved }) {
       <button type="button" onClick={save} disabled={saving || !value.trim()} className="btn btn-secondary btn-sm">
         {saving ? "Saving…" : "Save link"}
       </button>
-      {error && <span style={{ color: "#ff8a8a", fontSize: 12.5 }}>{error}</span>}
+      {error && <span style={{ color: "var(--state-danger-fg)", fontSize: 12.5 }}>{error}</span>}
     </div>
   );
 }
@@ -197,7 +197,7 @@ function TaskRow({ task }) {
                 {liveCheckedAt ? (
                   <div className="tt-meta-value">
                     {liveRemoved ? (
-                      <span style={{ color: "#ff8a8a" }}>Removed</span>
+                      <span style={{ color: "var(--state-danger-fg)" }}>Removed</span>
                     ) : (
                       <>
                         ↑ {liveScore ?? "-"}
@@ -229,7 +229,7 @@ function TaskRow({ task }) {
             )}
           </div>
           {refreshError && (
-            <p role="alert" style={{ color: "#ff8a8a", fontSize: 13, marginTop: 8 }}>
+            <p role="alert" style={{ color: "var(--state-danger-fg)", fontSize: 13, marginTop: 8 }}>
               {refreshError}
             </p>
           )}

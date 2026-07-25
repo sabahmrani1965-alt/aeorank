@@ -13,7 +13,7 @@ export default async function AdminLayout({ children }) {
   if (!isAdminEmail(user.email)) redirect("/dashboard");
 
   return (
-    <>
+    <div className="light-theme">
       <Header />
       <section className="section" style={{ paddingBottom: 0 }}>
         <div className="container">
@@ -36,6 +36,6 @@ export default async function AdminLayout({ children }) {
       </section>
       {children}
       <Footer />
-    </>
+    </div>
   );
 }

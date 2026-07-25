@@ -61,7 +61,7 @@ export default function Loading() {
     stepIdx < STEPS.length ? STEPS[stepIdx].label(brand) : "Finalizing your report";
 
   return (
-    <>
+    <div className="light-theme">
       <Header />
       <div className="loading-wrap">
         <div className="loading-card">
@@ -106,6 +106,6 @@ export default function Loading() {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }

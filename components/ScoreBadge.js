@@ -4,7 +4,7 @@ function tierFor(score) {
   if (score >= 85) {
     return {
       label: "Excellent Match",
-      fg: "#6EE7B7",
+      fg: "var(--state-success-fg)",
       bg: "linear-gradient(135deg, rgba(110,231,183,.18) 0%, rgba(110,231,183,.05) 100%)",
       border: "rgba(110,231,183,.4)",
     };
@@ -19,7 +19,7 @@ function tierFor(score) {
   }
   return {
     label: "Low Match",
-    fg: "#ff8a8a",
+    fg: "var(--state-danger-fg)",
     bg: "linear-gradient(135deg, rgba(255,120,120,.16) 0%, rgba(255,120,120,.05) 100%)",
     border: "rgba(255,120,120,.35)",
   };

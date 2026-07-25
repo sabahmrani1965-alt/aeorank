@@ -56,7 +56,7 @@ export default function AssignDraftControl({ draftId, posters, initialClaimedBy 
         </button>
       )}
       {error && (
-        <span role="alert" style={{ color: "#ff8a8a", fontSize: 12 }}>
+        <span role="alert" style={{ color: "var(--state-danger-fg)", fontSize: 12 }}>
           {error}
         </span>
       )}

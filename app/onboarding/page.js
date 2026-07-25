@@ -176,7 +176,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <>
+    <div className="light-theme">
       <Header />
       <section className="section">
         <div className="container-narrow" style={{ maxWidth: step === 4 ? 1040 : 560 }}>
@@ -224,7 +224,7 @@ export default function OnboardingPage() {
                   />
                 </label>
                 {error && (
-                  <p role="alert" style={{ color: "#ff8a8a", marginBottom: 12, fontSize: 14 }}>
+                  <p role="alert" style={{ color: "var(--state-danger-fg)", marginBottom: 12, fontSize: 14 }}>
                     {error}
                   </p>
                 )}
@@ -372,7 +372,7 @@ export default function OnboardingPage() {
                   </label>
                 ))}
                 {error && (
-                  <p role="alert" style={{ color: "#ff8a8a", marginBottom: 12, fontSize: 14 }}>
+                  <p role="alert" style={{ color: "var(--state-danger-fg)", marginBottom: 12, fontSize: 14 }}>
                     {error}
                   </p>
                 )}
@@ -421,6 +421,6 @@ export default function OnboardingPage() {
         </div>
       </section>
       <Footer />
-    </>
+    </div>
   );
 }

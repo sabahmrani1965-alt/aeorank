@@ -9,9 +9,9 @@ import RedeemCodeForm from "@/components/RedeemCodeForm";
 export const dynamic = "force-dynamic";
 
 function sentimentColor(sentiment) {
-  if (sentiment === "positive") return { bg: "rgba(110, 231, 183, 0.15)", fg: "#6EE7B7" };
-  if (sentiment === "negative") return { bg: "rgba(255, 120, 120, 0.12)", fg: "#ff8a8a" };
-  return { bg: "rgba(255,255,255,.06)", fg: "var(--text-dim)" };
+  if (sentiment === "positive") return { bg: "var(--state-success-bg)", fg: "var(--state-success-fg)" };
+  if (sentiment === "negative") return { bg: "var(--state-danger-bg)", fg: "var(--state-danger-fg)" };
+  return { bg: "var(--state-neutral-bg)", fg: "var(--text-dim)" };
 }
 
 export default async function MentionsPage() {
@@ -101,10 +101,10 @@ export default async function MentionsPage() {
                   <span style={{ fontSize: 13, color: "var(--text-dim)" }}>
                     Sentiment · {classified.length} classified of {mentions.length} total
                   </span>
-                  <strong style={{ color: "#6EE7B7" }}>{positivePct}% positive</strong>
+                  <strong style={{ color: "var(--state-success-fg)" }}>{positivePct}% positive</strong>
                 </div>
-                <div style={{ height: 8, borderRadius: 999, background: "rgba(255,120,120,0.2)", overflow: "hidden" }}>
-                  <div style={{ width: `${positivePct}%`, height: "100%", background: "#6EE7B7" }} />
+                <div style={{ height: 8, borderRadius: 999, background: "var(--state-danger-bg)", overflow: "hidden" }}>
+                  <div style={{ width: `${positivePct}%`, height: "100%", background: "var(--state-success-fg)" }} />
                 </div>
               </div>
             )}

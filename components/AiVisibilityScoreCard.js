@@ -42,7 +42,7 @@ export default function AiVisibilityScoreCard({ brand, aiVisibility }) {
               fontSize: 56,
               fontWeight: 800,
               lineHeight: 1,
-              color: aiVisibility.score >= 50 ? "#6EE7B7" : "var(--accent)",
+              color: aiVisibility.score >= 50 ? "var(--state-success-fg)" : "var(--accent)",
             }}
           >
             {aiVisibility.score}%
@@ -77,8 +77,8 @@ export default function AiVisibilityScoreCard({ brand, aiVisibility }) {
                   style={{
                     padding: "6px 14px",
                     borderRadius: 999,
-                    background: "rgba(255, 120, 120, 0.12)",
-                    color: "#ff8a8a",
+                    background: "var(--state-danger-bg)",
+                    color: "var(--state-danger-fg)",
                     fontSize: 13,
                     fontWeight: 600,
                   }}
@@ -129,9 +129,9 @@ export default function AiVisibilityScoreCard({ brand, aiVisibility }) {
                     padding: "4px 10px",
                     borderRadius: 999,
                     background: r.mentioned
-                      ? "rgba(110, 231, 183, 0.15)"
-                      : "rgba(255, 120, 120, 0.12)",
-                    color: r.mentioned ? "#6EE7B7" : "#ff8a8a",
+                      ? "var(--state-success-bg)"
+                      : "var(--state-danger-bg)",
+                    color: r.mentioned ? "var(--state-success-fg)" : "var(--state-danger-fg)",
                   }}
                 >
                   {r.mentioned ? `✓ ${brand} mentioned` : `✗ ${brand} not mentioned`}

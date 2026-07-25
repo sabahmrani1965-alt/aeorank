@@ -24,10 +24,10 @@ function timeAgo(iso) {
 }
 
 function positionColor(position) {
-  if (position == null) return { bg: "rgba(255,255,255,.06)", fg: "var(--text-dim)" };
-  if (position <= 3) return { bg: "rgba(110, 231, 183, 0.15)", fg: "#6EE7B7" };
-  if (position <= 6) return { bg: "rgba(242, 168, 59, 0.15)", fg: "var(--accent)" };
-  return { bg: "rgba(255, 120, 120, 0.12)", fg: "#ff8a8a" };
+  if (position == null) return { bg: "var(--state-neutral-bg)", fg: "var(--text-dim)" };
+  if (position <= 3) return { bg: "var(--state-success-bg)", fg: "var(--state-success-fg)" };
+  if (position <= 6) return { bg: "var(--accent-dim)", fg: "var(--accent)" };
+  return { bg: "var(--state-danger-bg)", fg: "var(--state-danger-fg)" };
 }
 
 function PromptRow({ prompt, onUpdated, onDeleted }) {
@@ -153,8 +153,8 @@ function PromptRow({ prompt, onUpdated, onDeleted }) {
               fontWeight: 700,
               padding: "4px 10px",
               borderRadius: 999,
-              background: prompt.last_checked_at ? (prompt.last_mentioned ? "rgba(110, 231, 183, 0.15)" : "rgba(255, 120, 120, 0.12)") : "rgba(255,255,255,.06)",
-              color: prompt.last_checked_at ? (prompt.last_mentioned ? "#6EE7B7" : "#ff8a8a") : "var(--text-dim)",
+              background: prompt.last_checked_at ? (prompt.last_mentioned ? "var(--state-success-bg)" : "var(--state-danger-bg)") : "var(--state-neutral-bg)",
+              color: prompt.last_checked_at ? (prompt.last_mentioned ? "var(--state-success-fg)" : "var(--state-danger-fg)") : "var(--text-dim)",
               whiteSpace: "nowrap",
             }}
           >
@@ -197,7 +197,7 @@ function PromptRow({ prompt, onUpdated, onDeleted }) {
       </div>
 
       {checkError && (
-        <p role="alert" style={{ color: "#ff8a8a", fontSize: 13.5, marginTop: 10 }}>
+        <p role="alert" style={{ color: "var(--state-danger-fg)", fontSize: 13.5, marginTop: 10 }}>
           {checkError}
         </p>
       )}
@@ -345,7 +345,7 @@ export default function PromptsManager({ initialPrompts }) {
               </button>
             </div>
             {addError && (
-              <p role="alert" style={{ color: "#ff8a8a", fontSize: 13.5, margin: 0 }}>
+              <p role="alert" style={{ color: "var(--state-danger-fg)", fontSize: 13.5, margin: 0 }}>
                 {addError}
               </p>
             )}
@@ -368,7 +368,7 @@ export default function PromptsManager({ initialPrompts }) {
         )}
 
         {suggestError && (
-          <p role="alert" style={{ color: "#ff8a8a", fontSize: 13.5, marginTop: 10 }}>
+          <p role="alert" style={{ color: "var(--state-danger-fg)", fontSize: 13.5, marginTop: 10 }}>
             {suggestError}
           </p>
         )}

@@ -165,7 +165,7 @@ export default function PricingTiers({ brand = "" }) {
         <p
           role="alert"
           style={{
-            color: "#ff8a8a",
+            color: "var(--state-danger-fg)",
             textAlign: "center",
             marginTop: 16,
             fontSize: 14,

@@ -32,7 +32,7 @@ export default function BillingPortalButton() {
         {loading ? "Redirecting…" : "Manage billing →"}
       </button>
       {error && (
-        <p role="alert" style={{ color: "#ff8a8a", marginTop: 10, fontSize: 14 }}>
+        <p role="alert" style={{ color: "var(--state-danger-fg)", marginTop: 10, fontSize: 14 }}>
           {error}
         </p>
       )}

@@ -61,7 +61,7 @@ export default function RedeemCodeForm({ onRedeemed }) {
         {loading ? "Checking…" : "Redeem"}
       </button>
       {error && (
-        <p role="alert" style={{ width: "100%", color: "#ff8a8a", fontSize: 13.5, margin: 0 }}>
+        <p role="alert" style={{ width: "100%", color: "var(--state-danger-fg)", fontSize: 13.5, margin: 0 }}>
           {error}
         </p>
       )}

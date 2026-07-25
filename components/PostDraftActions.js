@@ -110,8 +110,8 @@ export default function PostDraftActions({
               fontWeight: 700,
               padding: "3px 9px",
               borderRadius: 999,
-              background: "rgba(110, 231, 183, 0.15)",
-              color: "#6EE7B7",
+              background: "var(--state-success-bg)",
+              color: "var(--state-success-fg)",
             }}
           >
             Published

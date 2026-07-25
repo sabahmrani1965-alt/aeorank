@@ -49,7 +49,7 @@ function RequestRow({ request }) {
           </button>
         </div>
         {error && (
-          <p role="alert" style={{ color: "#ff8a8a", fontSize: 12, margin: "4px 0 0" }}>
+          <p role="alert" style={{ color: "var(--state-danger-fg)", fontSize: 12, margin: "4px 0 0" }}>
             {error}
           </p>
         )}

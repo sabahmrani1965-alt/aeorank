@@ -71,7 +71,7 @@ export default function AdminCreditAdjustForm() {
         {loading ? "Applying…" : "Apply adjustment"}
       </button>
       {message && (
-        <p role="alert" style={{ color: message.ok ? "#7ee3a3" : "#ff8a8a", fontSize: 13.5, margin: 0 }}>
+        <p role="alert" style={{ color: message.ok ? "var(--msg-success)" : "var(--state-danger-fg)", fontSize: 13.5, margin: 0 }}>
           {message.text}
         </p>
       )}

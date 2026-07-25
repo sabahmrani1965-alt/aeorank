@@ -92,7 +92,7 @@ export default async function PromptDetailPage({ params }) {
         <span style={{ width: 8, height: 8, borderRadius: "50%", background: TYPE_DOT[prompt.type] }} />
         <span style={{ fontSize: 12, color: "var(--text-muted)", textTransform: "capitalize" }}>{prompt.type}</span>
         <span style={{ fontSize: 12, color: "var(--text-muted)" }}>· {prompt.location}</span>
-        <span style={{ fontSize: 12, color: prompt.active ? "#6EE7B7" : "var(--text-dim)" }}>
+        <span style={{ fontSize: 12, color: prompt.active ? "var(--state-success-fg)" : "var(--text-dim)" }}>
           · {prompt.active ? "Active" : "Inactive"}
         </span>
       </div>
@@ -175,8 +175,8 @@ export default async function PromptDetailPage({ params }) {
                         fontWeight: 700,
                         padding: "3px 9px",
                         borderRadius: 999,
-                        background: c.position ? "rgba(110, 231, 183, 0.15)" : "rgba(255,255,255,.06)",
-                        color: c.position ? "#6EE7B7" : "var(--text-dim)",
+                        background: c.position ? "var(--state-success-bg)" : "var(--state-neutral-bg)",
+                        color: c.position ? "var(--state-success-fg)" : "var(--text-dim)",
                       }}
                     >
                       {c.position ? `#${c.position}` : "-"}
@@ -187,8 +187,8 @@ export default async function PromptDetailPage({ params }) {
                         fontWeight: 700,
                         padding: "3px 9px",
                         borderRadius: 999,
-                        background: c.mentioned ? "rgba(110, 231, 183, 0.15)" : "rgba(255, 120, 120, 0.12)",
-                        color: c.mentioned ? "#6EE7B7" : "#ff8a8a",
+                        background: c.mentioned ? "var(--state-success-bg)" : "var(--state-danger-bg)",
+                        color: c.mentioned ? "var(--state-success-fg)" : "var(--state-danger-fg)",
                       }}
                     >
                       {c.mentioned ? "Mentioned" : "Not mentioned"}

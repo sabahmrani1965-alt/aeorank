@@ -68,7 +68,7 @@ export default function GoogleAuthButton({ label = "Continue with Google", redir
         {loading ? "Redirecting…" : label}
       </button>
       {error && (
-        <p role="alert" style={{ color: "#ff8a8a", marginTop: 10, fontSize: 13.5 }}>
+        <p role="alert" style={{ color: "var(--state-danger-fg)", marginTop: 10, fontSize: 13.5 }}>
           {error}
         </p>
       )}

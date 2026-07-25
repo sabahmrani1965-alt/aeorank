@@ -82,7 +82,7 @@ function ApplicationRow({ application }) {
       <td style={{ padding: "10px 12px" }}>
         {message ? (
           <div>
-            <p style={{ color: "#7ee3a3", fontSize: 13, margin: 0 }}>{message}</p>
+            <p style={{ color: "var(--msg-success)", fontSize: 13, margin: 0 }}>{message}</p>
             {tempPassword && (
               <code style={{ background: "var(--bg-3)", padding: "4px 8px", borderRadius: 6, fontSize: 13, display: "inline-block", marginTop: 6 }}>
                 {tempPassword}
@@ -100,7 +100,7 @@ function ApplicationRow({ application }) {
           </div>
         )}
         {error && (
-          <p role="alert" style={{ color: "#ff8a8a", fontSize: 13, margin: "6px 0 0" }}>
+          <p role="alert" style={{ color: "var(--state-danger-fg)", fontSize: 13, margin: "6px 0 0" }}>
             {error}
           </p>
         )}

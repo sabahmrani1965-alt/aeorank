@@ -54,12 +54,12 @@ export default function InvitePosterForm() {
         {loading ? "Creating…" : "Add poster"}
       </button>
       {error && (
-        <p role="alert" style={{ color: "#ff8a8a", fontSize: 13.5, margin: 0 }}>
+        <p role="alert" style={{ color: "var(--state-danger-fg)", fontSize: 13.5, margin: 0 }}>
           {error}
         </p>
       )}
       {message && (
-        <p style={{ color: "#7ee3a3", fontSize: 13.5, margin: 0 }}>
+        <p style={{ color: "var(--msg-success)", fontSize: 13.5, margin: 0 }}>
           {message}
         </p>
       )}

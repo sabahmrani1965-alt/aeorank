@@ -15,7 +15,7 @@ export default function ReportError({ error, reset }) {
   }, [error]);
 
   return (
-    <>
+    <div className="light-theme">
       <Header />
       <section className="section">
         <div className="container-narrow">
@@ -46,6 +46,6 @@ export default function ReportError({ error, reset }) {
         </div>
       </section>
       <Footer />
-    </>
+    </div>
   );
 }

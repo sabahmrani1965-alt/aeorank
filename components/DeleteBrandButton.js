@@ -47,7 +47,7 @@ export default function DeleteBrandButton({ brandId, brandName }) {
         </button>
       </div>
       {error && (
-        <p role="alert" style={{ color: "#ff8a8a", fontSize: 13.5, margin: 0 }}>
+        <p role="alert" style={{ color: "var(--state-danger-fg)", fontSize: 13.5, margin: 0 }}>
           {error}
         </p>
       )}
