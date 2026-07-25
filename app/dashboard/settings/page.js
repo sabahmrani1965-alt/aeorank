@@ -4,8 +4,12 @@ import CompanyProfileForm from "@/components/CompanyProfileForm";
 import DeleteBrandButton from "@/components/DeleteBrandButton";
 import KeywordsManager from "@/components/KeywordsManager";
 import SettingsTabs from "@/components/SettingsTabs";
+import { suggestKeywords, isLlmConfigured } from "@/lib/llm";
+import { checkKeywordVolume } from "@/lib/keywordVolume";
 
 export const dynamic = "force-dynamic";
+
+const KEYWORD_FIELDS = "id, keyword, last_checked_at, last_post_count, last_top_subreddits, last_sample_posts, created_at";
 
 export default async function SettingsPage({ searchParams }) {
   const supabase = createClient();
@@ -18,14 +22,54 @@ export default async function SettingsPage({ searchParams }) {
     listBrands(supabase, user.id),
   ]);
 
-  const { data: keywords } = activeProfile
+  let { data: keywords } = activeProfile
     ? await supabase
         .from("tracked_keywords")
-        .select("id, keyword, last_checked_at, last_post_count, last_top_subreddits, last_sample_posts, created_at")
+        .select(KEYWORD_FIELDS)
         .eq("user_id", user.id)
         .eq("company_profile_id", activeProfile.id)
         .order("created_at", { ascending: false })
     : { data: [] };
+
+  // Seed a starter set of keywords automatically, once, the first time this
+  // brand's Keywords tab would otherwise be empty — a customer shouldn't
+  // have to know to click "Suggest keywords" just to see anything here.
+  // keywords_seeded guards against silently re-populating keywords the
+  // customer deliberately deleted on a later visit; only flips true once
+  // suggestions were actually generated (a transient LLM/Reddit hiccup
+  // just tries again on the next page load instead of giving up forever).
+  if (
+    activeProfile &&
+    !activeProfile.keywords_seeded &&
+    (keywords?.length ?? 0) === 0 &&
+    isLlmConfigured() &&
+    (activeProfile.description || activeProfile.company_name)
+  ) {
+    const suggestions = await suggestKeywords(
+      activeProfile.company_name || "",
+      activeProfile.description || "",
+      activeProfile.website || "",
+      Array.isArray(activeProfile.competitors) ? activeProfile.competitors : [],
+      []
+    );
+    if (suggestions?.length) {
+      const volumes = await Promise.all(suggestions.map((k) => checkKeywordVolume(k).catch(() => null)));
+      const rows = suggestions.map((keyword, i) => ({
+        user_id: user.id,
+        company_profile_id: activeProfile.id,
+        keyword,
+        last_checked_at: volumes[i] ? new Date().toISOString() : null,
+        last_post_count: volumes[i]?.postCount ?? null,
+        last_top_subreddits: volumes[i]?.topSubreddits ?? null,
+        last_sample_posts: volumes[i]?.samplePosts ?? null,
+      }));
+      const { data: inserted } = await supabase.from("tracked_keywords").insert(rows).select(KEYWORD_FIELDS);
+      if (inserted?.length) {
+        keywords = inserted;
+        await supabase.from("company_profiles").update({ keywords_seeded: true }).eq("id", activeProfile.id);
+      }
+    }
+  }
 
   const profileTab = (
     <>

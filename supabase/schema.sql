@@ -641,6 +641,12 @@ CREATE TABLE IF NOT EXISTS public.company_profiles (
   -- this funnel doesn't apply. Lets drop-off be measured precisely
   -- instead of inferred from which optional fields happen to be filled.
   onboarding_step_reached SMALLINT,
+  -- Whether app/dashboard/settings/page.js has already auto-generated a
+  -- starter set of tracked_keywords for this brand (lib/llm.js's
+  -- suggestKeywords). Only ever flips false -> true once, the first time
+  -- the Keywords tab is viewed with zero keywords — prevents silently
+  -- re-seeding keywords a customer deliberately deleted on a later visit.
+  keywords_seeded   BOOLEAN NOT NULL DEFAULT FALSE,
   created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
