@@ -310,35 +310,37 @@ const PANELS_BOTTOM = [
 export default function ResultsSection() {
   return (
     <section className="section">
-      <span className="section-tag">( why it works )</span>
-      <h2>
-        Why brands are moving budget to <span className="accent">Reddit</span>
-      </h2>
+      <div className="container">
+        <span className="section-tag">( why it works )</span>
+        <h2>
+          Why brands are moving budget to <span className="accent">Reddit</span>
+        </h2>
 
-      <div className="results-grid">
-        {PANELS_TOP.map(({ title, body, Visual }) => (
-          <div key={title} className="card results-panel">
-            <h3>{title}</h3>
-            <p>{body}</p>
-            <div className="results-visual">
-              <Visual />
+        <div className="results-grid">
+          {PANELS_TOP.map(({ title, body, Visual }) => (
+            <div key={title} className="card results-panel">
+              <h3>{title}</h3>
+              <p>{body}</p>
+              <div className="results-visual">
+                <Visual />
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      <h2 className="results-divider">The Results</h2>
+        <h2 className="results-divider">The Results</h2>
 
-      <div className="results-grid">
-        {PANELS_BOTTOM.map(({ title, body, Visual }) => (
-          <div key={title} className="card results-panel">
-            <h3>{title}</h3>
-            <p>{body}</p>
-            <div className="results-visual">
-              <Visual />
+        <div className="results-grid">
+          {PANELS_BOTTOM.map(({ title, body, Visual }) => (
+            <div key={title} className="card results-panel">
+              <h3>{title}</h3>
+              <p>{body}</p>
+              <div className="results-visual">
+                <Visual />
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

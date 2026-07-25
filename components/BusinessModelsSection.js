@@ -104,38 +104,40 @@ export default function BusinessModelsSection() {
 
   return (
     <section className="section">
-      <h2>This Works for Every Business Model</h2>
-      <p className="section-sub">
-        Reddit threads like this exist in every industry. They rank on Google
-        and can sometimes get millions of clicks per month. By placing your
-        brand as the top comment in these threads, you'll capture over 90% of
-        the traffic.
-      </p>
+      <div className="container">
+        <h2>This Works for Every Business Model</h2>
+        <p className="section-sub">
+          Reddit threads like this exist in every industry. They rank on Google
+          and can sometimes get millions of clicks per month. By placing your
+          brand as the top comment in these threads, you'll capture over 90% of
+          the traffic.
+        </p>
 
-      <div className="bm-panel">
-        <div className="bm-tabbar">
-          {CATEGORIES.map((c) => (
-            <button
-              key={c.key}
-              type="button"
-              onClick={() => setActive(c.key)}
-              className={`bm-tab${c.key === active ? " is-active" : ""}`}
-            >
-              <span aria-hidden="true">{c.icon}</span> {c.label}
-            </button>
-          ))}
+        <div className="bm-panel">
+          <div className="bm-tabbar">
+            {CATEGORIES.map((c) => (
+              <button
+                key={c.key}
+                type="button"
+                onClick={() => setActive(c.key)}
+                className={`bm-tab${c.key === active ? " is-active" : ""}`}
+              >
+                <span aria-hidden="true">{c.icon}</span> {c.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="bm-grid">
+            {category.posts.map((post) => (
+              <PostCard key={post.sub + post.highlight} post={post} />
+            ))}
+          </div>
         </div>
 
-        <div className="bm-grid">
-          {category.posts.map((post) => (
-            <PostCard key={post.sub + post.highlight} post={post} />
-          ))}
-        </div>
+        <p style={{ textAlign: "center", fontSize: 12, color: "var(--text-muted)", marginTop: 16 }}>
+          Illustrative example threads — not live search results.
+        </p>
       </div>
-
-      <p style={{ textAlign: "center", fontSize: 12, color: "var(--text-muted)", marginTop: 16 }}>
-        Illustrative example threads — not live search results.
-      </p>
     </section>
   );
 }
