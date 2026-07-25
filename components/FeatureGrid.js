@@ -20,7 +20,7 @@ const FEATURES = [
   {
     icon: "🏷️",
     title: "Keyword Tracking",
-    desc: "Real Reddit conversation volume for the keywords that matter to your category, not a generic SEO estimate.",
+    desc: "Add the keywords your buyers search for to sharpen your Reddit opportunities, with real conversation volume for each.",
   },
   {
     icon: "🧠",

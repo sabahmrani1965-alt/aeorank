@@ -47,12 +47,29 @@ export async function POST() {
     );
   }
 
+  // Customer-tracked keywords (app/dashboard/keywords) take priority over
+  // AI-guessed queries — the whole point of that tab is to let a customer
+  // steer Opportunity discovery toward what they actually know their
+  // buyers search for, not just what an LLM infers from the company
+  // description. Capped so a customer with many tracked keywords can't
+  // blow this route's 60s budget (each query is its own live Reddit search).
+  const MAX_QUERIES = 6;
+  const { data: trackedKeywordRows } = await supabase
+    .from("tracked_keywords")
+    .select("keyword")
+    .eq("user_id", user.id)
+    .eq("company_profile_id", profile.id)
+    .order("created_at", { ascending: false })
+    .limit(MAX_QUERIES);
+  const keywordQueries = (trackedKeywordRows || []).map((k) => k.keyword);
+
   // Prefer specific, description-grounded queries over the single generic
   // category bucket pickCategoryQuery falls back to (e.g. any "SaaS" mention
   // locks onto "SaaS startup", drowning out what the company actually does —
   // see lib/llm.js's generateOpportunityQueries for the full reasoning).
   const aiQueries = isLlmConfigured() ? await generateOpportunityQueries(brand, description) : null;
-  const queries = aiQueries?.length ? aiQueries : [pickCategoryQuery(description, brand)];
+  const fallbackQueries = aiQueries?.length ? aiQueries : [pickCategoryQuery(description, brand)];
+  const queries = [...new Set([...keywordQueries, ...fallbackQueries])].slice(0, MAX_QUERIES);
   const perQueryLimit = Math.max(6, Math.ceil(SEARCH_LIMIT / queries.length));
 
   try {

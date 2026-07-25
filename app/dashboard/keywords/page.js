@@ -50,8 +50,9 @@ export default async function KeywordsPage() {
       <div className="app-sidebar-group-label" style={{ padding: 0, marginBottom: 6 }}>Discover</div>
       <h2 style={{ marginBottom: 8 }}>Keywords</h2>
       <p style={{ color: "var(--text-dim)", marginBottom: 28, maxWidth: 640 }}>
-        Track real Reddit conversation volume for the keywords that matter to your category —
-        genuine post counts from Reddit's own search, not a generic SEO estimate.
+        Add the keywords your buyers actually search for — they're used to find better,
+        more relevant Reddit opportunities for you, and each one shows real conversation
+        volume from Reddit's own search, not a generic SEO estimate.
       </p>
 
       <KeywordsManager initialKeywords={keywords || []} />

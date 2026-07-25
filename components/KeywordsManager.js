@@ -206,7 +206,7 @@ export default function KeywordsManager({ initialKeywords }) {
 
       {keywords.length === 0 ? (
         <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
-          No keywords yet. Add one above to see real Reddit conversation volume for it.
+          No keywords yet. Add one above to help find better Reddit opportunities and see real conversation volume for it.
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
