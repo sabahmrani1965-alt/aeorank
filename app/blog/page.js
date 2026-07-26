@@ -10,6 +10,15 @@ export const metadata = {
 
 const posts = [
   {
+    tag: "AEO · Fundamentals",
+    title: "What Is AEO (Answer Engine Optimization)? The Complete Guide",
+    excerpt:
+      "The plain-English definition, how it differs from SEO and GEO, the five building blocks that actually make up the discipline, and where to start.",
+    date: "July 26, 2026",
+    readTime: "12 min read",
+    slug: "what-is-aeo",
+  },
+  {
     tag: "AEO · Schema",
     title: "AEO Schema Markup: The Tags That Actually Move AI Citations",
     excerpt:

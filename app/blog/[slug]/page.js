@@ -28,6 +28,53 @@ function renderInline(text) {
 }
 
 const posts = {
+  'what-is-aeo': {
+    tag: 'AEO · Fundamentals',
+    title: 'What Is AEO (Answer Engine Optimization)? The Complete Guide',
+    metaTitle: 'What Is AEO? Answer Engine Optimization Explained | AEOrank',
+    metaDescription: "AEO (Answer Engine Optimization) is the practice of getting your brand cited by ChatGPT, Claude, Gemini, and Perplexity. The plain-English definition, how it differs from SEO and GEO, and where to start.",
+    description: 'The plain-English definition, how it differs from SEO and GEO, the five building blocks that actually make up the discipline, and where to start.',
+    tags: ['aeo', 'answer-engine-optimization', 'definition', 'b2b-saas', 'ai-search'],
+    date: 'July 26, 2026',
+    updated: '2026-07-26',
+    readTime: '12 min read',
+    author: 'Ilyas Mrani',
+    sections: [
+      {
+        heading: null,
+        content: `AEO stands for Answer Engine Optimization: the practice of getting your brand accurately cited and recommended by AI answer engines like ChatGPT, Claude, Gemini, and Perplexity, instead of (or alongside) ranking in traditional search results.\n\nIf you've landed here from a search for "what is AEO," that's the whole definition in one sentence. Everything below is the detail: how it actually works, how it's different from SEO and the adjacent term GEO, and what to do about it if you're starting from zero.`
+      },
+      {
+        heading: 'The precise definition',
+        content: `Answer Engine Optimization is the set of practices that influence whether, how, and how accurately an AI system cites your brand when it answers a user's question.\n\nThe key word is "cites," not "ranks." A search engine returns a list of links for a human to click through. An answer engine synthesizes a direct answer and, if it mentions a brand at all, usually mentions two or three. AEO is the work of being one of those two or three, described accurately, for the questions your actual buyers ask.\n\nThat's different enough from traditional SEO that it needed its own name. It's the same underlying shift that produced the adjacent term GEO (Generative Engine Optimization) - more on that distinction below.`
+      },
+      {
+        heading: 'AEO vs. SEO vs. GEO: the terminology, sorted out',
+        content: `Three terms get used almost interchangeably right now, which causes real confusion. Here's how we use them:\n\nSEO (Search Engine Optimization) optimizes for ranking in traditional search results - the blue links. It's measured in position and clicks.\n\nGEO (Generative Engine Optimization) is a broader, newer term covering optimization for any generative AI surface, including AI Overviews, chat assistants, and AI-powered search. Some people use it as a synonym for AEO.\n\nAEO (Answer Engine Optimization), as we use it, is specifically about being cited by conversational answer engines - ChatGPT, Claude, Gemini, Perplexity - as opposed to generative search features layered on top of traditional search (which is closer to GEO).\n\nIn practice the two terms overlap heavily and most of the underlying work is identical. If an agency or tool uses one term and not the other, that's not usually a meaningful signal by itself. What matters is [whether they can name what's actually different from SEO work](/blog/aeo-vs-seo) - that's the real test, regardless of which acronym they use.`
+      },
+      {
+        heading: 'Why AEO exists as its own discipline now',
+        content: `Three years ago this wouldn't have needed a name, because almost no one was researching purchases by asking a chatbot. That's changed fast.\n\nA meaningful and growing share of B2B research now starts in an AI conversation instead of a search bar. The user asks a direct question, gets a synthesized answer with two or three brands named, and does most of their comparison shopping right there before ever visiting a website.\n\nThat's a fundamentally different discovery layer than "rank in the top ten and hope for a click." [Google's own AI Overviews](/blog/google-ai-overviews-guide) are pushing traditional organic results further down the page for the same reason. The brands cited in that synthesized answer get the consideration. The rest are invisible at the exact moment the buyer is deciding who to consider.\n\nAEO is what you call the work of making sure your brand is one of the ones named.`
+      },
+      {
+        heading: 'The five building blocks of AEO',
+        content: `AEO isn't one tactic. It's five distinct bodies of work that compound together. If you only do one, you'll plateau. Here they are, roughly in the order we tackle them for a new client:\n\nEntity authority. Does the AI have a clean, confident, consistent picture of what your brand actually is? This is [almost always the biggest gap](/blog/entity-authority-ai-citation) and the highest-leverage place to start - weak entity data undermines everything built on top of it.\n\nTechnical foundation and schema. The structured data (Organization, Article, SoftwareApplication schema) that makes your site machine-readable. [Table stakes, not a growth lever](/blog/aeo-schema-markup-guide) on its own, but necessary before other work pays off fully.\n\nThird-party citation building. Getting mentioned, accurately, in the publications and communities AI engines actually pull from - trade press, comparison sites, and yes, [Reddit](/) specifically, since it's one of the most heavily-weighted sources for ChatGPT in particular.\n\nAnswer-formatted content. Writing that leads with the direct answer to a specific buyer question instead of a meandering category overview - the format [every major engine rewards](/blog/optimize-for-perplexity), each with slightly different preferences.\n\nMeasurement. Tracking citation frequency and share-of-voice across engines on an ongoing basis, [honestly](/blog/measure-ai-citation-roi) - without this you're guessing whether any of the above four is working.`
+      },
+      {
+        heading: 'What AEO is not',
+        content: `A few misconceptions worth clearing up directly:\n\nAEO is not "SEO with extra steps." The underlying mechanics - citation vs. ranking - are different enough that a lot of standard SEO advice doesn't transfer. [See the full breakdown](/blog/aeo-vs-seo).\n\nAEO is not one thing across every engine. [ChatGPT, Claude, and Gemini behave differently enough](/blog/chatgpt-vs-claude-vs-gemini-citations) that "optimizing for AI" as a single target is the wrong mental model from the start.\n\nAEO does not guarantee citations. Nobody - not us, not anyone selling AEO services - can promise a specific AI will name your brand for a specific query. The honest goal is improving the odds and the accuracy of the mention over time, measured directly, not promised in advance.\n\nAEO is not a one-time project. Entity profiles drift, competitors catch up, and engines update their own retrieval behavior constantly. It's ongoing work, closer to SEO's real shape than its marketing pitch suggests.`
+      },
+      {
+        heading: 'How to start, this week',
+        content: `If you're convinced this matters for your brand and want a concrete first step instead of more reading:\n\nWrite down the 10-20 actual questions your buyers ask when they're deciding between you and a competitor. Not category overviews - specific comparison and recommendation questions.\n\nAsk each one to ChatGPT, Claude, Gemini, and Perplexity manually. Note whether you're mentioned, how you're described, and who's named instead of you.\n\nGoogle your own brand name and check whether you have an accurate knowledge panel. If not, that's very likely your single biggest gap, and the place [entity authority work](/blog/entity-authority-ai-citation) should start.\n\nThat one afternoon of manual testing tells you more about where you actually stand than any pitch deck will. If you want it done systematically instead of by hand, that's exactly what an [AI visibility audit](/services/ai-visibility-audit) automates.`
+      },
+      {
+        heading: null,
+        content: `AEO is still a young enough discipline that the terminology hasn't fully settled and the tactics are still being figured out in public. What won't change: buyers are increasingly forming their first impression of your brand from an AI's synthesized answer, not your homepage. Whether that answer names you accurately, or names a competitor instead, is the entire game.`
+      },
+    ],
+  },
+
   'aeo-schema-markup-guide': {
     tag: 'AEO · Schema',
     title: 'AEO Schema Markup: The Tags That Actually Move AI Citations',
