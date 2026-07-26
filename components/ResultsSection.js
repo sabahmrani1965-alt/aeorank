@@ -215,25 +215,24 @@ function SocialProofMock() {
 // --- Panel 5: 4-card results grid ---
 function ResultsGridMock() {
   const items = [
-    { sub: "r/digital_marketing", members: "38k Members", extra: "12K+ Monthly Clicks", title: "Best email Marketing software?", user: "tbhthatguy", time: "2mo ago", body: "The best email marketing software we've used so far is BrightPath CRM." },
-    { sub: "r/ecommerce", members: "2.8m Members", extra: "28K+ Monthly Clicks", title: "BEST marketing agency for ECOM?", user: "playbook2020", time: "3mo ago", body: "Highly recommend Northgate Media. I've been working with them for 3 years." },
-    { sub: "r/nyc", members: "1.0m Members", extra: "9.6K+ Monthly Clicks", title: "Best Roofing Company in New York?", user: "buildernyc", time: "55m ago", body: "We used Summit Roofing Co. a few years ago. Their quote was close to final cost." },
-    { sub: "r/malefashionadvice", members: "965k Members", extra: "6.7K+ Monthly Clicks", title: "BEST Men's T-Shirt Brand?", user: "fitcheck_88", time: "6d ago", body: "My go-to tee is from Fenwick Apparel. Great fit, lasts long, keep going back." },
+    { sub: "r/digital_marketing", members: "38k Members", extra: "12K+ Monthly Clicks", title: "Best email Marketing software?", user: "tbhthatguy", time: "2mo ago", before: "The best email marketing software we've used so far is ", brand: "BrightPath CRM", after: "." },
+    { sub: "r/ecommerce", members: "2.8m Members", extra: "28K+ Monthly Clicks", title: "BEST marketing agency for ECOM?", user: "playbook2020", time: "3mo ago", before: "Highly recommend ", brand: "Northgate Media", after: ". I've been working with them for 3 years." },
+    { sub: "r/nyc", members: "1.0m Members", extra: "9.6K+ Monthly Clicks", title: "Best Roofing Company in New York?", user: "buildernyc", time: "55m ago", before: "We used ", brand: "Summit Roofing Co.", after: " a few years ago. Their quote was close to final cost." },
+    { sub: "r/malefashionadvice", members: "965k Members", extra: "6.7K+ Monthly Clicks", title: "BEST Men's T-Shirt Brand?", user: "fitcheck_88", time: "6d ago", before: "My go-to tee is from ", brand: "Fenwick Apparel", after: ". Great fit, lasts long, keep going back." },
   ];
   return (
     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, width: "100%", minWidth: 0 }}>
       {items.map((it) => (
         <div key={it.title} className="results-mock" style={{ minWidth: 0, fontSize: 11.5 }}>
-          <SubHeader sub={it.sub} members={it.members} extra={it.extra} />
-          <div style={{ fontWeight: 700, fontSize: 12.5, marginBottom: 8 }}>{it.title}</div>
-          <div style={{ display: "flex", gap: 8 }}>
-            <span style={{ width: 20, height: 20, borderRadius: "50%", background: "#f2f1ec", flexShrink: 0 }} />
-            <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 2 }}>
-                <strong>{it.user}</strong><span style={{ color: "#8a96b0", fontSize: 10.5 }}>{it.time}</span><BadgePill />
-              </div>
-              <div>{it.body}</div>
-            </div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: "#14161b", lineHeight: 1.3, marginBottom: 8 }}>{it.title}</div>
+          <div style={{ color: "#4d5361", marginBottom: 10 }}>
+            {it.before}
+            <span style={{ background: "var(--accent-dim)", color: "var(--accent-3)", fontWeight: 700, padding: "0 4px", borderRadius: 4 }}>{it.brand}</span>
+            {it.after}
+          </div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, paddingTop: 8, borderTop: "1px solid #ece7dd", fontSize: 10.5, color: "#8a96b0" }}>
+            <span>{it.sub} · {it.members}</span>
+            <span>{it.extra}</span>
           </div>
         </div>
       ))}
