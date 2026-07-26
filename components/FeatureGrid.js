@@ -43,11 +43,6 @@ const FEATURES = [
     desc: "Track multiple brands from one account, each with its own opportunities, mentions, and reports.",
   },
   {
-    icon: "📄",
-    title: "On-Demand Reports",
-    desc: "Run a full AI-visibility analysis on any website, anytime, not just your own.",
-  },
-  {
     icon: "💳",
     title: "Usage-Based Credits",
     desc: "Pay only for what you generate. Top up anytime, no forced tiers.",
