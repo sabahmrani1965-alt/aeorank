@@ -108,7 +108,15 @@ async function provisionSubscription(session) {
     { onConflict: "stripe_subscription_id" }
   );
 
-  await grantMonthlyCredits(admin, userId, plan);
+  // Don't front-load credits during the trial — a trialing subscriber can
+  // cancel before ever being charged, so granting the full monthly
+  // allowance here would let anyone create real (paid-cost) posts and
+  // comments for free. Credits start flowing once the trial actually
+  // converts to a real charge, via the subscription_cycle invoice.paid
+  // handler below — same event that already handles every later renewal.
+  if (subscription.status !== "trialing") {
+    await grantMonthlyCredits(admin, userId, plan);
+  }
 }
 
 // Grants a plan's monthly credit allowance and bumps the reset date one
