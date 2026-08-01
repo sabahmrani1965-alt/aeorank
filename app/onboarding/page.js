@@ -47,6 +47,15 @@ export default function OnboardingPage() {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) return;
+      // Fire-and-forget, first-touch only — proves the page actually
+      // rendered in this visitor's browser, independent of whether they
+      // ever submit step 1. See onboarding_viewed_at in supabase/schema.sql.
+      supabase
+        .from("users")
+        .update({ onboarding_viewed_at: new Date().toISOString() })
+        .eq("id", user.id)
+        .is("onboarding_viewed_at", null)
+        .then(() => {});
       const brands = await listBrands(supabase, user.id);
       if (brands.some((b) => b.completed)) {
         router.replace("/dashboard");

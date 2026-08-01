@@ -860,6 +860,17 @@ ALTER TABLE public.users ADD COLUMN IF NOT EXISTS referral_code TEXT;
 CREATE UNIQUE INDEX IF NOT EXISTS users_referral_code_uidx
   ON public.users(referral_code) WHERE referral_code IS NOT NULL;
 
+-- ── USERS: onboarding funnel instrumentation ─────────────────
+-- Set once, first-touch only, by app/onboarding/page.js the moment the
+-- page actually mounts in the browser — deliberately separate from
+-- company_profiles.onboarding_step_reached, which only gets set once step
+-- 1 is submitted. A user with onboarding_viewed_at set but no
+-- company_profiles row at all proves the page rendered and they left
+-- without touching it; NULL here (with a real signup) means the page
+-- itself never loaded client-side — a redirect or render failure, not a
+-- behavioral drop-off. Lets the two failure modes finally be told apart.
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS onboarding_viewed_at TIMESTAMPTZ;
+
 -- "Users can update own record" above only restricts WHICH ROW a user can
 -- update (auth.uid() = id), not WHICH COLUMNS — without this trigger, a
 -- logged-in customer could call the Supabase REST API directly with
