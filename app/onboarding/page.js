@@ -41,21 +41,24 @@ export default function OnboardingPage() {
   // abandoned attempt — resume onto it instead of redirecting away or
   // creating a duplicate draft.
   useEffect(() => {
+    // Fired synchronously on mount, ahead of the auth.getUser() call below
+    // and via sendBeacon rather than a normal fetch — proves the page
+    // actually rendered in this visitor's browser at all, independent of
+    // both whether they ever submit step 1 AND whether client-side session
+    // hydration is slow. A beacon is queued by the browser and delivered
+    // even if the tab closes mid-request; the endpoint resolves the
+    // session itself from cookies rather than needing it passed in. See
+    // onboarding_viewed_at in supabase/schema.sql.
+    if (typeof navigator !== "undefined" && navigator.sendBeacon) {
+      navigator.sendBeacon("/api/onboarding/viewed");
+    }
+
     (async () => {
       const supabase = createClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) return;
-      // Fire-and-forget, first-touch only — proves the page actually
-      // rendered in this visitor's browser, independent of whether they
-      // ever submit step 1. See onboarding_viewed_at in supabase/schema.sql.
-      supabase
-        .from("users")
-        .update({ onboarding_viewed_at: new Date().toISOString() })
-        .eq("id", user.id)
-        .is("onboarding_viewed_at", null)
-        .then(() => {});
       const brands = await listBrands(supabase, user.id);
       if (brands.some((b) => b.completed)) {
         router.replace("/dashboard");
