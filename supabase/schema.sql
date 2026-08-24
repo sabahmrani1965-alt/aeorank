@@ -871,6 +871,15 @@ CREATE UNIQUE INDEX IF NOT EXISTS users_referral_code_uidx
 -- behavioral drop-off. Lets the two failure modes finally be told apart.
 ALTER TABLE public.users ADD COLUMN IF NOT EXISTS onboarding_viewed_at TIMESTAMPTZ;
 
+-- Set once each by app/api/cron/reengagement/route.js (a daily cron) —
+-- never re-sent once set, regardless of whether the underlying condition
+-- is still true. Two separate columns because a user can validly receive
+-- both nudges over time (never-started, then later completes onboarding
+-- but still doesn't subscribe): one flag per distinct email, not one
+-- generic "was nudged" flag that would block the second message.
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS onboarding_nudge_sent_at TIMESTAMPTZ;
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS trial_nudge_sent_at TIMESTAMPTZ;
+
 -- "Users can update own record" above only restricts WHICH ROW a user can
 -- update (auth.uid() = id), not WHICH COLUMNS — without this trigger, a
 -- logged-in customer could call the Supabase REST API directly with

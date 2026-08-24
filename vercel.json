@@ -14,12 +14,19 @@
     },
     "app/api/cron/weekly-digest/route.js": {
       "maxDuration": 60
+    },
+    "app/api/cron/reengagement/route.js": {
+      "maxDuration": 60
     }
   },
   "crons": [
     {
       "path": "/api/cron/weekly-digest",
       "schedule": "0 14 * * 1"
+    },
+    {
+      "path": "/api/cron/reengagement",
+      "schedule": "0 15 * * *"
     }
   ]
 }
