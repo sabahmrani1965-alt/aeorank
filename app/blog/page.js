@@ -10,6 +10,61 @@ export const metadata = {
 
 const posts = [
   {
+    tag: "AEO · Claude",
+    title: "Getting Cited by Claude: Why It's the Hardest Engine to Crack",
+    excerpt:
+      "Claude declines to recommend products more often than any other major engine. What it actually trusts when it does cite, and a realistic timeline for earning one.",
+    date: "August 27, 2026",
+    readTime: "7 min read",
+    slug: "getting-cited-by-claude",
+  },
+  {
+    tag: "AEO · Sentiment",
+    title: "Why Being Mentioned Isn't Enough: Sentiment in AI Citations",
+    excerpt:
+      "A citation isn't automatically good. One paired with 'some say to avoid this' does real damage. How that happens, and how to fix it.",
+    date: "August 27, 2026",
+    readTime: "6 min read",
+    slug: "sentiment-in-ai-citations",
+  },
+  {
+    tag: "AEO · Growth",
+    title: "Using Your Own Partner Network for AI Visibility",
+    excerpt:
+      "Your existing affiliates already have a reason to talk to you. Why that makes your partner network a warmer, faster channel than cold outreach.",
+    date: "August 27, 2026",
+    readTime: "6 min read",
+    slug: "partner-network-ai-visibility",
+  },
+  {
+    tag: "AEO · Reddit",
+    title: "How to Reply to a Reddit Thread Without Getting It Removed",
+    excerpt:
+      "One of our own outreach targets got pulled by mods for 'unapproved third-party advertisement.' What that rule actually means and how to reply without triggering it.",
+    date: "August 27, 2026",
+    readTime: "6 min read",
+    slug: "reply-to-reddit-without-getting-removed",
+  },
+  {
+    tag: "AEO · Comparisons",
+    title: "Profound vs. Peec AI vs. AEOrank: What Each One Actually Does",
+    excerpt:
+      "Not a \"why we're better\" pitch. An honest breakdown of what each tool actually measures or does, and why they're not really competing for the same budget line.",
+    date: "August 27, 2026",
+    readTime: "6 min read",
+    slug: "profound-vs-peec-vs-aeorank",
+  },
+  {
+    tag: "AEO · Reddit",
+    title:
+      "Why ChatGPT and Perplexity Cite Reddit Threads (And What Happens If You're Not In Them)",
+    excerpt:
+      "We checked 30 real B2B SaaS companies for a live, unanswered Reddit thread in their category. Found one in nearly all of them. Here's what that costs.",
+    date: "August 27, 2026",
+    readTime: "8 min read",
+    slug: "why-chatgpt-cites-reddit-threads",
+  },
+  {
     tag: "AEO · Fundamentals",
     title: "What Is AEO (Answer Engine Optimization)? The Complete Guide",
     excerpt:

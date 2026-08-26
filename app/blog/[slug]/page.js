@@ -28,6 +28,244 @@ function renderInline(text) {
 }
 
 const posts = {
+  'getting-cited-by-claude': {
+    tag: 'AEO · Claude',
+    title: "Getting Cited by Claude: Why It's the Hardest Engine to Crack",
+    metaTitle: 'Getting Cited by Claude: Why Its the Hardest | AEOrank',
+    metaDescription: "Claude declines to recommend products more than any other major engine. Here's what it actually trusts, and a realistic timeline for earning a citation.",
+    description: "Claude declines to recommend a specific product more often than any other major engine. Here's what it actually trusts when it does cite, and a realistic timeline for earning one.",
+    tags: ['aeo', 'claude', 'b2b-saas', 'ai-citations', 'entity-authority'],
+    date: 'August 27, 2026',
+    updated: '2026-08-27',
+    readTime: '7 min read',
+    author: 'Ilyas Mrani',
+    sections: [
+      {
+        heading: null,
+        content: `Of the three major conversational engines, [Claude gets cited the least often for B2B SaaS commercial queries](/blog/chatgpt-vs-claude-vs-gemini-citations), and that's by design, not by accident. Anthropic has built Claude to decline outright when it's uncertain, rather than guess at a recommendation the way a more confident model might.\n\nThat makes Claude the engine most teams give up on first. It's also, once you understand what it actually rewards, one of the more durable citations to earn, because Claude's caution means it holds onto a trusted source longer than an engine that's constantly revising its own confident guesses.`
+      },
+      {
+        heading: 'Why Claude says no when the others say yes',
+        content: `Claude's training explicitly biases it toward safer, more conservative answers on anything resembling a purchase recommendation. Where ChatGPT will often name two or three brands with reasonable confidence, Claude frequently responds with a comparative framework instead, listing what to look for in a category rather than naming who to buy from.\n\nThis isn't a bug you can work around with better content alone. It's a deliberate choice in how the model is tuned, and it means the bar for "confident enough to cite" is simply higher on Claude than anywhere else. A brand with a thin, inconsistent, or unverified presence won't clear that bar, no matter how well-written its own marketing pages are.`
+      },
+      {
+        heading: 'What Claude actually trusts when it does cite',
+        content: `A few patterns hold up consistently in what gets Claude to name a specific brand:\n\nWikipedia and Wikidata presence. Claude treats a well-maintained Wikipedia entry as a strong trust signal, more heavily than ChatGPT typically does. If you don't have one and you qualify for notability, [building the third-party coverage that eventually earns one](/blog/entity-authority-ai-citation) is some of the highest-leverage work available for this specific engine.\n\nAnalyst and academic references. Coverage from Gartner, Forrester, or similar research firms carries real weight. It's slower and more expensive to earn than a blog mention, but it's exactly the kind of source Claude is tuned to trust.\n\nNeutral, comparison-style writing. Claude appears to favor content that reads like independent research over content that reads like a sales page, even when both describe the same product accurately. If your own site is the only source describing you, and it reads promotional, Claude may prefer a third party's more neutral coverage of you instead, if one exists.\n\nConsistency across sources. The same entity-authority fundamentals that help every engine matter more here, because Claude's higher bar means any inconsistency is more likely to push it toward declining rather than guessing.`
+      },
+      {
+        heading: "What doesn't move the needle much",
+        content: `A few things worth being honest about, since a lot of AEO advice treats every engine the same:\n\nContent volume doesn't help here the way it might elsewhere. Publishing more doesn't lower Claude's bar for confidence. It's about the quality and independence of the sources describing you, not the quantity of pages you've written yourself.\n\nAggressive schema markup helps marginally, mostly through the entity-consistency angle, not because Claude is parsing structured data the way [Gemini does](/blog/chatgpt-vs-claude-vs-gemini-citations).\n\nRecency matters less than on Perplexity. Claude isn't doing live retrieval for most queries the way Perplexity is, so a fresh blog post doesn't move things quickly. The gains here compound slowly, through accumulated third-party trust, not through publishing cadence.`
+      },
+      {
+        heading: 'A realistic timeline',
+        content: `If your brand already has decent entity fundamentals (a knowledge panel, consistent descriptions, some earned coverage), meaningful movement on Claude specifically tends to take longer than the same work shows up on ChatGPT, often noticeably longer, because the trust threshold is higher and the sources that clear it, Wikipedia, analyst coverage, are slower to build.\n\nFor brands starting from a weak entity baseline, treat Claude as a lagging indicator. Do [the entity authority work](/blog/entity-authority-ai-citation) for its own sake, across all engines, and expect Claude to be the last one to reflect it, not the first.`
+      },
+      {
+        heading: null,
+        content: `Claude being harder to crack isn't a reason to skip it. It's a reason to expect the work to compound differently, weighted toward earned third-party trust rather than owned content output. If you want to know specifically where your brand stands with Claude today, and what's actually missing, [that's part of what an AI visibility audit checks](/services/ai-visibility-audit).`
+      },
+    ],
+  },
+
+  'sentiment-in-ai-citations': {
+    tag: 'AEO · Sentiment',
+    title: "Why Being Mentioned Isn't Enough: Sentiment in AI Citations",
+    metaTitle: 'Sentiment in AI Citations: Why It Matters | AEOrank',
+    metaDescription: "Getting cited by an AI engine isn't automatically good. A citation paired with 'some say to avoid this' does real damage. Here's how that happens and how to fix it.",
+    description: "A citation isn't automatically a win. Being named alongside 'some say to avoid this' does real damage. Here's how negative sentiment ends up baked into an AI answer, and how to fix it.",
+    tags: ['aeo', 'sentiment', 'b2b-saas', 'ai-citations', 'reputation'],
+    date: 'August 27, 2026',
+    updated: '2026-08-27',
+    readTime: '6 min read',
+    author: 'Ilyas Mrani',
+    sections: [
+      {
+        heading: null,
+        content: `Most AEO advice, including a lot of what we've written, treats "getting cited" as the finish line. It isn't. We've watched AI engines name a brand accurately and still do real damage in the same breath, because the source material behind that citation carried a negative signal the AI faithfully reflected.\n\nA citation isn't automatically good. It's only as good as what it's citing.`
+      },
+      {
+        heading: 'How this actually shows up',
+        content: `The pattern is consistent enough to describe generally, without naming specific brands: a real Reddit thread exists where someone asks about a product, an actual user replies with a specific complaint, and the company never responds. Months later, someone asks an AI engine the same category question. The engine names the brand, because it's a real, known entity, and pairs the mention with something close to "though some users report issues with X" or "an alternative worth considering if you've had problems with Y."\n\nThat's not the AI being unfair. It's reflecting exactly what's actually been said publicly, unanswered, for however long the thread has been sitting there. The citation happened. The outcome was still a net negative.`
+      },
+      {
+        heading: 'Why silence reads worse over time',
+        content: `A single unanswered complaint in a live thread is a small, recoverable thing. The problem is what happens when it's never addressed: it becomes the most complete, most citable account of that specific issue. No competing description exists to balance it, because nobody from the company ever added one.\n\nThis is the same underlying mechanism behind [why an unanswered thread costs more than it looks like it should](/blog/why-chatgpt-cites-reddit-threads). A citation engine doesn't invent sentiment. It reflects whatever's actually sitting in the source material it draws from, and an uncorrected complaint sits there indefinitely.`
+      },
+      {
+        heading: 'What actually fixes it',
+        content: `Not deletion, and not arguing. Neither is available to you on someone else's Reddit thread, and both would read badly even if they were.\n\nA direct, specific, non-defensive reply to the actual complaint. Acknowledging the issue, explaining what changed or what the real tradeoff is, and being honest about anything that's still a genuine limitation. This gives future readers, human and AI both, a second, more complete data point to weigh against the first.\n\nTiming matters more than most teams assume. A reply added six months after the original complaint still helps, but a reply added while the thread is still active reaches more of the people who'll ever read it, and reduces the window where the complaint sits as the only account.\n\nConsistency across the record. If the same specific complaint appears in multiple places, a review site, a forum, a Reddit thread, addressing it in one place while ignoring it elsewhere leaves the pattern only partially corrected.`
+      },
+      {
+        heading: 'What this means for how you prioritize',
+        content: `Not every unanswered thread is equally urgent. A neutral "what should I use" thread with no company mentioned yet is a visibility opportunity. A thread where your brand is already named alongside a specific, credible complaint is a sentiment risk, and it's worth treating as higher priority, since the cost of continued silence compounds specifically in that case.\n\nThis is part of why [checking actual comment threads matters](/blog/reply-to-reddit-without-getting-removed), not just search snippets of the original post. The comments are usually where the sentiment actually lives.`
+      },
+      {
+        heading: null,
+        content: `Getting cited is necessary but not sufficient. What the citation says about you is the part that actually determines whether it helps or hurts, and that's set by what's already public, answered or not, at the moment an AI engine goes looking. [We check for this specifically when we run a visibility audit](/services/ai-visibility-audit), not just whether you're mentioned, but what you're mentioned alongside.`
+      },
+    ],
+  },
+
+  'partner-network-ai-visibility': {
+    tag: 'AEO · Growth',
+    title: 'Using Your Own Partner Network for AI Visibility',
+    metaTitle: 'Using Your Partner Network for AI Visibility | AEOrank',
+    metaDescription: "Your existing affiliates already have a reason to talk to you. That makes your partner network a warmer, faster channel for AI visibility work than cold outreach.",
+    description: "Your existing affiliates already have a reason to talk to you. That's a warmer, faster starting point for AI visibility work than cold outreach to strangers.",
+    tags: ['aeo', 'partnerships', 'b2b-saas', 'growth', 'distribution'],
+    date: 'August 27, 2026',
+    updated: '2026-08-27',
+    readTime: '6 min read',
+    author: 'Ilyas Mrani',
+    sections: [
+      {
+        heading: null,
+        content: `Most companies think about AI visibility work, finding and replying to real conversations in their category, as a form of cold outreach. Find a stranger's Reddit thread, hope a reply lands well, move on. That framing misses a channel most B2B SaaS companies already have sitting unused: their own partner and affiliate network.`
+      },
+      {
+        heading: 'Why this is a genuinely different starting point',
+        content: `An affiliate or partner already has a real reason to be in touch with you. They've applied to your program, they're actively promoting you, and there's an existing relationship with actual stakes on both sides. A message from an existing partner isn't cold outreach, it's a message from someone already inside the tent.\n\nThat changes what a first message can look like. Instead of introducing yourself and hoping for a reply, you're flagging something specific and useful to someone who already has reason to open the message: a real, live conversation in their category that they'd likely want to know about regardless of anything else.`
+      },
+      {
+        heading: 'What this actually looks like in practice',
+        content: `The mechanics are simple enough to run without new tooling: pull your active partner list from whatever platform runs it (PartnerStack, Impact, and similar tools all expose this via API), then for each partner, check for a real, current, unanswered conversation in their specific category, verified the same way [any other AEO research should be](/blog/why-chatgpt-cites-reddit-threads), at the comment level, not just the headline post.\n\nThe message itself doesn't need to ask for anything. Share the thread, note what's actually being said, and let the partner decide what to do with it. No pitch required, since the relationship already exists.`
+      },
+      {
+        heading: 'The trust asymmetry that makes this work',
+        content: `A stranger has no reason to believe an unsolicited email claiming "I found a real thread about you." An existing partner has much less reason to doubt it, because you already have a track record together, and because the ask, if there's one at all, is nothing more than "you might want to see this."\n\nThis also solves a real practical problem with cold AEO outreach: finding a legitimate contact at a company you have no relationship with is often the hardest part. A partner program already has that contact info, verified, current, and reachable through a channel the company itself set up.`
+      },
+      {
+        heading: 'Where this fits with everything else',
+        content: `This isn't a replacement for direct outreach to companies you have no relationship with, it's a faster starting point for the companies you already do. If you're running any kind of affiliate or partner program yourself, or participating in one, that list is a genuinely underused source of warm introductions for exactly this kind of work.\n\nIt's also a two-way opportunity: a company that starts doing this for its partners is demonstrating the exact value it's offering, in real time, to the people most likely to talk about it further.`
+      },
+      {
+        heading: null,
+        content: `Most AI visibility advice assumes you're starting from zero with every company. If you already have a partner network, you're not. [We're happy to show you what a pass through your own partner list actually finds](/services/ai-visibility-audit).`
+      },
+    ],
+  },
+
+  'reply-to-reddit-without-getting-removed': {
+    tag: 'AEO · Reddit',
+    title: 'How to Reply to a Reddit Thread Without Getting It Removed',
+    metaTitle: 'How to Reply on Reddit Without Getting Removed | AEOrank',
+    metaDescription: "One of our own outreach targets got pulled by mods for 'unapproved third-party advertisement.' Here's what that actually means and how to reply without it happening to you.",
+    description: "While researching real threads to reply to, we watched one get removed by mods for 'unapproved third-party advertisement.' Here's what that rule actually means, and how to reply without triggering it.",
+    tags: ['aeo', 'reddit', 'community', 'b2b-saas', 'answer-engine-optimization'],
+    date: 'August 27, 2026',
+    updated: '2026-08-27',
+    readTime: '6 min read',
+    author: 'Ilyas Mrani',
+    sections: [
+      {
+        heading: null,
+        content: `While researching real Reddit threads for [an earlier piece](/blog/why-chatgpt-cites-reddit-threads), one of the strongest candidates we found got pulled before we could even use it. The thread was a genuine, unprompted "what's your favorite tool for this" question, exactly the kind of moment a company should want to answer. By the time we checked it again, it had been removed by the subreddit's mod team for "Unapproved Third-Party Advertisement."\n\nNobody from the company in question had even replied yet. The thread got pulled anyway, because someone else's answer in the same thread crossed a line the mods enforce automatically.\n\nThat's the risk most companies don't think about when they finally decide to engage on Reddit: the room has rules, and they're usually stricter than they look.`
+      },
+      {
+        heading: 'Why subreddits remove this kind of content',
+        content: `Most subreddits built around a product category, r/streaming, r/smallbusiness, r/SaaS, and hundreds like them, have an explicit rule against unapproved promotion. It's usually phrased close to: no advertising services or tools without prior consent from the mod team.\n\nThe rule exists because these communities get flooded with exactly the kind of reply a company is tempted to write: "Have you tried [Product]? It does X, Y, Z" with a link. Mods can't verify who's behind each account, so the policy is blunt by design. It doesn't distinguish between a genuinely helpful answer and a drive-by plug. It just removes anything that reads like the latter.\n\nThis means a company can write something true, specific, and genuinely useful, and still get removed, if the reply is structured like an ad instead of like a person answering a question.`
+      },
+      {
+        heading: 'What actually gets a reply removed',
+        content: `A few patterns we've seen trigger removal, based on watching real threads:\n\nLeading with the product name instead of the answer. "Product X handles this well" reads as promotional. "The main issue with [the thing being asked about] is usually Y, here's how we've seen people solve it" reads as an answer.\n\nA link with no context. Dropping a URL, even a genuinely relevant one, is one of the fastest ways to get auto-flagged by a subreddit's spam filter, separate from human moderation entirely.\n\nNo disclosure. If you work at or represent the company you're mentioning, most communities expect you to say so plainly. Undisclosed promotion reads as manipulation even when the content itself is accurate, and it's the fastest way to burn trust in a community you might want to be part of long-term.\n\nReplying to an old, resolved thread. Some subreddits treat a reply to a thread that's already settled, the OP picked a tool and moved on, as spam regardless of content, since it's not actually helping the person who asked.`
+      },
+      {
+        heading: 'What a reply that survives looks like',
+        content: `The threads that work aren't more clever, they're just structured like an actual answer instead of a pitch.\n\nAnswer the specific question first. If someone asked about pricing, address pricing. If they asked about a specific limitation, address that limitation. The product mention, if it belongs at all, comes after the actual answer, not before it.\n\nDisclose the affiliation in plain language. "I work on [Product]" or "full disclosure, I'm on the team at [Product]" up front costs nothing and changes how the entire reply reads. Communities are far more forgiving of an obviously self-interested answer than a hidden one.\n\nBe willing to say the product doesn't fit. If someone's asking about a use case your product genuinely doesn't cover well, saying so is what separates a real person from a bot account running a keyword search for your brand name. It's also usually what keeps the account from getting reported.\n\nSkip the link unless it's asked for. A specific, honest answer with no link almost never gets removed. The click can happen from the profile or a follow-up comment if someone wants it. Leading with a URL is optional; leading with a real answer isn't.`
+      },
+      {
+        heading: 'A quick check before you reply to anything',
+        content: `Before replying to a thread you found, three checks take less than a minute and catch most of the risk:\n\nRead the subreddit's rules, specifically anything about self-promotion, advertising, or business accounts. Most list it in the sidebar or the pinned rules post.\n\nCheck whether the thread is still open. A recent comment from someone other than the OP is a good sign. A thread where the last activity is the OP saying "thanks, going with X" is one to skip, or to reply to only if you have something genuinely new to add for the next person who finds it.\n\nRead the existing replies in full, not just the post. If a company representative, yours or a competitor's, has already replied, or if the thread was removed once already, that changes whether it's worth engaging at all.`
+      },
+      {
+        heading: null,
+        content: `The thread that got pulled during our research wasn't a fluke. It's a genuine, common outcome for companies engaging with Reddit for the first time without knowing the room's actual rules. The fix isn't complicated, it's mostly about answering the real question, disclosing who you are, and treating the reply as a comment, not a comment with a link attached.\n\nIf you want the actual threads worth replying to filtered from the ones that'll get you flagged before you spend the time, that's part of what [AEOrank](/) does. [We're happy to show you what we find](/services/ai-visibility-audit).`
+      },
+    ],
+  },
+
+  'profound-vs-peec-vs-aeorank': {
+    tag: 'AEO · Comparisons',
+    title: 'Profound vs. Peec AI vs. AEOrank: What Each One Actually Does',
+    metaTitle: 'Profound vs Peec AI vs AEOrank Compared | AEOrank',
+    metaDescription: 'An honest breakdown of what Profound, Peec AI, and AEOrank each actually do, not a "why we\'re better" pitch, just what each tool measures or acts on.',
+    description: 'Not a "why we\'re better" pitch. An honest breakdown of what each tool actually measures or does, and why they\'re not really competing for the same budget line.',
+    tags: ['aeo', 'comparison', 'profound', 'peec-ai', 'b2b-saas'],
+    date: 'August 27, 2026',
+    updated: '2026-08-27',
+    readTime: '6 min read',
+    author: 'Ilyas Mrani',
+    sections: [
+      {
+        heading: null,
+        content: `If you're evaluating AI visibility tools, here's the honest breakdown of Profound, Peec AI, and AEOrank. Not a "why we're better" pitch, just what each one is actually built to do, so you can figure out which piece of the problem you're trying to solve first.`
+      },
+      {
+        heading: 'Profound: the large-scale measurement platform',
+        content: `Profound is the largest player in this space, reaching a $1 billion valuation in February 2026. It tracks brand visibility across ChatGPT, Perplexity, Google AI Overviews, Copilot, and Gemini, with prompt-volume analytics that show what people are actually asking these engines, citation tracking to see whether and how you're mentioned, and competitor benchmarking. It also ships AI agents built to act on AEO, SEO, content, and demand-gen work directly.\n\nIn short: Profound answers "are we being cited, by whom instead of us, and across how much real query volume," at enterprise scale, with a lot of infrastructure behind that answer.`
+      },
+      {
+        heading: 'Peec AI: focused visibility tracking',
+        content: `Peec AI does something similar at a more accessible scale. It tracks visibility share, ranking position, and sentiment across the same major engines, with citation analysis showing the exact sources an engine pulled from and competitor share-of-voice benchmarking. It added AI Shopping Analytics in June 2026, tracking which product SKUs get recommended and at what price, useful specifically for ecommerce brands.\n\nPeec also supports multi-country and multi-language tracking, and ships an MCP integration for piping visibility data into tools like Claude directly. It's a strong option for teams that want real ongoing measurement without enterprise-scale pricing.`
+      },
+      {
+        heading: 'What Profound and Peec have in common',
+        content: `Both answer the same underlying question: are we being cited, and by whom instead of us. They measure what happens inside the AI's answer itself, tracked across real engines, real query volume, and real competitors. That's genuinely valuable, and it's the kind of measurement most B2B teams don't have any visibility into today.\n\nWhat neither one does is act on the gap once it's found. Knowing you're not cited for a query category doesn't tell you what specific, real-world conversation to go join to change that.`
+      },
+      {
+        heading: 'AEOrank: acting on the source material',
+        content: `AEOrank answers a different question: where is the real conversation happening right now, before an AI has generated any answer at all. It finds live Reddit threads where a company's product category comes up, verifies whether the company (or a competitor) has actually replied by checking the real comment thread, not just the original post, and flags the ones sitting open and unanswered.\n\nThat's genuinely upstream of what Profound and Peec measure. A citation doesn't appear from nothing. It gets built, in part, from the same kind of public discussion AEOrank is built to surface. [We checked this directly across 30 real companies](/blog/why-chatgpt-cites-reddit-threads) rather than assuming it: most had a live, unanswered thread sitting in their category, waiting.`
+      },
+      {
+        heading: "They're not really competing for the same budget",
+        content: `In practice, a team using Profound or Peec already knows visibility is a problem worth tracking. AEOrank is the part that happens before the score changes: going to the actual source conversation and replying while it's still live, [without getting flagged for doing it wrong](/blog/reply-to-reddit-without-getting-removed).\n\nA reasonable way to think about the stack: Peec or Profound tell you whether you're showing up. AEOrank finds the specific, real places to go do something about it. Different layer, different budget line, genuinely complementary rather than overlapping.`
+      },
+      {
+        heading: null,
+        content: `If you're already tracking AI visibility with one of these platforms and want to know what to actually do with the gaps it surfaces, that's the part we built. [Happy to show you what we find in your category](/services/ai-visibility-audit).`
+      },
+    ],
+  },
+
+  'why-chatgpt-cites-reddit-threads': {
+    tag: 'AEO · Reddit',
+    title: "Why ChatGPT and Perplexity Cite Reddit Threads (And What Happens If You're Not In Them)",
+    metaTitle: 'Why AI Cites Reddit Threads | AEOrank',
+    metaDescription: "We checked 30 real B2B SaaS companies for a live, unanswered Reddit thread in their category. Found one in nearly all of them.",
+    description: "We checked 30 real B2B SaaS companies for a live, unanswered Reddit thread in their category. Found one in nearly all of them. Here's what an unanswered thread actually costs, and what to do about it.",
+    tags: ['aeo', 'reddit', 'ai-citations', 'b2b-saas', 'answer-engine-optimization'],
+    date: 'August 27, 2026',
+    updated: '2026-08-27',
+    readTime: '8 min read',
+    author: 'Ilyas Mrani',
+    sections: [
+      {
+        heading: null,
+        content: `Reddit is one of the most heavily-cited sources across ChatGPT, Perplexity, and Google's AI Overviews whenever someone asks a "what's the best X" or "has anyone actually used Y" question. That's not a guess. It's one of the clearest patterns in citation tracking right now, and most B2B SaaS teams have no idea it's happening to them specifically.\n\nSo we ran a direct test instead of assuming. Across 30 real companies, spanning categories like project management, legal case software, background checks, web hosting, and payroll, we looked for a live Reddit thread where someone was actually asking about that company's category. We found one in nearly every single case. In the large majority, the company itself had never replied, while competitors got named freely by other users in the same thread.\n\nThat's the gap this post is about: not a hypothetical, a measured one.`
+      },
+      {
+        heading: 'Why Reddit specifically gets weighted so heavily',
+        content: `AI answer engines are tuned to favor genuine, first-person discussion over marketing copy, and Reddit is where that discussion happens in public, dated, and indexed. A comparison thread with real replies from real users reads as a more trustworthy source to a retrieval system than a vendor's own comparison page, for the same reason it reads that way to a human doing the same research.\n\n[ChatGPT in particular](/blog/how-to-get-cited-by-chatgpt) was trained on a large volume of Reddit content, and we consistently see Reddit-mention frequency translate into citation likelihood for B2B SaaS brands. Perplexity, which does live retrieval for nearly every query, will surface a fresh, active Reddit thread over a static page almost every time freshness is close. Neither engine treats Reddit as a nice-to-have source. It's a primary one.`
+      },
+      {
+        heading: 'What we actually found checking 30 real companies',
+        content: `We didn't rely on search snippets alone. Every thread we used was verified at the comment level, not just the original post, because a search snippet can make a thread look like an open opportunity when the company already replied, or when the thread's been removed by moderators, or when the "unanswered" claim is simply wrong. We caught real examples of all three during this pass, and dropped every one rather than force a pitch.\n\nWhat was left, after filtering those out: 27 of the 30 companies had a genuine, live, currently-unanswered thread where their exact product category was being discussed by real people, with real competitor names getting dropped in the replies. Not archived, not resolved, not already covered. Sitting open, waiting.\n\nThat's a higher hit rate than most teams would expect, and it's the reason "we don't have a Reddit problem" is usually wrong. Most companies simply aren't looking.`
+      },
+      {
+        heading: "The gap between a citation and a conversation",
+        content: `Here's the part that connects this back to [AEO](/blog/aeo-vs-seo) directly. A Reddit thread that goes unanswered doesn't just sit there quietly. It gets indexed, it gets read by the next person searching the same question, and it becomes part of the source material an AI model draws from when someone asks the same thing later, in a chat window instead of a search bar.\n\nSo the cost of missing one thread isn't one lost reader today. It's every future AI-generated answer that gets built, in part, from a conversation your brand wasn't part of. This is the same underlying mechanism as [entity authority](/blog/entity-authority-ai-citation): AI engines build a picture of your brand from everywhere it's discussed, and a category where you're consistently absent from the discussion is a category where AI has less reason to name you with confidence.\n\nA real, non-promotional reply on an existing thread does something a fresh blog post can't: it inserts your brand directly into the exact conversation people are already having, timestamped into a discussion an AI model may retrieve months from now, not just today.`
+      },
+      {
+        heading: 'What to actually do about it',
+        content: `The blocker here is almost never willingness. It's visibility. Most teams don't know these threads exist until long after they've gone quiet, if they ever find out at all.\n\nA rough version you can run yourself this week: write down the 10-20 specific questions your buyers ask when they're deciding between you and a competitor, then search each one plus "reddit" directly. Read the actual comments, not just the post, before deciding whether it's worth a reply. Skip anything already answered by your team or a competitor, anything removed by moderators, and anything where the "opportunity" doesn't hold up once you check.\n\nDone by hand, that's a real afternoon of work for a handful of leads. Done systematically across a full category, it's what [AEOrank](/) does automatically: finding the live, verified, currently-unanswered threads in your category so someone can reply while the conversation is still open, and connecting that work to the same [citation-building](/services/citation-building) and [AI visibility](/services/ai-visibility-audit) fundamentals that make the rest of your AEO effort compound.`
+      },
+      {
+        heading: null,
+        content: `The 30-company check that started this post wasn't a marketing exercise. It was us confirming, with real data instead of assumption, that the gap is as common as it looks like it should be. Twenty-seven times out of thirty, a real conversation was happening in public, and the company it was about wasn't in it.\n\nIf you want to know whether that's true for your own category, that's a fast thing to check. [We're happy to run it for you](/services/ai-visibility-audit).`
+      },
+    ],
+  },
+
   'what-is-aeo': {
     tag: 'AEO · Fundamentals',
     title: 'What Is AEO (Answer Engine Optimization)? The Complete Guide',
@@ -46,11 +284,11 @@ const posts = {
       },
       {
         heading: 'The precise definition',
-        content: `Answer Engine Optimization is the set of practices that influence whether, how, and how accurately an AI system cites your brand when it answers a user's question.\n\nThe key word is "cites," not "ranks." A search engine returns a list of links for a human to click through. An answer engine synthesizes a direct answer and, if it mentions a brand at all, usually mentions two or three. AEO is the work of being one of those two or three, described accurately, for the questions your actual buyers ask.\n\nThat's different enough from traditional SEO that it needed its own name. It's the same underlying shift that produced the adjacent term GEO (Generative Engine Optimization) - more on that distinction below.`
+        content: `Answer Engine Optimization is the set of practices that influence whether, how, and how accurately an AI system cites your brand when it answers a user's question.\n\nThe key word is "cites," not "ranks." A search engine returns a list of links for a human to click through. An answer engine synthesizes a direct answer and, if it mentions a brand at all, usually mentions two or three. AEO is the work of being one of those two or three, described accurately, for the questions your actual buyers ask.\n\nThat's different enough from traditional SEO that it needed its own name. It's the same underlying shift that produced the adjacent term GEO (Generative Engine Optimization), more on that distinction below.`
       },
       {
         heading: 'AEO vs. SEO vs. GEO: the terminology, sorted out',
-        content: `Three terms get used almost interchangeably right now, which causes real confusion. Here's how we use them:\n\nSEO (Search Engine Optimization) optimizes for ranking in traditional search results - the blue links. It's measured in position and clicks.\n\nGEO (Generative Engine Optimization) is a broader, newer term covering optimization for any generative AI surface, including AI Overviews, chat assistants, and AI-powered search. Some people use it as a synonym for AEO.\n\nAEO (Answer Engine Optimization), as we use it, is specifically about being cited by conversational answer engines - ChatGPT, Claude, Gemini, Perplexity - as opposed to generative search features layered on top of traditional search (which is closer to GEO).\n\nIn practice the two terms overlap heavily and most of the underlying work is identical. If an agency or tool uses one term and not the other, that's not usually a meaningful signal by itself. What matters is [whether they can name what's actually different from SEO work](/blog/aeo-vs-seo) - that's the real test, regardless of which acronym they use.`
+        content: `Three terms get used almost interchangeably right now, which causes real confusion. Here's how we use them:\n\nSEO (Search Engine Optimization) optimizes for ranking in traditional search results, the blue links. It's measured in position and clicks.\n\nGEO (Generative Engine Optimization) is a broader, newer term covering optimization for any generative AI surface, including AI Overviews, chat assistants, and AI-powered search. Some people use it as a synonym for AEO.\n\nAEO (Answer Engine Optimization), as we use it, is specifically about being cited by conversational answer engines like ChatGPT, Claude, Gemini, and Perplexity, as opposed to generative search features layered on top of traditional search (which is closer to GEO).\n\nIn practice the two terms overlap heavily and most of the underlying work is identical. If an agency or tool uses one term and not the other, that's not usually a meaningful signal by itself. What matters is [whether they can name what's actually different from SEO work](/blog/aeo-vs-seo). That's the real test, regardless of which acronym they use.`
       },
       {
         heading: 'Why AEO exists as its own discipline now',
@@ -58,15 +296,15 @@ const posts = {
       },
       {
         heading: 'The five building blocks of AEO',
-        content: `AEO isn't one tactic. It's five distinct bodies of work that compound together. If you only do one, you'll plateau. Here they are, roughly in the order we tackle them for a new client:\n\nEntity authority. Does the AI have a clean, confident, consistent picture of what your brand actually is? This is [almost always the biggest gap](/blog/entity-authority-ai-citation) and the highest-leverage place to start - weak entity data undermines everything built on top of it.\n\nTechnical foundation and schema. The structured data (Organization, Article, SoftwareApplication schema) that makes your site machine-readable. [Table stakes, not a growth lever](/blog/aeo-schema-markup-guide) on its own, but necessary before other work pays off fully.\n\nThird-party citation building. Getting mentioned, accurately, in the publications and communities AI engines actually pull from - trade press, comparison sites, and yes, [Reddit](/) specifically, since it's one of the most heavily-weighted sources for ChatGPT in particular.\n\nAnswer-formatted content. Writing that leads with the direct answer to a specific buyer question instead of a meandering category overview - the format [every major engine rewards](/blog/optimize-for-perplexity), each with slightly different preferences.\n\nMeasurement. Tracking citation frequency and share-of-voice across engines on an ongoing basis, [honestly](/blog/measure-ai-citation-roi) - without this you're guessing whether any of the above four is working.`
+        content: `AEO isn't one tactic. It's five distinct bodies of work that compound together. If you only do one, you'll plateau. Here they are, roughly in the order we tackle them for a new client:\n\nEntity authority. Does the AI have a clean, confident, consistent picture of what your brand actually is? This is [almost always the biggest gap](/blog/entity-authority-ai-citation) and the highest-leverage place to start, since weak entity data undermines everything built on top of it.\n\nTechnical foundation and schema. The structured data (Organization, Article, SoftwareApplication schema) that makes your site machine-readable. [Table stakes, not a growth lever](/blog/aeo-schema-markup-guide) on its own, but necessary before other work pays off fully.\n\nThird-party citation building. Getting mentioned, accurately, in the publications and communities AI engines actually pull from: trade press, comparison sites, and yes, [Reddit](/) specifically, since it's one of the most heavily-weighted sources for ChatGPT in particular.\n\nAnswer-formatted content. Writing that leads with the direct answer to a specific buyer question instead of a meandering category overview. It's the format [every major engine rewards](/blog/optimize-for-perplexity), each with slightly different preferences.\n\nMeasurement. Tracking citation frequency and share-of-voice across engines on an ongoing basis, [honestly](/blog/measure-ai-citation-roi). Without this you're guessing whether any of the above four is working.`
       },
       {
         heading: 'What AEO is not',
-        content: `A few misconceptions worth clearing up directly:\n\nAEO is not "SEO with extra steps." The underlying mechanics - citation vs. ranking - are different enough that a lot of standard SEO advice doesn't transfer. [See the full breakdown](/blog/aeo-vs-seo).\n\nAEO is not one thing across every engine. [ChatGPT, Claude, and Gemini behave differently enough](/blog/chatgpt-vs-claude-vs-gemini-citations) that "optimizing for AI" as a single target is the wrong mental model from the start.\n\nAEO does not guarantee citations. Nobody - not us, not anyone selling AEO services - can promise a specific AI will name your brand for a specific query. The honest goal is improving the odds and the accuracy of the mention over time, measured directly, not promised in advance.\n\nAEO is not a one-time project. Entity profiles drift, competitors catch up, and engines update their own retrieval behavior constantly. It's ongoing work, closer to SEO's real shape than its marketing pitch suggests.`
+        content: `A few misconceptions worth clearing up directly:\n\nAEO is not "SEO with extra steps." The underlying mechanics, citation vs. ranking, are different enough that a lot of standard SEO advice doesn't transfer. [See the full breakdown](/blog/aeo-vs-seo).\n\nAEO is not one thing across every engine. [ChatGPT, Claude, and Gemini behave differently enough](/blog/chatgpt-vs-claude-vs-gemini-citations) that "optimizing for AI" as a single target is the wrong mental model from the start.\n\nAEO does not guarantee citations. Nobody, not us, not anyone selling AEO services, can promise a specific AI will name your brand for a specific query. The honest goal is improving the odds and the accuracy of the mention over time, measured directly, not promised in advance.\n\nAEO is not a one-time project. Entity profiles drift, competitors catch up, and engines update their own retrieval behavior constantly. It's ongoing work, closer to SEO's real shape than its marketing pitch suggests.`
       },
       {
         heading: 'How to start, this week',
-        content: `If you're convinced this matters for your brand and want a concrete first step instead of more reading:\n\nWrite down the 10-20 actual questions your buyers ask when they're deciding between you and a competitor. Not category overviews - specific comparison and recommendation questions.\n\nAsk each one to ChatGPT, Claude, Gemini, and Perplexity manually. Note whether you're mentioned, how you're described, and who's named instead of you.\n\nGoogle your own brand name and check whether you have an accurate knowledge panel. If not, that's very likely your single biggest gap, and the place [entity authority work](/blog/entity-authority-ai-citation) should start.\n\nThat one afternoon of manual testing tells you more about where you actually stand than any pitch deck will. If you want it done systematically instead of by hand, that's exactly what an [AI visibility audit](/services/ai-visibility-audit) automates.`
+        content: `If you're convinced this matters for your brand and want a concrete first step instead of more reading:\n\nWrite down the 10-20 actual questions your buyers ask when they're deciding between you and a competitor. Not category overviews, specific comparison and recommendation questions.\n\nAsk each one to ChatGPT, Claude, Gemini, and Perplexity manually. Note whether you're mentioned, how you're described, and who's named instead of you.\n\nGoogle your own brand name and check whether you have an accurate knowledge panel. If not, that's very likely your single biggest gap, and the place [entity authority work](/blog/entity-authority-ai-citation) should start.\n\nThat one afternoon of manual testing tells you more about where you actually stand than any pitch deck will. If you want it done systematically instead of by hand, that's exactly what an [AI visibility audit](/services/ai-visibility-audit) automates.`
       },
       {
         heading: null,
@@ -211,7 +449,7 @@ const posts = {
       },
       {
         heading: 'What to measure',
-        content: `You need two numbers, tracked weekly:\n\nFirst, citation frequency across your top 30–50 buyer queries. Run them manually (or with tooling, there are options now) against ChatGPT, Perplexity, and Google AI. Track how often your brand appears.\n\nSecond, [share-of-voice](/blog/measure-ai-citation-roi) versus your top 3 competitors. This matters more than absolute count, because AEO is a relative game. You\'re trying to displace somebody.\n\nEverything else - referral traffic from AI, pipeline attribution, downstream revenue - is useful but noisy. Citation frequency and share-of-voice are the leading indicators that give you something real to optimize against.`
+        content: `You need two numbers, tracked weekly:\n\nFirst, citation frequency across your top 30–50 buyer queries. Run them manually (or with tooling, there are options now) against ChatGPT, Perplexity, and Google AI. Track how often your brand appears.\n\nSecond, [share-of-voice](/blog/measure-ai-citation-roi) versus your top 3 competitors. This matters more than absolute count, because AEO is a relative game. You\'re trying to displace somebody.\n\nEverything else, referral traffic from AI, pipeline attribution, downstream revenue, is useful but noisy. Citation frequency and share-of-voice are the leading indicators that give you something real to optimize against.`
       },
       {
         heading: 'Timeline: be realistic',
