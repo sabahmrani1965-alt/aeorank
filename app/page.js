@@ -9,9 +9,50 @@ import ResultsSection from "@/components/ResultsSection";
 import BusinessModelsSection from "@/components/BusinessModelsSection";
 import { CALENDLY_URL } from "@/lib/links";
 
+const SITE_URL = "https://www.aeorank.tech";
+const SITE_TITLE = "AEOrank: Reddit & AI Visibility Report";
+const SITE_DESCRIPTION =
+  "Help your brand show up in ChatGPT, Claude, and Gemini answers through measurable Reddit engagement.";
+
+export const metadata = {
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: SITE_URL },
+  openGraph: {
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    siteName: "AEOrank",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
+};
+
+// Organization schema for entity recognition. Deliberately no `sameAs`
+// or `foundingDate` yet: those need to point at real, live profiles
+// (LinkedIn, Crunchbase, Wikidata), which don't exist for AEOrank yet.
+// Add them here once those profiles are actually live, not before.
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": `${SITE_URL}/#organization`,
+  name: "AEOrank",
+  url: SITE_URL,
+  logo: `${SITE_URL}/icon.svg`,
+  description: SITE_DESCRIPTION,
+};
+
 export default function Home() {
   return (
     <MarketingLayout>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
       {/* HERO */}
       <section className="hero">
         <div className="container">
