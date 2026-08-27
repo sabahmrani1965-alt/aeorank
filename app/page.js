@@ -32,10 +32,9 @@ export const metadata = {
   },
 };
 
-// Organization schema for entity recognition. Deliberately no `sameAs`
-// or `foundingDate` yet: those need to point at real, live profiles
-// (LinkedIn, Crunchbase, Wikidata), which don't exist for AEOrank yet.
-// Add them here once those profiles are actually live, not before.
+// Organization schema for entity recognition. sameAs only lists profiles
+// confirmed live (checked, not assumed) — add more here as they go live,
+// never before. No foundingDate yet: not a verified fact we have.
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -44,6 +43,7 @@ const organizationJsonLd = {
   url: SITE_URL,
   logo: `${SITE_URL}/icon.svg`,
   description: SITE_DESCRIPTION,
+  sameAs: ["https://www.linkedin.com/company/aeoranktech"],
 };
 
 export default function Home() {
