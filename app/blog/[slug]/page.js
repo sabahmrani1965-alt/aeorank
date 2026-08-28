@@ -38,7 +38,7 @@ const posts = {
     date: 'August 27, 2026',
     updated: '2026-08-27',
     readTime: '7 min read',
-    author: 'Ilyas Mrani',
+    author: 'Ilyas Lemzouri',
     sections: [
       {
         heading: null,
@@ -77,7 +77,7 @@ const posts = {
     date: 'August 27, 2026',
     updated: '2026-08-27',
     readTime: '6 min read',
-    author: 'Ilyas Mrani',
+    author: 'Ilyas Lemzouri',
     sections: [
       {
         heading: null,
@@ -116,7 +116,7 @@ const posts = {
     date: 'August 27, 2026',
     updated: '2026-08-27',
     readTime: '6 min read',
-    author: 'Ilyas Mrani',
+    author: 'Ilyas Lemzouri',
     sections: [
       {
         heading: null,
@@ -155,7 +155,7 @@ const posts = {
     date: 'August 27, 2026',
     updated: '2026-08-27',
     readTime: '6 min read',
-    author: 'Ilyas Mrani',
+    author: 'Ilyas Lemzouri',
     sections: [
       {
         heading: null,
@@ -194,7 +194,7 @@ const posts = {
     date: 'August 27, 2026',
     updated: '2026-08-27',
     readTime: '6 min read',
-    author: 'Ilyas Mrani',
+    author: 'Ilyas Lemzouri',
     sections: [
       {
         heading: null,
@@ -237,7 +237,7 @@ const posts = {
     date: 'August 27, 2026',
     updated: '2026-08-27',
     readTime: '8 min read',
-    author: 'Ilyas Mrani',
+    author: 'Ilyas Lemzouri',
     sections: [
       {
         heading: null,
@@ -276,7 +276,7 @@ const posts = {
     date: 'July 26, 2026',
     updated: '2026-07-26',
     readTime: '12 min read',
-    author: 'Ilyas Mrani',
+    author: 'Ilyas Lemzouri',
     sections: [
       {
         heading: null,
@@ -323,7 +323,7 @@ const posts = {
     date: 'April 24, 2026',
     updated: '2026-04-24',
     readTime: '9 min read',
-    author: 'Ilyas Mrani',
+    author: 'Ilyas Lemzouri',
     sections: [
       {
         heading: null,
@@ -374,7 +374,7 @@ const posts = {
     date: 'April 17, 2026',
     updated: '2026-04-17',
     readTime: '10 min read',
-    author: 'Ilyas Mrani',
+    author: 'Ilyas Lemzouri',
     sections: [
       {
         heading: null,
@@ -421,7 +421,7 @@ const posts = {
     date: 'April 10, 2026',
     updated: '2026-04-10',
     readTime: '9 min read',
-    author: 'Ilyas Mrani',
+    author: 'Ilyas Lemzouri',
     sections: [
       {
         heading: null,
@@ -472,7 +472,7 @@ const posts = {
     date: 'April 3, 2026',
     updated: '2026-04-03',
     readTime: '7 min read',
-    author: 'Ilyas Mrani',
+    author: 'Ilyas Lemzouri',
     sections: [
       {
         heading: null,
@@ -519,7 +519,7 @@ const posts = {
     date: 'March 27, 2026',
     updated: '2026-03-27',
     readTime: '11 min read',
-    author: 'Ilyas Mrani',
+    author: 'Ilyas Lemzouri',
     sections: [
       {
         heading: null,
@@ -562,7 +562,7 @@ const posts = {
     date: 'March 20, 2026',
     updated: '2026-03-20',
     readTime: '7 min read',
-    author: 'Ilyas Mrani',
+    author: 'Ilyas Lemzouri',
     sections: [
       {
         heading: null,
@@ -605,7 +605,7 @@ const posts = {
     date: 'March 13, 2026',
     updated: '2026-03-13',
     readTime: '8 min read',
-    author: 'Ilyas Mrani',
+    author: 'Ilyas Lemzouri',
     sections: [
       {
         heading: null,
@@ -648,7 +648,7 @@ const posts = {
     date: 'March 6, 2026',
     updated: '2026-03-06',
     readTime: '10 min read',
-    author: 'Ilyas Mrani',
+    author: 'Ilyas Lemzouri',
     sections: [
       {
         heading: null,
