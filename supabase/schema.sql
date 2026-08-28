@@ -651,6 +651,13 @@ CREATE TABLE IF NOT EXISTS public.company_profiles (
   updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- When app/api/cron/refresh-mentions/route.js last ran the automated
+-- social-listening search for this brand. NULL sorts first (never
+-- checked), so a brand new to the cron gets picked up before ones
+-- already cycled through. Not touched by the manual "Refresh" button in
+-- app/api/mentions/refresh/route.js, only by the cron.
+ALTER TABLE public.company_profiles ADD COLUMN IF NOT EXISTS mentions_refreshed_at TIMESTAMPTZ;
+
 CREATE INDEX IF NOT EXISTS company_profiles_user_id_idx ON public.company_profiles(user_id);
 
 ALTER TABLE public.company_profiles ENABLE ROW LEVEL SECURITY;
