@@ -725,7 +725,7 @@ export default function BlogPost({ params }) {
     description: post.description,
     datePublished: post.updated,
     dateModified: post.updated,
-    author: { '@type': 'Person', name: post.author },
+    author: { '@type': 'Person', name: post.author, worksFor: { '@type': 'Organization', name: 'AEOrank', url: 'https://www.aeorank.tech' } },
     publisher: { '@type': 'Organization', name: 'AEOrank', url: 'https://www.aeorank.tech' },
     mainEntityOfPage: { '@type': 'WebPage', '@id': `https://www.aeorank.tech/blog/${params.slug}` },
   }

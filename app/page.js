@@ -46,12 +46,68 @@ const organizationJsonLd = {
   sameAs: ["https://www.linkedin.com/company/aeoranktech"],
 };
 
+// FAQPage schema, built directly from the FAQ section's own visible
+// question/answer text below (see the "faq" section) rather than a
+// separate copy — keeps the structured data and what a visitor actually
+// reads in sync, which matters since mismatched schema is worse than
+// none.
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "What does AEOrank actually do?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "We help brands show up in AI chat answers (ChatGPT, Claude, Gemini) by getting them mentioned in the Reddit conversations those models train on. Each engagement is reviewed by you before it goes live: no spam, no shortcuts.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Where does the Reddit data come from?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Reddit's public JSON endpoints (the same data Reddit's own search uses). It's purely read-only. We don't post, vote, or modify anything in your name without explicit approval.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How accurate is the keyword data?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Base estimates are directional, generated from your site's metadata and Reddit signals. Paid plans get audit-grade keyword data sourced from third-party providers.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Do you guarantee citations in ChatGPT or Claude?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: 'No, nobody can guarantee what an LLM will say. We focus on measurable signals: Reddit visibility, branded search lift, and tracked references over time. The "AI Visibility Score" in paid plans tracks these movements transparently.',
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Is this allowed under Reddit's rules?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "We follow each subreddit's posting guidelines and disclose affiliations where required.",
+      },
+    },
+  ],
+};
+
 export default function Home() {
   return (
     <MarketingLayout>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       {/* HERO */}
       <section className="hero">
