@@ -1,6 +1,8 @@
 const BASE_URL = "https://www.aeorank.tech";
 
 const blogSlugs = [
+  "crowdreply-vs-aeorank",
+  "how-we-verify-reddit-threads",
   "getting-cited-by-claude",
   "sentiment-in-ai-citations",
   "partner-network-ai-visibility",

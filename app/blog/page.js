@@ -10,6 +10,24 @@ export const metadata = {
 
 const posts = [
   {
+    tag: "AEO · Comparison",
+    title: "CrowdReply vs. AEOrank: What Each One Actually Does",
+    excerpt:
+      "CrowdReply and AEOrank overlap more than most AI visibility tools. An honest look at pricing, how each one actually posts to Reddit, and which fits which team.",
+    date: "August 28, 2026",
+    readTime: "6 min read",
+    slug: "crowdreply-vs-aeorank",
+  },
+  {
+    tag: "AEO · Methodology",
+    title: "How We Verify a Reddit Thread Before It Ever Reaches You",
+    excerpt:
+      "A search snippet showing no replies isn't proof a thread is unanswered. What we actually check before flagging a thread as a real opportunity.",
+    date: "August 28, 2026",
+    readTime: "5 min read",
+    slug: "how-we-verify-reddit-threads",
+  },
+  {
     tag: "AEO · Claude",
     title: "Getting Cited by Claude: Why It's the Hardest Engine to Crack",
     excerpt:
