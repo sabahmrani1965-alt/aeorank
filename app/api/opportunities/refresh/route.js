@@ -1,19 +1,13 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { searchPosts } from "@/lib/reddit";
-import { pickCategoryQuery } from "@/lib/keywords";
-import { scoreOpportunities, generateOpportunityQueries, isLlmConfigured } from "@/lib/llm";
+import { refreshOpportunitiesForBrand } from "@/lib/opportunities";
 import { hasActiveSubscription } from "@/lib/subscription";
 import { getActiveCompanyProfile } from "@/lib/brands";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-const SEARCH_LIMIT = 20;
-// Soft cap on stored (non-saved) rows per brand — old ones beyond this get
-// pruned, oldest first, so the accumulated pool doesn't grow unbounded.
-// Saved rows are exempt and never pruned.
-const MAX_STORED = 300;
+const MAX_QUERIES = 6;
 
 // Free for any customer with an active plan — same as Mentions refresh,
 // no credits charged.
@@ -51,9 +45,7 @@ export async function POST() {
   // AI-guessed queries — the whole point of that tab is to let a customer
   // steer Opportunity discovery toward what they actually know their
   // buyers search for, not just what an LLM infers from the company
-  // description. Capped so a customer with many tracked keywords can't
-  // blow this route's 60s budget (each query is its own live Reddit search).
-  const MAX_QUERIES = 6;
+  // description.
   const { data: trackedKeywordRows } = await supabase
     .from("tracked_keywords")
     .select("keyword")
@@ -61,76 +53,17 @@ export async function POST() {
     .eq("company_profile_id", profile.id)
     .order("created_at", { ascending: false })
     .limit(MAX_QUERIES);
-  const keywordQueries = (trackedKeywordRows || []).map((k) => k.keyword);
-
-  // Prefer specific, description-grounded queries over the single generic
-  // category bucket pickCategoryQuery falls back to (e.g. any "SaaS" mention
-  // locks onto "SaaS startup", drowning out what the company actually does —
-  // see lib/llm.js's generateOpportunityQueries for the full reasoning).
-  const aiQueries = isLlmConfigured() ? await generateOpportunityQueries(brand, description) : null;
-  const fallbackQueries = aiQueries?.length ? aiQueries : [pickCategoryQuery(description, brand)];
-  const queries = [...new Set([...keywordQueries, ...fallbackQueries])].slice(0, MAX_QUERIES);
-  const perQueryLimit = Math.max(6, Math.ceil(SEARCH_LIMIT / queries.length));
+  const trackedKeywords = (trackedKeywordRows || []).map((k) => k.keyword);
 
   try {
-    // Accumulate, don't replace — Engain-style: a growing pool of discovered
-    // opportunities, not a single point-in-time snapshot that gets wiped on
-    // every refresh. Only genuinely new permalinks get scored/inserted;
-    // anything already on file (saved or not) is left untouched. The
-    // existing-permalinks lookup doesn't depend on the search results, so
-    // it runs concurrently with the search fan-out rather than after it —
-    // this route is already close to the timeout ceiling between the query-
-    // generation LLM call, the search fan-out, and the scoring LLM call.
-    const [results, existingRes] = await Promise.all([
-      Promise.all(queries.map((q) => searchPosts(q, perQueryLimit))),
-      supabase.from("opportunities").select("permalink").eq("user_id", user.id).eq("company_profile_id", profile.id),
-    ]);
-    const found = [...new Map(results.flat().map((p) => [p.permalink, p])).values()].slice(0, SEARCH_LIMIT + 10);
-    const existingPermalinks = new Set((existingRes.data || []).map((r) => r.permalink));
-    const fresh = found.filter((p) => !existingPermalinks.has(p.permalink));
-
-    if (fresh.length === 0) {
-      return NextResponse.json({ ok: true, added: 0 });
-    }
-
-    const scores = isLlmConfigured()
-      ? await scoreOpportunities(fresh, description || brand)
-      : null;
-
-    const rows = fresh.map((p, i) => ({
-      user_id: user.id,
-      company_profile_id: profile.id,
-      sub: p.sub,
-      title: p.title,
-      snippet: p.snippet || null,
-      permalink: p.permalink,
-      ups: p.ups || 0,
-      comments: p.comments || 0,
-      post_created_at: p.created ? new Date(p.created).toISOString() : null,
-      relevance_score: scores?.[i]?.score ?? null,
-      relevance_reason: scores?.[i]?.reason || null,
-      relevance_reasons: scores?.[i]?.reasons?.length ? scores[i].reasons : null,
-      buying_intent: scores?.[i]?.buyingIntent ?? null,
-    }));
-
-    const { error: insertError } = await supabase.from("opportunities").insert(rows);
-    if (insertError) throw insertError;
-
-    // Prune oldest non-saved rows beyond the soft cap so the pool doesn't
-    // grow unbounded. Saved rows are pinned and never counted/pruned.
-    const { data: unsaved } = await supabase
-      .from("opportunities")
-      .select("id, fetched_at")
-      .eq("user_id", user.id)
-      .eq("company_profile_id", profile.id)
-      .eq("saved", false)
-      .order("fetched_at", { ascending: true });
-    if (unsaved && unsaved.length > MAX_STORED) {
-      const staleIds = unsaved.slice(0, unsaved.length - MAX_STORED).map((r) => r.id);
-      await supabase.from("opportunities").delete().in("id", staleIds);
-    }
-
-    return NextResponse.json({ ok: true, added: rows.length });
+    const { added } = await refreshOpportunitiesForBrand(supabase, {
+      userId: user.id,
+      companyProfileId: profile.id,
+      brand,
+      description,
+      trackedKeywords,
+    });
+    return NextResponse.json({ ok: true, added });
   } catch (e) {
     console.error("[opportunities/refresh] failed:", e?.message || e);
     return NextResponse.json({ error: "Could not refresh opportunities." }, { status: 500 });
