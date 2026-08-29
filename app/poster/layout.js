@@ -18,7 +18,14 @@ export default async function PosterLayout({ children }) {
   if (!user) redirect("/login");
 
   const { data: profile } = await supabase.from("users").select("role").eq("id", user.id).maybeSingle();
-  if (profile?.role !== "poster") redirect("/dashboard");
+  // Was "/dashboard" — on the CrewQuest domain, middleware.js unconditionally
+  // rewrites /dashboard back to /poster (its AEOrank-side equivalent), so a
+  // non-poster hitting this redirected straight into a loop with no way
+  // out. /apply-poster is the actual CrewQuest-side destination for
+  // "you're signed in but not verified yet" — middleware.js's own
+  // non-poster-domain branch already sends it on to /signup instead when
+  // this somehow gets hit from the AEOrank side.
+  if (profile?.role !== "poster") redirect("/apply-poster");
 
   const admin = createAdminClient();
 
