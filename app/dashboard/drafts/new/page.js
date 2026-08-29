@@ -129,9 +129,10 @@ function NewDraftForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type,
-          subreddit: needsTargetUrl(type)
-            ? undefined
-            : subreddit.startsWith("r/") ? subreddit : `r/${subreddit}`,
+          // Sent as-typed — the API route is the authoritative place that
+          // sanitizes this (handles "SaaS", "r/SaaS", or a pasted URL all
+          // the same way), so it isn't duplicated/out of sync here.
+          subreddit: needsTargetUrl(type) ? undefined : subreddit.trim(),
           title,
           body: type === "upvote" ? undefined : body,
           targetUrl: needsTargetUrl(type) ? targetUrl.trim() : undefined,
@@ -213,11 +214,14 @@ function NewDraftForm() {
               <span>Subreddit</span>
               <input
                 type="text"
-                placeholder="r/SaaS"
+                placeholder="SaaS"
                 value={subreddit}
                 onChange={(e) => setSubreddit(e.target.value)}
                 required
               />
+              <span style={{ fontSize: 12, color: "var(--text-muted)" }}>
+                Just the name, e.g. "SaaS" — no need for "r/" or a link.
+              </span>
             </label>
           )}
 

@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getActiveCompanyProfile } from "@/lib/brands";
 import { withCredits, getBalance, CREDIT_COSTS, upvoteCreditCost } from "@/lib/credits";
-import { needsTargetUrl, normalizeRedditUrl } from "@/lib/format";
+import { needsTargetUrl, normalizeRedditUrl, normalizeSubredditInput } from "@/lib/format";
 import { parseRedditUrl } from "@/lib/reddit";
 
 export const runtime = "nodejs";
@@ -76,6 +76,14 @@ export async function POST(req) {
       return NextResponse.json({ error: "Could not determine the subreddit from that link." }, { status: 400 });
     }
     subreddit = parsed.sub;
+  } else {
+    // Free-text field, and nothing on the client stops someone from
+    // pasting a full subreddit URL here instead of just its name — this
+    // is the only thing standing between that and a broken
+    // "r/https://reddit.com/r/..." row (see lib/format.js's
+    // normalizeSubredditInput for what it catches).
+    const clean = normalizeSubredditInput(subreddit);
+    subreddit = clean ? `r/${clean}` : "";
   }
 
   if (!subreddit || !bodyText) {
