@@ -15,16 +15,48 @@ const DOS_DONTS = {
   donts: ["Don't mention you were paid to post this", "Don't spam the same content elsewhere", "Don't use engagement-bait phrasing"],
 };
 
+function SubredditLink({ subreddit }) {
+  return (
+    <a
+      href={`https://www.reddit.com/r/${subreddit}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ color: "inherit", textDecoration: "none" }}
+      title={`Open r/${subreddit} on Reddit`}
+    >
+      r/{subreddit}
+    </a>
+  );
+}
+
 export default function TaskDetail({ task, reward }) {
   const router = useRouter();
   const [expired, setExpired] = useState(false);
+  const [releasing, setReleasing] = useState(false);
+  const [releaseError, setReleaseError] = useState("");
+
+  async function cancelTask() {
+    if (!confirm("Cancel this task and put it back in the pool for someone else?")) return;
+    setReleaseError("");
+    setReleasing(true);
+    try {
+      const res = await fetch(`/api/poster/tasks/${task.id}/release`, { method: "POST" });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || "Could not cancel this task.");
+      router.push("/poster");
+      router.refresh();
+    } catch (err) {
+      setReleaseError(err?.message || "Something went wrong.");
+      setReleasing(false);
+    }
+  }
 
   if (task.status === "submitted") {
     const pendingReview = task.verification_status === "needs_review";
     return (
       <section>
         <span className="section-tag">( submitted )</span>
-        <h2>r/{task.subreddit}</h2>
+        <h2><SubredditLink subreddit={task.subreddit} /></h2>
         <div className="card" style={{ padding: 24, marginTop: 20 }}>
           <StatusBadge status={pendingReview ? "pending_review" : "submitted"} />
           <p style={{ marginTop: 14, color: "var(--text-dim)" }}>
@@ -66,13 +98,23 @@ export default function TaskDetail({ task, reward }) {
     <section>
       <span className="section-tag">( in progress )</span>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 6 }}>
-        <h2 style={{ margin: 0 }}>r/{task.subreddit}</h2>
+        <h2 style={{ margin: 0 }}><SubredditLink subreddit={task.subreddit} /></h2>
         <RewardBadge amount={reward} />
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24, flexWrap: "wrap" }}>
-        <span className="kc-badge kc-badge-neutral">{TYPE_LABEL[task.type] || "Comment"}</span>
-        <Countdown expiresAt={task.claim_expires_at} onExpire={() => setExpired(true)} />
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 24, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+          <span className="kc-badge kc-badge-neutral">{TYPE_LABEL[task.type] || "Comment"}</span>
+          <Countdown expiresAt={task.claim_expires_at} onExpire={() => setExpired(true)} />
+        </div>
+        <button type="button" onClick={cancelTask} disabled={releasing} className="btn btn-ghost btn-sm">
+          {releasing ? "Cancelling…" : "Cancel task"}
+        </button>
       </div>
+      {releaseError && (
+        <p role="alert" style={{ color: "var(--msg-danger)", fontSize: 13, marginTop: -12, marginBottom: 20 }}>
+          {releaseError}
+        </p>
+      )}
 
       <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 24, alignItems: "start" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
@@ -143,7 +185,7 @@ export default function TaskDetail({ task, reward }) {
               </div>
 
               <div className="card" style={{ padding: 22 }}>
-                <DraftViewer taskId={task.id} initialTitle={task.title} initialBody={task.body} type={task.type} />
+                <DraftViewer initialTitle={task.title} initialBody={task.body} type={task.type} />
               </div>
             </>
           )}

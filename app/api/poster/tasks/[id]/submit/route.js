@@ -84,7 +84,7 @@ export async function POST(req, { params }) {
   // Required liveness check, not the optional/credit-metered one
   // (app/api/drafts/[id]/refresh-stats) — free for the poster (posters
   // don't have a credit account; this is an operational cost the
-  // business absorbs, same as claim/regenerate). Only a CONFIRMED live
+  // business absorbs, same as claim/release). Only a CONFIRMED live
   // result auto-completes the submission. Everything else — a confirmed
   // "removed," or `stats === null` (the check itself couldn't run: Apify
   // not configured, or the call failed/timed out) — goes to manual
