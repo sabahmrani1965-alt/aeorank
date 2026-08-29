@@ -23,6 +23,9 @@
     },
     "app/api/cron/refresh-mentions/route.js": {
       "maxDuration": 60
+    },
+    "app/api/admin/notify-posters/route.js": {
+      "maxDuration": 60
     }
   },
   "crons": [
