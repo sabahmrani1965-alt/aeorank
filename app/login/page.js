@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import AuthSplitLayout from "@/components/AuthSplitLayout";
 import GoogleAuthButton from "@/components/GoogleAuthButton";
 import { createClient } from "@/lib/supabase/client";
@@ -23,14 +23,29 @@ export default function LoginPage() {
     );
   }
 
-  return <LoginForm />;
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
+  );
 }
 
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const searchParams = useSearchParams();
+  // app/auth/callback/route.js redirects back here with ?error=auth when
+  // the Google round-trip fails (expired/invalid code, Supabase rejecting
+  // the redirect URL, etc). Without reading this, that failure was
+  // completely silent — the user just lands back on this exact page with
+  // nothing to explain why, indistinguishable from never having clicked
+  // "Log in with Google" at all.
+  const [error, setError] = useState(
+    searchParams.get("error") === "auth"
+      ? "Something went wrong signing in with Google. Please try again, or use email and password below."
+      : ""
+  );
   const router = useRouter();
 
   // /login is shared across both domains (see AuthSplitLayout) — Google

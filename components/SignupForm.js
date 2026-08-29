@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import GoogleAuthButton from "@/components/GoogleAuthButton";
 
@@ -15,13 +15,34 @@ import GoogleAuthButton from "@/components/GoogleAuthButton";
 // flow the signup came from (signup_source) so an incomplete CrewQuest
 // signup (never finished verification) is still recognizable as one,
 // rather than looking exactly like a genuine AEOrank customer.
-export default function SignupForm({ redirectTo = "/onboarding", intent = "aeorank" }) {
+//
+// Wrapped in Suspense here (rather than requiring every caller to do it)
+// so app/signup/page.js and app/apply-poster/page.js don't need any
+// changes to pick up useSearchParams below.
+export default function SignupForm(props) {
+  return (
+    <Suspense fallback={null}>
+      <SignupFormInner {...props} />
+    </Suspense>
+  );
+}
+
+function SignupFormInner({ redirectTo = "/onboarding", intent = "aeorank" }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
-  const [error, setError] = useState("");
+  const searchParams = useSearchParams();
+  // Same failure mode as app/login/page.js: app/auth/callback/route.js
+  // redirects back here with ?error=auth when the Google round-trip
+  // fails, and without reading it, the user just lands back on this form
+  // with no explanation at all.
+  const [error, setError] = useState(
+    searchParams.get("error") === "auth"
+      ? "Something went wrong signing in with Google. Please try again, or use email and password below."
+      : ""
+  );
   const router = useRouter();
 
   async function submit(e) {
