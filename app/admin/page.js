@@ -37,13 +37,24 @@ export default async function AdminOverviewPage() {
     if (!latestSubByUser.has(s.user_id)) latestSubByUser.set(s.user_id, s);
   }
   const latestSubs = [...latestSubByUser.values()];
-  const activeSubs = latestSubs.filter((s) => s.status === "active");
+  // Matches hasActiveSubscription() (lib/subscription.js) — a trialing
+  // subscriber has real product access, same as an active one, so this
+  // was undercounting anyone still in their trial window.
+  const activeSubs = latestSubs.filter((s) => s.status === "active" || s.status === "trialing");
+  const payingSubs = activeSubs.filter((s) => s.status === "active");
+  const trialingSubs = activeSubs.filter((s) => s.status === "trialing");
 
-  const planCounts = { starter: 0, growth: 0, scale: 0 };
+  // Includes 'comp' (redeem-code / manually-granted access, same table,
+  // no real Stripe subscription behind it — see redeem_codes in
+  // supabase/schema.sql) — previously dropped from this breakdown
+  // entirely, so the by-plan cards didn't sum to the top KPI above.
+  const planCounts = { starter: 0, growth: 0, scale: 0, comp: 0 };
   let mrr = 0;
   for (const s of activeSubs) {
     if (planCounts[s.plan] !== undefined) planCounts[s.plan]++;
-    mrr += PLANS[s.plan]?.amount || 0;
+    // comp plans have no real Stripe price behind them — never counted
+    // toward MRR.
+    if (s.plan !== "comp") mrr += PLANS[s.plan]?.amount || 0;
   }
 
   const postedDrafts = (drafts || []).filter((d) => d.posted).length;
@@ -68,8 +79,12 @@ export default async function AdminOverviewPage() {
             <div className="kpi-value">{crewquestUserCount}</div>
           </div>
           <div className="kpi">
-            <div className="kpi-label">Active subscriptions</div>
-            <div className="kpi-value">{activeSubs.length}</div>
+            <div className="kpi-label">Paying subscriptions</div>
+            <div className="kpi-value">{payingSubs.length}</div>
+          </div>
+          <div className="kpi">
+            <div className="kpi-label">On trial</div>
+            <div className="kpi-value">{trialingSubs.length}</div>
           </div>
           <div className="kpi">
             <div className="kpi-label">Est. MRR</div>
