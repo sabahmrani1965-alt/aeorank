@@ -147,7 +147,7 @@ export default function DashboardShell({
 
       <aside className={`app-sidebar${sidebarOpen ? " is-open" : ""}`}>
         <Link href="/dashboard" className="app-sidebar-logo">
-          <span className="logo-mark" style={{ width: 28, height: 28, fontSize: 13 }}>A</span>
+          <img src="/icon.svg" alt="" width={28} height={28} style={{ borderRadius: 8 }} />
           AEOrank
         </Link>
 
