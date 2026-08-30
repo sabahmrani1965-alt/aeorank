@@ -101,10 +101,6 @@ export default async function AdminOverviewPage() {
 
         <div className="kpi-row" style={{ marginTop: 16 }}>
           <div className="kpi">
-            <div className="kpi-label">Posted</div>
-            <div className="kpi-value">{postedDrafts}</div>
-          </div>
-          <div className="kpi">
             <div className="kpi-label">Pending</div>
             <div className="kpi-value">{unpostedDrafts}</div>
           </div>
