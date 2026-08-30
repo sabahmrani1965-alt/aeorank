@@ -38,7 +38,7 @@ export default async function DashboardLayout({ children }) {
       email={user.email}
       isAdmin={isAdminEmail(user.email)}
       creditBalance={balanceRow?.balance ?? 0}
-      project={{ name: activeProfile?.company_name || "", website: activeProfile?.website || "" }}
+      project={{ name: activeProfile?.company_name || "", website: activeProfile?.website || "", logo: activeProfile?.logo_url || "" }}
       plan={plan}
       brands={brands}
       activeBrandId={activeProfile?.id || null}

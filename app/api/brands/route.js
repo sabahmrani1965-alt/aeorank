@@ -48,6 +48,7 @@ export async function POST(req) {
       user_id: user.id,
       website: body.website || null,
       company_name: body.companyName || null,
+      logo_url: body.logoUrl || null,
       target_location: body.targetLocation || null,
       brand_variations: Array.isArray(body.brandVariations) ? body.brandVariations : [],
       description: body.description || null,

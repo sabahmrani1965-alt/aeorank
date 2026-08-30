@@ -25,6 +25,7 @@ export default function OnboardingPage() {
 
   const [website, setWebsite] = useState("");
   const [companyName, setCompanyName] = useState("");
+  const [logoUrl, setLogoUrl] = useState("");
   const [targetLocation, setTargetLocation] = useState(LOCATIONS[0]);
   const [variations, setVariations] = useState([]);
   const [description, setDescription] = useState("");
@@ -79,6 +80,7 @@ export default function OnboardingPage() {
     const fields = {
       website: overrides.website ?? (website || null),
       companyName: overrides.companyName ?? (companyName || null),
+      logoUrl: overrides.logoUrl ?? (logoUrl || null),
       targetLocation: overrides.targetLocation ?? (targetLocation || null),
       brandVariations: overrides.brandVariations ?? variations,
       description: overrides.description ?? (description || null),
@@ -94,6 +96,7 @@ export default function OnboardingPage() {
         .update({
           website: fields.website,
           company_name: fields.companyName,
+          logo_url: fields.logoUrl,
           target_location: fields.targetLocation,
           brand_variations: fields.brandVariations,
           description: fields.description,
@@ -136,6 +139,7 @@ export default function OnboardingPage() {
     let resolvedCompanyName = companyName;
     let resolvedDescription = description;
     let resolvedVariations = variations;
+    let resolvedLogoUrl = logoUrl;
     try {
       const res = await fetch("/api/site-meta", {
         method: "POST",
@@ -147,9 +151,11 @@ export default function OnboardingPage() {
         resolvedCompanyName = data.brand || "";
         resolvedDescription = data.description || "";
         resolvedVariations = data.variations || [];
+        resolvedLogoUrl = data.logoUrl || "";
         setCompanyName(resolvedCompanyName);
         setDescription(resolvedDescription);
         setVariations(resolvedVariations);
+        setLogoUrl(resolvedLogoUrl);
       }
     } catch {
       // Fetch failing shouldn't block onboarding — user fills the fields in manually.
@@ -159,6 +165,7 @@ export default function OnboardingPage() {
       companyName: resolvedCompanyName,
       description: resolvedDescription,
       brandVariations: resolvedVariations,
+      logoUrl: resolvedLogoUrl,
     }).catch(() => {});
     setLoading(false);
     setStep(2);
@@ -257,6 +264,21 @@ export default function OnboardingPage() {
               </p>
 
               <form onSubmit={goToStep3}>
+                {logoUrl && (
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+                    <img
+                      src={logoUrl}
+                      alt=""
+                      width={44}
+                      height={44}
+                      style={{ borderRadius: 10, border: "1px solid var(--card-border)", background: "var(--bg-3)", objectFit: "contain" }}
+                      onError={(e) => { e.currentTarget.style.display = "none"; }}
+                    />
+                    <span style={{ fontSize: 13, color: "var(--text-dim)" }}>
+                      Found on {website.replace(/^https?:\/\//i, "")} — we'll use this as your brand's logo.
+                    </span>
+                  </div>
+                )}
                 <label className="auth-field">
                   <span>Company name</span>
                   <input

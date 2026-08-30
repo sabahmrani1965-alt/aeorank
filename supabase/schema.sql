@@ -658,6 +658,14 @@ CREATE TABLE IF NOT EXISTS public.company_profiles (
 -- app/api/mentions/refresh/route.js, only by the cron.
 ALTER TABLE public.company_profiles ADD COLUMN IF NOT EXISTS mentions_refreshed_at TIMESTAMPTZ;
 
+-- Auto-detected when the customer enters their website in onboarding
+-- (app/api/site-meta and app/api/brands/autofill both resolve this: the
+-- site's own apple-touch-icon/favicon/og:image if one is found in its
+-- HTML, else a real favicon-lookup-service fallback — see those routes'
+-- comments). Never user-uploaded, so this is a display convenience, not
+-- guaranteed-accurate branding.
+ALTER TABLE public.company_profiles ADD COLUMN IF NOT EXISTS logo_url TEXT;
+
 CREATE INDEX IF NOT EXISTS company_profiles_user_id_idx ON public.company_profiles(user_id);
 
 ALTER TABLE public.company_profiles ENABLE ROW LEVEL SECURITY;

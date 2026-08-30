@@ -101,6 +101,7 @@ export default function DashboardShell({
   const [menuOpen, setMenuOpen] = useState(false);
   const [brandMenuOpen, setBrandMenuOpen] = useState(false);
   const [switching, setSwitching] = useState(false);
+  const [logoFailed, setLogoFailed] = useState(false);
   const menuRef = useRef(null);
   const brandMenuRef = useRef(null);
   const current = activeHref(pathname);
@@ -157,7 +158,17 @@ export default function DashboardShell({
               className="app-sidebar-project-trigger"
               onClick={() => setBrandMenuOpen((v) => !v)}
             >
-              <span className="app-sidebar-project-icon">{projectLabel[0].toUpperCase()}</span>
+              {project?.logo && !logoFailed ? (
+                <img
+                  src={project.logo}
+                  alt=""
+                  className="app-sidebar-project-icon"
+                  style={{ objectFit: "contain", padding: 2 }}
+                  onError={() => setLogoFailed(true)}
+                />
+              ) : (
+                <span className="app-sidebar-project-icon">{projectLabel[0].toUpperCase()}</span>
+              )}
               <div className="app-sidebar-project-info">
                 <div className="app-sidebar-project-name">{projectLabel}</div>
                 <span className="app-sidebar-project-plan">{plan ? `${plan} Plan` : "No plan"}</span>

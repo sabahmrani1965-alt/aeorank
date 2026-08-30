@@ -27,7 +27,7 @@ export async function POST(req) {
   if (!/^https?:\/\//i.test(url)) url = "https://" + url;
 
   const slug = urlToSlug(url);
-  const meta = await fetchSiteMeta(url).catch(() => ({ title: "", description: "", ok: false }));
+  const meta = await fetchSiteMeta(url).catch(() => ({ title: "", description: "", logo: "", ok: false }));
   const companyName = extractBrandFromTitle(meta.title) || prettyBrand(slug);
 
   let hostname = "";
@@ -43,5 +43,9 @@ export async function POST(req) {
 
   const variations = [...new Set([slug, hostname, `${slug}app`].filter(Boolean))].slice(0, 3);
 
-  return NextResponse.json({ companyName, description, variations });
+  // Same fallback as app/api/site-meta/route.js — see its comment.
+  const logoUrl =
+    meta.logo || (hostname ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(hostname)}&sz=128` : "");
+
+  return NextResponse.json({ companyName, description, variations, logoUrl });
 }
