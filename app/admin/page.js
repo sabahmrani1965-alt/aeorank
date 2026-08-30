@@ -97,11 +97,8 @@ export default async function AdminOverviewPage() {
             <div className="kpi-label">Est. MRR</div>
             <div className="kpi-value">${(mrr / 100).toLocaleString()}</div>
           </div>
-        </div>
-
-        <div className="kpi-row" style={{ marginTop: 16 }}>
           <div className="kpi">
-            <div className="kpi-label">Pending</div>
+            <div className="kpi-label">Pending posts</div>
             <div className="kpi-value">{unpostedDrafts}</div>
           </div>
         </div>
