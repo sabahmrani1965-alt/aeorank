@@ -112,7 +112,15 @@ export default async function AdminOverviewPage() {
           <div className="kpi-row">
             {Object.entries(planCounts).map(([plan, count]) => (
               <div key={plan} className="kpi">
-                <div className="kpi-label" style={{ textTransform: "capitalize" }}>{plan}</div>
+                {/* Real customer-facing name (PLANS[plan].label is
+                    "AEOrank — Lite/Pro/Max" — the "AEOrank —" prefix is
+                    redundant on AEOrank's own admin page) — not the raw
+                    starter/growth/scale DB key. 'comp' has no PLANS entry
+                    (no real Stripe price behind it), so it keeps its own
+                    label. */}
+                <div className="kpi-label">
+                  {plan === "comp" ? "Comp" : (PLANS[plan]?.label || plan).replace("AEOrank — ", "")}
+                </div>
                 <div className="kpi-value">{count}</div>
               </div>
             ))}
