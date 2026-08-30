@@ -110,17 +110,18 @@ export default async function AdminOverviewPage() {
         <div style={{ marginTop: 32 }}>
           <h3 style={{ marginBottom: 14 }}>Active subscriptions by plan</h3>
           <div className="kpi-row">
-            {Object.entries(planCounts).map(([plan, count]) => (
+            {Object.entries(planCounts)
+              // Comp (free/gifted access, no real Stripe plan) is still
+              // counted in planCounts for accuracy elsewhere, just not
+              // shown as its own card here.
+              .filter(([plan]) => plan !== "comp")
+              .map(([plan, count]) => (
               <div key={plan} className="kpi">
                 {/* Real customer-facing name (PLANS[plan].label is
                     "AEOrank — Lite/Pro/Max" — the "AEOrank —" prefix is
                     redundant on AEOrank's own admin page) — not the raw
-                    starter/growth/scale DB key. 'comp' has no PLANS entry
-                    (no real Stripe price behind it), so it keeps its own
-                    label. */}
-                <div className="kpi-label">
-                  {plan === "comp" ? "Comp" : (PLANS[plan]?.label || plan).replace("AEOrank — ", "")}
-                </div>
+                    starter/growth/scale DB key. */}
+                <div className="kpi-label">{(PLANS[plan]?.label || plan).replace("AEOrank — ", "")}</div>
                 <div className="kpi-value">{count}</div>
               </div>
             ))}
