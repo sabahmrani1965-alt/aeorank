@@ -20,14 +20,13 @@ export default async function AdminOverviewPage() {
     );
   }
 
-  const [{ data: users }, { data: subs }, { data: reports }, { data: drafts }] =
+  const [{ data: users }, { data: subs }, { data: drafts }] =
     await Promise.all([
       admin.from("users").select("id, email, created_at, role"),
       admin
         .from("subscriptions")
         .select("user_id, plan, status, stripe_customer_id, created_at")
         .order("created_at", { ascending: false }),
-      admin.from("reports").select("user_id"),
       admin.from("report_drafts").select("user_id, posted"),
     ]);
 
@@ -101,10 +100,6 @@ export default async function AdminOverviewPage() {
         </div>
 
         <div className="kpi-row" style={{ marginTop: 16 }}>
-          <div className="kpi">
-            <div className="kpi-label">Reports generated</div>
-            <div className="kpi-value">{reports?.length || 0}</div>
-          </div>
           <div className="kpi">
             <div className="kpi-label">Posted</div>
             <div className="kpi-value">{postedDrafts}</div>
