@@ -65,3 +65,36 @@ export async function PATCH(req, { params }) {
 
   return NextResponse.json({ ok: true });
 }
+
+// Same "submitted work is the source of truth for payouts" restriction as
+// the reassignment path above — deleting a submitted task would silently
+// remove it from a poster's earnings/payout history (lib/posterPay.js).
+// Only 'available'/'claimed' (never fulfilled) rows can be deleted.
+export async function DELETE(req, { params }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user || !isAdminEmail(user.email)) {
+    return NextResponse.json({ error: "Not authorized." }, { status: 403 });
+  }
+
+  const admin = createAdminClient();
+  if (!admin) return NextResponse.json({ error: "Not configured." }, { status: 500 });
+
+  const { data: existing } = await admin.from("report_drafts").select("status").eq("id", params.id).maybeSingle();
+  if (!existing) {
+    return NextResponse.json({ error: "Not found." }, { status: 404 });
+  }
+  if (existing.status === "submitted") {
+    return NextResponse.json({ error: "This task is already submitted and can't be deleted." }, { status: 409 });
+  }
+
+  const { error } = await admin.from("report_drafts").delete().eq("id", params.id);
+  if (error) {
+    console.error("[admin/drafts] delete failed:", error.message);
+    return NextResponse.json({ error: "Could not delete this post." }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true });
+}

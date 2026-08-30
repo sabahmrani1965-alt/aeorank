@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import AssignDraftControl from "@/components/AssignDraftControl";
 import AdminReviewControl from "@/components/AdminReviewControl";
+import AdminDeleteDraftControl from "@/components/AdminDeleteDraftControl";
 import { displaySubreddit } from "@/lib/format";
 
 const VERIFICATION_LABEL = {
@@ -33,7 +34,7 @@ export default async function AdminDraftsPage() {
   const [{ data: drafts }, { data: users }, { data: posters }] = await Promise.all([
     admin
       .from("report_drafts")
-      .select("id, user_id, type, subreddit, title, body, posted, posted_at, permalink, claimed_by, created_at, verification_status")
+      .select("id, user_id, type, subreddit, title, body, posted, posted_at, permalink, claimed_by, created_at, verification_status, status")
       .order("created_at", { ascending: false }),
     admin.from("users").select("id, email"),
     admin.from("users").select("id, email").eq("role", "poster"),
@@ -54,7 +55,7 @@ export default async function AdminDraftsPage() {
           </div>
         ) : (
           <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed", minWidth: 1150 }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed", minWidth: 1230 }}>
               <colgroup>
                 <col style={{ width: 140 }} />
                 <col style={{ width: 190 }} />
@@ -64,6 +65,7 @@ export default async function AdminDraftsPage() {
                 <col style={{ width: 90 }} />
                 <col style={{ width: 110 }} />
                 <col style={{ width: 190 }} />
+                <col style={{ width: 80 }} />
               </colgroup>
               <thead>
                 <tr style={{ borderBottom: "1px solid var(--border, rgba(255,255,255,.1))" }}>
@@ -75,6 +77,7 @@ export default async function AdminDraftsPage() {
                   <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Status</th>
                   <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Verification</th>
                   <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}>Assigned to</th>
+                  <th style={{ textAlign: "left", padding: "10px 12px", color: "var(--text-dim)", fontSize: 13 }}></th>
                 </tr>
               </thead>
               <tbody>
@@ -141,6 +144,9 @@ export default async function AdminDraftsPage() {
                     </td>
                     <td style={{ padding: "10px 12px" }}>
                       <AssignDraftControl draftId={d.id} posters={posters || []} initialClaimedBy={d.claimed_by} />
+                    </td>
+                    <td style={{ padding: "10px 12px" }}>
+                      {d.status !== "submitted" && <AdminDeleteDraftControl draftId={d.id} />}
                     </td>
                   </tr>
                 ))}
