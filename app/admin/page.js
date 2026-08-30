@@ -25,7 +25,7 @@ export default async function AdminOverviewPage() {
       admin.from("users").select("id, email, created_at, role"),
       admin
         .from("subscriptions")
-        .select("user_id, plan, status, created_at")
+        .select("user_id, plan, status, stripe_customer_id, created_at")
         .order("created_at", { ascending: false }),
       admin.from("reports").select("user_id"),
       admin.from("report_drafts").select("user_id, posted"),
@@ -41,7 +41,14 @@ export default async function AdminOverviewPage() {
   // subscriber has real product access, same as an active one, so this
   // was undercounting anyone still in their trial window.
   const activeSubs = latestSubs.filter((s) => s.status === "active" || s.status === "trialing");
-  const payingSubs = activeSubs.filter((s) => s.status === "active");
+  // "Paying" means a real Stripe subscription actually being billed —
+  // status='active' alone isn't enough: a manual/comp grant (see
+  // lib/posterAccount... no, redeem_codes / admin's own manual_grant_admin
+  // rows above) also sits at status='active' with no real charge behind
+  // it. Real Stripe customer ids always start with "cus_"; comp/manual
+  // grants use fixed non-Stripe placeholders ("comp", "manual_grant_admin").
+  const isRealStripeCustomer = (s) => typeof s.stripe_customer_id === "string" && s.stripe_customer_id.startsWith("cus_");
+  const payingSubs = activeSubs.filter((s) => s.status === "active" && isRealStripeCustomer(s));
   const trialingSubs = activeSubs.filter((s) => s.status === "trialing");
 
   // Includes 'comp' (redeem-code / manually-granted access, same table,
@@ -52,9 +59,10 @@ export default async function AdminOverviewPage() {
   let mrr = 0;
   for (const s of activeSubs) {
     if (planCounts[s.plan] !== undefined) planCounts[s.plan]++;
-    // comp plans have no real Stripe price behind them — never counted
-    // toward MRR.
-    if (s.plan !== "comp") mrr += PLANS[s.plan]?.amount || 0;
+    // Only a genuinely billing, real Stripe subscription counts toward
+    // MRR — comp and manual grants (see isRealStripeCustomer above)
+    // aren't real revenue, regardless of what plan they're tagged with.
+    if (s.status === "active" && isRealStripeCustomer(s)) mrr += PLANS[s.plan]?.amount || 0;
   }
 
   const postedDrafts = (drafts || []).filter((d) => d.posted).length;
