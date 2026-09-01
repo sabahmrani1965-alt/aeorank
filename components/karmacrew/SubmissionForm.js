@@ -3,16 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const CHECKLIST = [
-  { key: "rules", label: "Read rules" },
-  { key: "copy", label: "Copy text" },
-  { key: "publish", label: "Publish" },
-  { key: "paste", label: "Paste Reddit URL" },
-];
-
 export default function SubmissionForm({ taskId, type, mode = "submit" }) {
   const router = useRouter();
-  const [checked, setChecked] = useState({});
   const [permalink, setPermalink] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -20,10 +12,6 @@ export default function SubmissionForm({ taskId, type, mode = "submit" }) {
 
   const isResubmit = mode === "resubmit";
   const actionLabel = isResubmit ? "Resubmit" : "Submit";
-
-  function toggle(key) {
-    setChecked((c) => ({ ...c, [key]: !c[key] }));
-  }
 
   async function submit(e) {
     e.preventDefault();
@@ -68,15 +56,6 @@ export default function SubmissionForm({ taskId, type, mode = "submit" }) {
 
   return (
     <form onSubmit={submit} className="card" style={{ padding: 22, display: "flex", flexDirection: "column", gap: 16 }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {CHECKLIST.map((item) => (
-          <label key={item.key} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14, cursor: "pointer" }}>
-            <input type="checkbox" checked={Boolean(checked[item.key])} onChange={() => toggle(item.key)} />
-            {item.label}
-          </label>
-        ))}
-      </div>
-
       <label className="auth-field" style={{ marginBottom: 0 }}>
         <span>Paste Reddit Post URL</span>
         <textarea
