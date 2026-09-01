@@ -10,15 +10,6 @@ import RewardBadge from "./RewardBadge";
 
 const TYPE_LABEL = { comment: "Comment", reply: "Reply", post: "Post", upvote: "Upvote" };
 
-// Content-quality tips (sound like a real person, stay on-topic, avoid
-// engagement bait) were dropped — the content itself is pre-written, so
-// the poster has no control over it. What's left is only about the
-// poster's own actions, which still matter regardless of who wrote the text.
-const DOS_DONTS = {
-  dos: ["Only post once, no duplicates"],
-  donts: ["Don't mention you were paid to post this", "Don't spam the same content elsewhere"],
-};
-
 function SubredditLink({ subreddit }) {
   return (
     <a
@@ -235,32 +226,9 @@ export default function TaskDetail({ task, reward }) {
               </p>
             </div>
           ) : (
-            <>
-              <div className="card" style={{ padding: 22 }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
-                  <div>
-                    <div style={{ fontWeight: 700, marginBottom: 8, fontSize: 13.5, color: "var(--msg-success)" }}>Do</div>
-                    <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: "var(--text-dim)", lineHeight: 1.7 }}>
-                      {DOS_DONTS.dos.map((d) => (
-                        <li key={d}>{d}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <div style={{ fontWeight: 700, marginBottom: 8, fontSize: 13.5, color: "var(--msg-danger)" }}>Don't</div>
-                    <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: "var(--text-dim)", lineHeight: 1.7 }}>
-                      {DOS_DONTS.donts.map((d) => (
-                        <li key={d}>{d}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div className="card" style={{ padding: 22 }}>
-                <DraftViewer initialTitle={task.title} initialBody={task.body} type={task.type} />
-              </div>
-            </>
+            <div className="card" style={{ padding: 22 }}>
+              <DraftViewer initialTitle={task.title} initialBody={task.body} type={task.type} />
+            </div>
           )}
         </div>
 
