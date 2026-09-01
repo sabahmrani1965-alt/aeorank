@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isAdminEmail } from "@/lib/adminAuth";
+import { notifyReviewDecision } from "@/lib/notifications";
 
 export const runtime = "nodejs";
 
@@ -55,6 +56,21 @@ export async function POST(req, { params }) {
   const admin = createAdminClient();
   if (!admin) return NextResponse.json({ error: "Not configured." }, { status: 500 });
 
+  // Read BEFORE the update — reject clears claimed_by as part of its own
+  // reset, so this is the only chance to know who to notify.
+  const { data: task } = await admin
+    .from("report_drafts")
+    .select("claimed_by, subreddit")
+    .eq("id", params.id)
+    .eq("status", "submitted")
+    .maybeSingle();
+  if (!task) {
+    return NextResponse.json(
+      { error: "Could not update: this task may not be submitted anymore." },
+      { status: 409 }
+    );
+  }
+
   const updates =
     decision === "approve"
       ? { verification_status: "verified", admin_notes: null }
@@ -90,6 +106,16 @@ export async function POST(req, { params }) {
       { status: 409 }
     );
   }
+
+  // Best-effort — a notification/email hiccup must never undo a review
+  // decision that already landed.
+  await notifyReviewDecision(admin, {
+    posterId: task.claimed_by,
+    decision,
+    subreddit: task.subreddit,
+    note,
+    taskId: params.id,
+  }).catch((err) => console.error("[review] notify failed:", err?.message || err));
 
   return NextResponse.json({ ok: true });
 }

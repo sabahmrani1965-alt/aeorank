@@ -1028,6 +1028,41 @@ CREATE POLICY "Service role can do anything on poster_payouts"
   ON public.poster_payouts FOR ALL
   USING (auth.role() = 'service_role');
 
+-- ── NOTIFICATIONS ─────────────────────────────────────────────
+-- Real events a poster needs to know about even after the report_drafts
+-- row itself changes shape or vanishes from their view — most notably, a
+-- REJECTED task (app/api/admin/drafts/[id]/review) resets status back to
+-- 'available' and clears claimed_by, which drops it out of every
+-- claimed_by-scoped query (history, earnings, the task page) instantly.
+-- Without this separate, persisted record, a rejected poster would have
+-- zero in-app evidence it ever happened. Written only by that review
+-- route (lib/notifications.js); read by the notification bell
+-- (app/poster/layout.js -> components/karmacrew/NotificationBell.js).
+-- No read/unread tracking — same "just show it" simplicity the bell
+-- already had before this table existed.
+CREATE TABLE IF NOT EXISTS public.notifications (
+  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  poster_id  UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  -- 'approve' | 'reject' | 'request_changes' — matches the review
+  -- route's own `decision` values verbatim, no translation layer.
+  type       TEXT NOT NULL,
+  message    TEXT NOT NULL,
+  task_id    UUID REFERENCES public.report_drafts(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS notifications_poster_id_idx ON public.notifications(poster_id, created_at DESC);
+
+ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Posters can read own notifications"
+  ON public.notifications FOR SELECT
+  USING (auth.uid() = poster_id);
+
+CREATE POLICY "Service role can do anything on notifications"
+  ON public.notifications FOR ALL
+  USING (auth.role() = 'service_role');
+
 -- ── CAMPAIGNS ────────────────────────────────────────────────
 -- Reddit campaign tracking: a user points this at an existing Reddit post
 -- and the app tracks its real upvote/reply/removal status over time via
