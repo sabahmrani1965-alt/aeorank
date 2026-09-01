@@ -10,13 +10,16 @@ const CHECKLIST = [
   { key: "paste", label: "Paste Reddit URL" },
 ];
 
-export default function SubmissionForm({ taskId, type }) {
+export default function SubmissionForm({ taskId, type, mode = "submit" }) {
   const router = useRouter();
   const [checked, setChecked] = useState({});
   const [permalink, setPermalink] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+
+  const isResubmit = mode === "resubmit";
+  const actionLabel = isResubmit ? "Resubmit" : "Submit";
 
   function toggle(key) {
     setChecked((c) => ({ ...c, [key]: !c[key] }));
@@ -27,7 +30,7 @@ export default function SubmissionForm({ taskId, type }) {
     setError("");
     setSubmitting(true);
     try {
-      const res = await fetch(`/api/poster/tasks/${taskId}/submit`, {
+      const res = await fetch(`/api/poster/tasks/${taskId}/${isResubmit ? "resubmit" : "submit"}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(type === "upvote" ? {} : { permalink }),
@@ -51,7 +54,7 @@ export default function SubmissionForm({ taskId, type }) {
         </label>
 
         <button type="submit" className="btn btn-primary btn-large" disabled={submitting || !confirmed}>
-          {submitting ? "Submitting…" : "Submit"}
+          {submitting ? `${actionLabel}ting…` : actionLabel}
         </button>
 
         {error && (
@@ -97,7 +100,7 @@ export default function SubmissionForm({ taskId, type }) {
       </label>
 
       <button type="submit" className="btn btn-primary btn-large" disabled={submitting || !permalink.trim()}>
-        {submitting ? "Submitting…" : "Submit"}
+        {submitting ? `${actionLabel}ting…` : actionLabel}
       </button>
 
       {error && (

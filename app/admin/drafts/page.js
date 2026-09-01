@@ -7,6 +7,7 @@ import { displaySubreddit } from "@/lib/format";
 const VERIFICATION_LABEL = {
   verified: { label: "Verified", color: "var(--state-success-fg)" },
   needs_review: { label: "Needs review", color: "var(--accent)" },
+  changes_requested: { label: "Changes requested", color: "var(--state-claimed-fg)" },
   rejected: { label: "Rejected", color: "var(--state-danger-fg)" },
 };
 
@@ -34,7 +35,7 @@ export default async function AdminDraftsPage() {
   const [{ data: drafts }, { data: users }, { data: posters }] = await Promise.all([
     admin
       .from("report_drafts")
-      .select("id, user_id, type, subreddit, title, body, posted, posted_at, permalink, claimed_by, created_at, verification_status, status")
+      .select("id, user_id, type, subreddit, title, body, posted, posted_at, permalink, claimed_by, created_at, verification_status, admin_notes, status")
       .order("created_at", { ascending: false }),
     admin.from("users").select("id, email"),
     admin.from("users").select("id, email").eq("role", "poster"),
@@ -136,6 +137,9 @@ export default async function AdminDraftsPage() {
                           <span style={{ color: VERIFICATION_LABEL[d.verification_status]?.color, fontWeight: 600, fontSize: 13 }}>
                             {VERIFICATION_LABEL[d.verification_status]?.label || d.verification_status}
                           </span>
+                          {d.verification_status === "changes_requested" && d.admin_notes && (
+                            <span style={{ color: "var(--text-dim)", fontSize: 12.5, maxWidth: 220 }}>{d.admin_notes}</span>
+                          )}
                           {d.verification_status === "needs_review" && <AdminReviewControl draftId={d.id} />}
                         </div>
                       ) : (

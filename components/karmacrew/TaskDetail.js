@@ -51,6 +51,67 @@ export default function TaskDetail({ task, reward }) {
     }
   }
 
+  if (task.status === "submitted" && task.verification_status === "changes_requested") {
+    return (
+      <section>
+        <span className="section-tag">( changes requested )</span>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 24 }}>
+          <h2 style={{ margin: 0 }}><SubredditLink subreddit={task.subreddit} /></h2>
+          <RewardBadge amount={reward} />
+        </div>
+
+        <div className="card" style={{ padding: 22, marginBottom: 20 }}>
+          <StatusBadge status="changes_requested" />
+          <p style={{ marginTop: 14, color: "var(--text-dim)", lineHeight: 1.6, margin: "14px 0 0" }}>
+            {task.admin_notes || "An admin asked for a fix on this one before it can be approved. Take another look, then resubmit below."}
+          </p>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 24, alignItems: "start" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <div className="card" style={{ padding: 22 }}>
+              <div style={{ fontWeight: 700, marginBottom: 10 }}>Instructions</div>
+              <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.6, margin: 0 }}>{task.title}</p>
+            </div>
+
+            {task.type !== "post" && task.target_url && (
+              <div className="card" style={{ padding: 22 }}>
+                <div style={{ fontWeight: 700, marginBottom: 10 }}>
+                  {task.type === "reply" ? "Comment to reply to" : task.type === "upvote" ? "Post or comment to upvote" : "Thread to comment on"}
+                </div>
+                <a
+                  href={task.target_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "var(--accent)", fontSize: 14, wordBreak: "break-all" }}
+                >
+                  {task.target_url} ↗
+                </a>
+              </div>
+            )}
+
+            {task.type !== "upvote" && (
+              <div className="card" style={{ padding: 22 }}>
+                <DraftViewer initialTitle={task.title} initialBody={task.body} type={task.type} />
+              </div>
+            )}
+
+            {task.permalink && (
+              <div className="card" style={{ padding: 22 }}>
+                <div style={{ fontWeight: 700, marginBottom: 10 }}>What you submitted before</div>
+                <a href={task.permalink} target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)", fontSize: 14, wordBreak: "break-all" }}>
+                  {task.permalink} ↗
+                </a>
+              </div>
+            )}
+          </div>
+
+          <SubmissionForm taskId={task.id} type={task.type} mode="resubmit" />
+        </div>
+      </section>
+    );
+  }
+
   if (task.status === "submitted") {
     const pendingReview = task.verification_status === "needs_review";
     return (

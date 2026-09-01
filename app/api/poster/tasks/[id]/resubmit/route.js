@@ -6,6 +6,10 @@ import { requirePosterUser, buildSubmissionUpdate, PosterSubmissionError } from 
 export const runtime = "nodejs";
 export const maxDuration = 30;
 
+// Same as .../submit, but for a task an admin sent back with
+// verification_status='changes_requested' (app/api/admin/drafts/[id]/
+// review) — status stays 'submitted' the whole time (it never returns to
+// the open pool), so this only ever fires from that state, not 'claimed'.
 export async function POST(req, { params }) {
   const supabase = createClient();
   const user = await requirePosterUser(supabase);
@@ -24,11 +28,12 @@ export async function POST(req, { params }) {
     .select("type, subreddit, target_url")
     .eq("id", params.id)
     .eq("claimed_by", user.id)
-    .eq("status", "claimed")
+    .eq("status", "submitted")
+    .eq("verification_status", "changes_requested")
     .maybeSingle();
   if (!task) {
     return NextResponse.json(
-      { error: "Could not submit: this task may have expired or already been submitted." },
+      { error: "Could not resubmit: this task isn't waiting on changes anymore." },
       { status: 409 }
     );
   }
@@ -48,13 +53,14 @@ export async function POST(req, { params }) {
     .update(updates)
     .eq("id", params.id)
     .eq("claimed_by", user.id)
-    .eq("status", "claimed")
+    .eq("status", "submitted")
+    .eq("verification_status", "changes_requested")
     .select("id")
     .maybeSingle();
 
   if (error || !data) {
     return NextResponse.json(
-      { error: "Could not submit: this task may have expired or already been submitted." },
+      { error: "Could not resubmit: this task isn't waiting on changes anymore." },
       { status: 409 }
     );
   }

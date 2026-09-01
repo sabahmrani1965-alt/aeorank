@@ -434,7 +434,8 @@ BEGIN
        OR NEW.claimed_by IS NOT NULL
        OR NEW.claim_expires_at IS NOT NULL
        OR NEW.claimed_at IS NOT NULL
-       OR NEW.verification_status IS NOT NULL THEN
+       OR NEW.verification_status IS NOT NULL
+       OR NEW.admin_notes IS NOT NULL THEN
       RAISE EXCEPTION 'Cannot set marketplace fields directly.';
     END IF;
   ELSIF TG_OP = 'UPDATE' THEN
@@ -442,7 +443,8 @@ BEGIN
        OR NEW.claimed_by IS DISTINCT FROM OLD.claimed_by
        OR NEW.claim_expires_at IS DISTINCT FROM OLD.claim_expires_at
        OR NEW.claimed_at IS DISTINCT FROM OLD.claimed_at
-       OR NEW.verification_status IS DISTINCT FROM OLD.verification_status THEN
+       OR NEW.verification_status IS DISTINCT FROM OLD.verification_status
+       OR NEW.admin_notes IS DISTINCT FROM OLD.admin_notes THEN
       RAISE EXCEPTION 'Not allowed to modify marketplace fields directly.';
     END IF;
   END IF;
@@ -475,11 +477,21 @@ ALTER TABLE public.report_drafts ADD COLUMN IF NOT EXISTS live_checked_at TIMEST
 -- unavailable, or it looked removed — see app/api/poster/tasks/[id]/
 -- submit; a confident-but-possibly-wrong "removed" signal isn't grounds
 -- to auto-reject given fetchItemStats' documented reliability gaps, so
--- it goes to a human instead) | 'rejected' (an admin reviewed and said
--- no, via app/api/admin/drafts/[id]/review). Only NULL/'verified' rows
--- count toward a poster's real earnings — see getEarningsSummary
--- (lib/posterPay.js).
+-- it goes to a human instead) | 'changes_requested' (an admin asked the
+-- SAME poster to fix something and resubmit — status stays 'submitted'
+-- throughout, unlike 'rejected' below, so the task never re-enters the
+-- open pool; see app/api/poster/tasks/[id]/resubmit) | 'rejected' (an
+-- admin reviewed and said no, via app/api/admin/drafts/[id]/review).
+-- Only NULL/'verified' rows count toward a poster's real earnings — see
+-- getEarningsSummary (lib/posterPay.js).
 ALTER TABLE public.report_drafts ADD COLUMN IF NOT EXISTS verification_status TEXT;
+
+-- Admin's feedback when verification_status='changes_requested' — shown
+-- on the poster's own task page (components/karmacrew/TaskDetail.js) so
+-- they know what to fix before resubmitting. Cleared (set back to NULL)
+-- on every resubmit/approve/reject so a stale note never lingers past
+-- the review it was written for.
+ALTER TABLE public.report_drafts ADD COLUMN IF NOT EXISTS admin_notes TEXT;
 
 -- ── OPPORTUNITIES ────────────────────────────────────────────
 -- Cached Reddit threads matched + relevance-scored against a user's
