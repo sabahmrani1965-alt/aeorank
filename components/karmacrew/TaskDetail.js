@@ -10,9 +10,13 @@ import RewardBadge from "./RewardBadge";
 
 const TYPE_LABEL = { comment: "Comment", reply: "Reply", post: "Post", upvote: "Upvote" };
 
+// Content-quality tips (sound like a real person, stay on-topic, avoid
+// engagement bait) were dropped — the content itself is pre-written, so
+// the poster has no control over it. What's left is only about the
+// poster's own actions, which still matter regardless of who wrote the text.
 const DOS_DONTS = {
-  dos: ["Sound like a real person, not an ad", "Keep it on-topic for the subreddit", "Only post once, no duplicates"],
-  donts: ["Don't mention you were paid to post this", "Don't spam the same content elsewhere", "Don't use engagement-bait phrasing"],
+  dos: ["Only post once, no duplicates"],
+  donts: ["Don't mention you were paid to post this", "Don't spam the same content elsewhere"],
 };
 
 function SubredditLink({ subreddit }) {
