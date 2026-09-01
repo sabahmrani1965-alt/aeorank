@@ -5,6 +5,7 @@ import { getActiveCompanyProfile } from "@/lib/brands";
 import { withCredits, getBalance, CREDIT_COSTS, upvoteCreditCost } from "@/lib/credits";
 import { needsTargetUrl, normalizeRedditUrl, normalizeSubredditInput } from "@/lib/format";
 import { parseRedditUrl } from "@/lib/reddit";
+import { notifyNewTask } from "@/lib/discord";
 
 export const runtime = "nodejs";
 
@@ -156,6 +157,12 @@ export async function POST(req) {
     }
     return NextResponse.json({ error: "Could not save post." }, { status: 500 });
   }
+
+  // Awaited (not fire-and-forget) since a serverless function can be frozen
+  // right after the response is returned — a background call could get cut
+  // off mid-flight. Best-effort regardless: a Discord hiccup must never fail
+  // the save itself.
+  await notifyNewTask({ type, subreddit, title, qty }).catch(() => {});
 
   return NextResponse.json({
     ok: true,
