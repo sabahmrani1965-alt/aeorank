@@ -10,7 +10,7 @@ const FAQS = [
   },
   {
     q: "How do I get paid?",
-    a: "Each mission pays a flat rate ($0.50 for a comment or reply, $1.00 for a post). Your earnings build up in your dashboard, and you can request a withdrawal once you've earned at least $10.",
+    a: "Each mission pays a flat rate ($0.50 for a comment, $1.00 for a reply, $2.00 for a post, $0.10 per upvote). Your earnings build up in your dashboard, and you can request a withdrawal once you've earned at least $10.",
   },
   {
     q: "Why do you check my Reddit account?",
