@@ -5,19 +5,25 @@ import { isAdminEmail } from "@/lib/adminAuth";
 
 export const runtime = "nodejs";
 
-// Resolves a submission that couldn't be auto-verified (see
-// app/api/poster/tasks/[id]/submit) — approving sets it to 'verified' so
-// it starts counting toward the poster's earnings (getEarningsSummary,
-// lib/posterPay.js). Rejecting resets the whole row back to a fresh,
-// available, unclaimed state, the same "don't let a task silently vanish"
-// principle as the claim-expiry release in lib/posterTasks.js. Requesting
-// changes is the middle ground: unlike reject, the same poster keeps the
-// claim and can fix + resubmit (app/api/poster/tasks/[id]/resubmit) —
-// status stays 'submitted' throughout, so it never re-enters the open
-// pool, but verification_status flips to 'changes_requested' with a note
-// so the poster's task page can show them what to fix. Only acts on rows
-// currently 'needs_review' — already-decided rows can't be flipped back
-// through this route.
+// Lets an admin act on ANY submitted task, not just one auto-verification
+// couldn't confirm — most real submissions pass the automated Reddit
+// check instantly (see fetchItemStats/buildSubmissionUpdate in
+// lib/posterTasks.js) and land straight on 'verified', but a live post can
+// still be off-brief, off-topic, or otherwise worth sending back even
+// though it's genuinely posted. Approving sets 'verified' (idempotent if
+// already verified) so it counts toward the poster's earnings
+// (getEarningsSummary, lib/posterPay.js). Rejecting resets the whole row
+// back to a fresh, available, unclaimed state — same "don't let a task
+// silently vanish" principle as the claim-expiry release in
+// lib/posterTasks.js; if the row had already been counted as verified,
+// it stops counting the moment this runs. Requesting changes is the
+// middle ground: unlike reject, the same poster keeps the claim and can
+// fix + resubmit (app/api/poster/tasks/[id]/resubmit) — status stays
+// 'submitted' throughout, so it never re-enters the open pool, but
+// verification_status flips to 'changes_requested' with a note so the
+// poster's task page can show them what to fix. Only acts on rows
+// currently 'submitted' — an already-rejected (reset) row has no
+// 'submitted' left to find.
 export async function POST(req, { params }) {
   const supabase = createClient();
   const {
@@ -74,13 +80,13 @@ export async function POST(req, { params }) {
     .from("report_drafts")
     .update(updates)
     .eq("id", params.id)
-    .eq("verification_status", "needs_review")
+    .eq("status", "submitted")
     .select("id")
     .maybeSingle();
 
   if (error || !data) {
     return NextResponse.json(
-      { error: "Could not update: this task may not be pending review anymore." },
+      { error: "Could not update: this task may not be submitted anymore." },
       { status: 409 }
     );
   }

@@ -132,15 +132,15 @@ export default async function AdminDraftsPage() {
                       )}
                     </td>
                     <td style={{ padding: "10px 12px" }}>
-                      {d.verification_status ? (
+                      {d.verification_status || d.status === "submitted" ? (
                         <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "flex-start" }}>
                           <span style={{ color: VERIFICATION_LABEL[d.verification_status]?.color, fontWeight: 600, fontSize: 13 }}>
-                            {VERIFICATION_LABEL[d.verification_status]?.label || d.verification_status}
+                            {VERIFICATION_LABEL[d.verification_status]?.label || d.verification_status || "Verified"}
                           </span>
                           {d.verification_status === "changes_requested" && d.admin_notes && (
                             <span style={{ color: "var(--text-dim)", fontSize: 12.5, maxWidth: 220 }}>{d.admin_notes}</span>
                           )}
-                          {d.verification_status === "needs_review" && <AdminReviewControl draftId={d.id} />}
+                          {d.status === "submitted" && <AdminReviewControl draftId={d.id} />}
                         </div>
                       ) : (
                         <span style={{ color: "var(--text-muted)", fontSize: 13 }}>-</span>
