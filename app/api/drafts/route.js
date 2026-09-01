@@ -162,7 +162,7 @@ export async function POST(req) {
   // right after the response is returned — a background call could get cut
   // off mid-flight. Best-effort regardless: a Discord hiccup must never fail
   // the save itself.
-  await notifyNewTask({ type, subreddit, title, qty }).catch(() => {});
+  await notifyNewTask({ ids: outcome.result.map((r) => r.id), type, subreddit }).catch(() => {});
 
   return NextResponse.json({
     ok: true,
