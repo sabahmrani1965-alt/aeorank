@@ -75,7 +75,11 @@ export default function TaskDetail({ task, reward }) {
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             <div className="card" style={{ padding: 22 }}>
               <div style={{ fontWeight: 700, marginBottom: 10 }}>Instructions</div>
-              <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.6, margin: 0 }}>{task.title}</p>
+              <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.6, margin: 0 }}>
+                {task.type === "post"
+                  ? `Post the title and body below as a new post in r/${task.subreddit}, from your own Reddit account.`
+                  : task.title}
+              </p>
             </div>
 
             {task.type !== "post" && task.target_url && (
@@ -185,7 +189,11 @@ export default function TaskDetail({ task, reward }) {
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           <div className="card" style={{ padding: 22 }}>
             <div style={{ fontWeight: 700, marginBottom: 10 }}>Instructions</div>
-            <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.6, margin: 0 }}>{task.title}</p>
+            <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.6, margin: 0 }}>
+              {task.type === "post"
+                ? `Post the title and body below as a new post in r/${task.subreddit}, from your own Reddit account.`
+                : task.title}
+            </p>
           </div>
 
           {/* Where this goes. First thing a poster needs, so it sits above
