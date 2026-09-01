@@ -47,7 +47,7 @@ export default function AuthSplitLayout({ children }) {
           </p>
           <div className="auth-stats">
             <div>
-              <div className="auth-stat-value">$0.50–$1</div>
+              <div className="auth-stat-value">$1–$5</div>
               <div className="auth-stat-label">Per completed task</div>
             </div>
             <div>
