@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { checkPrompt, isAiVisibilityConfigured } from "@/lib/aivisibility";
+import { checkPrompt, isAiVisibilityConfigured, persistCheckResults } from "@/lib/aivisibility";
 import { runWithConcurrency } from "@/lib/concurrency";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+// Cloro (ChatGPT/Perplexity) averages 30-45s per call. At CONCURRENCY=4
+// over BATCH_SIZE=12 prompts, that's 3 sequential waves — comfortably
+// over the old 60s ceiling that was sized for Gemini/Claude alone.
+export const maxDuration = 280;
 
 const BATCH_SIZE = 12;
 const CONCURRENCY = 4;
@@ -78,32 +81,16 @@ export async function GET(req) {
   await runWithConcurrency(prompts, CONCURRENCY, async (prompt) => {
     const brand = brandById.get(prompt.company_profile_id);
     if (!brand) return;
-    const result = await checkPrompt(prompt.text, brand).catch((e) => {
+    const results = await checkPrompt(prompt.text, brand).catch((e) => {
       console.error("[cron/check-prompts] checkPrompt failed:", e?.message || e);
       return null;
     });
-    if (!result) return;
-    const checkedAt = new Date().toISOString();
-    await admin
-      .from("prompts")
-      .update({
-        last_checked_at: checkedAt,
-        last_mentioned: result.mentioned,
-        last_position: result.position,
-        last_brands: result.brands,
-        last_answer: result.answer,
-        last_model: result.model,
-      })
-      .eq("id", prompt.id);
-    await admin.from("prompt_checks").insert({
-      prompt_id: prompt.id,
-      user_id: prompt.user_id,
-      mentioned: result.mentioned,
-      position: result.position,
-      brands: result.brands,
-      answer: result.answer,
-      model: result.model,
-      created_at: checkedAt,
+    if (!results) return;
+    await persistCheckResults(admin, {
+      promptId: prompt.id,
+      userId: prompt.user_id,
+      results,
+      checkedAt: new Date().toISOString(),
     });
     checked++;
   });

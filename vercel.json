@@ -19,7 +19,7 @@
       "maxDuration": 60
     },
     "app/api/cron/check-prompts/route.js": {
-      "maxDuration": 60
+      "maxDuration": 280
     },
     "app/api/cron/refresh-mentions/route.js": {
       "maxDuration": 60

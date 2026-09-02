@@ -3,10 +3,12 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { hasActiveSubscription } from "@/lib/subscription";
 import { getActiveCompanyProfile } from "@/lib/brands";
-import { checkPrompt, isAiVisibilityConfigured } from "@/lib/aivisibility";
+import { checkPrompt, isAiVisibilityConfigured, persistCheckResults } from "@/lib/aivisibility";
 
 export const runtime = "nodejs";
-export const maxDuration = 30;
+// Cloro (ChatGPT/Perplexity) averages 30-45s per call — comfortably over
+// the old 30s ceiling that was sized for Gemini/Claude alone.
+export const maxDuration = 60;
 
 export async function POST(req, { params }) {
   const supabase = createClient();
@@ -53,8 +55,8 @@ export async function POST(req, { params }) {
     return NextResponse.json({ error: "Prompt not found." }, { status: 404 });
   }
 
-  const result = await checkPrompt(prompt.text, brand);
-  if (!result) {
+  const results = await checkPrompt(prompt.text, brand);
+  if (!results) {
     return NextResponse.json(
       { error: "Couldn't check this prompt right now. Try again." },
       { status: 502 }
@@ -62,39 +64,21 @@ export async function POST(req, { params }) {
   }
   const checkedAt = new Date().toISOString();
 
-  const { error: updateError } = await admin
-    .from("prompts")
-    .update({
-      last_checked_at: checkedAt,
-      last_mentioned: result.mentioned,
-      last_position: result.position,
-      last_brands: result.brands,
-      last_answer: result.answer,
-      last_model: result.model,
-    })
-    .eq("id", prompt.id);
-  if (updateError) {
-    console.error("[prompts/check] save failed:", updateError.message);
-  }
-
-  // Immutable history row, alongside the prompts.last_* cache above — this
-  // is what the detail page's trend chart/Top Brands/Recent Checks read from.
-  const { error: historyError } = await admin.from("prompt_checks").insert({
-    prompt_id: prompt.id,
-    user_id: user.id,
-    mentioned: result.mentioned,
-    position: result.position,
-    brands: result.brands,
-    answer: result.answer,
-    model: result.model,
-    created_at: checkedAt,
+  // persistCheckResults writes prompts.last_* (the primary result) plus
+  // one prompt_checks history row per engine that answered — see
+  // lib/aivisibility.js. Best-effort: it logs its own failures rather
+  // than throwing, so a DB hiccup never hides a check that did complete.
+  const primary = await persistCheckResults(admin, {
+    promptId: prompt.id,
+    userId: user.id,
+    results,
+    checkedAt,
   });
-  if (historyError) {
-    console.error("[prompts/check] history insert failed:", historyError.message);
-  }
 
   return NextResponse.json({
     ok: true,
-    result: { ...result, checkedAt },
+    checkedAt,
+    results,
+    primary,
   });
 }

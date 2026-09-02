@@ -34,6 +34,11 @@ function PromptRow({ prompt, onUpdated, onDeleted }) {
   const [checking, setChecking] = useState(false);
   const [checkError, setCheckError] = useState("");
   const [expanded, setExpanded] = useState(false);
+  // Full per-engine breakdown from the most recent check THIS session —
+  // not persisted on the prompt row itself (prompts.last_* only ever
+  // holds one "primary" engine's result, see lib/aivisibility.js), so a
+  // page reload falls back to the single last_answer/last_model view below.
+  const [results, setResults] = useState(null);
   const [editing, setEditing] = useState(false);
   const [editText, setEditText] = useState(prompt.text);
   const [editType, setEditType] = useState(prompt.type);
@@ -50,14 +55,15 @@ function PromptRow({ prompt, onUpdated, onDeleted }) {
       const res = await fetch(`/api/prompts/${prompt.id}/check`, { method: "POST" });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data?.error || "Could not check this prompt.");
+      setResults(data.results);
       onUpdated({
         ...prompt,
-        last_checked_at: data.result.checkedAt,
-        last_mentioned: data.result.mentioned,
-        last_position: data.result.position,
-        last_brands: data.result.brands,
-        last_answer: data.result.answer,
-        last_model: data.result.model,
+        last_checked_at: data.checkedAt,
+        last_mentioned: data.primary.mentioned,
+        last_position: data.primary.position,
+        last_brands: data.primary.brands,
+        last_answer: data.primary.answer,
+        last_model: data.primary.model,
       });
       setExpanded(true);
     } catch (e) {
@@ -177,13 +183,13 @@ function PromptRow({ prompt, onUpdated, onDeleted }) {
         <button type="button" onClick={checkNow} disabled={checking} className="btn btn-primary btn-sm">
           {checking ? (
             <>
-              <span className="loader" /> Checking…
+              <span className="loader" /> Checking… (can take up to a minute)
             </>
           ) : (
             "Check now"
           )}
         </button>
-        {prompt.last_answer && (
+        {(results?.length > 0 || prompt.last_answer) && (
           <button type="button" onClick={() => setExpanded((v) => !v)} className="btn btn-ghost btn-sm">
             {expanded ? "Hide answer" : "View answer"}
           </button>
@@ -202,7 +208,43 @@ function PromptRow({ prompt, onUpdated, onDeleted }) {
         </p>
       )}
 
-      {expanded && prompt.last_answer && (
+      {expanded && results?.length > 0 && (
+        <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid var(--card-border-soft)", display: "flex", flexDirection: "column", gap: 14 }}>
+          {results.map((r) => {
+            const rPos = positionColor(r.position);
+            return (
+              <div key={r.model}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6, flexWrap: "wrap" }}>
+                  <span style={{ fontSize: 11.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".04em", color: "var(--text-muted)" }}>
+                    {r.model}
+                  </span>
+                  <span style={{ fontSize: 11.5, fontWeight: 700, padding: "2px 8px", borderRadius: 999, background: rPos.bg, color: rPos.fg }}>
+                    {r.position ? `#${r.position}` : "-"}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: 11.5,
+                      fontWeight: 700,
+                      padding: "2px 8px",
+                      borderRadius: 999,
+                      background: r.mentioned ? "var(--state-success-bg)" : "var(--state-danger-bg)",
+                      color: r.mentioned ? "var(--state-success-fg)" : "var(--state-danger-fg)",
+                    }}
+                  >
+                    {r.mentioned ? "Mentioned" : "Not mentioned"}
+                  </span>
+                </div>
+                <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.55, margin: 0, whiteSpace: "pre-wrap" }}>{r.answer}</p>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* No check this session yet — fall back to the single cached
+          result from the last page load (prompts.last_* only ever holds
+          one "primary" engine, see lib/aivisibility.js). */}
+      {expanded && !results?.length && prompt.last_answer && (
         <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid var(--card-border-soft)" }}>
           <div style={{ fontSize: 11.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".04em", color: "var(--text-muted)", marginBottom: 6 }}>
             {prompt.last_model}'s answer
