@@ -162,53 +162,75 @@ export default async function PromptDetailPage({ params }) {
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {[...history].reverse().map((c) => (
-              <div key={c.id} className="card" style={{ padding: 16 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap", marginBottom: 8 }}>
-                  <span style={{ fontSize: 12.5, color: "var(--text-muted)" }}>
-                    {c.model} · {timeAgo(c.created_at)}
-                  </span>
-                  <div style={{ display: "flex", gap: 8 }}>
-                    <span
-                      style={{
-                        fontSize: 12,
-                        fontWeight: 700,
-                        padding: "3px 9px",
-                        borderRadius: 999,
-                        background: c.position ? "var(--state-success-bg)" : "var(--state-neutral-bg)",
-                        color: c.position ? "var(--state-success-fg)" : "var(--text-dim)",
-                      }}
-                    >
-                      {c.position ? `#${c.position}` : "-"}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: 12,
-                        fontWeight: 700,
-                        padding: "3px 9px",
-                        borderRadius: 999,
-                        background: c.mentioned ? "var(--state-success-bg)" : "var(--state-danger-bg)",
-                        color: c.mentioned ? "var(--state-success-fg)" : "var(--state-danger-fg)",
-                      }}
-                    >
-                      {c.mentioned ? "Mentioned" : "Not mentioned"}
-                    </span>
+            {/* One card per CHECK EVENT, not per engine row — a multi-engine
+                check writes several prompt_checks rows sharing one exact
+                created_at (see persistCheckResults, lib/aivisibility.js),
+                which rendered as confusing near-duplicate cards when listed
+                flat. Grouped here by that shared timestamp. */}
+            {(() => {
+              const groups = new Map();
+              for (const c of [...history].reverse()) {
+                if (!groups.has(c.created_at)) groups.set(c.created_at, []);
+                groups.get(c.created_at).push(c);
+              }
+              return [...groups.entries()].map(([at, rows]) => (
+                <div key={at} className="card" style={{ padding: 16 }}>
+                  <div style={{ fontSize: 12.5, color: "var(--text-muted)", marginBottom: 12 }}>
+                    Checked {timeAgo(at)}
+                    {rows.length > 1 ? ` · ${rows.length} engines` : ""}
                   </div>
-                </div>
-                <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.5, margin: 0, whiteSpace: "pre-wrap" }}>
-                  {c.answer && c.answer.length > 220 ? `${c.answer.slice(0, 220)}…` : c.answer}
-                </p>
-                {c.brands?.length > 0 && (
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
-                    {c.brands.map((b) => (
-                      <span key={b} style={{ fontSize: 12, background: "var(--bg-3)", padding: "3px 9px", borderRadius: 999, color: "var(--text-dim)" }}>
-                        {b}
-                      </span>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                    {rows.map((c) => (
+                      <div key={c.id}>
+                        <div style={{ display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap", marginBottom: 6 }}>
+                          <span style={{ fontSize: 11.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".04em", color: "var(--text-muted)" }}>
+                            {c.model}
+                          </span>
+                          <div style={{ display: "flex", gap: 8 }}>
+                            <span
+                              style={{
+                                fontSize: 12,
+                                fontWeight: 700,
+                                padding: "3px 9px",
+                                borderRadius: 999,
+                                background: c.position ? "var(--state-success-bg)" : "var(--state-neutral-bg)",
+                                color: c.position ? "var(--state-success-fg)" : "var(--text-dim)",
+                              }}
+                            >
+                              {c.position ? `#${c.position}` : "-"}
+                            </span>
+                            <span
+                              style={{
+                                fontSize: 12,
+                                fontWeight: 700,
+                                padding: "3px 9px",
+                                borderRadius: 999,
+                                background: c.mentioned ? "var(--state-success-bg)" : "var(--state-danger-bg)",
+                                color: c.mentioned ? "var(--state-success-fg)" : "var(--state-danger-fg)",
+                              }}
+                            >
+                              {c.mentioned ? "Mentioned" : "Not mentioned"}
+                            </span>
+                          </div>
+                        </div>
+                        <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.5, margin: 0, whiteSpace: "pre-wrap" }}>
+                          {c.answer && c.answer.length > 220 ? `${c.answer.slice(0, 220)}…` : c.answer}
+                        </p>
+                        {c.brands?.length > 0 && (
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8 }}>
+                            {c.brands.map((b) => (
+                              <span key={b} style={{ fontSize: 12, background: "var(--bg-3)", padding: "3px 9px", borderRadius: 999, color: "var(--text-dim)" }}>
+                                {b}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     ))}
                   </div>
-                )}
-              </div>
-            ))}
+                </div>
+              ));
+            })()}
           </div>
         )}
       </div>

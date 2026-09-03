@@ -148,6 +148,42 @@ export default async function PromptsPage() {
 
   const stats = brand ? computeStats(checks || [], brand) : null;
 
+  // Latest stored result PER ENGINE per prompt, so each row can show its
+  // full per-engine breakdown on a fresh page load — not only right after
+  // a "Check now" click this session. Separate, capped query (with
+  // `answer`, which the stats query above deliberately omits — answers
+  // are by far the heaviest column) reduced in JS: newest-first, first
+  // row seen per (prompt, model) wins. PostgREST has no DISTINCT ON.
+  const { data: recentRows } = promptIds.length
+    ? await supabase
+        .from("prompt_checks")
+        .select("prompt_id, model, mentioned, position, brands, answer, created_at")
+        .in("prompt_id", promptIds)
+        .order("created_at", { ascending: false })
+        .limit(100)
+    : { data: [] };
+  const engineResults = {};
+  for (const row of recentRows || []) {
+    if (!engineResults[row.prompt_id]) engineResults[row.prompt_id] = [];
+    const list = engineResults[row.prompt_id];
+    if (list.some((r) => r.model === row.model)) continue;
+    list.push({
+      model: row.model,
+      mentioned: row.mentioned,
+      position: row.position,
+      brands: row.brands,
+      answer: row.answer,
+      checkedAt: row.created_at,
+    });
+  }
+  const engineRank = (m) => {
+    const i = ENGINE_ORDER.indexOf(m);
+    return i === -1 ? ENGINE_ORDER.length : i;
+  };
+  for (const list of Object.values(engineResults)) {
+    list.sort((a, b) => engineRank(a.model) - engineRank(b.model));
+  }
+
   return (
     <section className="dashboard-page">
       <div className="app-sidebar-group-label" style={{ padding: 0, marginBottom: 6 }}>Analyze</div>
@@ -251,7 +287,7 @@ export default async function PromptsPage() {
         </>
       )}
 
-      <PromptsManager initialPrompts={prompts || []} />
+      <PromptsManager initialPrompts={prompts || []} initialEngineResults={engineResults} />
     </section>
   );
 }
