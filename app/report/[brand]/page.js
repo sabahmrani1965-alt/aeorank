@@ -59,7 +59,14 @@ export default async function ReportPage({ params, searchParams }) {
   // 3. Reddit data — use a category query (e.g. "SaaS startup") for community
   //    search and brand + category for post search. This avoids generic single
   //    words ("access", "tools") pulling political subreddits.
-  const categoryQuery = pickCategoryQuery(description, brand);
+  //
+  // ?category= override: the auto-derived query comes from the site's own
+  // meta description, and ambiguous wording there can point the whole
+  // report at the wrong industry (real case: a payments company describing
+  // itself with "A2A" — account-to-account — got matched to agent-to-agent
+  // AI subreddits). Used when we hand-craft a report link for outreach.
+  const categoryOverride = String(searchParams?.category || "").trim().slice(0, 60);
+  const categoryQuery = categoryOverride || pickCategoryQuery(description, brand);
   const postQuery = `${brand} ${categoryQuery}`;
 
   const llmEnabled = isLlmConfigured();
