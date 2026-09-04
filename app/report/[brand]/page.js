@@ -14,8 +14,8 @@ import {
   totalsFromKeywords,
   pickCategoryQuery,
 } from "@/lib/keywords";
-import { searchSubreddits, searchPosts, formatMembers, timeAgo } from "@/lib/reddit";
-import { generateKeywordsFromLlm, suggestRedditPost, isLlmConfigured } from "@/lib/llm";
+import { searchSubreddits, searchPosts, timeAgo } from "@/lib/reddit";
+import { generateKeywordsFromLlm, suggestRedditPost, isLlmConfigured, filterCommentablePosts } from "@/lib/llm";
 import { analyzeBrandVisibility, isAiVisibilityConfigured } from "@/lib/aivisibility";
 
 export const dynamic = "force-dynamic";
@@ -99,9 +99,19 @@ export default async function ReportPage({ params, searchParams }) {
   const keywords = enrichKeywordsWithVolumes(brand, keywordPhrases);
   const totals = totalsFromKeywords(keywords);
 
-  const posts = [...new Map(postsRaw.map((p) => [p.permalink, p])).values()]
+  const dedupedPosts = [...new Map(postsRaw.map((p) => [p.permalink, p])).values()]
     .sort((a, b) => b.ups - a.ups)
     .slice(0, 10);
+
+  // Every thread shown must be one where a comment mentioning the brand
+  // would genuinely fit — Claude vets each candidate and off-topic ones
+  // are dropped (see filterCommentablePosts). Fails soft: if the filter
+  // itself can't run, the unfiltered list renders as before rather than
+  // blanking the section on an infra hiccup.
+  const commentable = llmEnabled
+    ? await filterCommentablePosts(brand, description, dedupedPosts)
+    : null;
+  const posts = commentable ?? dedupedPosts;
 
   // Draft a single post suggestion for the top real subreddit we found.
   // This is copy-and-post guidance for the customer's own account — nothing
@@ -238,59 +248,10 @@ export default async function ReportPage({ params, searchParams }) {
         </div>
       </section>
 
-      {/* Subreddits */}
-      <section className="section section-alt">
-        <div className="container">
-          <div className="section-icon">
-            <span className="icon-box">★</span>
-            <h3>Top Subreddit Opportunities</h3>
-          </div>
-
-          {subreddits.length === 0 ? (
-            <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
-              Reddit returned no subreddit matches. Try a different URL.
-            </div>
-          ) : (
-            <>
-              <div className="sub-grid">
-                {subreddits.map((s) => (
-                  <a
-                    key={s.name}
-                    href={s.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="sub-card"
-                  >
-                    <div className="sub-head">
-                      <SubIcon name={s.name} icon={s.icon} />
-                      <div className="sub-name">{s.name}</div>
-                    </div>
-                    {s.desc ? <div className="sub-desc">{s.desc}</div> : null}
-                    {s.members > 0 ? (
-                      <div className="sub-members">
-                        {formatMembers(s.members)} members
-                      </div>
-                    ) : (
-                      <div className="sub-members sub-members-active">
-                        <span className="sub-active-dot" />
-                        Active community
-                      </div>
-                    )}
-                  </a>
-                ))}
-              </div>
-              {subreddits.some((s) => s.members > 0) && (
-                <div className="audience-block" style={{ marginTop: 24 }}>
-                  <div className="audience-num">
-                    {formatMembers(subreddits.reduce((s, x) => s + x.members, 0))}+
-                  </div>
-                  <div className="audience-label">Combined audience reachable</div>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      </section>
+      {/* The former "Top Subreddit Opportunities" section was removed —
+          subreddit search results were too noisy for a prospect-facing
+          page (searchSubreddits is still fetched above: the suggested-
+          post draft uses its top result). */}
 
       {/* Posts */}
       <section className="section">
