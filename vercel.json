@@ -4,7 +4,7 @@
   "regions": ["iad1"],
   "functions": {
     "app/report/[brand]/page.js": {
-      "maxDuration": 30
+      "maxDuration": 60
     },
     "app/api/contact/route.js": {
       "maxDuration": 10

@@ -2,8 +2,18 @@
 // visibility check. Shared between the live /report/[brand] page and the
 // dashboard's saved report detail view, so both render identically instead
 // of duplicating this markup.
+// Joins engine names for prose: "A", "A and B", "A, B and C".
+function listEngines(names) {
+  if (names.length <= 1) return names[0] || "";
+  return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+}
+
 export default function AiVisibilityScoreCard({ brand, aiVisibility }) {
   if (!aiVisibility || !aiVisibility.rows || aiVisibility.rows.length === 0) return null;
+
+  // Derived from the rows that actually answered — never a hardcoded
+  // engine list that could claim a model this run didn't include.
+  const engines = [...new Set(aiVisibility.rows.map((r) => r.model))];
 
   return (
     <section className="section section-alt">
@@ -14,8 +24,8 @@ export default function AiVisibilityScoreCard({ brand, aiVisibility }) {
           <span className="accent">Right Now</span>
         </h2>
         <p className="section-sub">
-          We just asked Gemini (with live Google Search grounding) and
-          Claude the questions your buyers actually ask. These are their{" "}
+          We just asked {listEngines(engines)} the questions your buyers
+          actually ask. These are their{" "}
           <strong>real, unedited answers</strong>. Run them yourself and
           you'll get the same. Here's whether <strong>{brand}</strong>{" "}
           showed up.
@@ -148,9 +158,9 @@ export default function AiVisibilityScoreCard({ brand, aiVisibility }) {
         </div>
 
         <p style={{ marginTop: 20, color: "var(--text-muted)", fontSize: 13, textAlign: "center" }}>
-          Live answers from Gemini (Google Search–grounded) and Claude,
-          generated when this report loaded. AEOrank tracks these across
-          every major AI engine for paying customers.
+          Real answers from {listEngines(engines)}, generated when this
+          report loaded. AEOrank tracks these continuously for paying
+          customers.
         </p>
       </div>
     </section>
