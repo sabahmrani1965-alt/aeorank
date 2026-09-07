@@ -53,6 +53,13 @@ function matchesPrefix(pathname, prefix) {
 const AEORANK_ONLY = ["/report", "/services", "/industries", "/blog", "/checkout", "/contact", "/about"];
 const CREWQUEST_ONLY = ["/crewquest"];
 
+// EasyRep AI's product site rides on this same deployment: easyrepai.app
+// serves only the /easyrep pages (landing, privacy, terms) with clean
+// root-level URLs, and everything else on that domain goes to its
+// homepage — an EasyRep visitor should never land on AEOrank or
+// CrewQuest content.
+const EASYREP_HOST = "easyrepai.app";
+
 export async function middleware(request) {
   const response = await updateSession(request);
 
@@ -60,6 +67,24 @@ export async function middleware(request) {
   const requestHost = stripWww((request.headers.get("host") || "").split(":")[0]);
   const onPosterDomain = Boolean(hostname && requestHost === hostname);
   const pathname = request.nextUrl.pathname;
+
+  if (requestHost === EASYREP_HOST) {
+    const rewriteTo = (newPathname) => {
+      const url = request.nextUrl.clone();
+      url.pathname = newPathname;
+      const rewritten = NextResponse.rewrite(url);
+      response.cookies.getAll().forEach((c) => rewritten.cookies.set(c.name, c.value, c));
+      return rewritten;
+    };
+    if (pathname === "/") return rewriteTo("/easyrep");
+    if (pathname === "/privacy") return rewriteTo("/easyrep/privacy");
+    if (pathname === "/terms") return rewriteTo("/easyrep/terms");
+    if (matchesPrefix(pathname, "/easyrep")) return response;
+    const url = request.nextUrl.clone();
+    url.pathname = "/";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
 
   function redirectTo(newPathname, preserveQuery = false) {
     const url = request.nextUrl.clone();
