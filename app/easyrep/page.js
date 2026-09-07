@@ -59,7 +59,7 @@ html, body { background:#fff; margin:0; }
 
 .er-hero { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:24px; align-items:stretch; }
 .er-hero-card { background:#F4F5F6; border-radius:28px; padding:44px 40px; display:flex; flex-direction:column; justify-content:center; }
-.er-kicker { display:inline-flex; align-items:center; gap:8px; color:#16A34A; font-weight:700; font-size:13px; letter-spacing:.1em; margin-bottom:16px; }
+.er-kicker { display:inline-flex; align-items:center; gap:8px; color:#2563EB; font-weight:700; font-size:13px; letter-spacing:.1em; margin-bottom:16px; }
 .er-h1 { font-size:clamp(34px,4.5vw,52px); font-weight:800; letter-spacing:-0.03em; line-height:1.04; margin:0 0 16px; }
 .er-sub { font-size:17px; color:#5c6068; line-height:1.6; margin:0 0 24px; max-width:44ch; }
 .er a.er-cta { display:inline-block; background:#0B0B0F; color:#fff; border-radius:999px; padding:15px 28px; font-size:15px; font-weight:700; width:fit-content; }
@@ -73,10 +73,10 @@ html, body { background:#fff; margin:0; }
 .er-ssub { font-size:11px; color:#8a8f98; margin:2px 0 10px; }
 .er-scard { background:#fff; border-radius:18px; box-shadow:0 6px 18px rgba(11,11,15,.07); padding:13px; }
 .er-sname { font-size:16px; font-weight:800; }
-.er-sworks { font-size:11px; color:#16A34A; font-weight:700; margin:2px 0 8px; }
-.er-slabel { font-size:9px; font-weight:700; color:#16A34A; letter-spacing:.07em; margin:8px 0 4px; }
+.er-sworks { font-size:11px; color:#2563EB; font-weight:700; margin:2px 0 8px; }
+.er-slabel { font-size:9px; font-weight:700; color:#2563EB; letter-spacing:.07em; margin:8px 0 4px; }
 .er-sstep { font-size:11px; line-height:1.5; color:#0B0B0F; }
-.er-ssoft { background:#E7F8EE; border-radius:12px; padding:9px; font-size:10.5px; line-height:1.5; margin-top:10px; }
+.er-ssoft { background:#EAF1FE; border-radius:12px; padding:9px; font-size:10.5px; line-height:1.5; margin-top:10px; }
 .er-sbtn { background:#0B0B0F; color:#fff; border-radius:999px; padding:11px; text-align:center; font-weight:700; font-size:12px; margin-top:12px; }
 .er-stabs { display:flex; justify-content:space-around; padding:10px 0 2px; font-size:8.5px; color:#9aa0a8; font-weight:600; }
 .er-stabs b { color:#0B0B0F; }
@@ -99,7 +99,7 @@ html, body { background:#fff; margin:0; }
 .er-benefits { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
 .er-benefit { background:#F4F5F6; border-radius:24px; padding:28px 30px; }
 .er-benefit h3 { font-size:17px; font-weight:800; margin:0 0 8px; }
-.er-benefit h3 span { color:#16A34A; margin-right:10px; }
+.er-benefit h3 span { color:#2563EB; margin-right:10px; }
 .er-benefit p { font-size:14px; color:#5c6068; line-height:1.65; margin:0; }
 
 .er-faq { max-width:760px; margin:0 auto; }
@@ -113,7 +113,7 @@ html, body { background:#fff; margin:0; }
 .er-final { background:#0B0B0F; color:#fff; border-radius:28px; text-align:center; padding:64px 28px; margin-top:88px; }
 .er-final h2 { font-size:clamp(26px,3.4vw,38px); font-weight:800; letter-spacing:-0.025em; margin:0 0 12px; }
 .er-final p { color:#b8bcc4; font-size:16px; line-height:1.6; margin:0 auto 28px; max-width:52ch; }
-.er-final a { background:#16A34A; color:#fff; border-radius:999px; padding:15px 30px; font-weight:700; font-size:15px; display:inline-block; }
+.er-final a { background:#2563EB; color:#fff; border-radius:999px; padding:15px 30px; font-weight:700; font-size:15px; display:inline-block; }
 
 .er-footer { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; padding:36px 4px 44px; color:#8a8f98; font-size:14px; }
 .er-footer a { color:#5c6068; font-weight:500; margin-left:18px; }
@@ -239,7 +239,7 @@ export default function EasyRepLanding() {
         </p>
         <section className="er-why">
           <div className="er-whycard">
-            <div className="er-chip" style={{ background: "#E7F8EE" }}>🌿</div>
+            <div className="er-chip" style={{ background: "#EAF1FE" }}>🌿</div>
             <h3>Never judgmental</h3>
             <p>
               Every screen is written for someone nervous about looking
@@ -248,7 +248,7 @@ export default function EasyRepLanding() {
             </p>
           </div>
           <div className="er-whycard">
-            <div className="er-chip" style={{ background: "#EAF2FF" }}>🔒</div>
+            <div className="er-chip" style={{ background: "#F3EEFD" }}>🔒</div>
             <h3>Private by design</h3>
             <p>
               Form videos stay on your phone, only a few still frames are

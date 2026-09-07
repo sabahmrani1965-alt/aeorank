@@ -29,9 +29,11 @@ export default function EasyRepPrivacy() {
           experience, goal, training days): used to build your workout plan.
         </li>
         <li>
-          <strong>Photos you take of machines and meals</strong>: sent to our server, passed
-          to an AI service (Anthropic) to identify the machine or estimate the meal, and not
-          stored on our servers. The text result is saved to your account if you're signed in.
+          <strong>Photos you take of machines, meals, and body scans</strong>: sent to our
+          server, passed to an AI service (Anthropic) to identify the machine, estimate the
+          meal, or give a rough visual body estimate, and not stored on our servers. The text
+          result is saved to your account if you're signed in; body scan results stay on your
+          phone only.
         </li>
         <li>
           <strong>Form check videos</strong>: the video itself never leaves your phone. The
