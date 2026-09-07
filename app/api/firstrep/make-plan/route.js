@@ -56,6 +56,7 @@ export async function POST(req) {
   const gymType = String(body?.gym_type || "commercial chain").slice(0, 40);
   const daysPerWeek = body?.days_per_week === 3 ? 3 : 2;
   const experience = String(body?.experience || "never").slice(0, 40);
+  const goal = String(body?.goal || "build the habit").slice(0, 60);
   const allowed = Array.isArray(body?.allowed_exercises)
     ? body.allowed_exercises.map(String).slice(0, 60)
     : [];
@@ -72,7 +73,7 @@ export async function POST(req) {
       messages: [
         {
           role: "user",
-          content: `Build the plan. User profile: fears: ${fears.join(", ") || "none given"}. Gym type: ${gymType}. Days per week: ${daysPerWeek}. Experience: ${experience}.`,
+          content: `Build the plan. User profile: fears: ${fears.join(", ") || "none given"}. Gym type: ${gymType}. Days per week: ${daysPerWeek}. Experience: ${experience}. Their goal: ${goal} (let this shade exercise choice and the tips, gently).`,
         },
       ],
     });
