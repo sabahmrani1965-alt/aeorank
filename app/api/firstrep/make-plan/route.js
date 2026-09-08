@@ -20,7 +20,26 @@ export async function OPTIONS() {
   return new Response(null, { status: 204, headers: CORS });
 }
 
-function buildSystem(allowedExercises) {
+// The week's structure is decided here, not by the model, so the session
+// count always matches what the user asked for and no muscle is trained
+// on back-to-back days. Model compliance is checked, never trusted.
+function splitFor(days) {
+  const FULL = { name: "Full body", focus: "legs, chest, back, shoulders, arms and stomach" };
+  const UPPER = { name: "Upper body", focus: "chest, back, shoulders and arms" };
+  const LOWER = { name: "Lower body", focus: "legs, glutes and stomach" };
+  const PUSH = { name: "Push", focus: "chest, shoulders and back of arms" };
+  const PULL = { name: "Pull", focus: "back and front of arms" };
+  const LEGS = { name: "Legs", focus: "legs, glutes and calves" };
+  if (days <= 3) {
+    return Array.from({ length: days }, (_, i) => ({ ...FULL, name: days === 1 ? "Full body" : `Full body ${i + 1}` }));
+  }
+  if (days === 4) {
+    return [UPPER, LOWER, { ...UPPER, name: "Upper body 2" }, { ...LOWER, name: "Lower body 2" }];
+  }
+  return [PUSH, PULL, LEGS, UPPER, LOWER];
+}
+
+function buildSystem(allowedExercises, sessionPlan) {
   return `You build a gentle 2-week gym plan for a nervous absolute beginner. Plain language, no jargon, never judgmental, never use em dashes.
 
 Reply ONLY with JSON:
@@ -32,12 +51,10 @@ Reply ONLY with JSON:
 }
 
 Rules:
-- Exactly 2 weeks. Sessions per week = the user's days_per_week (2 to 5).
-- Structure the week by how often they train, so no muscle is hit two days running:
-  - 2 or 3 days: every session is full body.
-  - 4 days: alternate upper body and lower body sessions.
-  - 5 days: push (chest, shoulders, triceps), pull (back, biceps), legs, then upper, then lower.
-  Name each session for what it trains, e.g. "Full body", "Upper body", "Legs", "Push".
+- Exactly 2 weeks.
+- Each week MUST contain EXACTLY ${sessionPlan.length} sessions, in this order, with these
+  exact names and focus. Do not add, drop, merge or rename sessions:
+${sessionPlan.map((x, i) => `  ${i + 1}. "${x.name}" - train ${x.focus}`).join("\n")}
 - Each session: 5 to 6 exercises, 2 sets each, reps like "10-12".
 - Every exercise name MUST be chosen exactly from this list: ${allowedExercises.join("; ")}.
 - If the user's fears include free weights or doing form wrong, week 1 uses machines only.
@@ -79,7 +96,7 @@ export async function POST(req) {
     const msg = await client.messages.create({
       model: "claude-haiku-4-5",
       max_tokens: 3500,
-      system: buildSystem(allowed),
+      system: buildSystem(allowed, splitFor(daysPerWeek)),
       messages: [
         {
           role: "user",
