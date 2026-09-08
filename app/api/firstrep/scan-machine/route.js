@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { guard } from "@/lib/easyrepGuard";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -14,9 +15,9 @@ const MAX_BASE64_LENGTH = 4 * 1024 * 1024;
 const SYSTEM = `You identify gym equipment for nervous beginners. Reply ONLY with JSON: { machine_name, muscles_simple (plain words like 'front of thighs'), setup_steps (array, max 4, how to adjust seat/pins/handles), movement_steps (array, exactly 3), common_mistakes (array, exactly 3, each one sentence), reassurance (one warm sentence), confidence (0-1) }. If it is not gym equipment, return { machine_name: null }. Never use jargon like 'hypertrophy', 'eccentric', 'RPE'. Never use em dashes.`;
 
 const CORS = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "null",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Headers": "Content-Type, x-easyrep-key",
 };
 
 export async function OPTIONS() {
@@ -24,6 +25,9 @@ export async function OPTIONS() {
 }
 
 export async function POST(req) {
+  const refused = guard(req, CORS);
+  if (refused) return refused;
+
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) return NextResponse.json({ error: "Not configured." }, { status: 500, headers: CORS });
 

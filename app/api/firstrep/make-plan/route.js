@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { guard } from "@/lib/easyrepGuard";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -10,9 +11,9 @@ export const maxDuration = 60;
 // them, so every planned exercise has an info card and swap options.
 
 const CORS = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "null",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Headers": "Content-Type, x-easyrep-key",
 };
 
 export async function OPTIONS() {
@@ -42,6 +43,9 @@ Rules:
 }
 
 export async function POST(req) {
+  const refused = guard(req, CORS);
+  if (refused) return refused;
+
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) return NextResponse.json({ error: "Not configured." }, { status: 500, headers: CORS });
 

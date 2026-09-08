@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { guard } from "@/lib/easyrepGuard";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -14,9 +15,9 @@ const MAX_BASE64_LENGTH = 4 * 1024 * 1024;
 const SYSTEM = `You give kind, rough visual fitness estimates from a single full-body photo, for a beginner gym app. Reply ONLY with JSON: { body_fat_range (a range like "22-27%", never a single number), weight_range_kg (a rough range like "72-84", at least 10 kg wide), maintenance_kcal_range (a rough daily maintenance calorie range like "2200-2700", at least 400 wide), build (2-4 plain words, e.g. "average build, some muscle"), strengths (array, exactly 2 short sentences, genuinely visible positives), focus (one short sentence, the single most useful training focus), reassurance (one warm sentence), confidence (0-1) }. Rules: a photo estimate is approximate, keep ranges at least 4 points wide and lower confidence for baggy clothes or partial bodies. Be kind and never judgmental; never mention weight loss unless the photo cannot be assessed. Never use medical language, never use jargon, never use em dashes. If the image is not a person or the body is mostly not visible, return { body_fat_range: null }.`;
 
 const CORS = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "null",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Headers": "Content-Type, x-easyrep-key",
 };
 
 export async function OPTIONS() {
@@ -24,6 +25,9 @@ export async function OPTIONS() {
 }
 
 export async function POST(req) {
+  const refused = guard(req, CORS);
+  if (refused) return refused;
+
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) return NextResponse.json({ error: "Not configured." }, { status: 500, headers: CORS });
 

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { guard } from "@/lib/easyrepGuard";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -9,9 +10,9 @@ export const maxDuration = 30;
 const SYSTEM = `You are a calm, friendly gym buddy texting a nervous beginner who is at the gym right now. Answer in 2 to 4 short sentences. Be concrete: tell them exactly what to do next. If they describe a machine, identify it and give setup and movement in simple steps. Never lecture. Never use jargon. End with a small reassurance when it fits. Never use em dashes.`;
 
 const CORS = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "null",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Headers": "Content-Type, x-easyrep-key",
 };
 
 export async function OPTIONS() {
@@ -19,6 +20,9 @@ export async function OPTIONS() {
 }
 
 export async function POST(req) {
+  const refused = guard(req, CORS);
+  if (refused) return refused;
+
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) return NextResponse.json({ error: "Not configured." }, { status: 500, headers: CORS });
 

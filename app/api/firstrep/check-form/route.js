@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { guard } from "@/lib/easyrepGuard";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -12,9 +13,9 @@ const MAX_FRAME_LENGTH = 1.5 * 1024 * 1024; // base64 per frame, 768px frames ar
 const LIFTS = new Set(["squat", "deadlift", "bench", "dumbbell row", "overhead press", "lunge"]);
 
 const CORS = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "null",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Headers": "Content-Type, x-easyrep-key",
 };
 
 export async function OPTIONS() {
@@ -26,6 +27,9 @@ function buildSystem(lift) {
 }
 
 export async function POST(req) {
+  const refused = guard(req, CORS);
+  if (refused) return refused;
+
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) return NextResponse.json({ error: "Not configured." }, { status: 500, headers: CORS });
 

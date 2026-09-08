@@ -6,3 +6,9 @@ node_modules
 .DS_Store
 data/leads.json
 data/
+
+# Local agent config: can contain tokens in saved command allowlists
+.claude/
+.agents/
+skills-lock.json
+supabase/.temp/
