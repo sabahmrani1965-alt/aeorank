@@ -32,7 +32,12 @@ Reply ONLY with JSON:
 }
 
 Rules:
-- Exactly 2 weeks. Sessions per week = the user's days_per_week (2 or 3).
+- Exactly 2 weeks. Sessions per week = the user's days_per_week (2 to 5).
+- Structure the week by how often they train, so no muscle is hit two days running:
+  - 2 or 3 days: every session is full body.
+  - 4 days: alternate upper body and lower body sessions.
+  - 5 days: push (chest, shoulders, triceps), pull (back, biceps), legs, then upper, then lower.
+  Name each session for what it trains, e.g. "Full body", "Upper body", "Legs", "Push".
 - Each session: 5 to 6 exercises, 2 sets each, reps like "10-12".
 - Every exercise name MUST be chosen exactly from this list: ${allowedExercises.join("; ")}.
 - If the user's fears include free weights or doing form wrong, week 1 uses machines only.
@@ -58,7 +63,8 @@ export async function POST(req) {
 
   const fears = Array.isArray(body?.fears) ? body.fears.map(String).slice(0, 10) : [];
   const gymType = String(body?.gym_type || "commercial chain").slice(0, 40);
-  const daysPerWeek = body?.days_per_week === 3 ? 3 : 2;
+  const requested = Number(body?.days_per_week);
+  const daysPerWeek = Number.isFinite(requested) ? Math.min(5, Math.max(2, Math.round(requested))) : 2;
   const experience = String(body?.experience || "never").slice(0, 40);
   const goal = String(body?.goal || "build the habit").slice(0, 60);
   const allowed = Array.isArray(body?.allowed_exercises)
