@@ -40,7 +40,7 @@ function splitFor(days) {
 }
 
 function buildSystem(allowedExercises, sessionPlan) {
-  return `You build a gentle 2-week gym plan for a nervous absolute beginner. Plain language, no jargon, never judgmental, never use em dashes.
+  return `You build a gentle one-week gym plan for a nervous absolute beginner. Plain language, no jargon, never judgmental, never use em dashes.
 
 Reply ONLY with JSON:
 {
@@ -51,8 +51,8 @@ Reply ONLY with JSON:
 }
 
 Rules:
-- Exactly 2 weeks.
-- Each week MUST contain EXACTLY ${sessionPlan.length} sessions, in this order, with these
+- Exactly 1 week.
+- The single week MUST contain EXACTLY ${sessionPlan.length} sessions, in this order, with these
   exact names and focus. Do not add, drop, merge or rename sessions:
 ${sessionPlan.map((x, i) => `  ${i + 1}. "${x.name}" - train ${x.focus}`).join("\n")}
 - Each session: 5 to 6 exercises, 2 sets each, reps like "10-12".
@@ -115,7 +115,7 @@ export async function POST(req) {
     } catch {
       return NextResponse.json({ error: "Couldn't build the plan, try again." }, { status: 502, headers: CORS });
     }
-    if (!Array.isArray(parsed?.weeks) || parsed.weeks.length !== 2) {
+    if (!Array.isArray(parsed?.weeks) || parsed.weeks.length !== 1) {
       return NextResponse.json({ error: "Couldn't build the plan, try again." }, { status: 502, headers: CORS });
     }
 
