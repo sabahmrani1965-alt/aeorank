@@ -74,7 +74,7 @@ export default function EasyRepPrivacy() {
       </p>
 
       <h2>Contact</h2>
-      <p>Questions: sabah.mrani1965@gmail.com</p>
+      <p>Questions: abdelhadi@easyrepai.app</p>
     </main>
   );
 }

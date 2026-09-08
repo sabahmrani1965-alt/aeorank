@@ -141,7 +141,7 @@ export default function EasyRepLanding() {
             <a href="#why">Why us</a>
             <a href="#benefits">Benefits</a>
             <a href="#faq">FAQ</a>
-            <a href="mailto:sabah.mrani1965@gmail.com">Contact</a>
+            <a href="mailto:abdelhadi@easyrepai.app">Contact</a>
           </div>
           <div className="er-soon">Coming soon</div>
         </nav>
@@ -324,7 +324,7 @@ export default function EasyRepLanding() {
             EasyRep AI exists so you never walk in without a plan again.
             Launching on the App Store soon.
           </p>
-          <a href="mailto:sabah.mrani1965@gmail.com?subject=Tell%20me%20when%20EasyRep%20AI%20launches">
+          <a href="mailto:abdelhadi@easyrepai.app?subject=Tell%20me%20when%20EasyRep%20AI%20launches">
             Email me when it launches
           </a>
         </section>
@@ -334,7 +334,7 @@ export default function EasyRepLanding() {
           <div>
             <a href="/easyrep/privacy">Privacy Policy</a>
             <a href="/easyrep/terms">Terms of Use</a>
-            <a href="mailto:sabah.mrani1965@gmail.com">Contact</a>
+            <a href="mailto:abdelhadi@easyrepai.app">Contact</a>
           </div>
         </footer>
       </div>
