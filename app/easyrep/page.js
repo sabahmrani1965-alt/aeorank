@@ -4,6 +4,8 @@
 // the site, the listing and the app read as one product. Honest by
 // design: no download counts, no store badges, no ratings until the app
 // is actually live.
+import SignupForm from "./signup-form";
+
 export const metadata = {
   title: "EasyRep AI - Gym & Calorie AI Coach",
   description:
@@ -82,8 +84,8 @@ const FAQ = [
     a: "As little as possible. Signing in is optional, there are no ads and no tracking SDKs, and we never sell data. The full detail is in the privacy policy.",
   },
   {
-    q: "When can I download it?",
-    a: "It is finished and with Apple for review. This page gets the real App Store link the day it is approved, and not a fake one before that.",
+    q: "How do I get access?",
+    a: "Leave your email and we will let you in as places open. Access is free to start, and we will never email you about anything else.",
   },
 ];
 
@@ -148,6 +150,40 @@ html, body { background:#fff; margin:0; }
 .er .foot { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;
   padding:40px 4px 52px; color:#8a8f98; font-size:14px; }
 .er .foot a { color:#4b5058; font-weight:500; margin-left:18px; }
+/* Early access form. Two variants: on the light hero and on the dark
+   closing section, which is why the colours are set per variant rather
+   than inherited. */
+.er .su { margin:0 0 4px; max-width:460px; }
+.er .su-row { display:flex; gap:10px; flex-wrap:wrap; }
+.er .su input { flex:1 1 220px; min-width:0; padding:15px 18px; font-size:16px;
+  border-radius:999px; border:1.5px solid #DDE1E6; background:#fff; color:#0B0B0F;
+  font-family:inherit; outline:none; }
+.er .su input:focus { border-color:#2563EB; box-shadow:0 0 0 3px rgba(37,99,235,.15); }
+.er .su button { padding:15px 26px; font-size:16px; font-weight:700; border:0;
+  border-radius:999px; background:#0B0B0F; color:#fff; cursor:pointer; font-family:inherit;
+  white-space:nowrap; }
+.er .su button:hover { background:#25252c; }
+.er .su button:disabled { opacity:.6; cursor:default; }
+.er .su-err { color:#C0392B; font-size:14px; margin:10px 2px 0; }
+.er .su-done { display:flex; flex-direction:column; gap:5px; padding:18px 22px;
+  border-radius:20px; background:#EAF1FE; border:1px solid rgba(37,99,235,.25); }
+.er .su-done strong { font-size:17px; color:#0B0B0F; }
+.er .su-done span { font-size:14.5px; color:#4b5058; line-height:1.5; }
+
+.er .su-dark input { background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.28);
+  color:#fff; }
+.er .su-dark input::placeholder { color:rgba(255,255,255,.55); }
+.er .su-dark input:focus { border-color:#fff; box-shadow:0 0 0 3px rgba(255,255,255,.18); }
+.er .su-dark button { background:#fff; color:#0B0B0F; }
+.er .su-dark button:hover { background:#e8e8ea; }
+.er .su-dark.su-done { background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.3); }
+.er .su-dark.su-done strong { color:#fff; }
+.er .su-dark.su-done span { color:rgba(255,255,255,.75); }
+.er .su-dark .su-err { color:#ffb4ab; }
+
+/* The nav pill is a link now, so it needs the anchor colour pinned. */
+.er a.soon { color:#fff; display:inline-block; }
+
 @media (max-width:860px){
 .er .links { display:none; }
 .er .banner { min-height:auto; }
@@ -172,7 +208,7 @@ export default function EasyRepLanding() {
             <a href="#faq">FAQ</a>
             <a href="mailto:abdelhadi@easyrepai.app">Contact</a>
           </div>
-          <div className="soon">Coming soon</div>
+          <a className="soon" href="#get">Get access</a>
         </nav>
 
         <section className="banner">
@@ -185,10 +221,9 @@ export default function EasyRepLanding() {
               Scan any machine to learn it. Snap your plate for calories and protein. Get kind
               feedback on your form, and follow a plan that starts easy.
             </p>
-            <a className="cta" href="#features">Coming soon to the App Store</a>
+            <SignupForm variant="hero" source="hero" />
             <p className="fine">
-              Finished and with Apple for review. The real download link appears here the day it
-              is approved, and not before.
+              Early access is free. One email when your place is ready, and nothing else.
             </p>
           </div>
         </section>
@@ -228,18 +263,17 @@ export default function EasyRepLanding() {
           ))}
         </section>
 
+        <div id="get" />
         <section className="final">
           <img src="/easyrep/plan.jpg" alt="" loading="lazy" />
           <div className="scrim" />
           <div className="inner">
             <h2>The hardest visit is the first one.</h2>
             <p>
-              EasyRep AI exists so you never walk in without a plan again. Launching on the App
-              Store soon.
+              EasyRep AI exists so you never walk in without a plan again. Put your email in and
+              we will let you know the moment your place is ready.
             </p>
-            <a href="mailto:abdelhadi@easyrepai.app?subject=Tell%20me%20when%20EasyRep%20AI%20launches">
-              Email me when it launches
-            </a>
+            <SignupForm variant="dark" source="footer" />
           </div>
         </section>
 
