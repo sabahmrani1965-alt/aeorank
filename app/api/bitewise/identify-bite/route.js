@@ -149,6 +149,18 @@ export async function POST(req) {
       );
     }
 
+    // The prompt forbids em dashes and the model still emits them, so
+    // strip them rather than ask twice. Walks every string in the reply.
+    const deDash = (v) =>
+      typeof v === "string"
+        ? v.replace(/\s*[\u2014\u2013]\s*/g, ", ")
+        : Array.isArray(v)
+          ? v.map(deDash)
+          : v && typeof v === "object"
+            ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, deDash(x)]))
+            : v;
+    parsed = deDash(parsed);
+
     // Never let a malformed reply read as reassurance. An unrecognised
     // urgency becomes "watch" rather than "routine", and a reply with no
     // red flags gets the universal ones, because those two fields are
