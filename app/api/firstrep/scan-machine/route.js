@@ -12,7 +12,36 @@ export const maxDuration = 30;
 
 const MAX_BASE64_LENGTH = 4 * 1024 * 1024;
 
-const SYSTEM = `You identify gym equipment for nervous beginners. Reply ONLY with JSON: { machine_name, muscles_simple (plain words like 'front of thighs'), setup_steps (array, max 4, how to adjust seat/pins/handles), movement_steps (array, exactly 3), common_mistakes (array, exactly 3, each one sentence), reassurance (one warm sentence), confidence (0-1) }. If it is not gym equipment, return { machine_name: null }. Never use jargon like 'hypertrophy', 'eccentric', 'RPE'. Never use em dashes.`;
+// The illustration keys the app ships. The model picks the one whose
+// movement matches the machine in the photo, so the scan result can show
+// the exercise being performed instead of text alone. Kept in sync by
+// hand with src/lib/exercise-images.ts in the EasyRep repo; a key the app
+// does not have is simply dropped client side, so drift degrades to no
+// illustration rather than a broken image.
+const EXERCISE_KEYS = [
+  "ab-crunch-machine", "assisted-pull-up-machine", "back-extension-bench",
+  "bench-dip", "biceps-curl-machine", "bird-dog", "bodyweight-squat",
+  "cable-biceps-curl", "cable-chest-fly", "cable-crunch", "cable-row",
+  "cable-triceps-pushdown", "calf-raise-machine", "chest-press-machine",
+  "dumbbell-bench-press", "dumbbell-biceps-curl", "dumbbell-romanian-deadlift",
+  "floor-crunch", "glute-bridge", "goblet-squat-dumbbell", "hack-squat-machine",
+  "hip-thrust-machine", "incline-push-up", "lat-pulldown-machine",
+  "lateral-raise-dumbbell", "lateral-raise-machine", "leg-extension-machine",
+  "leg-press-calf-press", "leg-press-machine", "lying-leg-curl-machine",
+  "one-arm-dumbbell-row", "overhead-dumbbell-triceps-extension",
+  "pec-deck-machine", "pike-push-up", "plank", "push-up",
+  "seated-dumbbell-calf-raise", "seated-dumbbell-shoulder-press",
+  "seated-leg-curl-machine", "seated-row-machine", "shoulder-press-machine",
+  "smith-machine-bench-press", "standing-calf-raise-bodyweight",
+  "triceps-dip-machine", "underhand-row-dumbbell", "wall-sit",
+];
+
+const SYSTEM = `You identify gym equipment for nervous beginners. Reply ONLY with JSON: { machine_name, muscles_simple (plain words like 'front of thighs'), setup_steps (array, max 4, how to adjust seat/pins/handles), movement_steps (array, exactly 3), common_mistakes (array, exactly 3, each one sentence), reassurance (one warm sentence), confidence (0-1), exercise_key }. If it is not gym equipment, return { machine_name: null }. Never use jargon like 'hypertrophy', 'eccentric', 'RPE'. Never use em dashes.
+
+exercise_key must be exactly one string from this list, or null:
+${EXERCISE_KEYS.join(", ")}
+
+Pick the key whose movement is the one you just described on this machine. A cable station set up for rows is cable-row; set up for a triceps pushdown it is cable-triceps-pushdown, so choose from the attachment and pin height you can see. Use null when nothing in the list is that movement, and never invent a key that is not listed.`;
 
 const CORS = {
   "Access-Control-Allow-Origin": "null",
@@ -49,7 +78,7 @@ export async function POST(req) {
     const client = new Anthropic({ apiKey: key });
     const msg = await client.messages.create({
       model: "claude-haiku-4-5",
-      max_tokens: 600,
+      max_tokens: 700,
       system: SYSTEM,
       messages: [
         {
@@ -79,6 +108,10 @@ export async function POST(req) {
         { status: 422, headers: CORS }
       );
     }
+
+    // Drop a key the model invented rather than chose, so the app never
+    // tries to load an illustration that does not exist.
+    if (!EXERCISE_KEYS.includes(parsed.exercise_key)) parsed.exercise_key = null;
 
     return NextResponse.json({ result: parsed }, { headers: CORS });
   } catch (e) {
