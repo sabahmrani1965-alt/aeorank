@@ -100,12 +100,12 @@ html, body { background:#fff; margin:0; }
 .er .links { display:flex; gap:24px; font-size:14px; color:#3f4249; font-weight:500; }
 .er .soon { background:#0B0B0F; color:#fff; border-radius:999px; padding:9px 18px; font-size:13px;
   font-weight:700; white-space:nowrap; }
-.er .hero { text-align:left; padding:0; position:relative; margin-top:22px; border-radius:32px; overflow:hidden; min-height:560px;
+.er .banner { text-align:left; padding:0; position:relative; margin-top:22px; border-radius:32px; overflow:hidden; min-height:560px;
   display:flex; align-items:center; }
-.er .hero img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
-.er .hero .scrim { position:absolute; inset:0;
+.er .banner img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.er .banner .scrim { position:absolute; inset:0;
   background:linear-gradient(100deg,rgba(255,255,255,.985) 0%,rgba(255,255,255,.96) 42%,rgba(255,255,255,.55) 60%,rgba(255,255,255,0) 86%); }
-.er .hero .inner { text-align:left; position:relative; padding:56px 48px; max-width:640px; }
+.er .banner .inner { text-align:left; position:relative; padding:56px 48px; max-width:640px; }
 .er .kick { display:inline-flex; align-items:center; gap:8px; color:#2563EB; font-weight:800;
   font-size:12.5px; letter-spacing:.12em; margin-bottom:16px; }
 .er h1 { font-size:clamp(40px,5.4vw,64px); font-weight:800; letter-spacing:-.035em; line-height:1.02;
@@ -113,7 +113,7 @@ html, body { background:#fff; margin:0; }
 .er .lead { font-size:19px; color:#4b5058; line-height:1.6; margin:0 0 28px; max-width:44ch; }
 .er a.cta { display:inline-block; background:#0B0B0F; color:#fff; border-radius:999px; padding:16px 30px;
   font-size:16px; font-weight:700; }
-.er .fine { font-size:13.5px; color:#8a8f98; margin-top:14px; line-height:1.5; max-width:46ch; }
+.er .fine { font-size:13.5px; color:#8a8f98; margin:14px 0 0; line-height:1.5; max-width:46ch; }
 .er .feat { display:grid; grid-template-columns:1fr 1fr; gap:44px; align-items:center; margin-top:104px; }
 .er .feat .shot { border-radius:26px; overflow:hidden; aspect-ratio:4/5; background:#F2F3F5; }
 .er .feat .shot img { width:100%; height:100%; object-fit:cover; display:block; }
@@ -150,9 +150,9 @@ html, body { background:#fff; margin:0; }
 .er .foot a { color:#4b5058; font-weight:500; margin-left:18px; }
 @media (max-width:860px){
 .er .links { display:none; }
-.er .hero { min-height:auto; }
-.er .hero .inner { padding:36px 24px 44px; }
-.er .hero .scrim { background:linear-gradient(180deg,rgba(255,255,255,.96) 0%,rgba(255,255,255,.92) 55%,rgba(255,255,255,.4) 100%); }
+.er .banner { min-height:auto; }
+.er .banner .inner { padding:36px 24px 44px; }
+.er .banner .scrim { background:linear-gradient(180deg,rgba(255,255,255,.96) 0%,rgba(255,255,255,.92) 55%,rgba(255,255,255,.4) 100%); }
 .er .feat { grid-template-columns:1fr; gap:22px; margin-top:64px; }
 .er .feat.flip .shot { order:0; }
 .er .band, .er h2.sec, .er .final { margin-top:64px; }
@@ -175,7 +175,7 @@ export default function EasyRepLanding() {
           <div className="soon">Coming soon</div>
         </nav>
 
-        <section className="hero">
+        <section className="banner">
           <img src="/easyrep/hero.jpg" alt="" />
           <div className="scrim" />
           <div className="inner">
