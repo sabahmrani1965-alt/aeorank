@@ -80,6 +80,10 @@ export async function middleware(request) {
     if (pathname === "/privacy") return rewriteTo("/easyrep/privacy");
     if (pathname === "/terms") return rewriteTo("/easyrep/terms");
     if (matchesPrefix(pathname, "/easyrep")) return response;
+    // The signup form posts from this domain, so its API has to survive
+    // the catch-all below, which otherwise sends anything unrecognised
+    // back to the homepage and silently breaks the form.
+    if (matchesPrefix(pathname, "/api/easyrep")) return response;
     const url = request.nextUrl.clone();
     url.pathname = "/";
     url.search = "";
