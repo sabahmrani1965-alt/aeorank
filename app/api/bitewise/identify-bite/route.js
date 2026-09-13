@@ -100,12 +100,17 @@ export async function POST(req) {
   // Optional context the app collects, which changes the reading a lot.
   const where = typeof body?.where === "string" ? body.where.slice(0, 60) : "";
   const age = typeof body?.ageHours === "number" ? body.ageHours : null;
+  const allergy = ["severe", "sometimes", "none"].includes(body?.allergy) ? body.allergy : null;
   const symptoms = Array.isArray(body?.symptoms)
     ? body.symptoms.filter((s) => typeof s === "string").slice(0, 8).join(", ")
     : "";
 
   const context = [
     where && `Where on the body: ${where}.`,
+    allergy === "severe" &&
+      "IMPORTANT: this person reports a severe allergy to stings and carries an EpiPen or has been warned by a doctor. Any sign of a sting, or any swelling spreading beyond the site, is at least same_day, and a red flag must tell them to use their EpiPen and call emergency services if a reaction starts.",
+    allergy === "sometimes" &&
+      "This person reports that they sometimes swell up more than most after stings, but have never had a serious reaction. Weigh local swelling with that in mind, and grade up rather than down when unsure.",
     age !== null && `First noticed about ${age} hours ago.`,
     symptoms && `They also report: ${symptoms}.`,
   ]
@@ -173,6 +178,23 @@ export async function POST(req) {
         "Fever, chills, or feeling generally unwell",
         "The centre darkening, blistering, or turning black",
       ];
+    }
+
+    // A severe allergy is the one case where the model under-weighting a
+    // detail can hurt someone, so it does not get the final word. If any
+    // candidate is a sting, urgency is floored at same_day, and the EpiPen
+    // instruction is always the first red flag whatever was returned.
+    if (allergy === "severe") {
+      const STING = /\b(bee|wasp|hornet|yellow ?jacket|fire ant|sting)/i;
+      const names = Array.isArray(parsed.candidates) ? parsed.candidates.map((c) => c?.name || "") : [];
+      const looksLikeSting = names.some((n) => STING.test(n)) || STING.test(parsed.headline || "");
+      if (looksLikeSting && URGENCY.indexOf(parsed.urgency) < URGENCY.indexOf("same_day")) {
+        parsed.urgency = "same_day";
+        parsed.urgency_reason =
+          "This looks like it could be a sting, and you told us you can react severely. Get it looked at today even if it seems mild now.";
+      }
+      const epi = "If you feel a reaction starting, use your EpiPen first, then call emergency services";
+      parsed.red_flags = [epi, ...parsed.red_flags.filter((f) => !/epipen/i.test(f))].slice(0, 5);
     }
 
     return NextResponse.json({ result: parsed }, { headers: CORS });
