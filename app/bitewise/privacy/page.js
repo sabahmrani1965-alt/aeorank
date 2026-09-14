@@ -10,7 +10,7 @@ export default function BiteWisePrivacy() {
   return (
     <main style={S}>
       <h1>BiteWise Privacy Policy</h1>
-      <p><em>Last updated: September 9, 2026</em></p>
+      <p><em>Last updated: September 14, 2026</em></p>
 
       <h2>The short version</h2>
       <p>
@@ -21,22 +21,28 @@ export default function BiteWisePrivacy() {
 
       <h2>What happens to a photo</h2>
       <p>
-        When you check a bite, the app resizes the photo on your phone and sends it to our
+        When you check a bite or identify a bug, and only after you have agreed to it in the
+        app, the photo is resized on your phone and sent to our
         server, which passes it to Anthropic&apos;s Claude to be read. The answer comes back and
         the photo is discarded. We do not store it, we do not use it to train anything, and it
         is not attached to your name, because we do not know your name.
       </p>
       <p>
         Alongside the photo we send only what you chose to tell us: where on the body the mark
-        is, if you tapped one of those buttons. Nothing else.
+        is, if you tapped one of those buttons, and your answer to whether you react badly to
+        stings, because that changes how the result is graded. Like the photo, neither is stored.
+        Nothing else is sent.
       </p>
 
       <h2>What stays on your phone</h2>
       <ul>
         <li><strong>Your checks</strong>: the photo, the date, and the result. These live in the
           app&apos;s own storage on your device.</li>
-        <li><strong>How many free checks you have used</strong>, so the app knows when the free
-          allowance runs out.</li>
+        <li><strong>Your identified bugs</strong>: the photo, the date, and the result.</li>
+        <li><strong>Your answers from setup</strong>: why you opened the app, and whether you react
+          badly to stings.</li>
+        <li><strong>Whether you have agreed</strong> to photos being analysed, which you can turn
+          off in Settings.</li>
         <li><strong>Whether you subscribe.</strong></li>
       </ul>
       <p>

@@ -9,7 +9,7 @@ export default function BiteWiseTerms() {
   return (
     <main style={S}>
       <h1>BiteWise Terms of Use</h1>
-      <p><em>Last updated: September 9, 2026</em></p>
+      <p><em>Last updated: September 14, 2026</em></p>
 
       <h2>BiteWise is not medical care</h2>
       <p>
@@ -41,8 +41,8 @@ export default function BiteWiseTerms() {
 
       <h2>Subscriptions</h2>
       <p>
-        The bite guide, the emergency signs, and a small allowance of checks are free and always
-        will be. BiteWise Pro unlocks unlimited checks.
+        Checking bites and identifying bugs require a BiteWise Pro subscription. The bite guide
+        and the emergency signs are free and always will be, with or without one.
       </p>
       <ul>
         <li>Payment is charged to your Apple ID at confirmation of purchase.</li>
