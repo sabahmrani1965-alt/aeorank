@@ -46,8 +46,10 @@ export default function BiteWisePrivacy() {
         <li><strong>Whether you subscribe.</strong></li>
       </ul>
       <p>
-        None of this is sent to us. Delete the app, or use Delete all my data in Settings, and it
-        is gone. We cannot recover it, because we never had it.
+        None of this is stored on our servers. The allergy answer travels with a photo when you
+        ask for a result, as described above, and is discarded with it. Delete the app and all of
+        it is gone; Delete all my data in Settings removes your checks, bugs, and allergy answer.
+        We cannot recover any of it, because we never kept it.
       </p>
 
       <h2>What our server sees</h2>
