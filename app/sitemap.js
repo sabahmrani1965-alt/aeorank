@@ -1,36 +1,24 @@
+import { posts } from "./blog/page";
+import { services } from "./services/[slug]/page";
+import { industries } from "./industries/[slug]/page";
+
+// Derived, not hand-maintained. The previous version copied three slug
+// arrays by hand and had already drifted: /blog/what-is-aeo was live and
+// linked from /blog but missing from the sitemap entirely.
+
 const BASE_URL = "https://www.aeorank.tech";
 
-const blogSlugs = [
-  "crowdreply-vs-aeorank",
-  "how-we-verify-reddit-threads",
-  "getting-cited-by-claude",
-  "sentiment-in-ai-citations",
-  "partner-network-ai-visibility",
-  "reply-to-reddit-without-getting-removed",
-  "profound-vs-peec-vs-aeorank",
-  "why-chatgpt-cites-reddit-threads",
-  "aeo-schema-markup-guide",
-  "chatgpt-vs-claude-vs-gemini-citations",
-  "how-to-get-cited-by-chatgpt",
-  "measure-ai-citation-roi",
-  "entity-authority-ai-citation",
-  "optimize-for-perplexity",
-  "aeo-vs-seo",
-  "google-ai-overviews-guide",
-];
-
-const industrySlugs = ["saas", "startups", "tech-it", "software"];
-
-const serviceSlugs = [
-  "aeo-management",
-  "aeo-consulting",
-  "citation-building",
-  "entity-optimization",
-  "ai-visibility-audit",
-];
+/// Posts carry a human date ("August 28, 2026"). Fall back to the build
+/// date only when a post has none, rather than stamping today on all of
+/// them, which told crawlers every page changed on every deploy.
+function postDate(post, fallback) {
+  if (!post?.date) return fallback;
+  const parsed = new Date(post.date);
+  return Number.isNaN(parsed.getTime()) ? fallback : parsed.toISOString().slice(0, 10);
+}
 
 export default function sitemap() {
-  const lastModified = new Date().toISOString().slice(0, 10);
+  const buildDate = new Date().toISOString().slice(0, 10);
 
   const staticPages = [
     { url: BASE_URL, changeFrequency: "weekly", priority: 1.0 },
@@ -40,30 +28,28 @@ export default function sitemap() {
     { url: `${BASE_URL}/contact`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/privacy`, changeFrequency: "yearly", priority: 0.3 },
     { url: `${BASE_URL}/terms`, changeFrequency: "yearly", priority: 0.3 },
-  ];
+  ].map((p) => ({ ...p, lastModified: buildDate }));
 
-  const blogPages = blogSlugs.map((slug) => ({
-    url: `${BASE_URL}/blog/${slug}`,
+  const blogPages = posts.map((post) => ({
+    url: `${BASE_URL}/blog/${post.slug}`,
     changeFrequency: "monthly",
     priority: 0.7,
+    lastModified: postDate(post, buildDate),
   }));
 
-  const industryPages = industrySlugs.map((slug) => ({
+  const industryPages = Object.keys(industries).map((slug) => ({
     url: `${BASE_URL}/industries/${slug}`,
     changeFrequency: "monthly",
     priority: 0.6,
+    lastModified: buildDate,
   }));
 
-  const servicePages = serviceSlugs.map((slug) => ({
+  const servicePages = Object.keys(services).map((slug) => ({
     url: `${BASE_URL}/services/${slug}`,
     changeFrequency: "monthly",
     priority: 0.7,
+    lastModified: buildDate,
   }));
 
-  return [
-    ...staticPages,
-    ...blogPages,
-    ...industryPages,
-    ...servicePages,
-  ].map((p) => ({ ...p, lastModified }));
+  return [...staticPages, ...blogPages, ...industryPages, ...servicePages];
 }

@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CALENDLY_URL } from "@/lib/links";
 
-const services = {
+// Exported so app/sitemap.js derives slugs from the same source.
+export const services = {
   'aeo-management': {
     title: 'AEO Management Services',
     tag: 'Full-Service AEO',

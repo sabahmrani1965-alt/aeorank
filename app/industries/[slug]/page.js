@@ -2,7 +2,8 @@ import MarketingLayout from "@/components/MarketingLayout";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-const industries = {
+// Exported so app/sitemap.js derives slugs from the same source.
+export const industries = {
   'saas': {
     title: 'AEO for SaaS Companies',
     tag: 'SaaS Companies',

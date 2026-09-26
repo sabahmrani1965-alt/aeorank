@@ -12,3 +12,6 @@ data/
 .agents/
 skills-lock.json
 supabase/.temp/
+
+# Audit screenshots: 12MB of binaries, regenerable, not source.
+www.aeorank.tech-audit/screenshots/

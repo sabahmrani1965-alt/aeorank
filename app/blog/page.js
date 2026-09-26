@@ -8,7 +8,9 @@ export const metadata = {
   alternates: { canonical: "https://www.aeorank.tech/blog" },
 };
 
-const posts = [
+// Exported so app/sitemap.js derives from the same list instead of a
+// hand-copied array that silently drifts.
+export const posts = [
   {
     tag: "AEO · Comparison",
     title: "CrowdReply vs. AEOrank: What Each One Actually Does",
