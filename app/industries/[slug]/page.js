@@ -124,6 +124,10 @@ export async function generateMetadata({ params }) {
       description: industry.description,
       type: 'website',
       url: `https://www.aeorank.tech/industries/${params.slug}`,
+      // Points at the generated card in app/opengraph-image.js. Declaring
+      // openGraph here replaces the file-convention image, so it is named
+      // explicitly. No content hash: that changes whenever the card does.
+      images: ["/opengraph-image"],
     },
   }
 }
@@ -156,7 +160,7 @@ export default function IndustryPage({ params }) {
       <section className="section">
         <div className="container-narrow" style={{ textAlign: "center" }}>
           <span className="section-tag">( {industry.tag} )</span>
-          <h2
+          <h1
             style={{ marginBottom: 18 }}
             dangerouslySetInnerHTML={{
               __html: heroHtml.replace(/<em>/g, '<span class="accent">').replace(/<\/em>/g, "</span>"),

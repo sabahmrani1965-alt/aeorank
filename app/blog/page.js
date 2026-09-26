@@ -173,9 +173,9 @@ export default function Blog() {
       <section className="section">
         <div className="container-narrow" style={{ textAlign: "center" }}>
           <span className="section-tag">( the blog )</span>
-          <h2>
+          <h1>
             Notes on the <span className="accent">answer engine</span> game
-          </h2>
+          </h1>
           <p className="section-sub">
             Practical AEO strategies, research, and field reports for B2B SaaS
             marketers who want to win in the age of AI search.

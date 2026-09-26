@@ -390,7 +390,7 @@ a:hover { color: var(--accent); }
 button { font-family: inherit; }
 
 /* Gradient-text accent, usable standalone (existing .hero h1 .accent /
-   .section h2 .accent rules below are equally-specific duplicates of
+   .section h1/h2 .accent rules below are equally-specific duplicates of
    this, kept as-is rather than removed). */
 .accent {
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-3) 100%);
@@ -590,6 +590,10 @@ button { font-family: inherit; }
 /* ----------------- Section ----------------- */
 .section { padding: 100px 0; position: relative; }
 .section-alt { background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%); }
+/* A section's lead heading is an h1 on pages where it IS the page title
+   (posts, service and industry pages) and an h2 elsewhere, so both tags
+   take the same treatment. */
+.section h1,
 .section h2 {
   font-size: clamp(30px, 4.2vw, 48px);
   font-weight: 800;
@@ -598,6 +602,7 @@ button { font-family: inherit; }
   margin-bottom: 16px;
   line-height: 1.1;
 }
+.section h1 .accent,
 .section h2 .accent {
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-3) 100%);
   -webkit-background-clip: text;

@@ -88,9 +88,9 @@ export default function Services() {
       <section className="section">
         <div className="container-narrow" style={{ textAlign: "center" }}>
           <span className="section-tag">( aeo services )</span>
-          <h2>
+          <h1>
             Five services. One goal: <span className="accent">get you cited.</span>
-          </h2>
+          </h1>
           <p className="section-sub">
             Every service below is built around something that actually moves AI
             citations. No fluff retainers, no "content strategy" that's just a

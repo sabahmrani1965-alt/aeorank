@@ -9,7 +9,7 @@ export default function Terms() {
     <MarketingLayout>
       <section className="section">
         <div className="container-narrow">
-          <h2 style={{ textAlign: "left", marginBottom: 8 }}>Terms of Service</h2>
+          <h1 style={{ textAlign: "left", marginBottom: 8 }}>Terms of Service</h1>
           <p style={{ color: "var(--text-muted)", marginBottom: 32 }}>
             Last updated: {new Date().toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}
           </p>

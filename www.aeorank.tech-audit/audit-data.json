@@ -1,0 +1,853 @@
+{
+ "summary": {
+  "health_score": 69,
+  "business_type": "B2B SaaS \u2014 AI visibility / AEO",
+  "top_findings": [
+   "31 of 32 pages have no H1",
+   "og:image missing on all 32 pages",
+   "apex->www redirect is 307 temporary",
+   "4 industry pages are thin and near-duplicate",
+   "Core Web Vitals not measured (PageSpeed quota + no Python runtime)"
+  ],
+  "quick_wins": [
+   "Add H1 via the shared heading component",
+   "Root opengraph-image.tsx",
+   "307 -> 308 on the www hop",
+   "Service+FAQPage schema on /industries/*"
+  ]
+ },
+ "categories": [
+  {
+   "name": "Technical SEO",
+   "score": 78,
+   "what_works": [
+    "All 32 URLs 200",
+    "robots.txt correct + sitemap referenced",
+    "HSTS max-age=63072000"
+   ],
+   "findings": [
+    {
+     "title": "Apex to www is 307 temporary",
+     "severity": "Medium",
+     "description": "https://aeorank.tech -> 307 -> https://www.aeorank.tech/",
+     "recommendation": "Return 308"
+    }
+   ]
+  },
+  {
+   "name": "On-Page SEO",
+   "score": 45,
+   "what_works": [
+    "Titles, descriptions, canonicals on all 32"
+   ],
+   "findings": [
+    {
+     "title": "31 of 32 pages have zero H1",
+     "severity": "Critical",
+     "description": "Server-rendered; blog titles are h2. Outline starts at h2.",
+     "recommendation": "Promote page title to h1 in the shared template"
+    }
+   ]
+  },
+  {
+   "name": "Content Quality",
+   "score": 70,
+   "what_works": [
+    "16 posts, 655-1717 words, avg ~1100"
+   ],
+   "findings": [
+    {
+     "title": "Industry pages thin and near-duplicate",
+     "severity": "Medium",
+     "description": "297-308 words, same template",
+     "recommendation": "Expand with per-industry evidence"
+    }
+   ]
+  },
+  {
+   "name": "Schema / Structured Data",
+   "score": 88,
+   "what_works": [
+    "0 invalid JSON-LD",
+    "BlogPosting+BreadcrumbList on all posts",
+    "Service+FAQPage on all service pages"
+   ],
+   "findings": [
+    {
+     "title": "Schema gaps",
+     "severity": "Medium",
+     "description": "/industries/* only BreadcrumbList; /services,/blog,/about,/contact none",
+     "recommendation": "Mirror /services/* schema"
+    }
+   ]
+  },
+  {
+   "name": "AI Search Readiness",
+   "score": 65,
+   "what_works": [
+    "FAQPage blocks",
+    "no AI crawler blocks"
+   ],
+   "findings": [
+    {
+     "title": "/llms.txt 404",
+     "severity": "Low",
+     "description": "Not used by Google; positioning only",
+     "recommendation": "Publish one"
+    }
+   ]
+  },
+  {
+   "name": "Images",
+   "score": 95,
+   "what_works": [
+    "0 images missing alt across 32 pages"
+   ],
+   "findings": []
+  },
+  {
+   "name": "Performance (CWV)",
+   "score": null,
+   "what_works": [],
+   "findings": [
+    {
+     "title": "Not measured",
+     "severity": "Info",
+     "description": "PageSpeed public quota exhausted; local Lighthouse needs the Python runtime",
+     "recommendation": "Re-run once Python 3.10+ is installed"
+    }
+   ]
+  }
+ ],
+ "action_plan": {
+  "phases": [
+   {
+    "name": "Phase 1: Critical Fixes",
+    "timeframe": "Week 1",
+    "items": [
+     "Add H1 to 31 pages",
+     "Add og:image"
+    ]
+   },
+   {
+    "name": "Phase 2: High-Impact",
+    "timeframe": "Weeks 2-3",
+    "items": [
+     "307->308",
+     "Expand industry pages",
+     "Schema on /industries/*"
+    ]
+   },
+   {
+    "name": "Phase 3: Content & Authority",
+    "timeframe": "Month 2",
+    "items": [
+     "Schema on remaining pages",
+     "twitter:card",
+     "llms.txt",
+     "security headers"
+    ]
+   },
+   {
+    "name": "Phase 4: Monitoring",
+    "timeframe": "Ongoing",
+    "items": [
+     "Measure CWV once Python runtime exists"
+    ]
+   }
+  ]
+ },
+ "artifacts": {
+  "findings_dir": "findings/",
+  "screenshots_dir": "screenshots/"
+ },
+ "pages": [
+  {
+   "url": "https://www.aeorank.tech",
+   "status": 200,
+   "title": "AEOrank: Reddit &amp; AI Visibility Report",
+   "desc": "Help your brand show up in ChatGPT, Claude, and Gemini answers through measurable Reddit engagement.",
+   "canonical": "https://www.aeorank.tech",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 1,
+   "h2": 9,
+   "words": 2000,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "Organization",
+    "FAQPage"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 130,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/services",
+   "status": 200,
+   "title": "Services: AEOrank",
+   "desc": "AEO services for B2B SaaS: entity authority, citation building, schema, content, and full-service management. Built around the work that actually moves AI citations.",
+   "canonical": "https://www.aeorank.tech/services",
+   "robots": null,
+   "og_image": null,
+   "tw_card": null,
+   "h1": 0,
+   "h2": 2,
+   "words": 486,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [],
+   "schema_invalid": 0,
+   "html_kb": 41,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/blog",
+   "status": 200,
+   "title": "Blog: AEOrank",
+   "desc": "Practical AEO and Answer Engine Optimization guides, research, and notes for B2B SaaS marketers winning in the age of AI search.",
+   "canonical": "https://www.aeorank.tech/blog",
+   "robots": null,
+   "og_image": null,
+   "tw_card": null,
+   "h1": 0,
+   "h2": 1,
+   "words": 834,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [],
+   "schema_invalid": 0,
+   "html_kb": 47,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/about",
+   "status": 200,
+   "title": "About - AEOrank",
+   "desc": "AEOrank helps brands appear in AI chat answers through measurable Reddit engagement.",
+   "canonical": null,
+   "robots": null,
+   "og_image": null,
+   "tw_card": null,
+   "h1": 0,
+   "h2": 1,
+   "words": 255,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [],
+   "schema_invalid": 0,
+   "html_kb": 16,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/contact",
+   "status": 200,
+   "title": "Contact - AEOrank",
+   "desc": "Get in touch with the AEOrank team about Reddit + AI visibility services.",
+   "canonical": null,
+   "robots": null,
+   "og_image": null,
+   "tw_card": null,
+   "h1": 0,
+   "h2": 1,
+   "words": 115,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [],
+   "schema_invalid": 0,
+   "html_kb": 14,
+   "cache": "private, no-cache, no-store, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/privacy",
+   "status": 200,
+   "title": "Privacy Policy - AEOrank",
+   "desc": "Help your brand show up in ChatGPT, Claude, and Gemini answers through measurable Reddit engagement.",
+   "canonical": null,
+   "robots": null,
+   "og_image": null,
+   "tw_card": null,
+   "h1": 0,
+   "h2": 1,
+   "words": 185,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [],
+   "schema_invalid": 0,
+   "html_kb": 15,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/terms",
+   "status": 200,
+   "title": "Terms of Service - AEOrank",
+   "desc": "Help your brand show up in ChatGPT, Claude, and Gemini answers through measurable Reddit engagement.",
+   "canonical": null,
+   "robots": null,
+   "og_image": null,
+   "tw_card": null,
+   "h1": 0,
+   "h2": 1,
+   "words": 188,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [],
+   "schema_invalid": 0,
+   "html_kb": 15,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/blog/crowdreply-vs-aeorank",
+   "status": 200,
+   "title": "CrowdReply vs AEOrank: Honest Comparison | AEOrank",
+   "desc": "CrowdReply and AEOrank both work in Reddit based AI visibility. Here&#x27;s the real difference: pricing, how each one posts, and which fits your team.",
+   "canonical": "https://www.aeorank.tech/blog/crowdreply-vs-aeorank",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 2,
+   "words": 806,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BlogPosting",
+    "BreadcrumbList"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 37,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/blog/how-we-verify-reddit-threads",
+   "status": 200,
+   "title": "How We Verify Reddit Threads Before You See Them | AEOrank",
+   "desc": "A search snippet showing no replies isn&#x27;t proof a thread is unanswered. Here&#x27;s the verification process that catches what snippets miss.",
+   "canonical": "https://www.aeorank.tech/blog/how-we-verify-reddit-threads",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 2,
+   "words": 655,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BlogPosting",
+    "BreadcrumbList"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 34,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/blog/getting-cited-by-claude",
+   "status": 200,
+   "title": "Getting Cited by Claude: Why Its the Hardest | AEOrank",
+   "desc": "Claude declines to recommend products more than any other major engine. Here&#x27;s what it actually trusts, and a realistic timeline for earning a citation.",
+   "canonical": "https://www.aeorank.tech/blog/getting-cited-by-claude",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 2,
+   "words": 965,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BlogPosting",
+    "BreadcrumbList"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 42,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/blog/sentiment-in-ai-citations",
+   "status": 200,
+   "title": "Sentiment in AI Citations: Why It Matters | AEOrank",
+   "desc": "Getting cited by an AI engine isn&#x27;t automatically good. A citation paired with &#x27;some say to avoid this&#x27; does real damage. Here&#x27;s how that happens and how to fix it.",
+   "canonical": "https://www.aeorank.tech/blog/sentiment-in-ai-citations",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 2,
+   "words": 867,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BlogPosting",
+    "BreadcrumbList"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 39,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/blog/partner-network-ai-visibility",
+   "status": 200,
+   "title": "Using Your Partner Network for AI Visibility | AEOrank",
+   "desc": "Your existing affiliates already have a reason to talk to you. That makes your partner network a warmer, faster channel for AI visibility work than cold outreach.",
+   "canonical": "https://www.aeorank.tech/blog/partner-network-ai-visibility",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 2,
+   "words": 782,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BlogPosting",
+    "BreadcrumbList"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 37,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/blog/reply-to-reddit-without-getting-removed",
+   "status": 200,
+   "title": "How to Reply on Reddit Without Getting Removed | AEOrank",
+   "desc": "One of our own outreach targets got pulled by mods for &#x27;unapproved third-party advertisement.&#x27; Here&#x27;s what that actually means and how to reply without it happening to you.",
+   "canonical": "https://www.aeorank.tech/blog/reply-to-reddit-without-getting-removed",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 2,
+   "words": 1161,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BlogPosting",
+    "BreadcrumbList"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 44,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/blog/profound-vs-peec-vs-aeorank",
+   "status": 200,
+   "title": "Profound vs Peec AI vs AEOrank Compared | AEOrank",
+   "desc": "An honest breakdown of what Profound, Peec AI, and AEOrank each actually do, not a &quot;why we&#x27;re better&quot; pitch, just what each tool measures or acts on.",
+   "canonical": "https://www.aeorank.tech/blog/profound-vs-peec-vs-aeorank",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 2,
+   "words": 866,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BlogPosting",
+    "BreadcrumbList"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 39,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/blog/why-chatgpt-cites-reddit-threads",
+   "status": 200,
+   "title": "Why AI Cites Reddit Threads | AEOrank",
+   "desc": "We checked 30 real B2B SaaS companies for a live, unanswered Reddit thread in their category. Found one in nearly all of them.",
+   "canonical": "https://www.aeorank.tech/blog/why-chatgpt-cites-reddit-threads",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 2,
+   "words": 1153,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BlogPosting",
+    "BreadcrumbList"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 44,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/blog/aeo-schema-markup-guide",
+   "status": 200,
+   "title": "AEO Schema Markup: Tags That Move Citations | AEOrank",
+   "desc": "Most schema advice is a recycled SEO checklist. Which schema types actually move AI citations for B2B SaaS, and which are just noise: the honest take.",
+   "canonical": "https://www.aeorank.tech/blog/aeo-schema-markup-guide",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 2,
+   "words": 1711,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BlogPosting",
+    "BreadcrumbList"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 61,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/blog/chatgpt-vs-claude-vs-gemini-citations",
+   "status": 200,
+   "title": "ChatGPT vs Claude vs Gemini Citations | AEOrank",
+   "desc": "Same query, different brands cited. Why ChatGPT, Claude, and Gemini build their B2B SaaS answers differently, and how to optimize for each engine.",
+   "canonical": "https://www.aeorank.tech/blog/chatgpt-vs-claude-vs-gemini-citations",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 2,
+   "words": 1717,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BlogPosting",
+    "BreadcrumbList"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 59,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/blog/how-to-get-cited-by-chatgpt",
+   "status": 200,
+   "title": "Get Cited by ChatGPT: What Works in 2026 | AEOrank",
+   "desc": "Six months of testing what moves AI citations for B2B SaaS. Entity work and third-party citations beat content volume. Here&#x27;s the honest version.",
+   "canonical": "https://www.aeorank.tech/blog/how-to-get-cited-by-chatgpt",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 2,
+   "words": 1306,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BlogPosting",
+    "BreadcrumbList"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 50,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/blog/measure-ai-citation-roi",
+   "status": 200,
+   "title": "Measuring AEO ROI Without Lying to Yourself | AEOrank",
+   "desc": "Most AI citation attribution is guesswork. The honest framework for measuring whether AEO works for B2B SaaS: what to track, what to ignore.",
+   "canonical": "https://www.aeorank.tech/blog/measure-ai-citation-roi",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 2,
+   "words": 1189,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BlogPosting",
+    "BreadcrumbList"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 48,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/blog/entity-authority-ai-citation",
+   "status": 200,
+   "title": "Why SaaS Brands Get Cited by AI (and Don&#x27;t) | AEOrank",
+   "desc": "Why some B2B SaaS brands get cited by ChatGPT and others don&#x27;t. It&#x27;s almost never content. It&#x27;s entity authority. Here&#x27;s what that means in practice.",
+   "canonical": "https://www.aeorank.tech/blog/entity-authority-ai-citation",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 2,
+   "words": 1214,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BlogPosting",
+    "BreadcrumbList"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 47,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/blog/optimize-for-perplexity",
+   "status": 200,
+   "title": "Perplexity AEO: What It Actually Wants | AEOrank",
+   "desc": "Perplexity is where the highest-intent technical B2B buyers research. It retrieves and weights citations differently from ChatGPT. Here&#x27;s what works.",
+   "canonical": "https://www.aeorank.tech/blog/optimize-for-perplexity",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 2,
+   "words": 1110,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BlogPosting",
+    "BreadcrumbList"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 47,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/blog/aeo-vs-seo",
+   "status": 200,
+   "title": "AEO vs SEO: Different Jobs, Both Matter | AEOrank",
+   "desc": "Most agencies selling AEO are just rebranding SEO. They optimize for different things. Here&#x27;s how AEO and SEO actually differ for B2B SaaS, and why.",
+   "canonical": "https://www.aeorank.tech/blog/aeo-vs-seo",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 2,
+   "words": 1089,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BlogPosting",
+    "BreadcrumbList"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 46,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/blog/google-ai-overviews-guide",
+   "status": 200,
+   "title": "Google AI Overviews: A Year of Lessons | AEOrank",
+   "desc": "AI Overviews went from rough launch to dominant placement on B2B queries. After a year optimizing for SaaS clients, here&#x27;s what gets cited and what doesn&#x27;t.",
+   "canonical": "https://www.aeorank.tech/blog/google-ai-overviews-guide",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 2,
+   "words": 1286,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BlogPosting",
+    "BreadcrumbList"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 51,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/industries/saas",
+   "status": 200,
+   "title": "AEO for SaaS Companies",
+   "desc": "Answer Engine Optimization built for B2B SaaS. We help SaaS companies get cited by ChatGPT, Perplexity, and Google AI for their highest-intent buyer queries.",
+   "canonical": "https://www.aeorank.tech/industries/saas",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 4,
+   "words": 297,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BreadcrumbList"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 33,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/industries/startups",
+   "status": 200,
+   "title": "AEO for Startups",
+   "desc": "AEO for early and growth-stage startups. Build category authority faster than competitors and establish your brand as the AI-recommended choice before you&#x27;re a household name.",
+   "canonical": "https://www.aeorank.tech/industries/startups",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 4,
+   "words": 308,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BreadcrumbList"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 33,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/industries/tech-it",
+   "status": 200,
+   "title": "AEO for Tech &amp; IT Companies",
+   "desc": "AEO for cybersecurity, DevOps, cloud, and infrastructure companies. Get cited in the technical AI research queries that drive enterprise purchase decisions.",
+   "canonical": "https://www.aeorank.tech/industries/tech-it",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 4,
+   "words": 301,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BreadcrumbList"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 33,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/industries/software",
+   "status": 200,
+   "title": "AEO for Software Companies",
+   "desc": "AEO for software companies across every vertical. Whether you&#x27;re building HR tech, fintech, edtech, or vertical SaaS, we help you dominate AI answers in your niche.",
+   "canonical": "https://www.aeorank.tech/industries/software",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 4,
+   "words": 301,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BreadcrumbList"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 33,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/services/aeo-management",
+   "status": 200,
+   "title": "AEO Management Services",
+   "desc": "Full-service Answer Engine Optimization management for B2B SaaS. We handle every aspect of getting your brand cited by ChatGPT, Perplexity, and Google AI.",
+   "canonical": "https://www.aeorank.tech/services/aeo-management",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 5,
+   "words": 372,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BreadcrumbList",
+    "Service",
+    "FAQPage"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 35,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/services/aeo-consulting",
+   "status": 200,
+   "title": "AEO Consulting Services",
+   "desc": "Strategic AEO consulting for B2B SaaS teams who want to execute internally. We provide the roadmap, frameworks, and expertise; you execute with our guidance.",
+   "canonical": "https://www.aeorank.tech/services/aeo-consulting",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 5,
+   "words": 351,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BreadcrumbList",
+    "Service",
+    "FAQPage"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 35,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/services/citation-building",
+   "status": 200,
+   "title": "Citation Building Services",
+   "desc": "Strategic citation building for B2B SaaS. We secure mentions in the high-authority publications and directories that AI engines use as training data and real-time citation sources.",
+   "canonical": "https://www.aeorank.tech/services/citation-building",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 5,
+   "words": 335,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BreadcrumbList",
+    "Service",
+    "FAQPage"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 35,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/services/entity-optimization",
+   "status": 200,
+   "title": "Entity Optimization Services",
+   "desc": "Entity optimization for B2B SaaS. We establish your brand as a recognized, trusted entity across the knowledge graph so AI engines confidently cite you.",
+   "canonical": "https://www.aeorank.tech/services/entity-optimization",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 5,
+   "words": 364,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BreadcrumbList",
+    "Service",
+    "FAQPage"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 35,
+   "cache": "public, max-age=0, must-revalidate"
+  },
+  {
+   "url": "https://www.aeorank.tech/services/ai-visibility-audit",
+   "status": 200,
+   "title": "AI Visibility Audit",
+   "desc": "Comprehensive AI visibility audit for B2B SaaS. See exactly where your brand stands in AI-generated answers across ChatGPT, Perplexity, Google AI, and more.",
+   "canonical": "https://www.aeorank.tech/services/ai-visibility-audit",
+   "robots": null,
+   "og_image": null,
+   "tw_card": "summary",
+   "h1": 0,
+   "h2": 5,
+   "words": 342,
+   "imgs": 4,
+   "img_noalt": 0,
+   "schema": [
+    "BreadcrumbList",
+    "Service",
+    "FAQPage"
+   ],
+   "schema_invalid": 0,
+   "html_kb": 34,
+   "cache": "public, max-age=0, must-revalidate"
+  }
+ ]
+}

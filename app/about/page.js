@@ -13,9 +13,9 @@ export default function About() {
       <section className="section">
         <div className="container-narrow">
           <span className="section-tag">( about )</span>
-          <h2 style={{ textAlign: "center" }}>
+          <h1 style={{ textAlign: "center" }}>
             Built for the new <span className="accent">answer engine</span> era
-          </h2>
+          </h1>
           <p className="section-sub">
             Search is changing. People ask ChatGPT, Claude, and Gemini the
             questions they used to type into Google. AEOrank helps brands show

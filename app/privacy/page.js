@@ -9,7 +9,7 @@ export default function Privacy() {
     <MarketingLayout>
       <section className="section">
         <div className="container-narrow">
-          <h2 style={{ textAlign: "left", marginBottom: 8 }}>Privacy Policy</h2>
+          <h1 style={{ textAlign: "left", marginBottom: 8 }}>Privacy Policy</h1>
           <p style={{ color: "var(--text-muted)", marginBottom: 32 }}>
             Last updated: {new Date().toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}
           </p>

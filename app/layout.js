@@ -19,11 +19,30 @@ const caveat = Caveat({
   variable: "--font-caveat",
 });
 
+const SITE = "https://www.aeorank.tech";
+
 export const metadata = {
+  // metadataBase lets the generated opengraph-image resolve to an absolute
+  // URL. Without it Next emits a relative path and crawlers ignore the card.
+  metadataBase: new URL(SITE),
   title: "AEOrank: Reddit & AI Visibility Report",
   description:
     "Help your brand show up in ChatGPT, Claude, and Gemini answers through measurable Reddit engagement.",
   icons: { icon: "/icon.svg" },
+  openGraph: {
+    type: "website",
+    siteName: "AEOrank",
+    url: SITE,
+    title: "AEOrank: Reddit & AI Visibility Report",
+    description:
+      "Help your brand show up in ChatGPT, Claude, and Gemini answers through measurable Reddit engagement.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AEOrank: Reddit & AI Visibility Report",
+    description:
+      "Help your brand show up in ChatGPT, Claude, and Gemini answers through measurable Reddit engagement.",
+  },
 };
 
 export default function RootLayout({ children }) {

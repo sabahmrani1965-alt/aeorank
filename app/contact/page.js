@@ -24,9 +24,9 @@ export default function ContactPage({ searchParams }) {
       <section className="section">
         <div className="container-narrow">
           <span className="section-tag">( contact )</span>
-          <h2 style={{ textAlign: "center" }}>
+          <h1 style={{ textAlign: "center" }}>
             Talk to the <span className="accent">AEOrank</span> team
-          </h2>
+          </h1>
           <p className="section-sub" style={{ marginBottom: 28 }}>
             {planKey === "general"
               ? "Tell us about your brand and what you'd like AI assistants to say about it."

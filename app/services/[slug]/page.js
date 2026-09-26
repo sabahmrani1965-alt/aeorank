@@ -146,6 +146,10 @@ export async function generateMetadata({ params }) {
       description: service.description,
       type: 'website',
       url: `https://www.aeorank.tech/services/${params.slug}`,
+      // Points at the generated card in app/opengraph-image.js. Declaring
+      // openGraph here replaces the file-convention image, so it is named
+      // explicitly. No content hash: that changes whenever the card does.
+      images: ["/opengraph-image"],
     },
   }
 }
@@ -193,7 +197,7 @@ export default function ServicePage({ params }) {
       <section className="section">
         <div className="container-narrow" style={{ textAlign: "center" }}>
           <span className="section-tag">( {service.tag} )</span>
-          <h2
+          <h1
             style={{ marginBottom: 18 }}
             dangerouslySetInnerHTML={{
               __html: service.hero

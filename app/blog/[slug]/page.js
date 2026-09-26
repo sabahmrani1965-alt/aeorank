@@ -783,6 +783,10 @@ export async function generateMetadata({ params }) {
       type: 'article',
       publishedTime: post.updated,
       authors: [post.author],
+      // Points at the generated card in app/opengraph-image.js. Declaring
+      // openGraph here replaces the file-convention image, so it is named
+      // explicitly. No content hash: that changes whenever the card does.
+      images: ["/opengraph-image"],
     },
     alternates: {
       canonical: `https://www.aeorank.tech/blog/${params.slug}`,
@@ -832,7 +836,7 @@ export default function BlogPost({ params }) {
       <section className="section">
         <div className="container-narrow" style={{ textAlign: "center" }}>
           <span className="section-tag">( {post.tag} )</span>
-          <h2 style={{ marginBottom: 18 }}>{post.title}</h2>
+          <h1 style={{ marginBottom: 18 }}>{post.title}</h1>
           <div
             style={{
               display: "flex",
