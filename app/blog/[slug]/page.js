@@ -698,6 +698,64 @@ const posts = {
     ],
   },
 
+  'reddit-ai-visibility-guide': {
+    tag: 'Reddit & AI Visibility',
+    title: 'Reddit Marketing for AI Search Visibility',
+    metaTitle: 'Reddit Marketing for AI Search Visibility | AEOrank',
+    metaDescription: "Why AI assistants lean on Reddit, what actually earns a citation, and what gets your account banned. A practical guide for B2B SaaS teams.",
+    description: 'AI assistants cite Reddit constantly. This is how Reddit visibility actually works, what earns a citation, and the tactics that get you removed instead.',
+    tags: ['reddit', 'aeo', 'ai-search', 'b2b-saas', 'strategy'],
+    date: 'September 27, 2026',
+    updated: '2026-09-27',
+    readTime: '9 min read',
+    author: 'Ilyas Lemzouri',
+    sections: [
+      {
+        heading: null,
+        content: `Ask ChatGPT, Claude or Perplexity to recommend software and you will often get an answer shaped by Reddit. Not because Reddit is authoritative in the way a standards body is, but because it is one of the few places on the open web where people describe, at length and in public, what it was actually like to use something.\n\nThat makes Reddit unusually useful to a model trying to answer "what do people actually recommend?" — and it makes Reddit visibility a distinct discipline from ranking a page in Google.\n\nThis guide covers what works, what does not, and how to tell the difference.`,
+      },
+      {
+        heading: 'Why Reddit carries weight with AI assistants',
+        content: `Three things stack up, and they compound.\n\n• **It is first-hand and specific.** A thread about migrating off a tool contains the detail a marketing page removes: what broke, what the workaround was, what it cost. That is the kind of passage an answer engine can quote usefully.\n• **It is structured as a question with answers.** Reddit's format maps almost exactly onto what an assistant is being asked to produce. A question, several competing answers, and a visible signal of which the community found useful.\n• **It is licensed and accessible.** Reddit has publicly announced data partnerships with AI companies — see [Reddit's own newsroom](https://www.redditinc.com/blog) for the primary announcements. Whatever the commercial terms, the practical effect is that Reddit content is reachable by the systems answering your buyers' questions.\n\nGoogle's own documentation on [AI features in Search](https://developers.google.com/search/docs/appearance/ai-features) is worth reading alongside this, because the eligibility rules for AI Overviews are ordinary Search rules — there is no separate Reddit exception.`,
+      },
+      {
+        heading: 'What actually earns a citation',
+        content: `A citation is not a mention. A model quotes a passage because it answers the question better than the alternatives in front of it.\n\n• **Answer the question that was asked.** A comment that resolves the asker's specific problem gets quoted. A comment that pivots to your product does not.\n• **Be specific enough to be checkable.** Numbers, versions, timeframes, named constraints. "It took about three weeks and the CSV import choked on anything over 50k rows" is citable. "It works great" is not.\n• **Disclose the affiliation.** Say you work there. This is both the subreddit rule in most places and, practically, the thing that stops the comment being removed later — and a removed comment cites nothing.\n• **Write for the reader, not the crawler.** Google's [helpful content guidance](https://developers.google.com/search/docs/fundamentals/creating-helpful-content) applies here more literally than usual, because the audience really is a person who will downvote you.\n\nThe test is simple: would this comment be useful if your product did not exist? If not, it is an advertisement, and it will be treated as one.`,
+      },
+      {
+        heading: 'What gets you removed instead',
+        content: `The tactics sold as "Reddit marketing" are mostly the ones that destroy the asset.\n\n| Tactic | What happens |\n| --- | --- |\n| Aged or purchased accounts | Removal and often a sitewide ban; the thread loses the comment entirely |\n| Coordinated upvoting | Vote manipulation is against Reddit's sitewide rules, and it is detectable |\n| Undisclosed employee comments | Removal on discovery, plus the reputational cost of being caught |\n| Posting the same copy across subreddits | Flagged as spam, usually before a human sees it |\n\nThe reason these matter for AI visibility specifically: a removed comment is not just a lost placement. It is a lost placement in a thread that will keep being read for years. The half-life of a good Reddit answer is measured in years, which is exactly why the shortcuts cost more than they appear to.`,
+      },
+      {
+        heading: 'Where to actually spend the effort',
+        content: `Ranked by what tends to produce citations per hour spent.\n\n1. **Find threads that are already ranking.** A two-year-old thread that sits on page one for your category query is worth more than a new post nobody will see. Search the query your buyer would type, and look for Reddit results.\n2. **Answer questions in your actual area of expertise.** Not adjacent, not "related to our space" — the ones where your answer would be better than anyone else's in the thread.\n3. **Build the entity signals in parallel.** Reddit works best when the model already has a record of who you are. See [entity authority](/blog/entity-authority-ai-citation) for why that comes first.\n4. **Publish the primary sources Reddit can point at.** Threads cite documentation, benchmarks and post-mortems. If nothing of yours is worth linking, you are relying entirely on other people's descriptions.\n\nThis is the same order we use in [citation building](/services/citation-building), for the same reason: the cheap tactics at the bottom of the list only work once the expensive ones at the top are in place.`,
+      },
+      {
+        heading: 'Which subreddits are actually worth your time?',
+        content: `Most of the value sits in a handful of communities, and the selection rule is not size.\n\n• **Does the subreddit rank?** Search your category query and see which subreddits Google already surfaces. A 40k-member community that ranks beats a 2M-member one that does not.\n• **Do questions like your buyer's get asked there?** Search within the subreddit for the problem you solve. If nobody asks, there is nothing to answer.\n• **Are vendor answers tolerated?** Read the rules and then read the actual removed-comment pattern. Some communities allow disclosed vendor participation; some remove it on sight regardless of quality.\n• **Do threads stay alive?** Communities where two-year-old threads still get replies are the ones whose answers keep getting read, and keep getting cited.\n\nThe honest version of subreddit selection is that three good communities you participate in properly beat twenty you post into.`,
+      },
+      {
+        heading: 'How long does Reddit visibility take to show up?',
+        content: `Slower than paid, faster than domain authority. The sequencing matters more than the calendar.\n\n1. **Immediately:** the comment exists and can be read by anyone who finds the thread.\n2. **Days to weeks:** the thread's own Google ranking determines how many people, and how many crawlers, actually see it.\n3. **Weeks to months:** assistants that index or re-crawl the open web can begin surfacing it.\n4. **Months:** anything that depends on training data rather than retrieval, which you do not control and cannot schedule.\n\nThat last step is why nobody can honestly promise a citation by a specific date. What you can control is how many genuinely good answers exist in threads that rank. The rest is a function of how each engine retrieves, which changes without notice.`,
+      },
+      {
+        heading: 'Does any of this work without the rest of your AEO in place?',
+        content: `Partly, and less than you would like.\n\nReddit is a strong signal about what people say about you. It is a weak signal about who you are. An assistant that has never encountered your brand as an entity has nothing to attach the Reddit evidence to — which is why a thread praising a company nobody has a record of often produces no citation at all.\n\nThe pieces that make Reddit work harder:\n\n• **A resolvable entity.** Consistent name, description and identifiers across the places models look. [Schema.org Organization markup](https://schema.org/Organization) is the machine-readable half of this.\n• **Third-party corroboration.** Reddit plus nothing reads as anecdote. Reddit plus documentation, plus listings, plus coverage reads as a company.\n• **Something worth linking to.** Threads cite sources. If your site has no primary material, you are dependent on other people summarising you.\n\nWe wrote about the ordering in [AEO vs SEO](/blog/aeo-vs-seo), and the underlying reason in [entity authority](/blog/entity-authority-ai-citation).`,
+      },
+      {
+        heading: 'What should you not outsource?',
+        content: `The judgement calls, and there are three.\n\n• **Which threads you answer.** This requires knowing what your product genuinely does and does not do. Get it wrong and you produce confidently incorrect answers under your own name.\n• **What you claim.** Any number you put in a Reddit comment is checkable by the person reading it, and they will check. Unsourced performance claims do more damage in a thread than on a landing page, because the reply is public.\n• **Whether to answer at all.** The highest-value move is often to not comment — when your honest answer is that a competitor fits better, saying so builds more than a placement would.\n\nThe mechanical parts — finding threads, tracking which questions get asked, monitoring whether assistants name you — are worth automating. The judgement is not.`,
+      },
+      {
+        heading: 'How to measure it honestly',
+        content: `Reddit visibility is measurable, but most of what gets reported is not measurement.\n\n• **Track the answer, not the impression.** The question is whether an assistant names you when asked a buyer question, not how many times your brand string appeared somewhere.\n• **Fix the prompt set before you start.** If the questions change between your baseline and your follow-up, the comparison means nothing. Pick the queries your buyers actually ask and leave them alone.\n• **Record every check, including the zeroes.** A run where nobody mentions you is data. Discarding it is how "200% improvement" claims get manufactured.\n• **Watch for the false positive.** "I'm not familiar with that brand" contains your brand name. A naive substring match scores that as a mention — and scores the clearest possible proof of invisibility as a win.\n\nThat last one is not hypothetical. It is a bug we shipped and had to fix, and it inflated two reports to 100% and 75% before anyone noticed. Any tool you evaluate, including ours, should be asked how it handles it.\n\nFor the broader measurement approach, [measuring AI citation ROI](/blog/measure-ai-citation-roi) goes further into attribution.`,
+      },
+      {
+        heading: 'The short version',
+        content: `Reddit matters to AI assistants because it contains specific, first-hand, question-shaped content that models can quote. You earn citations there by being genuinely useful in threads where you have real expertise, disclosing who you are, and being specific enough to be worth quoting.\n\nEverything sold as a shortcut — aged accounts, upvote rings, undisclosed astroturfing — trades a durable asset for a short-lived placement, and usually loses both.\n\nIf you want the same work done systematically, that is what [AEOrank](/services) is. If you would rather do it yourself, the order above is the one that works.`,
+      },
+    ],
+  },
   'aeo-vs-seo': {
     tag: 'AEO vs SEO',
     title: 'AEO vs SEO: Stop Pretending They\'re the Same Job',

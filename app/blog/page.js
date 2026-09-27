@@ -12,6 +12,15 @@ export const metadata = {
 // hand-copied array that silently drifts.
 export const posts = [
   {
+    tag: "Reddit & AI Visibility",
+    title: "Reddit Marketing for AI Search Visibility",
+    excerpt:
+      "AI assistants cite Reddit constantly. How Reddit visibility actually works, what earns a citation, and the tactics that get you removed instead.",
+    date: "September 27, 2026",
+    readTime: "9 min read",
+    slug: "reddit-ai-visibility-guide",
+  },
+  {
     tag: "AEO · Comparison",
     title: "CrowdReply vs. AEOrank: What Each One Actually Does",
     excerpt:
