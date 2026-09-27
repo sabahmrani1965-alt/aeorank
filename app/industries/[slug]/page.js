@@ -1,4 +1,5 @@
 import MarketingLayout from "@/components/MarketingLayout";
+import { renderBlock } from "@/components/prose";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -87,6 +88,28 @@ export const industries = {
       { num: '+312%', label: 'Average AI Citation Increase' },
       { num: '4–6mo', label: 'To Meaningful Share-of-Voice' },
       { num: '+180%', label: 'AI-Sourced Pipeline Growth' },
+    ],
+    guide: [
+      {
+        heading: 'Why B2B SaaS is different from other AEO work',
+        content: `A SaaS buyer does not ask an assistant one question. They ask a sequence, over weeks, and the answers compound: what tools exist, which suits our size, how does X compare to Y, is X worth the money, what do people who left X say.\n\nThat sequence is why category-level visibility matters more here than in most verticals. Being named once in a "best tools" answer does little if you are absent from the comparison and pricing answers that follow. The queries that decide a deal are the later ones.\n\n• **Long, multi-touch research.** Buyers return to the same assistant repeatedly across a cycle measured in weeks or months.\n• **Committee decisions.** The person asking is often not the person paying, so the answers need to satisfy both.\n• **Category crowding.** Most SaaS categories have a dozen credible vendors, and assistants name three.\n• **Switching questions.** "Alternatives to X" and "X vs Y" carry more intent than the category term itself.`,
+      },
+      {
+        heading: 'Which queries actually decide a SaaS deal?',
+        content: `Ranked by how close they sit to a purchase, not by volume. Volume is inversely correlated with intent here.\n\n| Query shape | Intent | Why it matters |\n| --- | --- | --- |\n| "alternatives to [competitor]" | Highest | The buyer has already rejected someone and is actively shopping |\n| "[you] vs [competitor]" | High | A shortlist exists and you are on it |\n| "is [you] worth it" / pricing | High | Late-stage validation, often the last check before a call |\n| "best [category] for [segment]" | Medium | Shortlist formation, where absence is most costly |\n| "what is [category]" | Low | Education, rarely decisive |\n\nMost AEO effort goes into the bottom row because it is the easiest to write about. The top three are where deals are won, and they are also where Reddit threads and third-party comparisons dominate the source material an assistant draws on.`,
+      },
+      {
+        heading: 'What the work actually involves',
+        content: `In the order it should be done, because each step makes the next one work better.\n\n1. **Establish the entity.** An assistant must resolve who you are before it will recommend you. Consistent naming, a complete Organization record, and profiles on the platforms models read. Nothing downstream compensates for skipping this — see [entity authority](/blog/entity-authority-ai-citation).\n2. **Find where the category is discussed.** For most SaaS categories, a meaningful share is Reddit: comparison threads, migration post-mortems, "we tried X for six months" write-ups. The method is in [Reddit marketing for AI search visibility](/blog/reddit-ai-visibility-guide).\n3. **Participate where you have real expertise.** Disclosed, specific, and useful whether or not someone buys. The durable citations come from answers that would stand without the product mention.\n4. **Publish the primary sources.** Threads and assistants both cite documentation, benchmarks and honest comparisons. If nothing of yours is worth linking, you depend on other people's summaries of you.\n5. **Measure the answer, not the impression.** Fix a query set, record every check including the zeroes, and compare per engine. [Measuring AI citation ROI](/blog/measure-ai-citation-roi) covers the attribution side.`,
+      },
+      {
+        heading: 'How long does it take, and what should you expect?',
+        content: `Honestly: slower than paid acquisition, and nobody can promise a citation by a date. What is controllable is how much good source material exists about you, and how consistently your entity resolves.\n\n• **Weeks 1-4.** Entity work and baseline measurement. The baseline is the part most teams skip and then regret, because without it no later number means anything.\n• **Months 2-3.** Participation compounds. Threads that rank keep being read, so early answers keep working.\n• **Months 3-6.** Assistants that re-crawl the open web begin reflecting it. Anything depending on training data rather than retrieval is outside anyone's control or schedule.\n\nA vendor promising a specific percentage increase by a specific month is making a claim about someone else's system. We wrote about how to test that claim in [how to evaluate AI visibility tools](/blog/best-ai-visibility-tools).`,
+      },
+      {
+        heading: 'Doing it yourself versus handing it over',
+        content: `The mechanical parts are worth automating and the judgement is not.\n\nWorth automating: finding threads that rank, tracking which questions get asked, monitoring whether assistants name you, and watching competitors' citation share.\n\nNot worth outsourcing: which threads you answer, what you claim, and whether to answer at all. Those need someone who genuinely knows what your product does and does not do, because a confidently wrong answer posted under your own name costs more than the placement was worth.\n\nIf you want the tooling and run the work yourself, that is what the plans on our [pricing page](/pricing) cover. If you would rather hand the whole programme over, [AEO management](/services/aeo-management) is the managed version.`,
+      },
     ],
   },
 
@@ -450,6 +473,25 @@ export default function IndustryPage({ params }) {
           .stats-band-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
+
+      {/* The SERP for "answer engine optimization for B2B SaaS" is 9/9
+          long-form guides and 0 vendor landing pages. A 300-word benefits
+          page is the wrong page type, not merely a thin one, so the guide
+          sits inside the commercial page rather than replacing it. */}
+      {industry.guide ? (
+        <section className="section">
+          <div className="container-narrow">
+            {industry.guide.map((sec, i) => (
+              <div key={i} style={{ marginBottom: 30 }}>
+                <h2 style={{ fontSize: 24, lineHeight: 1.3, marginBottom: 14, textAlign: "left" }}>
+                  {sec.heading}
+                </h2>
+                {sec.content.split("\n\n").map((b, j) => renderBlock(b, j))}
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       {/* Commercial pages linked only to /, /contact, /signup and /services.
           Nothing pointed back into the blog, so the funnel ran one way and
