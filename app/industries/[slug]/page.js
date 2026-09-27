@@ -137,6 +137,24 @@ export const industries = {
       { num: '3–4mo', label: 'To First Meaningful Wins' },
       { num: '+560%', label: 'AI-Sourced Lead Volume' },
     ],
+    guide: [
+      {
+        heading: 'The startup problem is different: you have no entity yet',
+        content: `An established company doing AEO is correcting how it is described. A startup is establishing that it exists at all. Those are different jobs and most AEO advice quietly assumes the first.\n\nWhen an assistant has no record of you, it does not name you tentatively. It does not name you. There is no partial credit, which is why startups often see zero citations for months while doing everything the guides say.`,
+      },
+      {
+        heading: 'What to do before you have any authority',
+        content: `Ranked for a company with no budget, no backlinks and no brand recognition.\n\n1. **Narrow the category until you can win it.** "Best project management tool" is unwinnable. "Project management for architecture firms" might not be. Assistants name three tools; be one of three in a small category rather than absent from a large one.\n2. **Use the founder as the entity.** Early on, a founder with a real track record is more resolvable than the company. A named person with a history is something a model can attach to.\n3. **Publish the thing only you know.** Your build decisions, your failure modes, your benchmarks. It is the one category of content a larger competitor cannot produce.\n4. **Answer questions in public, as yourself.** Disclosed, specific, useful without the product mention. The method is in [Reddit marketing for AI search visibility](/blog/reddit-ai-visibility-guide).\n5. **Get listed everywhere legitimate.** Directories, launch platforms, category round-ups. Each is corroboration you do not own, which is what you are short of.`,
+      },
+      {
+        heading: 'What not to spend time on yet',
+        content: `| Tactic | Why not yet |\n| --- | --- |\n| Wikidata entry | Notability bar you likely fail; a deleted entry is worse than none |\n| Broad category terms | Established vendors hold them and authority decides those |\n| High-volume content | Volume without entity resolution produces nothing |\n| Paid AI-visibility tooling | Measure manually first; the answer is probably zero, and you can confirm that for free |\n\nThe honest version: at pre-traction, most AEO spend is premature. The entity groundwork and public participation are free and they are what compounds.`,
+      },
+      {
+        heading: 'How will you know it is working?',
+        content: `Not by a dashboard number, which will read zero for a while and is uninformative while it does.\n\nEarlier signals: assistants describe you accurately when asked directly by name, rather than confusing you with something similar; your own threads and documentation start appearing in answers about the problem even when the brand is not named; a competitor comparison mentions you unprompted.\n\nThose precede category citations, usually by months. A fixed query set measured from the start is what lets you see the difference between "not yet" and "not working" — an [AI visibility audit](/services/ai-visibility-audit) establishes one.`,
+      },
+    ],
   },
 
   'tech-it': {
@@ -144,7 +162,7 @@ export const industries = {
     tag: 'Tech & IT',
     description: 'AEO for cybersecurity, DevOps, cloud, and infrastructure companies. Get cited in the technical AI research queries that drive enterprise purchase decisions.',
     hero: 'AEO for <em>Tech & IT</em> Companies',
-    intro: 'Technical buyers, CIOs, CISOs, platform engineers, DevOps leads, rely heavily on AI tools for research. We help tech and IT companies become the brand AI cites for high-intent technical queries.',
+    intro: 'Technical buyers (CIOs, CISOs, platform engineers, DevOps leads) rely heavily on AI tools for research. We help tech and IT companies become the brand AI cites for high-intent technical queries.',
     challenges: [
       { title: 'Technical Buyer Complexity', desc: 'Your buyers ask detailed technical questions. Our content strategy answers those questions with real technical depth.' },
       { title: 'High-Stakes Evaluation', desc: 'Tech purchase decisions are high-risk. Citation placements in trusted technical publications carry enormous weight.' },
@@ -162,6 +180,24 @@ export const industries = {
       { num: '+312%', label: 'Technical Query Citations' },
       { num: '+189%', label: 'Enterprise-Qualified Leads' },
       { num: '6–9mo', label: 'To Category Dominance' },
+    ],
+    guide: [
+      {
+        heading: 'Technical buyers ask different questions',
+        content: `A CIO, a platform engineer and a security lead do not ask "what is the best X". They ask whether it integrates with what they already run, how it fails, what the compliance story is, and what it costs at their scale.\n\nThose questions have verifiable answers, which changes the work. Marketing language scores poorly here because the reader can check it. Specificity is not a stylistic preference in this segment; it is the qualification criterion.`,
+      },
+      {
+        heading: 'The queries that matter for technical categories',
+        content: `| Query shape | What the buyer is really asking |\n| --- | --- |\n| "[tool] vs [tool] for [scale]" | Will this survive our load |\n| "does [tool] support [standard]" | Can we deploy it without a fight |\n| "[tool] SOC 2 / HIPAA / ISO" | Will security block this |\n| "[tool] pricing at [N] seats" | What does it cost when it matters |\n| "migrating from [incumbent]" | How painful is the exit |\n\nEvery one has a factual answer, and most vendor sites answer none of them in extractable form. That is the gap: assistants cannot cite what is not written down.`,
+      },
+      {
+        heading: 'Documentation is your citation surface',
+        content: `In technical categories, public documentation usually outperforms the blog as a source, because it is specific, stable and structured.\n\n• **Publish the limits.** Rate limits, supported versions, known incompatibilities. Stating constraints plainly is both citable and credible.\n• **Write the migration guide.** From the incumbent, honestly, including where it is hard. It is the highest-intent document you can publish.\n• **Keep the compliance page factual.** Certifications, dates, scope. No adjectives.\n• **Version your changes.** A dated changelog is a freshness signal and an accuracy signal at once.`,
+      },
+      {
+        heading: 'Where technical audiences actually discuss tools',
+        content: `Less concentrated than consumer categories, and the venues carry different weight: Reddit for candid experience, Hacker News for architectural debate, Stack Overflow and GitHub issues for the specific failure modes, vendor-neutral docs for the comparisons.\n\nThe practical implication is that participation has to be genuinely expert. A technical thread rejects marketing language faster than any other venue, and being caught there costs more than the placement was worth. If your answer would not stand without the product mention, it will not survive the thread — let alone get cited.\n\nThe screening and reply standards are in [how we verify a Reddit thread](/blog/how-we-verify-reddit-threads).`,
+      },
     ],
   },
 
@@ -188,6 +224,24 @@ export const industries = {
       { num: '+241%', label: 'Vertical-Specific AI Citations' },
       { num: '+130%', label: 'Demo Requests from AI Traffic' },
       { num: '4–8mo', label: 'To Vertical Category Leadership' },
+    ],
+    guide: [
+      {
+        heading: 'Your category is the thing being decided',
+        content: `For software companies the hard part is rarely the product description. It is which category an assistant files you under, because that determines which questions you are eligible to appear in at all.\n\nA horizontal platform described in its own terms ("a workflow automation layer") competes in a category buyers do not search. The same product described as what it replaces competes in a category with real demand. Vertical software has the opposite risk: described too narrowly, it never surfaces for the broader question its buyers actually ask first.`,
+      },
+      {
+        heading: 'Vertical and horizontal need opposite corrections',
+        content: `| | Vertical software | Horizontal platform |\n| --- | --- | --- |\n| Usual failure | Category too narrow to have demand | Category too abstract to be searched |\n| The fix | Claim the broader problem, then qualify | Name the concrete job you replace |\n| Query to target | "[broad tool] for [your vertical]" | "alternatives to [the incumbent]" |\n| Proof that works | Depth in one industry's specifics | Migration and comparison material |\n\nGetting this wrong is not a content problem and more content will not fix it. It is a positioning statement that needs to be consistent across your site, your schema and every third-party listing.`,
+      },
+      {
+        heading: 'Make the category claim machine-readable',
+        content: `Assistants read structure, not just prose.\n\n• **A definitional sentence.** "X is a Y for Z" somewhere plain on the site. Most software sites open mid-pitch and never state it, which leaves the category to be inferred.\n• **Consistent description everywhere.** The same one sentence on your site, your Organization schema, and every directory listing. Five paraphrases read as five weak signals.\n• **Comparison material.** "X vs Y" and "alternatives to X" are where category membership gets confirmed, and they are query shapes with high purchase intent.\n• **Documentation worth citing.** Threads and assistants both cite docs. If yours are thin, other people's descriptions of you win by default.`,
+      },
+      {
+        heading: 'Where the source material actually lives',
+        content: `For software specifically, it is rarely your own blog. It is migration write-ups, comparison threads, and "we ran X for a year" posts — places where someone with no stake describes what your product was actually like.\n\nThat is why participation matters more than publication here: you cannot write the third-party account yourself, but you can answer honestly in the threads where it is being written. [Why ChatGPT cites Reddit threads](/blog/why-chatgpt-cites-reddit-threads) covers the retrieval side, and [entity authority](/blog/entity-authority-ai-citation) covers making sure the mentions attach to you.`,
+      },
     ],
   },
 }
