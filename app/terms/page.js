@@ -1,7 +1,21 @@
 import MarketingLayout from "@/components/MarketingLayout";
 
 export const metadata = {
-  title: "Terms of Service - AEOrank",
+  title: "Terms of Service: AEOrank",
+  description:
+    "The terms that apply when you use AEOrank, including accounts, billing, acceptable use and liability.",
+  // These four pages had no canonical, and privacy/terms served the
+  // homepage description verbatim. Without an openGraph block they also
+  // inherited the homepage's og:title and og:url.
+  alternates: { canonical: "https://www.aeorank.tech/terms" },
+  openGraph: {
+    title: "Terms of Service: AEOrank",
+    description:
+      "The terms that apply when you use AEOrank, including accounts, billing, acceptable use and liability.",
+    type: "website",
+    url: "https://www.aeorank.tech/terms",
+    images: ["/opengraph-image"],
+  },
 };
 
 export default function Terms() {

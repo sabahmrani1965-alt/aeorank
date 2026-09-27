@@ -3,8 +3,21 @@ import ContactForm from "@/components/ContactForm";
 import { CALENDLY_URL } from "@/lib/links";
 
 export const metadata = {
-  title: "Contact - AEOrank",
-  description: "Get in touch with the AEOrank team about Reddit + AI visibility services.",
+  title: "Contact: AEOrank",
+  description:
+    "Get in touch with the AEOrank team about Reddit and AI visibility. Book a call or send a message.",
+  // These four pages had no canonical, and privacy/terms served the
+  // homepage description verbatim. Without an openGraph block they also
+  // inherited the homepage's og:title and og:url.
+  alternates: { canonical: "https://www.aeorank.tech/contact" },
+  openGraph: {
+    title: "Contact: AEOrank",
+    description:
+      "Get in touch with the AEOrank team about Reddit and AI visibility. Book a call or send a message.",
+    type: "website",
+    url: "https://www.aeorank.tech/contact",
+    images: ["/opengraph-image"],
+  },
 };
 
 const PLANS = {

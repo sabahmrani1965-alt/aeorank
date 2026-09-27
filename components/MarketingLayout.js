@@ -24,7 +24,10 @@ const organizationJsonLd = {
   "@id": `${SITE_URL}/#organization`,
   name: "AEOrank",
   url: SITE_URL,
-  logo: `${SITE_URL}/icon.svg`,
+  // Raster, not icon.svg: Google's Logo guidance requires at least
+  // 112x112px and the SVG declares 60x60. /logo.png is 512x512 on white.
+  // icon.svg stays the favicon.
+  logo: `${SITE_URL}/logo.png`,
   description: SITE_DESCRIPTION,
   sameAs: ["https://www.linkedin.com/company/aeoranktech"],
 };

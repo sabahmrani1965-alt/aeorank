@@ -1020,10 +1020,15 @@ export default function BlogPost({ params }) {
     image: ['https://www.aeorank.tech/opengraph-image'],
     author: { '@type': 'Person', name: post.author, worksFor: { '@type': 'Organization', name: 'AEOrank', url: 'https://www.aeorank.tech' } },
     publisher: {
+      // Carries @id so this is the same entity as the sitewide
+      // Organization, but keeps name/url/logo inline: Article rich
+      // results require publisher.name, and a bare @id reference across
+      // separate script blocks is not reliably resolved by validators.
+      '@id': 'https://www.aeorank.tech/#organization',
       '@type': 'Organization',
       name: 'AEOrank',
       url: 'https://www.aeorank.tech',
-      logo: { '@type': 'ImageObject', url: 'https://www.aeorank.tech/icon.svg' },
+      logo: { '@type': 'ImageObject', url: 'https://www.aeorank.tech/logo.png' },
     },
     mainEntityOfPage: { '@type': 'WebPage', '@id': `https://www.aeorank.tech/blog/${params.slug}` },
   }

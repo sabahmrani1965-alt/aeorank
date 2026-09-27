@@ -1,7 +1,21 @@
 import MarketingLayout from "@/components/MarketingLayout";
 
 export const metadata = {
-  title: "Privacy Policy - AEOrank",
+  title: "Privacy Policy: AEOrank",
+  description:
+    "How AEOrank collects, uses and stores your data, what we share, and the choices you have.",
+  // These four pages had no canonical, and privacy/terms served the
+  // homepage description verbatim. Without an openGraph block they also
+  // inherited the homepage's og:title and og:url.
+  alternates: { canonical: "https://www.aeorank.tech/privacy" },
+  openGraph: {
+    title: "Privacy Policy: AEOrank",
+    description:
+      "How AEOrank collects, uses and stores your data, what we share, and the choices you have.",
+    type: "website",
+    url: "https://www.aeorank.tech/privacy",
+    images: ["/opengraph-image"],
+  },
 };
 
 export default function Privacy() {

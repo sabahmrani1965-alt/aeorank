@@ -248,7 +248,7 @@ export default function ServicePage({ params }) {
     '@type': 'Service',
     name: service.title,
     description: service.description,
-    provider: { '@type': 'Organization', name: 'AEOrank', url: 'https://www.aeorank.tech' },
+    provider: { '@id': 'https://www.aeorank.tech/#organization' },
     areaServed: 'Worldwide',
     serviceType: 'Answer Engine Optimization',
   }

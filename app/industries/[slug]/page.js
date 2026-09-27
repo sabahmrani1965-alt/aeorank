@@ -205,7 +205,7 @@ export default function IndustryPage({ params }) {
     '@type': 'Service',
     name: industry.title,
     description: industry.description,
-    provider: { '@type': 'Organization', name: 'AEOrank', url: 'https://www.aeorank.tech' },
+    provider: { '@id': 'https://www.aeorank.tech/#organization' },
     areaServed: 'Worldwide',
     serviceType: 'Answer Engine Optimization',
     audience: { '@type': 'Audience', audienceType: industry.tag },

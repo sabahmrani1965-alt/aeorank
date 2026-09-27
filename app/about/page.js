@@ -2,9 +2,21 @@ import MarketingLayout from "@/components/MarketingLayout";
 import Link from "next/link";
 
 export const metadata = {
-  title: "About - AEOrank",
+  title: "About: AEOrank",
   description:
-    "AEOrank helps brands appear in AI chat answers through measurable Reddit engagement.",
+    "AEOrank helps brands appear in AI chat answers through measurable Reddit engagement. What we do, what we will not do, and how we work.",
+  // These four pages had no canonical, and privacy/terms served the
+  // homepage description verbatim. Without an openGraph block they also
+  // inherited the homepage's og:title and og:url.
+  alternates: { canonical: "https://www.aeorank.tech/about" },
+  openGraph: {
+    title: "About: AEOrank",
+    description:
+      "AEOrank helps brands appear in AI chat answers through measurable Reddit engagement. What we do, what we will not do, and how we work.",
+    type: "website",
+    url: "https://www.aeorank.tech/about",
+    images: ["/opengraph-image"],
+  },
 };
 
 export default function About() {
