@@ -2,29 +2,132 @@ import MarketingLayout from "@/components/MarketingLayout";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-// Turns [label](href) inside prose into <Link> nodes so we can keep section
-// content as plain strings while still rendering internal links.
+// Turns [label](href) and **bold** inside prose into nodes, so section
+// content stays plain strings while still rendering links and emphasis.
+// External links get rel/target; internal ones stay <Link>.
 function renderInline(text) {
   const parts = [];
-  const regex = /\[([^\]]+)\]\(([^)]+)\)/g;
+  const regex = /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*/g;
   let lastIndex = 0;
   let key = 0;
   let match;
   while ((match = regex.exec(text)) !== null) {
     if (match.index > lastIndex) parts.push(text.slice(lastIndex, match.index));
-    parts.push(
-      <Link
-        key={key++}
-        href={match[2]}
-        style={{ color: "var(--accent)", textDecoration: "underline" }}
-      >
-        {match[1]}
-      </Link>
-    );
+    if (match[3] !== undefined) {
+      parts.push(<strong key={key++} style={{ color: "var(--text)" }}>{match[3]}</strong>);
+    } else if (/^https?:\/\//.test(match[2])) {
+      parts.push(
+        <a
+          key={key++}
+          href={match[2]}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: "var(--accent)", textDecoration: "underline" }}
+        >
+          {match[1]}
+        </a>
+      );
+    } else {
+      parts.push(
+        <Link
+          key={key++}
+          href={match[2]}
+          style={{ color: "var(--accent)", textDecoration: "underline" }}
+        >
+          {match[1]}
+        </Link>
+      );
+    }
     lastIndex = regex.lastIndex;
   }
   if (lastIndex < text.length) parts.push(text.slice(lastIndex));
   return parts;
+}
+
+const PROSE = {
+  fontSize: 16.5,
+  color: "var(--text-dim)",
+  lineHeight: 1.8,
+  marginBottom: 16,
+};
+
+// A block is a bullet list, a numbered list, a pipe table, or a paragraph.
+// Answer engines read list and table markup; the same words inside one <p>
+// collapse into run-on prose when extracted.
+function renderBlock(block, key) {
+  const lines = block.split("\n").filter((l) => l.trim() !== "");
+
+  if (lines.length > 1 && lines.every((l) => l.trim().startsWith("|"))) {
+    const rows = lines
+      .filter((l) => !/^\s*\|[\s|:-]+\|\s*$/.test(l))
+      .map((l) => l.trim().replace(/^\||\|$/g, "").split("|").map((c) => c.trim()));
+    const [head, ...body] = rows;
+    return (
+      <div key={key} style={{ overflowX: "auto", marginBottom: 20 }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 15.5 }}>
+          <thead>
+            <tr>
+              {head.map((c, i) => (
+                <th
+                  key={i}
+                  style={{
+                    textAlign: "left",
+                    padding: "10px 12px",
+                    borderBottom: "1px solid var(--accent)",
+                    color: "var(--text)",
+                    fontWeight: 700,
+                  }}
+                >
+                  {renderInline(c)}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {body.map((r, i) => (
+              <tr key={i}>
+                {r.map((c, j) => (
+                  <td
+                    key={j}
+                    style={{
+                      padding: "10px 12px",
+                      borderBottom: "1px solid var(--border)",
+                      color: "var(--text-dim)",
+                      lineHeight: 1.6,
+                      verticalAlign: "top",
+                    }}
+                  >
+                    {renderInline(c)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  const bulleted = lines.length > 0 && lines.every((l) => /^\s*[•-]\s+/.test(l));
+  const numbered = lines.length > 0 && lines.every((l) => /^\s*\d+[.)]\s+/.test(l));
+  if (bulleted || numbered) {
+    const ListTag = numbered ? "ol" : "ul";
+    return (
+      <ListTag key={key} style={{ ...PROSE, paddingLeft: 24 }}>
+        {lines.map((l, i) => (
+          <li key={i} style={{ marginBottom: 8 }}>
+            {renderInline(l.replace(/^\s*(?:[•-]|\d+[.)])\s+/, ""))}
+          </li>
+        ))}
+      </ListTag>
+    );
+  }
+
+  return (
+    <p key={key} style={PROSE}>
+      {renderInline(block)}
+    </p>
+  );
 }
 
 const posts = {
@@ -50,7 +153,7 @@ const posts = {
       },
       {
         heading: 'What Claude actually trusts when it does cite',
-        content: `A few patterns hold up consistently in what gets Claude to name a specific brand:\n\nWikipedia and Wikidata presence. Claude treats a well-maintained Wikipedia entry as a strong trust signal, more heavily than ChatGPT typically does. If you don't have one and you qualify for notability, [building the third-party coverage that eventually earns one](/blog/entity-authority-ai-citation) is some of the highest-leverage work available for this specific engine.\n\nAnalyst and academic references. Coverage from Gartner, Forrester, or similar research firms carries real weight. It's slower and more expensive to earn than a blog mention, but it's exactly the kind of source Claude is tuned to trust.\n\nNeutral, comparison-style writing. Claude appears to favor content that reads like independent research over content that reads like a sales page, even when both describe the same product accurately. If your own site is the only source describing you, and it reads promotional, Claude may prefer a third party's more neutral coverage of you instead, if one exists.\n\nConsistency across sources. The same entity-authority fundamentals that help every engine matter more here, because Claude's higher bar means any inconsistency is more likely to push it toward declining rather than guessing.`
+        content: `A few patterns hold up consistently in what gets Claude to name a specific brand:\n\n• **Wikipedia and Wikidata presence.** Claude treats a well-maintained Wikipedia entry as a strong trust signal, more heavily than ChatGPT typically does. If you don't have one and you qualify for notability, [building the third-party coverage that eventually earns one](/blog/entity-authority-ai-citation) is some of the highest-leverage work available for this specific engine.\n• **Analyst and academic references.** Coverage from Gartner, Forrester, or similar research firms carries real weight. It's slower and more expensive to earn than a blog mention, but it's exactly the kind of source Claude is tuned to trust.\n• **Neutral, comparison-style writing.** Claude appears to favor content that reads like independent research over content that reads like a sales page, even when both describe the same product accurately. If your own site is the only source describing you, and it reads promotional, Claude may prefer a third party's more neutral coverage of you instead, if one exists.\n• **Consistency across sources.** The same entity-authority fundamentals that help every engine matter more here, because Claude's higher bar means any inconsistency is more likely to push it toward declining rather than guessing.`
       },
       {
         heading: "What doesn't move the needle much",
@@ -167,7 +270,7 @@ const posts = {
       },
       {
         heading: 'What actually gets a reply removed',
-        content: `A few patterns we've seen trigger removal, based on watching real threads:\n\nLeading with the product name instead of the answer. "Product X handles this well" reads as promotional. "The main issue with [the thing being asked about] is usually Y, here's how we've seen people solve it" reads as an answer.\n\nA link with no context. Dropping a URL, even a genuinely relevant one, is one of the fastest ways to get auto-flagged by a subreddit's spam filter, separate from human moderation entirely.\n\nNo disclosure. If you work at or represent the company you're mentioning, most communities expect you to say so plainly. Undisclosed promotion reads as manipulation even when the content itself is accurate, and it's the fastest way to burn trust in a community you might want to be part of long-term.\n\nReplying to an old, resolved thread. Some subreddits treat a reply to a thread that's already settled, the OP picked a tool and moved on, as spam regardless of content, since it's not actually helping the person who asked.`
+        content: `A few patterns we've seen trigger removal, based on watching real threads:\n\nLeading with the product name instead of the answer. "Product X handles this well" reads as promotional. "The main issue with [the thing being asked about] is usually Y, here's how we've seen people solve it" reads as an answer.\n\n• **A link with no context.** Dropping a URL, even a genuinely relevant one, is one of the fastest ways to get auto-flagged by a subreddit's spam filter, separate from human moderation entirely.\n• **No disclosure.** If you work at or represent the company you're mentioning, most communities expect you to say so plainly. Undisclosed promotion reads as manipulation even when the content itself is accurate, and it's the fastest way to burn trust in a community you might want to be part of long-term.\n• **Replying to an old, resolved thread.** Some subreddits treat a reply to a thread that's already settled, the OP picked a tool and moved on, as spam regardless of content, since it's not actually helping the person who asked.`
       },
       {
         heading: 'What a reply that survives looks like',
@@ -296,7 +399,7 @@ const posts = {
       },
       {
         heading: 'The five building blocks of AEO',
-        content: `AEO isn't one tactic. It's five distinct bodies of work that compound together. If you only do one, you'll plateau. Here they are, roughly in the order we tackle them for a new client:\n\nEntity authority. Does the AI have a clean, confident, consistent picture of what your brand actually is? This is [almost always the biggest gap](/blog/entity-authority-ai-citation) and the highest-leverage place to start, since weak entity data undermines everything built on top of it.\n\nTechnical foundation and schema. The structured data (Organization, Article, SoftwareApplication schema) that makes your site machine-readable. [Table stakes, not a growth lever](/blog/aeo-schema-markup-guide) on its own, but necessary before other work pays off fully.\n\nThird-party citation building. Getting mentioned, accurately, in the publications and communities AI engines actually pull from: trade press, comparison sites, and yes, [Reddit](/) specifically, since it's one of the most heavily-weighted sources for ChatGPT in particular.\n\nAnswer-formatted content. Writing that leads with the direct answer to a specific buyer question instead of a meandering category overview. It's the format [every major engine rewards](/blog/optimize-for-perplexity), each with slightly different preferences.\n\nMeasurement. Tracking citation frequency and share-of-voice across engines on an ongoing basis, [honestly](/blog/measure-ai-citation-roi). Without this you're guessing whether any of the above four is working.`
+        content: `• **AEO isn't one tactic.** It's five distinct bodies of work that compound together. If you only do one, you'll plateau. Here they are, roughly in the order we tackle them for a new client:\n• **Entity authority.** Does the AI have a clean, confident, consistent picture of what your brand actually is? This is [almost always the biggest gap](/blog/entity-authority-ai-citation) and the highest-leverage place to start, since weak entity data undermines everything built on top of it.\n• **Technical foundation and schema.** The structured data (Organization, Article, SoftwareApplication schema) that makes your site machine-readable. [Table stakes, not a growth lever](/blog/aeo-schema-markup-guide) on its own, but necessary before other work pays off fully.\n• **Third-party citation building.** Getting mentioned, accurately, in the publications and communities AI engines actually pull from: trade press, comparison sites, and yes, [Reddit](/) specifically, since it's one of the most heavily-weighted sources for ChatGPT in particular.\n• **Answer-formatted content.** Writing that leads with the direct answer to a specific buyer question instead of a meandering category overview. It's the format [every major engine rewards](/blog/optimize-for-perplexity), each with slightly different preferences.\n• **Measurement.** Tracking citation frequency and share-of-voice across engines on an ongoing basis, [honestly](/blog/measure-ai-citation-roi). Without this you're guessing whether any of the above four is working.`
       },
       {
         heading: 'What AEO is not',
@@ -335,11 +438,11 @@ const posts = {
       },
       {
         heading: 'The schema types that pay off, in order of impact',
-        content: `If you only implement four schema types for AEO, do these in this order:\n\nOrganization schema. The single highest-leverage schema for B2B SaaS AEO. Implement it on your homepage with full sameAs links, accurate description, founding year, logo, and key people. This feeds AI entity profiles directly and is a foundational component of [entity authority work](/services/entity-optimization).\n\nWebSite + SearchAction schema. Helps with navigation and tells engines your domain structure. Quick to implement, broad benefit.\n\nFAQPage schema. Useful when implemented on actually-useful FAQ content. Useless or harmful when implemented on thin or duplicated content. Be honest about whether your FAQs would be useful to a real visitor: that\'s the test.\n\nArticle schema for blog content. Helps your published content get attributed correctly to your brand and feeds AI\'s understanding of what you cover. Implement on every published post including author and publish date.\n\nEverything else (Product, BreadcrumbList, HowTo, Course, Event) is situational. If you have specific content that fits, implement it. If you\'re forcing it, skip it.`
+        content: `If you only implement four schema types for AEO, do these in this order:\n\n• **Organization schema.** The single highest-leverage schema for B2B SaaS AEO. Implement it on your homepage with full sameAs links, accurate description, founding year, logo, and key people. This feeds AI entity profiles directly and is a foundational component of [entity authority work](/services/entity-optimization).\n• **WebSite + SearchAction schema.** Helps with navigation and tells engines your domain structure. Quick to implement, broad benefit.\n• **FAQPage schema.** Useful when implemented on actually-useful FAQ content. Useless or harmful when implemented on thin or duplicated content. Be honest about whether your FAQs would be useful to a real visitor: that\'s the test.\n• **Article schema for blog content.** Helps your published content get attributed correctly to your brand and feeds AI\'s understanding of what you cover. Implement on every published post including author and publish date.\n\nEverything else (Product, BreadcrumbList, HowTo, Course, Event) is situational. If you have specific content that fits, implement it. If you\'re forcing it, skip it.`
       },
       {
         heading: 'Organization schema: the foundation everyone gets wrong',
-        content: `Most B2B SaaS sites have basic Organization schema, and most of them have it wrong in subtle ways that hurt AEO.\n\nThe mistakes we see most:\n\nMissing or weak sameAs array. The sameAs property is a list of canonical URLs that represent the same entity: your LinkedIn, Crunchbase, Twitter/X, Wikipedia if applicable, GitHub, YouTube channel, Wikidata. Most sites have 2–3 entries. Strong AEO setups have 8–12+, including industry-specific directories like G2 and Capterra.\n\nGeneric description. "Software company" is not a useful description. AI engines need specifics: what category, what for whom, what makes you distinguishable. Treat the description like a positioning statement.\n\nInconsistent name. Your schema name should match what\'s used everywhere else. If you\'re "Acme Inc" on Crunchbase and "Acme" in schema, you\'re forcing AI to disambiguate. Pick one.\n\nMissing logo URL. The logo property feeds knowledge panels and increases entity recognition.\n\nMissing founding date. Helps AI engines distinguish you from similarly-named brands and validates your maturity in the category.\n\nThese details sound trivial until you measure their impact. We\'ve watched [share-of-voice](/blog/measure-ai-citation-roi) climb meaningfully on AI engines after a single Organization schema cleanup, with no other changes.`
+        content: `Most B2B SaaS sites have basic Organization schema, and most of them have it wrong in subtle ways that hurt AEO.\n\nThe mistakes we see most:\n\nMissing or weak sameAs array. The sameAs property is a list of canonical URLs that represent the same entity: your LinkedIn, Crunchbase, Twitter/X, Wikipedia if applicable, GitHub, YouTube channel, Wikidata. Most sites have 2–3 entries. Strong AEO setups have 8–12+, including industry-specific directories like G2 and Capterra.\n\nGeneric description. "Software company" is not a useful description. AI engines need specifics: what category, what for whom, what makes you distinguishable. Treat the description like a positioning statement.\n\n• **Inconsistent name.** Your schema name should match what\'s used everywhere else. If you\'re "Acme Inc" on Crunchbase and "Acme" in schema, you\'re forcing AI to disambiguate. Pick one.\n• **Missing logo URL.** The logo property feeds knowledge panels and increases entity recognition.\n• **Missing founding date.** Helps AI engines distinguish you from similarly-named brands and validates your maturity in the category.\n\nThese details sound trivial until you measure their impact. We\'ve watched [share-of-voice](/blog/measure-ai-citation-roi) climb meaningfully on AI engines after a single Organization schema cleanup, with no other changes.`
       },
       {
         heading: 'FAQPage and HowTo: when they help, when they hurt',
@@ -347,11 +450,11 @@ const posts = {
       },
       {
         heading: 'Article, Product, SoftwareApplication: the edge cases',
-        content: `Article schema. Implement on every blog post. Include author with link to author profile (with their own Person schema if possible, including sameAs to LinkedIn). Include datePublished and dateModified accurately. Include publisher reference back to your Organization schema.\n\nProduct schema. For B2B SaaS, this is more situational than e-commerce. If you have a product page that genuinely positions a discrete product (not "our platform"), Product schema with aggregateRating from a verified source can help. If you\'re forcing it on a marketing landing page, skip it.\n\nSoftwareApplication schema. Specifically useful for B2B SaaS. Implement on your main product page with applicationCategory, operatingSystem (often "Web"), and aggregateRating if you have legitimate review data. This is one of the few schema types that explicitly says "this is software," which helps AI engines categorize you correctly.\n\nCourse, Event, Recipe, etc. Skip unless they actually apply. Forcing irrelevant schema is a credibility cost, not a benefit.`
+        content: `• **Article schema.** Implement on every blog post. Include author with link to author profile (with their own Person schema if possible, including sameAs to LinkedIn). Include datePublished and dateModified accurately. Include publisher reference back to your Organization schema.\n• **Product schema.** For B2B SaaS, this is more situational than e-commerce. If you have a product page that genuinely positions a discrete product (not "our platform"), Product schema with aggregateRating from a verified source can help. If you\'re forcing it on a marketing landing page, skip it.\n• **SoftwareApplication schema.** Specifically useful for B2B SaaS. Implement on your main product page with applicationCategory, operatingSystem (often "Web"), and aggregateRating if you have legitimate review data. This is one of the few schema types that explicitly says "this is software," which helps AI engines categorize you correctly.\n• **Course, Event, Recipe, etc.** Skip unless they actually apply. Forcing irrelevant schema is a credibility cost, not a benefit.`
       },
       {
         heading: 'Schema mistakes that quietly hurt your AEO',
-        content: `A non-exhaustive list of schema implementations we see hurting AEO performance:\n\nSchema that disagrees with page content. If your schema says one thing and the page says another (wrong product name, wrong description, wrong date), engines downweight the schema and sometimes the whole page.\n\nSchema with broken sameAs URLs. Linking to a Twitter handle that\'s now defunct or a Wikipedia entry that doesn\'t exist erodes trust signals. Audit sameAs links quarterly.\n\nJSON-LD that fails validation. Use Google\'s Rich Results Test to verify every schema implementation. Broken JSON-LD often gets ignored entirely, costing you signals you think you\'re sending.\n\nSchema implemented inconsistently across pages. If your Organization schema on the homepage says one thing and a different version appears in the footer of every blog post, engines have to disambiguate. Pick one canonical source per schema type and reference it consistently.\n\nSchema that\'s never updated. Founding dates change, key people leave, descriptions evolve. Stale schema is worse than no schema.`
+        content: `A non-exhaustive list of schema implementations we see hurting AEO performance:\n\n• **Schema that disagrees with page content.** If your schema says one thing and the page says another (wrong product name, wrong description, wrong date), engines downweight the schema and sometimes the whole page.\n• **Schema with broken sameAs URLs.** Linking to a Twitter handle that\'s now defunct or a Wikipedia entry that doesn\'t exist erodes trust signals. Audit sameAs links quarterly.\n• **JSON-LD that fails validation.** Use Google\'s Rich Results Test to verify every schema implementation. Broken JSON-LD often gets ignored entirely, costing you signals you think you\'re sending.\n• **Schema implemented inconsistently across pages.** If your Organization schema on the homepage says one thing and a different version appears in the footer of every blog post, engines have to disambiguate. Pick one canonical source per schema type and reference it consistently.\n• **Schema that\'s never updated.** Founding dates change, key people leave, descriptions evolve. Stale schema is worse than no schema.`
       },
       {
         heading: 'The 30-minute AEO schema audit',
@@ -394,11 +497,11 @@ const posts = {
       },
       {
         heading: 'Gemini: the search-fed answer engine',
-        content: `Gemini\'s behavior is the easiest to model because it\'s closest to traditional search. The strongest predictor of Gemini citation is whether you rank well in Google for the query, including in [Google AI Overviews](/blog/google-ai-overviews-guide).\n\nThis makes Gemini optimization the most accessible for teams with mature SEO. The work that\'s already getting you Position 1 organic listings is feeding into Gemini\'s citation behavior. Gemini also leans on:\n\nRecent content. Like Perplexity (and unlike ChatGPT or Claude), Gemini does live retrieval and weights freshness more heavily than its competitors. Updated dates and recent publication matter.\n\nSchema markup. Gemini specifically benefits from FAQ, HowTo, and Organization schema in ways ChatGPT and Claude don\'t fully reflect.\n\nYouTube content. Because Google owns YouTube, Gemini integrates video content more aggressively. If your category has good YouTube coverage of your brand, that signal carries into Gemini answers.\n\nThe honest tradeoff with Gemini: because it\'s search-grounded, optimizing for it overlaps heavily with traditional SEO. The work isn\'t AEO-specific. But the citation positioning is: being cited inline in a Gemini answer is a different surface than appearing in the blue links.`
+        content: `Gemini\'s behavior is the easiest to model because it\'s closest to traditional search. The strongest predictor of Gemini citation is whether you rank well in Google for the query, including in [Google AI Overviews](/blog/google-ai-overviews-guide).\n\nThis makes Gemini optimization the most accessible for teams with mature SEO. The work that\'s already getting you Position 1 organic listings is feeding into Gemini\'s citation behavior. Gemini also leans on:\n\n• **Recent content.** Like Perplexity (and unlike ChatGPT or Claude), Gemini does live retrieval and weights freshness more heavily than its competitors. Updated dates and recent publication matter.\n• **Schema markup.** Gemini specifically benefits from FAQ, HowTo, and Organization schema in ways ChatGPT and Claude don\'t fully reflect.\n• **YouTube content.** Because Google owns YouTube, Gemini integrates video content more aggressively. If your category has good YouTube coverage of your brand, that signal carries into Gemini answers.\n\nThe honest tradeoff with Gemini: because it\'s search-grounded, optimizing for it overlaps heavily with traditional SEO. The work isn\'t AEO-specific. But the citation positioning is: being cited inline in a Gemini answer is a different surface than appearing in the blue links.`
       },
       {
         heading: 'Why the same brand can win on one engine and lose on another',
-        content: `We\'ve audited dozens of B2B SaaS brands across all three engines. The patterns are consistent.\n\nBrands that win ChatGPT but lose Claude usually have strong category presence (lots of mentions, content, Reddit visibility) but weak third-party authority signals (no analyst coverage, no Wikipedia, weak press). ChatGPT\'s threshold for citation is lower; Claude\'s is stricter.\n\nBrands that win Claude but lose ChatGPT are usually older, more "establishment" players. They have analyst reports and Wikipedia but haven\'t kept up with category content or community presence. Claude trusts them; ChatGPT thinks they\'re sleepy.\n\nBrands that win Gemini but lose ChatGPT and Claude usually have the best traditional SEO but the weakest entity profile. They rank for queries but the AI engines (especially the ones less search-grounded) don\'t have a strong picture of who they are.\n\nThe brands that consistently appear across all three are the ones that have done all of: clean entity profile, third-party citation work, content depth, and SEO maintenance. There\'s no shortcut. Each engine rewards a different mix, but a brand strong on all four dimensions gets cited everywhere.`
+        content: `Summed up side by side, drawn from the sections above:\n\n| Engine | What drives a citation | Highest-leverage work | Hardest part |\n| --- | --- | --- | --- |\n| **ChatGPT** | Whether the model already "knows" the brand from training across trusted sources | [Entity authority](/blog/entity-authority-ai-citation) | Consistency across many sources, which is slow to build |\n| **Claude** | Conservative by design; often declines to recommend specific products at all | Independent, high-quality sources describing you | Frequently gives a framework instead of a recommendation |\n| **Gemini** | Closest to traditional search — whether you rank in Google for the query | Existing SEO, incl. [AI Overviews](/blog/google-ai-overviews-guide) | Least distinct from SEO, so least differentiating |\n\nWe\'ve audited dozens of B2B SaaS brands across all three engines. The patterns are consistent.\n\nBrands that win ChatGPT but lose Claude usually have strong category presence (lots of mentions, content, Reddit visibility) but weak third-party authority signals (no analyst coverage, no Wikipedia, weak press). ChatGPT\'s threshold for citation is lower; Claude\'s is stricter.\n\nBrands that win Claude but lose ChatGPT are usually older, more "establishment" players. They have analyst reports and Wikipedia but haven\'t kept up with category content or community presence. Claude trusts them; ChatGPT thinks they\'re sleepy.\n\nBrands that win Gemini but lose ChatGPT and Claude usually have the best traditional SEO but the weakest entity profile. They rank for queries but the AI engines (especially the ones less search-grounded) don\'t have a strong picture of who they are.\n\nThe brands that consistently appear across all three are the ones that have done all of: clean entity profile, third-party citation work, content depth, and SEO maintenance. There\'s no shortcut. Each engine rewards a different mix, but a brand strong on all four dimensions gets cited everywhere.`
       },
       {
         heading: 'How to optimize for all three without burning out',
@@ -484,7 +587,7 @@ const posts = {
       },
       {
         heading: 'What you can measure directly',
-        content: `Start with the data that\'s actually unambiguous:\n\nReferral traffic. Filter Google Analytics or your analytics tool for referrers from chat.openai.com, perplexity.ai, bing.com (for Copilot), and specific AI-adjacent domains. This undercounts but it\'s real data.\n\nSurvey responses. Add "how did you find us?" to your signup or demo request form with AI assistants as an option. People will tell you. You\'ll be surprised how quickly this number grows.\n\nDirect traffic patterns. If direct traffic (people typing your URL) spikes after a citation campaign, that\'s often AI doing its work: buyers seeing you in AI and typing your domain later. Correlation isn\'t proof, but it\'s signal.\n\nBranded search volume. Same idea. If branded searches for your company increase month-over-month while nothing else changed, AI exposure is often the cause.`
+        content: `Start with the data that\'s actually unambiguous:\n\n• **Referral traffic.** Filter Google Analytics or your analytics tool for referrers from chat.openai.com, perplexity.ai, bing.com (for Copilot), and specific AI-adjacent domains. This undercounts but it\'s real data.\n• **Survey responses.** Add "how did you find us?" to your signup or demo request form with AI assistants as an option. People will tell you. You\'ll be surprised how quickly this number grows.\n• **Direct traffic patterns.** If direct traffic (people typing your URL) spikes after a citation campaign, that\'s often AI doing its work: buyers seeing you in AI and typing your domain later. Correlation isn\'t proof, but it\'s signal.\n• **Branded search volume.** Same idea. If branded searches for your company increase month-over-month while nothing else changed, AI exposure is often the cause.`
       },
       {
         heading: 'Citation tracking is your leading indicator',
@@ -492,7 +595,7 @@ const posts = {
       },
       {
         heading: 'Connecting citations to pipeline',
-        content: `The hard part. Here\'s what we\'ve found actually works:\n\nTag AI-suspected leads in the CRM. When a lead comes in via "unknown" source but branded search volume just jumped, or referral traffic from AI platforms spiked the same week, flag those leads for tracking. Over 90 days, you\'ll have a cohort.\n\nLook at the conversion behavior. Leads influenced by AI research typically convert faster and ask more specific product questions on demo calls. Sales will notice before you do: ask them "are you hearing buyers mention ChatGPT or Perplexity more?" That qualitative data is almost as valuable as the quantitative.\n\nMatch timing. If [AEO campaigns](/services/aeo-management) started in January and your unattributed-but-converting pipeline starts climbing in March, that\'s the fingerprint of AI attribution.\n\nIt\'s not airtight. But combined with citation tracking moving in the right direction, it\'s enough signal to make budget decisions.`
+        content: `• **The hard part.** Here\'s what we\'ve found actually works:\n• **Tag AI-suspected leads in the CRM.** When a lead comes in via "unknown" source but branded search volume just jumped, or referral traffic from AI platforms spiked the same week, flag those leads for tracking. Over 90 days, you\'ll have a cohort.\n• **Look at the conversion behavior.** Leads influenced by AI research typically convert faster and ask more specific product questions on demo calls. Sales will notice before you do: ask them "are you hearing buyers mention ChatGPT or Perplexity more?" That qualitative data is almost as valuable as the quantitative.\n• **Match timing.** If [AEO campaigns](/services/aeo-management) started in January and your unattributed-but-converting pipeline starts climbing in March, that\'s the fingerprint of AI attribution.\n• **It\'s not airtight.** But combined with citation tracking moving in the right direction, it\'s enough signal to make budget decisions.`
       },
       {
         heading: 'What NOT to measure',
@@ -578,7 +681,7 @@ const posts = {
       },
       {
         heading: 'What Perplexity actually extracts',
-        content: `We\'ve watched Perplexity results on hundreds of queries over the last six months. A few consistent patterns:\n\nLeading with a direct answer works. The first sentence or two of your page often gets extracted verbatim. If your page starts with "Let me tell you a story about..." Too bad, Perplexity wanted the answer.\n\nStructured lists get pulled heavily. Numbered steps, bullet points, comparison tables. Perplexity likes clean structure because it\'s easy to extract and easy to present.\n\nSpecific numbers and data earn citations. A page that says "our benchmark showed 42% faster queries" is more likely to be cited than one that says "noticeably faster." Perplexity prefers sources that add hard information.\n\nBalanced content outperforms promotional content. If your page reads like a sales page, Perplexity tends to favor neutral comparison sources over you. Write like a researcher, not a marketer.`
+        content: `We\'ve watched Perplexity results on hundreds of queries over the last six months. A few consistent patterns:\n\n• **Leading with a direct answer works.** The first sentence or two of your page often gets extracted verbatim. If your page starts with "Let me tell you a story about..." Too bad, Perplexity wanted the answer.\n• **Structured lists get pulled heavily.** Numbered steps, bullet points, comparison tables. Perplexity likes clean structure because it\'s easy to extract and easy to present.\n• **Specific numbers and data earn citations.** A page that says "our benchmark showed 42% faster queries" is more likely to be cited than one that says "noticeably faster." Perplexity prefers sources that add hard information.\n• **Balanced content outperforms promotional content.** If your page reads like a sales page, Perplexity tends to favor neutral comparison sources over you. Write like a researcher, not a marketer.`
       },
       {
         heading: 'The publications Perplexity leans on',
@@ -617,7 +720,7 @@ const posts = {
       },
       {
         heading: 'Where the overlap is real',
-        content: `The honest version: a lot of work benefits both channels.\n\nStrong technical SEO helps AEO. Fast pages, clean markup, good internal linking: AI engines crawl these the same way search engines do. If your site is a mess technically, fixing it helps both.\n\nHigh-quality content helps both. A comprehensive, well-structured answer page can rank on Google AND get cited by Perplexity. No contradiction.\n\nBacklinks still matter. AI engines weight trusted third-party mentions, and backlinks from authoritative domains are a proxy signal for that trust.\n\nSchema markup helps both. Cleaner data for crawlers is cleaner data for everything.\n\nSo if you\'re doing good SEO, maybe 40–50% of that work directly supports AEO. That\'s real. That\'s useful.`
+        content: `The honest version: a lot of work benefits both channels.\n\n• **Strong technical SEO helps AEO.** Fast pages, clean markup, good internal linking: AI engines crawl these the same way search engines do. If your site is a mess technically, fixing it helps both.\n• **High-quality content helps both.** A comprehensive, well-structured answer page can rank on Google AND get cited by Perplexity. No contradiction.\n• **Backlinks still matter.** AI engines weight trusted third-party mentions, and backlinks from authoritative domains are a proxy signal for that trust.\n• **Schema markup helps both.** Cleaner data for crawlers is cleaner data for everything.\n\nSo if you\'re doing good SEO, maybe 40–50% of that work directly supports AEO. That\'s real. That\'s useful.`
       },
       {
         heading: 'Where the disciplines diverge',
@@ -664,7 +767,7 @@ const posts = {
       },
       {
         heading: 'What doesn\'t work (but feels like it should)',
-        content: `Some things we\'ve tested that produced surprisingly little lift:\n\nAggressive content expansion. Writing a 6,000-word mega-guide for every topic. Google does not appear to systematically favor length for AI Overview selection. In some cases, concise pages win.\n\nPure keyword targeting. Writing explicitly for "AI Overview inclusion keywords" (yes, people sell these) doesn\'t consistently work. Google\'s selection process weights utility more than keyword match.\n\nE-E-A-T signals in isolation. Author bios and expertise credentials help, but don\'t move the needle alone. They\'re part of a broader trust picture: necessary, not sufficient.\n\nSchema without content quality. Putting FAQ schema on thin content doesn\'t rescue it. Schema amplifies good content, it doesn\'t create it.`
+        content: `Some things we\'ve tested that produced surprisingly little lift:\n\n• **Aggressive content expansion.** Writing a 6,000-word mega-guide for every topic. Google does not appear to systematically favor length for AI Overview selection. In some cases, concise pages win.\n• **Pure keyword targeting.** Writing explicitly for "AI Overview inclusion keywords" (yes, people sell these) doesn\'t consistently work. Google\'s selection process weights utility more than keyword match.\n• **E-E-A-T signals in isolation.** Author bios and expertise credentials help, but don\'t move the needle alone. They\'re part of a broader trust picture: necessary, not sufficient.\n• **Schema without content quality.** Putting FAQ schema on thin content doesn\'t rescue it. Schema amplifies good content, it doesn\'t create it.`
       },
       {
         heading: 'The traffic question',
@@ -906,19 +1009,9 @@ export default function BlogPost({ params }) {
                     {section.heading}
                   </h2>
                 )}
-                {section.content.split("\n\n").map((para, j) => (
-                  <p
-                    key={j}
-                    style={{
-                      fontSize: 16.5,
-                      color: "var(--text-dim)",
-                      lineHeight: 1.8,
-                      marginBottom: 16,
-                    }}
-                  >
-                    {renderInline(para)}
-                  </p>
-                ))}
+                {section.content
+                  .split("\n\n")
+                  .map((block, j) => renderBlock(block, j))}
               </div>
             ))}
           </article>
