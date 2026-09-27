@@ -3,6 +3,80 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CALENDLY_URL } from "@/lib/links";
 
+const RELATED = {
+  "aeo-management": [
+    {
+      "slug": "what-is-aeo",
+      "title": "What Is AEO? Answer Engine Optimization Explained"
+    },
+    {
+      "slug": "aeo-vs-seo",
+      "title": "AEO vs SEO: Stop Pretending They're the Same Job"
+    },
+    {
+      "slug": "measure-ai-citation-roi",
+      "title": "How to Measure AI Citation ROI"
+    }
+  ],
+  "aeo-consulting": [
+    {
+      "slug": "what-is-aeo",
+      "title": "What Is AEO? Answer Engine Optimization Explained"
+    },
+    {
+      "slug": "aeo-vs-seo",
+      "title": "AEO vs SEO: Stop Pretending They're the Same Job"
+    },
+    {
+      "slug": "google-ai-overviews-guide",
+      "title": "The Google AI Overviews Guide"
+    }
+  ],
+  "citation-building": [
+    {
+      "slug": "reddit-ai-visibility-guide",
+      "title": "Reddit Marketing for AI Search Visibility"
+    },
+    {
+      "slug": "why-chatgpt-cites-reddit-threads",
+      "title": "Why ChatGPT Cites Reddit Threads"
+    },
+    {
+      "slug": "how-we-verify-reddit-threads",
+      "title": "How We Verify a Reddit Thread"
+    }
+  ],
+  "entity-optimization": [
+    {
+      "slug": "entity-authority-ai-citation",
+      "title": "Entity Authority and AI Citation"
+    },
+    {
+      "slug": "aeo-schema-markup-guide",
+      "title": "The AEO Schema Markup Guide"
+    },
+    {
+      "slug": "getting-cited-by-claude",
+      "title": "Getting Cited by Claude"
+    }
+  ],
+  "ai-visibility-audit": [
+    {
+      "slug": "measure-ai-citation-roi",
+      "title": "How to Measure AI Citation ROI"
+    },
+    {
+      "slug": "chatgpt-vs-claude-vs-gemini-citations",
+      "title": "ChatGPT vs Claude vs Gemini Citations"
+    },
+    {
+      "slug": "optimize-for-perplexity",
+      "title": "How to Optimize for Perplexity"
+    }
+  ]
+}
+
+
 // Exported so app/sitemap.js derives slugs from the same source.
 export const services = {
   'aeo-management': {
@@ -31,10 +105,10 @@ export const services = {
   },
 
   'aeo-consulting': {
-    title: 'AEO Consulting Services',
+    title: 'Answer Engine Optimization Consulting',
     tag: 'Strategic Advisory',
-    description: 'Strategic AEO consulting for B2B SaaS teams who want to execute internally. We provide the roadmap, frameworks, and expertise; you execute with our guidance.',
-    hero: 'Strategic <em>AEO Consulting</em> for In-House Teams',
+    description: 'Answer Engine Optimization (AEO) consulting for B2B SaaS teams who execute internally. We provide the roadmap, frameworks and expertise for getting cited by ChatGPT, Claude, Gemini and Perplexity; your team ships it.',
+    hero: 'Strategic <em>Answer Engine Optimization</em> Consulting for In-House Teams',
     intro: 'For SaaS companies with strong in-house marketing teams, AEO consulting gives you the strategy, frameworks, and expert guidance to build AEO capability internally, without outsourcing execution.',
     benefits: [
       { title: 'Custom AEO Roadmap', desc: 'A prioritized 12-month roadmap built around your specific product, market, and competitive landscape.' },
@@ -56,10 +130,10 @@ export const services = {
   },
 
   'citation-building': {
-    title: 'Citation Building Services',
+    title: 'AI Citation Building Services',
     tag: 'Earned Citations',
-    description: 'Strategic citation building for B2B SaaS. We secure mentions in the high-authority publications and directories that AI engines use as training data and real-time citation sources.',
-    hero: 'Secure the <em>Citations</em> AI Engines Trust',
+    description: 'AI citation building for B2B SaaS \u2014 not local NAP directory listings. We secure mentions in the publications and directories that ChatGPT, Claude, Gemini and Perplexity draw on when answering buyer questions.',
+    hero: 'Secure the <em>AI Citations</em> Engines Actually Trust',
     intro: 'Citations are the single strongest external signal AI engines use to decide which brands to recommend. Our citation building service secures mentions in the exact publications and directories that influence AI citation behavior.',
     benefits: [
       { title: 'Targeted Publication Outreach', desc: 'Placements in 20+ high-authority publications that AI engines reference regularly.' },
@@ -376,6 +450,28 @@ export default function ServicePage({ params }) {
           .four-col { grid-template-columns: 1fr !important; }
         }
       `}</style>
+
+      {/* Commercial pages linked only to /, /contact, /signup and /services.
+          Nothing pointed back into the blog, so the funnel ran one way and
+          the posts that explain this service had no path in. */}
+      {RELATED[params.slug] ? (
+        <section className="section" style={{ paddingTop: 0 }}>
+          <div className="container-narrow">
+            <h2 style={{ fontSize: 22, marginBottom: 16, textAlign: "left" }}>
+              Read more on this
+            </h2>
+            <ul style={{ paddingLeft: 22, lineHeight: 1.9 }}>
+              {RELATED[params.slug].map((r) => (
+                <li key={r.slug}>
+                  <Link href={`/blog/${r.slug}`} style={{ color: "var(--accent)" }}>
+                    {r.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      ) : null}
     </MarketingLayout>
   );
 }

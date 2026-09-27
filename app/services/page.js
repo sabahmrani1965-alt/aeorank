@@ -26,7 +26,7 @@ const services = [
   },
   {
     icon: "🎯",
-    title: "AEO Consulting",
+    title: "Answer Engine Optimization Consulting",
     slug: "aeo-consulting",
     price: "From $1,500/mo",
     blurb:
@@ -40,7 +40,7 @@ const services = [
   },
   {
     icon: "🔗",
-    title: "Citation Building",
+    title: "AI Citation Building",
     slug: "citation-building",
     price: "From $1,000/mo",
     blurb:
@@ -223,7 +223,7 @@ export default function Services() {
             </p>
             <p style={{ marginBottom: 18 }}>
               If you have a capable in-house marketing team,{" "}
-              <strong style={{ color: "var(--text)" }}>AEO Consulting</strong>{" "}
+              <strong style={{ color: "var(--text)" }}>Answer Engine Optimization Consulting</strong>{" "}
               often gives better ROI. We provide the strategy and frameworks;
               your team executes. You save money and build internal AEO
               capability.
@@ -231,7 +231,7 @@ export default function Services() {
             <p style={{ marginBottom: 28 }}>
               The one-off services (
               <strong style={{ color: "var(--text)" }}>Entity Optimization</strong>,{" "}
-              <strong style={{ color: "var(--text)" }}>Citation Building</strong>
+              <strong style={{ color: "var(--text)" }}>AI Citation Building</strong>
               ) are usually for companies that want to tackle a specific
               weakness without committing to a full program. Legitimate, but
               rarely as high-leverage as doing the work together.

@@ -2,6 +2,66 @@ import MarketingLayout from "@/components/MarketingLayout";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+const RELATED = {
+  "saas": [
+    {
+      "slug": "what-is-aeo",
+      "title": "What Is AEO? Answer Engine Optimization Explained"
+    },
+    {
+      "slug": "aeo-vs-seo",
+      "title": "AEO vs SEO: Stop Pretending They're the Same Job"
+    },
+    {
+      "slug": "measure-ai-citation-roi",
+      "title": "How to Measure AI Citation ROI"
+    }
+  ],
+  "startups": [
+    {
+      "slug": "what-is-aeo",
+      "title": "What Is AEO? Answer Engine Optimization Explained"
+    },
+    {
+      "slug": "reddit-ai-visibility-guide",
+      "title": "Reddit Marketing for AI Search Visibility"
+    },
+    {
+      "slug": "entity-authority-ai-citation",
+      "title": "Entity Authority and AI Citation"
+    }
+  ],
+  "software": [
+    {
+      "slug": "aeo-schema-markup-guide",
+      "title": "The AEO Schema Markup Guide"
+    },
+    {
+      "slug": "entity-authority-ai-citation",
+      "title": "Entity Authority and AI Citation"
+    },
+    {
+      "slug": "google-ai-overviews-guide",
+      "title": "The Google AI Overviews Guide"
+    }
+  ],
+  "tech-it": [
+    {
+      "slug": "getting-cited-by-claude",
+      "title": "Getting Cited by Claude"
+    },
+    {
+      "slug": "chatgpt-vs-claude-vs-gemini-citations",
+      "title": "ChatGPT vs Claude vs Gemini Citations"
+    },
+    {
+      "slug": "what-is-aeo",
+      "title": "What Is AEO? Answer Engine Optimization Explained"
+    }
+  ]
+}
+
+
 // Exported so app/sitemap.js derives slugs from the same source.
 export const industries = {
   'saas': {
@@ -390,6 +450,28 @@ export default function IndustryPage({ params }) {
           .stats-band-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
+
+      {/* Commercial pages linked only to /, /contact, /signup and /services.
+          Nothing pointed back into the blog, so the funnel ran one way and
+          the posts that explain this service had no path in. */}
+      {RELATED[params.slug] ? (
+        <section className="section" style={{ paddingTop: 0 }}>
+          <div className="container-narrow">
+            <h2 style={{ fontSize: 22, marginBottom: 16, textAlign: "left" }}>
+              Read more on this
+            </h2>
+            <ul style={{ paddingLeft: 22, lineHeight: 1.9 }}>
+              {RELATED[params.slug].map((r) => (
+                <li key={r.slug}>
+                  <Link href={`/blog/${r.slug}`} style={{ color: "var(--accent)" }}>
+                    {r.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      ) : null}
     </MarketingLayout>
   );
 }
