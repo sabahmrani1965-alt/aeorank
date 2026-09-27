@@ -21,6 +21,7 @@ export default function Footer() {
             <h4>Product</h4>
             <Link href="/services">Services</Link>
             <Link href="/pricing">Pricing</Link>
+            <Link href="/proof">Our own score</Link>
             <Link href="/industries">Industries</Link>
             <Link href="/blog">Blog</Link>
             <Link href="/#faq">FAQ</Link>
