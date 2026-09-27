@@ -31,7 +31,7 @@ const posts = {
   'getting-cited-by-claude': {
     tag: 'AEO · Claude',
     title: "Getting Cited by Claude: Why It's the Hardest Engine to Crack",
-    metaTitle: 'Getting Cited by Claude: Why It's the Hardest | AEOrank',
+    metaTitle: 'Getting Cited by Claude: Why It\'s the Hardest | AEOrank',
     metaDescription: "Claude declines to recommend products more than any other major engine. Here's what it actually trusts, and a realistic timeline for earning a citation.",
     description: "Claude declines to recommend a specific product more often than any other major engine. Here's what it actually trusts when it does cite, and a realistic timeline for earning one.",
     tags: ['aeo', 'claude', 'b2b-saas', 'ai-citations', 'entity-authority'],
