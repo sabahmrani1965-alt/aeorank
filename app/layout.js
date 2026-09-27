@@ -51,11 +51,17 @@ export default function RootLayout({ children }) {
       <body>
         {children}
         <Analytics />
+        {/* lazyOnload, not afterInteractive: gtag.js is ~172KB, about a
+            third of every page's transferred weight, and it was competing
+            with the render on mobile where LCP sits above 5s on the blog
+            and service pages. Deferring it until after load costs a small
+            number of very short sessions in GA and takes the largest
+            single resource off the critical path. */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
-        <Script id="google-analytics" strategy="afterInteractive">
+        <Script id="google-analytics" strategy="lazyOnload">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}

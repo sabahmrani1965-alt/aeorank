@@ -137,12 +137,26 @@ export default function IndustryPage({ params }) {
   const industry = industries[params.slug]
   if (!industry) notFound()
 
+  // The same Service as /services/*, aimed at an industry rather than sold
+  // separately — so audience, not a distinct serviceType. These pages
+  // previously carried BreadcrumbList and nothing else.
+  const serviceLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: industry.title,
+    description: industry.description,
+    provider: { '@type': 'Organization', name: 'AEOrank', url: 'https://www.aeorank.tech' },
+    areaServed: 'Worldwide',
+    serviceType: 'Answer Engine Optimization',
+    audience: { '@type': 'Audience', audienceType: industry.tag },
+  }
+
   const breadcrumbLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.aeorank.tech' },
-      { '@type': 'ListItem', position: 2, name: 'Industries', item: 'https://www.aeorank.tech' },
+      { '@type': 'ListItem', position: 2, name: 'Industries', item: 'https://www.aeorank.tech/industries' },
       { '@type': 'ListItem', position: 3, name: industry.title, item: `https://www.aeorank.tech/industries/${params.slug}` },
     ],
   }
@@ -156,6 +170,10 @@ export default function IndustryPage({ params }) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceLd) }}
       />
 
       <section className="section">

@@ -807,8 +807,17 @@ export default function BlogPost({ params }) {
     description: post.description,
     datePublished: post.updated,
     dateModified: post.updated,
+    // image is REQUIRED for Google's Article/BlogPosting rich results.
+    // Without it no post is eligible, however good the rest is. Points at
+    // the generated card in app/opengraph-image.js — a real 1200x630 PNG.
+    image: ['https://www.aeorank.tech/opengraph-image'],
     author: { '@type': 'Person', name: post.author, worksFor: { '@type': 'Organization', name: 'AEOrank', url: 'https://www.aeorank.tech' } },
-    publisher: { '@type': 'Organization', name: 'AEOrank', url: 'https://www.aeorank.tech' },
+    publisher: {
+      '@type': 'Organization',
+      name: 'AEOrank',
+      url: 'https://www.aeorank.tech',
+      logo: { '@type': 'ImageObject', url: 'https://www.aeorank.tech/icon.svg' },
+    },
     mainEntityOfPage: { '@type': 'WebPage', '@id': `https://www.aeorank.tech/blog/${params.slug}` },
   }
 
