@@ -205,7 +205,7 @@ export const services = {
     faqs: [
       { q: 'How many citations do I get per month?', a: 'Depends on the plan: typically 10–25 new high-quality citations per month for active campaigns.' },
       { q: 'Are these paid placements?', a: 'No. All citations are earned: expert commentary, original research placements, directory optimization. No paid link schemes.' },
-      { q: 'Do citations actually move the needle?', a: 'Yes, AI engines heavily weight third-party citations. Most clients see 200–400% increase in AI citation frequency within 6 months.' },
+      { q: 'Do citations actually move the needle?', a: 'Third-party citations are one of the strongest signals AI engines use, so the work is aimed at the right thing. We will not put a percentage on it: nobody controls what a model says, and a guaranteed increase is a claim about someone else\'s system rather than a service level. What we do promise is a fixed query set, every check recorded including the ones where nobody mentions you, and per-engine results you can check yourself.' },
     ],
   },
 
