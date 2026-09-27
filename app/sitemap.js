@@ -23,6 +23,7 @@ export default function sitemap() {
   const staticPages = [
     { url: BASE_URL, changeFrequency: "weekly", priority: 1.0 },
     { url: `${BASE_URL}/services`, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${BASE_URL}/pricing`, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE_URL}/blog`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/industries`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE_URL}/about`, changeFrequency: "monthly", priority: 0.6 },
