@@ -698,6 +698,52 @@ const posts = {
     ],
   },
 
+  'best-ai-visibility-tools': {
+    tag: 'Tools & Comparison',
+    title: 'AI Visibility Tools: How to Actually Evaluate Them',
+    metaTitle: 'Best AI Visibility Tools: How to Evaluate Them | AEOrank',
+    metaDescription: "A buyer's guide to AI visibility and AEO tools. The seven questions that separate real measurement from dashboards, and an honest list of what exists.",
+    description: 'Most AI visibility tool round-ups are affiliate lists. This one is a test plan: the seven questions to ask any vendor, including us, before you pay.',
+    tags: ['tools', 'aeo', 'ai-search', 'comparison', 'b2b-saas'],
+    date: 'September 27, 2026',
+    updated: '2026-09-27',
+    readTime: '8 min read',
+    author: 'Ilyas Lemzouri',
+    sections: [
+      {
+        heading: null,
+        content: `We build one of these tools, so treat the framing here accordingly. What follows is not a ranking — it is the set of questions we would ask a vendor in this category, including us, because they are the ones that separate measurement from a dashboard.\n\nThe category is young enough that feature lists change monthly. Anything we told you about a competitor's pricing or feature set today would be wrong within a quarter, so we have not tried. Each tool below is described in its own words, with a link, and the questions are what you should take into the demo.`,
+      },
+      {
+        heading: 'What are you actually buying?',
+        content: `Tools in this space do one or more of three different jobs, and the pricing rarely makes clear which.\n\n• **Measurement.** Ask models buyer questions on a schedule, record whether you were named. This is the part that can be verified.\n• **Diagnosis.** Explain why you were not named — entity gaps, missing sources, competitor coverage.\n• **Intervention.** Actually change something: content, schema, or participation in the places models read.\n\nMost of the category is measurement with a diagnosis layer. Fewer tools do intervention, and intervention is where the cost and the risk both sit. Knowing which you are buying prevents the common outcome: paying monthly for a dashboard that tells you the same zero every week.`,
+      },
+      {
+        heading: 'How does it detect a mention?',
+        content: `This is the single most revealing question, and almost nobody asks it.\n\nAsk the vendor what happens when a model replies *"I'm not familiar with that brand — could you clarify?"* That sentence contains the brand name. A naive substring match scores it as a mention, which turns the clearest possible proof of invisibility into a positive result.\n\nWe know because we shipped that bug. Two reports scored 100% and 75% on answers that were, every one of them, the model saying it had never heard of the brand. The fix was to strip denial and clarification sentences before looking for the name.\n\nIf a vendor cannot answer this question precisely, their numbers are not measurement.`,
+      },
+      {
+        heading: 'Which models, how often, and does it keep the history?',
+        content: `Three follow-ups that matter more than the dashboard.\n\n• **Which models, and are they live or from memory?** A model answering from training data and a model browsing the web give different answers to the same question. Both are valid; conflating them is not.\n• **What is the model mix?** If 80% of your checks hit one engine, your "overall visibility" number mostly describes that engine. Ask for per-model rates.\n• **Is every check stored, including the zeroes?** If the tool only keeps the latest state, you cannot show a before and after — and a vendor that discards null results can present any trend it likes.\n\nThe test: ask for the raw check history, not the summary. A tool that cannot produce it cannot prove a change.`,
+      },
+      {
+        heading: 'Can it show you a result it did not want to show you?',
+        content: `Ask for a customer whose numbers did not move, and what they concluded.\n\nEvery vendor in this category, us included, is selling into a market where nobody has long time-series yet. A vendor with only success stories after eighteen months of a category existing is selecting what it shows you. One that can describe a flat result and why is doing measurement.\n\nRelated, and worth asking directly: does the contract promise a specific outcome? Nobody controls what a model says. A guaranteed percentage increase in citations is not a service level, it is a claim about someone else's system.`,
+      },
+      {
+        heading: 'What exists in the category',
+        content: `Described in each vendor's own words, linked so you can check rather than trust this page. No ranking, no affiliate links, and the ordering is alphabetical.\n\n| Tool | In their own words |\n| --- | --- |\n| [AthenaHQ](https://www.athenahq.ai) | "AEO & GEO platform trusted by commercial & enterprise businesses to become the answer AI gives and the brand AI trusts" |\n| [CrowdReply](https://crowdreply.com) | "The only AI search visibility platform with a built-in Engagement Engine. Track rankings, monitor cited conversations and place your brand where it matters" |\n| [Peec AI](https://peec.ai) | "Helps marketing teams analyze brand performance across ChatGPT, Perplexity, and Gemini. Track visibility, benchmark competitors, and optimize AI search presence" |\n| [Profound](https://www.tryprofound.com) | "The AI marketing platform built for the agentic era. See what your customers ask AI, deploy agents to act on it, and measure the results" |\n| [Scrunch](https://scrunchai.com) | "Monitor brand presence in AI search, analyze and optimize your website, and deliver content directly to AI agents" |\n\nAEOrank sits in the same category, weighted toward Reddit as the source material — the reasoning is in [why ChatGPT cites Reddit threads](/blog/why-chatgpt-cites-reddit-threads), and our own comparisons are [here](/blog/profound-vs-peec-vs-aeorank) and [here](/blog/crowdreply-vs-aeorank). Read them knowing who wrote them.`,
+      },
+      {
+        heading: 'How should you actually run the evaluation?',
+        content: `Four steps, about two weeks.\n\n1. **Write your ten queries first.** The ones your buyers genuinely type, before any vendor shows you theirs. A vendor's suggested queries are chosen to produce a readable dashboard.\n2. **Run them yourself, manually, once.** Open ChatGPT, Claude, Gemini and Perplexity and ask. Write down what you see. This is your reality check against every number a tool shows you afterwards.\n3. **Give the same ten to each vendor in the trial.** Compare their output against your manual run. Discrepancies are the interesting part — ask about every one.\n4. **Ask what changes next.** Measurement alone does not move a number. If nobody can tell you what work follows, you are buying a thermometer and calling it treatment.\n\nStep two is the one people skip, and it is the one that catches detection bugs, cherry-picked queries and inflated baselines in a single afternoon.`,
+      },
+      {
+        heading: 'The short version',
+        content: `Ask how mentions are detected and what happens on a denial sentence. Ask for per-model rates and the raw check history. Ask for a flat result. Run your own queries manually before you believe any dashboard, including ours.\n\nIf you want the honest baseline on your own brand first, our [AI visibility audit](/services/ai-visibility-audit) produces one, and [measuring AI citation ROI](/blog/measure-ai-citation-roi) covers what to do with the number once you have it.`,
+      },
+    ],
+  },
   'reddit-ai-visibility-guide': {
     tag: 'Reddit & AI Visibility',
     title: 'Reddit Marketing for AI Search Visibility',

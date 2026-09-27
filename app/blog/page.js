@@ -12,6 +12,15 @@ export const metadata = {
 // hand-copied array that silently drifts.
 export const posts = [
   {
+    tag: "Tools & Comparison",
+    title: "AI Visibility Tools: How to Actually Evaluate Them",
+    excerpt:
+      "Most AI visibility tool round-ups are affiliate lists. This one is a test plan: the seven questions to ask any vendor, including us, before you pay.",
+    date: "September 27, 2026",
+    readTime: "8 min read",
+    slug: "best-ai-visibility-tools",
+  },
+  {
     tag: "Reddit & AI Visibility",
     title: "Reddit Marketing for AI Search Visibility",
     excerpt:
