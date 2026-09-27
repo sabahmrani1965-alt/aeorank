@@ -4,7 +4,7 @@ import Link from "next/link";
 import { CALENDLY_URL } from "@/lib/links";
 
 // /pricing did not exist. The subscription tiers lived only behind the
-// product — dashboard billing, onboarding, and the report page — so a buyer
+// product, dashboard billing, onboarding, and the report page, so a buyer
 // searching "aeorank pricing" had nowhere to land, and the self-serve price
 // was visible only after signing up.
 //
@@ -66,7 +66,7 @@ export default function Pricing() {
           </h1>
           <p className="section-sub">
             Every plan includes monthly credits and a 7-day free trial. Credits pay
-            for the things that actually move citations — comments, posts, scans —
+            for the things that actually move citations, comments, posts, scans , 
             so the cost tracks the work rather than a seat count.
           </p>
         </div>

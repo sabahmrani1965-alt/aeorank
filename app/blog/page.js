@@ -17,7 +17,7 @@ export const posts = [
     excerpt:
       "Most AI visibility tool round-ups are affiliate lists. This one is a test plan: the seven questions to ask any vendor, including us, before you pay.",
     date: "September 27, 2026",
-    readTime: "8 min read",
+    readTime: "4 min read",
     slug: "best-ai-visibility-tools",
   },
   {
@@ -26,7 +26,7 @@ export const posts = [
     excerpt:
       "AI assistants cite Reddit constantly. How Reddit visibility actually works, what earns a citation, and the tactics that get you removed instead.",
     date: "September 27, 2026",
-    readTime: "9 min read",
+    readTime: "7 min read",
     slug: "reddit-ai-visibility-guide",
   },
   {
@@ -35,7 +35,7 @@ export const posts = [
     excerpt:
       "CrowdReply and AEOrank overlap more than most AI visibility tools. An honest look at pricing, how each one actually posts to Reddit, and which fits which team.",
     date: "August 28, 2026",
-    readTime: "6 min read",
+    readTime: "2 min read",
     slug: "crowdreply-vs-aeorank",
   },
   {
@@ -44,7 +44,7 @@ export const posts = [
     excerpt:
       "A search snippet showing no replies isn't proof a thread is unanswered. What we actually check before flagging a thread as a real opportunity.",
     date: "August 28, 2026",
-    readTime: "5 min read",
+    readTime: "2 min read",
     slug: "how-we-verify-reddit-threads",
   },
   {
@@ -53,7 +53,7 @@ export const posts = [
     excerpt:
       "Claude declines to recommend products more often than any other major engine. What it actually trusts when it does cite, and a realistic timeline for earning one.",
     date: "August 27, 2026",
-    readTime: "7 min read",
+    readTime: "3 min read",
     slug: "getting-cited-by-claude",
   },
   {
@@ -62,7 +62,7 @@ export const posts = [
     excerpt:
       "A citation isn't automatically good. One paired with 'some say to avoid this' does real damage. How that happens, and how to fix it.",
     date: "August 27, 2026",
-    readTime: "6 min read",
+    readTime: "3 min read",
     slug: "sentiment-in-ai-citations",
   },
   {
@@ -71,7 +71,7 @@ export const posts = [
     excerpt:
       "Your existing affiliates already have a reason to talk to you. Why that makes your partner network a warmer, faster channel than cold outreach.",
     date: "August 27, 2026",
-    readTime: "6 min read",
+    readTime: "2 min read",
     slug: "partner-network-ai-visibility",
   },
   {
@@ -80,7 +80,7 @@ export const posts = [
     excerpt:
       "One of our own outreach targets got pulled by mods for 'unapproved third-party advertisement.' What that rule actually means and how to reply without triggering it.",
     date: "August 27, 2026",
-    readTime: "6 min read",
+    readTime: "4 min read",
     slug: "reply-to-reddit-without-getting-removed",
   },
   {
@@ -89,7 +89,7 @@ export const posts = [
     excerpt:
       "Not a \"why we're better\" pitch. An honest breakdown of what each tool actually measures or does, and why they're not really competing for the same budget line.",
     date: "August 27, 2026",
-    readTime: "6 min read",
+    readTime: "3 min read",
     slug: "profound-vs-peec-vs-aeorank",
   },
   {
@@ -99,7 +99,7 @@ export const posts = [
     excerpt:
       "We checked 30 real B2B SaaS companies for a live, unanswered Reddit thread in their category. Found one in nearly all of them. Here's what that costs.",
     date: "August 27, 2026",
-    readTime: "8 min read",
+    readTime: "4 min read",
     slug: "why-chatgpt-cites-reddit-threads",
   },
   {
@@ -108,7 +108,7 @@ export const posts = [
     excerpt:
       "The plain-English definition, how it differs from SEO and GEO, the five building blocks that actually make up the discipline, and where to start.",
     date: "July 26, 2026",
-    readTime: "12 min read",
+    readTime: "5 min read",
     slug: "what-is-aeo",
   },
   {
@@ -117,7 +117,7 @@ export const posts = [
     excerpt:
       "Most schema advice is recycled SEO with 'AEO' stamped on top. The schema types that actually move AI citations for B2B SaaS, ranked by impact.",
     date: "April 24, 2026",
-    readTime: "9 min read",
+    readTime: "6 min read",
     slug: "aeo-schema-markup-guide",
   },
   {
@@ -126,7 +126,7 @@ export const posts = [
     excerpt:
       "Same query, different brands cited. ChatGPT, Claude, and Gemini build their answers from different signals. How each one actually behaves and what to do about it.",
     date: "April 17, 2026",
-    readTime: "10 min read",
+    readTime: "7 min read",
     slug: "chatgpt-vs-claude-vs-gemini-citations",
   },
   {
@@ -135,7 +135,7 @@ export const posts = [
     excerpt:
       "Six months of testing what moves AI citations and what doesn't. Entity work matters more than content volume. Third-party citations matter more than either.",
     date: "April 10, 2026",
-    readTime: "9 min read",
+    readTime: "4 min read",
     slug: "how-to-get-cited-by-chatgpt",
   },
   {
@@ -144,7 +144,7 @@ export const posts = [
     excerpt:
       "Most AI attribution is guesswork dressed up as data. The honest framework for figuring out whether AEO is actually working, what it's worth, and when to stop.",
     date: "April 3, 2026",
-    readTime: "7 min read",
+    readTime: "4 min read",
     slug: "measure-ai-citation-roi",
   },
   {
@@ -153,7 +153,7 @@ export const posts = [
     excerpt:
       "Spoiler: it's almost never the content. It's entity authority. What that actually means and why most SaaS companies are bad at it.",
     date: "March 27, 2026",
-    readTime: "11 min read",
+    readTime: "4 min read",
     slug: "entity-authority-ai-citation",
   },
   {
@@ -162,7 +162,7 @@ export const posts = [
     excerpt:
       "Perplexity is where the highest-intent technical buyers actually research. It retrieves differently. It weights differently. Here's what matters.",
     date: "March 20, 2026",
-    readTime: "7 min read",
+    readTime: "4 min read",
     slug: "optimize-for-perplexity",
   },
   {
@@ -171,7 +171,7 @@ export const posts = [
     excerpt:
       "Most agencies selling AEO are just rebranding SEO services. They're not the same discipline. How they actually differ and why both still matter.",
     date: "March 13, 2026",
-    readTime: "8 min read",
+    readTime: "4 min read",
     slug: "aeo-vs-seo",
   },
   {
@@ -181,7 +181,7 @@ export const posts = [
     excerpt:
       "AI Overviews went from annoying feature to dominant placement. What gets featured, what doesn't, and what's changed since launch.",
     date: "March 6, 2026",
-    readTime: "10 min read",
+    readTime: "4 min read",
     slug: "google-ai-overviews-guide",
   },
 ];

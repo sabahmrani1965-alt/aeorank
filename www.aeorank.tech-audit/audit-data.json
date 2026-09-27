@@ -1,7 +1,7 @@
 {
  "summary": {
   "health_score": 69,
-  "business_type": "B2B SaaS — AI visibility / AEO",
+  "business_type": "B2B SaaS \u2014 AI visibility / AEO",
   "top_findings": [
    "31 of 32 pages have no H1",
    "og:image missing on all 32 pages",
@@ -50,21 +50,6 @@
    ]
   },
   {
-   "name": "Content Quality",
-   "score": 70,
-   "what_works": [
-    "16 posts, 655-1717 words, avg ~1100"
-   ],
-   "findings": [
-    {
-     "title": "Industry pages thin and near-duplicate",
-     "severity": "Medium",
-     "description": "297-308 words, same template",
-     "recommendation": "Expand with per-industry evidence"
-    }
-   ]
-  },
-  {
    "name": "Schema / Structured Data",
    "score": 88,
    "what_works": [
@@ -96,7 +81,7 @@
      "recommendation": "Publish one"
     },
     {
-     "title": "Lighthouse Agentic Browsing: 2/2 (mobile and desktop, Lighthouse 13.5.0, local run — PSI quota exceeded)",
+     "title": "Lighthouse Agentic Browsing: 2/2 (mobile and desktop, Lighthouse 13.5.0, local run \u2014 PSI quota exceeded)",
      "severity": "Info",
      "description": "agent-accessibility-tree and cumulative-layout-shift both pass (0 of 33 axe rules failed, CLS=0). webmcp-form-coverage, webmcp-registered-tools, webmcp-schema-validity, llms-txt and ard-schema are all not-applicable (no forms/tools, no llms.txt, no ai-catalog.json), so they drop out of N rather than failing.",
      "recommendation": "No fix needed for the passing audits. Publishing a valid /llms.txt would add a counted passing audit (3/3); an ai-catalog.json would add another (4/4) but only if a real agent resource exists to list."
@@ -209,227 +194,379 @@
    ]
   },
   {
-   "name": "Search Experience (SXO)",
-   "score": 40,
+   "name": "Content Quality",
+   "score": 55,
+   "pass": 2,
+   "pass1_score": 46,
+   "scores": {
+    "content_quality": {
+     "pass1": 46,
+     "pass2": 55,
+     "delta": 9
+    },
+    "eeat": {
+     "pass1": 32,
+     "pass2": 37,
+     "delta": 5
+    },
+    "ai_citation_readiness": {
+     "pass1": 38,
+     "pass2": 56,
+     "delta": 18
+    }
+   },
+   "eeat_breakdown": {
+    "experience": {
+     "weight": 0.2,
+     "pass1": 25,
+     "pass2": 34
+    },
+    "expertise": {
+     "weight": 0.25,
+     "pass1": 38,
+     "pass2": 42
+    },
+    "authoritativeness": {
+     "weight": 0.25,
+     "pass1": 22,
+     "pass2": 28
+    },
+    "trustworthiness": {
+     "weight": 0.3,
+     "pass1": 30,
+     "pass2": 42
+    }
+   },
+   "metrics": {
+    "posts": 19,
+    "total_body_words": 16862,
+    "mean_words_per_post": 887,
+    "posts_over_1500w": 2,
+    "posts_under_1000w": 15,
+    "invisible_unicode_codepoints": 0,
+    "cliche_hits": 15,
+    "cliche_density_max_per_1k": 2.2,
+    "prose_em_dashes_new_posts": 18,
+    "prose_em_dashes_other_17_posts": 1,
+    "article_li": 102,
+    "li_surviving_trafilatura": 102,
+    "li_survival_pct": 100.0,
+    "article_strong": 95,
+    "article_tables": 3,
+    "tables_surviving": 3,
+    "mean_retention_structured_pct": 79.6,
+    "mean_retention_unstructured_pct": 66.0,
+    "zero_structure_posts": 7,
+    "zero_structure_words": 4177,
+    "outbound_links_total": 9,
+    "posts_with_outbound": 2,
+    "posts_with_zero_outbound": 17,
+    "claim_level_citations": 4,
+    "nofollow_or_sponsored_sitewide": 0,
+    "question_shaped_h2": 62,
+    "total_h2": 103,
+    "internal_contextual_links": 98,
+    "flesch_mean": 55.0,
+    "avg_sentence_len_mean": 15.6,
+    "readtime_claimed_min": 150,
+    "readtime_actual_min": 75,
+    "readtime_inflation_ratio": 2.0,
+    "posts_readtime_inflated_over_1_75x": 15,
+    "metadata_templated_ratio": 0.0,
+    "metadata_site_risk": "low",
+    "industries_max_pairwise_similarity": 0.165,
+    "services_max_pairwise_similarity": 0.154
+   },
    "what_works": [
-    "/services hub gives real prices ($500 / from $800 / from $1,000 / from $1,500 / from $3,000) and an honest 'how to choose' chooser",
-    "Mock dashboard is explicitly labelled illustrative, not a real customer score",
-    "Blog posts carry named-author bylines, dates and BlogPosting author/worksFor schema",
-    "Global nav and CTA placement are consistent and fast across all 32 URLs"
+    "Zero invisible Unicode across all 19 posts and their metadata",
+    "AI-cliche density near zero: 13 'leverage' + 1 'comprehensive guide' in 16,862 words",
+    "List conversion verified: 102 of 102 <li>, 95 <strong> and 3 <table> all survive trafilatura",
+    "Main-content retention 79.6% on structured posts vs 66.0% on unstructured",
+    "/pricing exists and prices are extractable main content in a real table (pass 1: price invisible)",
+    "Near-duplicate /industries/ pages resolved: max pairwise similarity now 0.165",
+    "Metadata templating clean sitewide: templated_ratio 0.0, no shared CTA, site_risk low",
+    "60% of h2s are question-shaped, good for answer-engine query matching",
+    "best-ai-visibility-tools carries an explicit vendor-conflict disclosure"
    ],
    "findings": [
     {
-     "title": "/services/citation-building targets a term Google resolves to local-SEO NAP citations",
-     "severity": "Critical",
-     "description": "9/9 results for 'citation building services' are local directory/NAP submission (BrightLocal Citation Builder, citationbuildingservice.com, '13 Local Citation Building Services'). Page means AI-engine citations. Full semantic collision - unwinnable as titled, and wrong traffic if won.",
-     "recommendation": "Retitle to 'AI Citation Building for B2B SaaS' and add an explicit 'not local-SEO NAP citations' disambiguator near the H1"
-    },
-    {
-     "title": "Four /industries/* pages are 265-277 word landing pages in a 100% long-form-guide SERP",
-     "severity": "Critical",
-     "description": "'answer engine optimization for B2B SaaS' returns 9/9 guides (PartnerStack Ultimate 2026 Guide, Sproutworth B2B CEO's Guide, Elsner, Bluetext, madx.digital/learn, GrackerAI, Storylane...) and zero vendor pages. Taxonomy: Landing Page targeting how-to keyword = CRITICAL. Error multiplied across saas/startups/tech-it/software.",
-     "recommendation": "Convert to ~2,000-word Hybrid guides with mid-scroll and end-scroll service CTAs; add Service schema"
-    },
-    {
-     "title": "/services/aeo-consulting targets a navigational query owned by unrelated companies",
-     "severity": "Critical",
-     "description": "'AEO consulting' SERP = LinkedIn company page, Instagram, UK Companies House record, aeoconsulting.co.uk (IT consulting), aeoconsulting.us (structural engineering), Wikipedia 'Adaptive Execution Office'. 1 of 9 results is answer-engine consulting. AEO also resolves to Authorised Economic Operator.",
-     "recommendation": "Re-target to 'answer engine optimization consulting' / 'AEO consultant for SaaS'; abandon the bare head term"
-    },
-    {
-     "title": "/services/entity-optimization is a 331-word sales page in an 89% practitioner-guide SERP",
-     "severity": "Critical",
-     "description": "8/9 results for 'entity optimization for AI search' are method guides (Frase 2026 Practitioner Guide, SEJ Ask-An-SEO, '7 Moves That Stick'). Page gives benefits, SERP rewards mechanics (Wikidata, sameAs, knowledge panel).",
-     "recommendation": "Rebuild as Hybrid: publish the actual method as H2 steps, keep the service offer as a module"
-    },
-    {
-     "title": "/services/ai-visibility-audit sells a $500 audit into a DIY how-to SERP while the free scan stays gated",
-     "severity": "High",
-     "description": "5/9 results are DIY ('Step-by-Step', 'in 30 Minutes', 'You Can Do Right Now', '15 Questions Every CMO Should Ask'). Real secondary intent is Tool/Interactive. AEOrank already has an instant AI-visibility scan but it sits behind email+password signup.",
-     "recommendation": "Put an ungated domain-input scan above the fold with a partial instant result; publish the 100-query methodology; gate only the full report"
-    },
-    {
-     "title": "No page competes on AEOrank's own differentiator",
-     "severity": "High",
-     "description": "'Reddit marketing for AI search visibility' is 8/9 informational (Search Engine Land, AirOps, Amsive, iQuanti, Semrush x3) with zero vendor pages and no AEOrank presence. The most defensible claim in the business has an open SERP.",
-     "recommendation": "Build a 'Reddit for AI Search Visibility' pillar and cluster why-chatgpt-cites-reddit-threads, reply-to-reddit-without-getting-removed and how-we-verify-reddit-threads beneath it"
-    },
-    {
-     "title": "Zero third-party proof on the entire conversion path",
-     "severity": "High",
-     "description": "No named clients, logos, testimonials or case studies across 32 URLs. Only example is AEOrank's own property (SaaSOffers). '+312%' and '+180%' on /industries/saas have no source, period or sample size. /about is 229 words with no founder bio. The 'best AEO agency' SERP ranks vendors specifically on published pipeline case studies.",
-     "recommendation": "Publish one named case study with a date, an n and a pipeline number; link it from the hero and all nine commercial pages; source or remove the unsourced percentages"
-    },
-    {
-     "title": "Site sells two business models with no chooser and no pricing page",
-     "severity": "High",
-     "description": "Homepage sells self-serve software (visibility score, credits, AI writing assistant); /services sells agency retainers from $3,000/mo. Nav offers 'Get Started' and 'Book a Call' with no stated difference. No /pricing URL in the 32-page sitemap and no credit price anywhere. Costs every persona 8-14 clarity points.",
-     "recommendation": "Add a two-column 'run it yourself vs we run it' chooser above the homepage FAQ and ship a /pricing page"
-    },
-    {
-     "title": "Comparison posts have no comparison table and no verdict",
+     "title": "18 prose em dashes in the two new posts vs 1 in the other 17",
      "severity": "Medium",
-     "description": "/blog/profound-vs-peec-vs-aeorank (816 w) and /blog/crowdreply-vs-aeorank are prose only - 0 tables sitewide, no 'best for' segmentation, no ItemList schema. Taxonomy: Blog Post without structured comparison = HIGH. Self-named framing also cannot reach 'best AEO agency' demand, which is 9/9 third-party listicles.",
-     "recommendation": "Add a criteria table and an explicit best-for verdict; separately pitch for inclusion in the existing third-party listicles"
+     "description": "reddit-ai-visibility-guide 12, best-ai-visibility-tools 6, plus 2 on /pricing. 7.0 per 1k words vs 0.0 per 1k in the de-em-dashed corpus. All appositive 'clause - and clause' shape. The other 17 posts' 11 en dashes are all numeric ranges.",
+     "recommendation": "Strip to match the corpus; add em dash to the pre-publish lint"
     },
     {
-     "title": "Media is functionally absent from every commercial page",
+     "title": "Literal asterisks rendered on /blog/best-ai-visibility-tools",
      "severity": "Medium",
-     "description": "0 tables, 0 video, 0 real product screenshots with descriptive alt text sitewide; images are icons and emoji. Above-fold dashboard is a CSS mockup. Competing pages ship comparison tables and step visuals.",
-     "recommendation": "Add annotated real screenshots, a sample audit report page, and a table per comparison or service page"
+     "description": "renderInline supports **bold** and [link](href) only. Single-asterisk italics ship 4 raw * characters to the reader.",
+     "recommendation": "Remove the asterisks or add single-asterisk handling to renderInline"
     },
     {
-     "title": "Service and industry pages carry no date or dateModified",
+     "title": "Read-time labels inflated 2.00x corpus-wide",
+     "severity": "High",
+     "description": "150 min claimed vs 75 min actual at 225 wpm. 15 of 19 posts inflated 1.75x or worse; worst how-we-verify-reddit-threads at 3.1x. Includes one new post (best-ai-visibility-tools 1.86x). Rendered next to the byline on every post.",
+     "recommendation": "Derive readTime from word count at 200-225 wpm"
+    },
+    {
+     "title": "3 residual stripped hyphens, 2 in the post the restore pass targeted",
      "severity": "Low",
-     "description": "Nine commercial pages are undated in a field that changes monthly; only blog posts expose datePublished/dateModified.",
-     "recommendation": "Surface a visible 'Last updated' plus dateModified on all service and industry pages"
+     "description": "crowdreply-vs-aeorank: 'sub 5%' (second occurrence, first was fixed, both spellings now 300 chars apart) and 'credit based'. how-we-verify-reddit-threads: 'nice to have'. Corpus otherwise clean; 115 hyphenated compounds checked against open usage, and the 3 low-density posts hand-verified.",
+     "recommendation": "Fix all three; grep by count not presence"
+    },
+    {
+     "title": "7 posts still have zero list, table or strong markup",
+     "severity": "Medium",
+     "description": "4,177 words across sentiment-in-ai-citations, partner-network-ai-visibility, profound-vs-peec-vs-aeorank, why-chatgpt-cites-reddit-threads, entity-authority-ai-citation, crowdreply-vs-aeorank, how-we-verify-reddit-threads. Five of these occupy the six lowest extraction-retention slots (59.0-69.3%). Three are commercial comparison or trust pages.",
+     "recommendation": "Run the same conversion pass on these seven before writing post 20"
+    },
+    {
+     "title": "17 of 19 posts still cite nothing; 5 of the 9 new links are competitor homepages",
+     "severity": "High",
+     "description": "9 outbound links in 16,862 words on 2 of 19 posts. Only 4 are claim-level citations (2x developers.google.com, schema.org/Organization). The 5 on best-ai-visibility-tools are competitor homepages, which establish existence not corroboration. redditinc.com/blog is a newsroom index, not the permalink the sentence relies on. Zero nofollow or sponsored anywhere on the domain, so 5 dofollow links point at direct competitors.",
+     "recommendation": "Swap the Reddit index for the specific announcement, decide the competitor-link equity deliberately, and add one claim-level citation to an uncited post"
+    },
+    {
+     "title": "Five /services/ pages average 151 words of substance, unchanged from pass 1",
+     "severity": "High",
+     "description": "Extracted main content: aeo-management 160, entity-optimization 156, ai-visibility-audit 148, aeo-consulting 147, citation-building 143 against an 800-word coverage floor. /industries/* 174-186 against 500-600. /about 92, /contact 26. The blog carries 16,862 words; the commercial-intent pages carry 755 between all five.",
+     "recommendation": "Take the 5 service pages to 500+ words each before publishing another post"
+    },
+    {
+     "title": "Author remains an unresolvable entity",
+     "severity": "High",
+     "description": "Byline text on 19 posts and author.name in 19 BlogPosting blocks, with worksFor but no url, no sameAs, no /author/ page, no bio sentence on the domain. Every expertise claim attaches to an entity no engine can verify. Owner-blocked on details.",
+     "recommendation": "Ship a minimal /author/ page with 2-3 sentences and one sameAs, then wire author.url"
+    },
+    {
+     "title": "/industries/software description restates its title",
+     "severity": "Low",
+     "description": "metadata_template.py flags description-echoes-title at medium. Only sitewide metadata issue above low; 3 low brand-suffix-in-description flags on /contact, /blog/crowdreply-vs-aeorank, /blog/profound-vs-peec-vs-aeorank.",
+     "recommendation": "Rewrite the description to add information the title does not carry"
+    },
+    {
+     "title": "Owner-declined items, carried forward unchanged",
+     "severity": "Medium",
+     "description": "+312% double meaning, 200-400% guarantee inside FAQPage schema, 5.5B vs 1.2B contradiction, zero case studies. Noted not re-argued. The FAQ-schema guarantee is the highest-exposure remaining trust item because it is the version a machine reads and quotes.",
+     "recommendation": "Owner decision; revisit the schema guarantee first if reopened"
+    }
+   ]
+  },
+  {
+   "name": "Search Experience (SXO)",
+   "score": 60,
+   "previous_score": 40,
+   "delta": 20,
+   "scoring_note": "SXO Gap Score, separate from the SEO Health Score. Pass 2 of 2, re-measured 2026-09-27.",
+   "dimensions": {
+    "page_type": {
+     "score": 11,
+     "max": 15,
+     "previous": 7
+    },
+    "content_depth": {
+     "score": 8,
+     "max": 15,
+     "previous": 3
+    },
+    "ux_signals": {
+     "score": 12,
+     "max": 15,
+     "previous": 8
+    },
+    "schema": {
+     "score": 11,
+     "max": 15,
+     "previous": 9
+    },
+    "media": {
+     "score": 6,
+     "max": 15,
+     "previous": 4
+    },
+    "authority": {
+     "score": 5,
+     "max": 15,
+     "previous": 3
+    },
+    "freshness": {
+     "score": 7,
+     "max": 10,
+     "previous": 6
+    }
+   },
+   "what_works": [
+    "Two CRITICAL page-type mismatches eliminated: 'AI citation building services' SERP flipped from 9/9 local-NAP to 5/9 AI-citation Service Pages; 'answer engine optimization consulting' went from 1/9 relevant to 5/9 competitor Service Pages",
+    "/pricing resolves the software-vs-agency identity gap with published numbers in a SERP where no competitor publishes any",
+    "/blog/reddit-ai-visibility-guide (1,854 w, 11 H2) enters an 8/9-informational SERP on the company's own differentiator, with the correct page type",
+    "H1s deployed sitewide: 12 of 12 rendered URLs now have exactly 1 H1 (pass 1 found zero outside the homepage)",
+    "/blog/best-ai-visibility-tools names and links 5 competitors in their own words with authorship disclosed: the site's first real trust asset",
+    "27 commercial-to-blog links now route between awareness and decision stages (pass 1 had 0)"
+   ],
+   "findings": [
+    {
+     "title": "/industries/* : four 288-word landing pages in a 100%-guide SERP",
+     "severity": "Critical",
+     "description": "'answer engine optimization for B2B SaaS' returns 9/9 long-form guides and 0 vendor landing pages, identical to pass 1. Risk increased: the orphan fix linked all four children from a new index plus the footer, added Service schema and 3 blog links each, so Google now reliably crawls 5 pages that are the wrong page type.",
+     "recommendation": "Rebuild /industries/saas as a 2,000-word Hybrid guide keeping the service CTA as mid-scroll and end-scroll modules; measure, then template to /startups, /software, /tech-it"
+    },
+    {
+     "title": "/blog/best-ai-visibility-tools is a framework post in a 9/9 ranked-listicle SERP",
+     "severity": "High",
+     "description": "NEW mismatch created by the fix. Every one of 9 results is a numbered ranked listicle (10 Best, 9 best, 19 Best, Tested and Ranked). The page states 'No ranking... the ordering is alphabetical', lists 5 tools where the SERP wants 9-19, omits Frase/Semrush/Evertune/Otterly/ZipTie, and has no ItemList schema. Taxonomy: 'Blog Post without structured comparison = HIGH'.",
+     "recommendation": "Expand to 12+ tools with a scored column per evaluation question, add 'best for' verdicts and ItemList schema; keep the seven questions as the differentiator"
+    },
+    {
+     "title": "200-400% guarantee in live FAQPage schema contradicts the site's own new blog post",
+     "severity": "High",
+     "description": "/services/citation-building ships 'Most clients see 200-400% increase in AI citation frequency within 6 months' as rich-result-eligible markup, while /blog/best-ai-visibility-tools warns buyers that 'a guaranteed percentage increase in citations is not a service level'. The homepage FAQ schema gets it right. 'Most clients' is also unsupportable against zero named clients, and the page it sits on just became winnable.",
+     "recommendation": "Delete or rewrite that one FAQ answer: zero cost, removes a procurement disqualifier"
+    },
+    {
+     "title": "No ungated AI-visibility checker; competitor claimed the position",
+     "severity": "High",
+     "description": "/services/ai-visibility-audit is 364 words with zero input fields. The Tool/Interactive secondary intent identified in pass 1 is now held by Frase, which ranks #1 for 'best AI visibility tools 2026' with 'Compared + Free Checker' in its title. Weakest persona (DIY Self-Auditor, 54/100) is blocked on exactly this.",
+     "recommendation": "Domain input above the fold, instant partial result (3 engines x 5 queries), full 100-query report gated; publish the method as H2 lists"
+    },
+    {
+     "title": "/pricing has three published prices and a rate table with no Offer schema",
+     "severity": "Medium",
+     "description": "Schema on /pricing is Organization, WebSite, BreadcrumbList only. Lite $199 / Pro $299 / Max $449, 7-day trials, a per-action credit table and $1/credit top-ups are all in HTML and none of it is machine-readable. Highest-value schema gap on the site now that prices exist.",
+     "recommendation": "Add Offer + SoftwareApplication schema to /pricing"
+    },
+    {
+     "title": "Pricing is not in the primary navigation",
+     "severity": "Medium",
+     "description": "Header renders only Log in / Book a Call / Get Started, the same two undifferentiated CTAs flagged in pass 1, with the page that resolves them reachable only from the footer. Service pages render a reduced nav (Home | Services) that drops the global nav entirely, so a visitor landing from search has no path to pricing except the footer.",
+     "recommendation": "Add a Pricing link to the header; restore the global nav on service pages"
+    },
+    {
+     "title": "Trust is still the lowest dimension for all six personas",
+     "severity": "Medium",
+     "description": "Average 11.5/25, up from 7.7. Zero case studies, zero named clients, zero testimonials; /about is 256 words with an H1 and no H2, no bio, no credentials; +312% and +180% unsourced on 4 industry pages; +312% carries two meanings; 5.5B and 1.2B sit in the same homepage paragraph. The frozen baseline study (76 checks, 68 days, 0 mentions) is honest but unpublished, so it scores 0.",
+     "recommendation": "Publish the baseline as-is, zeros included, with the 2026-11-26 re-measurement date stated"
     }
    ],
-   "sxo_gap_score": {
-    "total": 40,
-    "page_type": 7,
-    "content_depth": 3,
-    "ux_signals": 8,
-    "schema": 9,
-    "media": 4,
-    "authority": 3,
-    "freshness": 6
-   },
-   "persona_scores": [
+   "personas": [
     {
-     "persona": "Skeptical SaaS Founder (heard of AEO, unsure it is real)",
-     "stage": "Awareness-Consideration",
-     "relevance": 19,
-     "clarity": 15,
-     "trust": 6,
-     "action": 14,
-     "total": 54,
-     "rating": "Needs Work"
-    },
-    {
-     "persona": "DIY Self-Auditor",
+     "name": "DIY Self-Auditor",
      "stage": "Awareness",
-     "relevance": 12,
-     "clarity": 13,
-     "trust": 8,
-     "action": 10,
-     "total": 43,
-     "rating": "Needs Work"
-    },
-    {
-     "persona": "In-house SEO / Technical Evaluator",
-     "stage": "Consideration",
      "relevance": 14,
-     "clarity": 12,
-     "trust": 9,
-     "action": 13,
-     "total": 48,
-     "rating": "Needs Work"
-    },
-    {
-     "persona": "Reddit-Risk-Averse Brand Manager",
-     "stage": "Consideration",
-     "relevance": 15,
-     "clarity": 11,
-     "trust": 10,
+     "clarity": 16,
+     "trust": 12,
      "action": 12,
-     "total": 48,
+     "total": 54,
+     "previous_total": 43,
      "rating": "Needs Work"
     },
     {
-     "persona": "Budget-Conscious SMB / Startup",
+     "name": "In-house SEO / Technical Evaluator",
      "stage": "Consideration",
-     "relevance": 11,
-     "clarity": 17,
-     "trust": 8,
-     "action": 12,
-     "total": 48,
-     "rating": "Needs Work"
-    },
-    {
-     "persona": "Agency Shortlister (VP Marketing)",
-     "stage": "Decision",
      "relevance": 16,
-     "clarity": 14,
-     "trust": 5,
-     "action": 16,
-     "total": 51,
+     "clarity": 16,
+     "trust": 12,
+     "action": 15,
+     "total": 59,
+     "previous_total": 48,
      "rating": "Needs Work"
+    },
+    {
+     "name": "Agency Shortlister (VP Marketing)",
+     "stage": "Decision",
+     "relevance": 17,
+     "clarity": 18,
+     "trust": 8,
+     "action": 17,
+     "total": 60,
+     "previous_total": 51,
+     "rating": "Good"
+    },
+    {
+     "name": "Budget-Conscious SMB / Startup",
+     "stage": "Consideration",
+     "relevance": 12,
+     "clarity": 22,
+     "trust": 11,
+     "action": 16,
+     "total": 61,
+     "previous_total": 48,
+     "rating": "Good"
+    },
+    {
+     "name": "Reddit-Risk-Averse Brand Manager",
+     "stage": "Consideration",
+     "relevance": 20,
+     "clarity": 18,
+     "trust": 15,
+     "action": 14,
+     "total": 67,
+     "previous_total": 48,
+     "rating": "Good"
+    },
+    {
+     "name": "Skeptical SaaS Founder",
+     "stage": "Awareness-Consideration",
+     "relevance": 20,
+     "clarity": 21,
+     "trust": 11,
+     "action": 17,
+     "total": 69,
+     "previous_total": 54,
+     "rating": "Good"
     }
    ],
    "serp_consensus": [
     {
-     "keyword": "answer engine optimization for B2B SaaS",
-     "target": "/industries/saas",
-     "dominant_type": "Blog Post (long-form guide)",
-     "consensus": "9/9 = 100%",
-     "target_type": "Landing Page",
-     "severity": "Critical"
-    },
-    {
-     "keyword": "entity optimization for AI search",
-     "target": "/services/entity-optimization",
-     "dominant_type": "Blog Post (practitioner guide)",
-     "consensus": "8/9 = 89%",
-     "target_type": "Service Page",
-     "severity": "Critical"
-    },
-    {
-     "keyword": "citation building services",
+     "keyword": "AI citation building services",
      "target": "/services/citation-building",
-     "dominant_type": "Service Page (local SEO / NAP)",
-     "consensus": "9/9 = 100% local",
-     "target_type": "Service Page (AI citations)",
-     "severity": "Critical"
+     "dominant_type": "Service Page",
+     "consensus": "5/9",
+     "pass1": "CRITICAL",
+     "pass2": "ALIGNED"
     },
     {
-     "keyword": "AEO consulting",
+     "keyword": "answer engine optimization consulting",
      "target": "/services/aeo-consulting",
-     "dominant_type": "Navigational (unrelated same-named entities)",
-     "consensus": "1/9 relevant",
-     "target_type": "Service Page",
-     "severity": "Critical"
+     "dominant_type": "Service Page",
+     "consensus": "5/9",
+     "pass1": "CRITICAL",
+     "pass2": "ALIGNED"
+    },
+    {
+     "keyword": "Reddit marketing for AI search visibility",
+     "target": "/blog/reddit-ai-visibility-guide",
+     "dominant_type": "Blog Post",
+     "consensus": "8/9",
+     "pass1": "HIGH (no page)",
+     "pass2": "ALIGNED"
+    },
+    {
+     "keyword": "best AI visibility tools 2026",
+     "target": "/blog/best-ai-visibility-tools",
+     "dominant_type": "Comparison Page",
+     "consensus": "9/9",
+     "pass1": "HIGH (no page)",
+     "pass2": "HIGH (format)"
     },
     {
      "keyword": "AI visibility audit",
      "target": "/services/ai-visibility-audit",
-     "dominant_type": "Blog Post (DIY how-to) + Tool",
-     "consensus": "5/9 = 56%",
-     "target_type": "Service Page",
-     "severity": "High"
+     "dominant_type": "Split Service/guide",
+     "consensus": "4/9",
+     "pass1": "HIGH",
+     "pass2": "MEDIUM"
     },
     {
-     "keyword": "best AEO agency for SaaS companies 2026",
-     "target": "(none)",
-     "dominant_type": "Third-party Comparison listicle",
-     "consensus": "9/9 = 100%",
-     "target_type": "missing",
-     "severity": "High"
-    },
-    {
-     "keyword": "Reddit marketing for AI search visibility",
-     "target": "(none)",
-     "dominant_type": "Blog Post (guide)",
-     "consensus": "8/9 = 89%",
-     "target_type": "missing",
-     "severity": "High"
-    },
-    {
-     "keyword": "how to get your brand cited by ChatGPT",
-     "target": "/blog/how-to-get-cited-by-chatgpt",
-     "dominant_type": "Blog Post (playbook)",
-     "consensus": "9/9 = 100%",
-     "target_type": "Blog Post",
-     "severity": "Aligned (depth gap)"
-    },
-    {
-     "keyword": "AEO services / answer engine optimization agency",
-     "target": "/services",
-     "dominant_type": "Service Page",
-     "consensus": "6/9 = 67%",
-     "target_type": "Service Page",
-     "severity": "Aligned (depth gap)"
+     "keyword": "answer engine optimization for B2B SaaS",
+     "target": "/industries/saas",
+     "dominant_type": "Blog Post guide",
+     "consensus": "9/9",
+     "pass1": "CRITICAL",
+     "pass2": "CRITICAL"
     }
+   ],
+   "artifacts": [
+    "findings/sxo.md",
+    "findings/sxo-pass2.md"
    ]
   }
  ],

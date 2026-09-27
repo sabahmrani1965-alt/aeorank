@@ -1,0 +1,161 @@
+{
+  "category": "Content Architecture",
+  "pass": 2,
+  "generated": "2026-09-27",
+  "supersedes": "cluster-plan.json",
+  "score": 58,
+  "previous_score": 42,
+  "method": {
+    "serp_source": "WebSearch live SERPs (no paid SERP API configured)",
+    "serp_api_available": false,
+    "head_terms_sampled": 8,
+    "pairs_scored": 28,
+    "confidence": "medium",
+    "limits": [
+      "WebSearch returns ~9 results with no positions; overlap scores are floor estimates",
+      "No volume/difficulty/CPC; gap ranking is by commercial proximity and SERP composition",
+      "Link graph, orphans, word counts and distribution metrics are exact static analysis"
+    ]
+  },
+  "addressed_since_pass_1": {
+    "sitemap_derived_from_posts_array": true,
+    "what_is_aeo_in_sitemap": true,
+    "distinct_lastmod_values": 12,
+    "lastmod_still_build_stamped": ["9 static pages", "4 industries", "5 services"],
+    "commercial_to_blog_links": 27,
+    "industries_index_exists_and_footer_linked": true,
+    "pricing_page_exists": true,
+    "blog_index_paginated": false
+  },
+  "corpus": {
+    "posts": 19,
+    "posts_in_sitemap": 19,
+    "total_prose_words": 17117,
+    "mean_words": 901,
+    "previous_mean_words": 854,
+    "posts_meeting_spoke_spec_1200_1800": ["reddit-ai-visibility-guide", "chatgpt-vs-claude-vs-gemini-citations", "aeo-schema-markup-guide"],
+    "posts_meeting_pillar_spec_2500_4000": [],
+    "blog_to_blog_links": 45,
+    "blog_to_blog_links_previous": 40,
+    "blog_to_commercial_links": 39,
+    "blog_to_commercial_links_previous": 32,
+    "commercial_to_blog_links": 27,
+    "commercial_to_blog_links_previous": 0,
+    "reciprocal_pairs": 1,
+    "reciprocal_pairs_previous": 1,
+    "reciprocal_pair_list": [["aeo-vs-seo", "entity-authority-ai-citation"]]
+  },
+  "link_equity": {
+    "gini_in_degree_blog_only_pass1": 0.579,
+    "gini_in_degree_blog_only_pass2": 0.611,
+    "gini_in_degree_whole_graph_pass2": 0.49,
+    "hhi_blog_only_pass1": 1288,
+    "hhi_blog_only_pass2": 1269,
+    "hhi_whole_graph_pass2": 984,
+    "posts_with_ge3_inbound_pass1": 5,
+    "posts_with_ge3_inbound_pass2": 10,
+    "verdict": "Blog-to-blog distribution got marginally more concentrated (3 of 5 new links landed on the 3 already-most-linked posts). Whole-graph distribution improved materially because of the 27 commercial links. Commercial-side skew is unchanged."
+  },
+  "blog_to_commercial_distribution": {
+    "/services/ai-visibility-audit": 17,
+    "/services/citation-building": 11,
+    "/services/entity-optimization": 5,
+    "/services/aeo-management": 4,
+    "/services": 2,
+    "/services/aeo-consulting": 0,
+    "/industries/saas": 0,
+    "/industries/startups": 0,
+    "/industries/software": 0,
+    "/industries/tech-it": 0,
+    "/industries": 0,
+    "/pricing": 0
+  },
+  "orphans": {
+    "site_wide_zero_inbound": ["best-ai-visibility-tools", "sentiment-in-ai-citations", "partner-network-ai-visibility"],
+    "site_wide_count_pass1": 6,
+    "site_wide_count_pass2": 3,
+    "zero_blog_inbound": ["what-is-aeo", "reddit-ai-visibility-guide", "getting-cited-by-claude", "best-ai-visibility-tools", "sentiment-in-ai-citations", "partner-network-ai-visibility", "how-we-verify-reddit-threads"],
+    "zero_blog_inbound_count_pass1": 6,
+    "zero_blog_inbound_count_pass2": 7,
+    "new_posts_orphaned": {
+      "best-ai-visibility-tools": {"blog_in": 0, "commercial_in": 0, "verdict": "total orphan"},
+      "reddit-ai-visibility-guide": {"blog_in": 0, "commercial_in": 2, "verdict": "blog-graph orphan"}
+    }
+  },
+  "clusters": [
+    {
+      "id": 1, "name": "AEO Foundations", "hub": "what-is-aeo",
+      "hub_outbound_spokes_linked": "7 of 7", "hub_inbound_from_blog": 0, "hub_inbound_from_commercial": 5,
+      "spokes": ["aeo-vs-seo", "aeo-schema-markup-guide", "entity-authority-ai-citation"],
+      "status": "hub present, outbound complete, zero blog inbound, 1061 words vs 2500 pillar spec"
+    },
+    {
+      "id": 2, "name": "Engine-Specific Citation", "hub": null,
+      "spokes": ["how-to-get-cited-by-chatgpt", "getting-cited-by-claude", "optimize-for-perplexity", "google-ai-overviews-guide", "chatgpt-vs-claude-vs-gemini-citations"],
+      "status": "NO HUB. Largest cluster (5 posts, 5129 words). Now the only cluster with no parent page at all. Exceeds 2-4 spec.",
+      "fix": "publish ai-citation-playbook (gap #1)"
+    },
+    {
+      "id": 3, "name": "Reddit & Source Credibility", "hub": "reddit-ai-visibility-guide",
+      "hub_outbound_spokes_linked": "0 of 4",
+      "hub_actual_outbound": ["aeo-vs-seo", "entity-authority-ai-citation", "measure-ai-citation-roi"],
+      "hub_inbound_from_blog": 0,
+      "spokes": ["why-chatgpt-cites-reddit-threads", "reply-to-reddit-without-getting-removed", "how-we-verify-reddit-threads", "sentiment-in-ai-citations"],
+      "status": "HUB NOT WIRED. New 1565-word post links none of its four spokes and sends all three blog links into Clusters 1 and 2. Topically restates two spokes without citing them.",
+      "fix": "4 link insertions in the existing file"
+    },
+    {
+      "id": 4, "name": "Comparison / BOFU", "hub": "best-ai-visibility-tools",
+      "hub_outbound_spokes_linked": "2 of 2", "hub_inbound_from_blog": 0, "hub_inbound_from_commercial": 0,
+      "spokes": ["profound-vs-peec-vs-aeorank", "crowdreply-vs-aeorank"],
+      "status": "Hub outbound wiring correct. Total orphan inbound. Targets a different SERP than the money term.",
+      "serp_note": "'best AI visibility tools' (10/10 ranked listicles) vs 'how to evaluate an AI visibility tool' (9 buyer-guide results): 0 exact URL overlap, 1 shared domain (tryprofound.com). Separate topics under the 0-1 threshold. The shipped post serves the evaluation SERP, not the listicle SERP."
+    }
+  ],
+  "unclustered": ["partner-network-ai-visibility"],
+  "cannibalization": {
+    "verdict": "clean on SERP, one topical overlap to watch",
+    "pairs_scored": 28,
+    "pairs_same_post_7_to_10": 0,
+    "pairs_same_cluster_4_to_6": 0,
+    "pairs_interlink_2_to_3": 0,
+    "max_exact_url_overlap": 0,
+    "max_shared_domain_overlap": 1,
+    "pairs_zero_url_and_zero_domain": 21,
+    "duplicate_primary_keywords": 0,
+    "watch": "reddit-ai-visibility-guide restates why-chatgpt-cites-reddit-threads and reply-to-reddit-without-getting-removed in section form while linking to neither. 0 SERP overlap today; becomes real cannibalization if the cluster grows without hub-spoke links."
+  },
+  "gaps_reranked": [
+    {"rank": 1, "slug": "ai-citation-playbook", "previous_rank": 4, "role": "hub for Cluster 2", "target_words": "3000-4000", "feeds": ["/services/aeo-management", "/services/citation-building"], "serp_field": "9 results, agencies and small vendors (gotechark, frase, pixelmojo x2, mersel.ai, buildmvpfast, verlua, mesmerise, mediaofficers) - softer than the tools SERP"},
+    {"rank": 2, "slug": "aeo-for-b2b-saas", "previous_rank": 2, "role": "vertical MOFU, only article that can link into all four /industries/*", "target_words": "2000-2500", "feeds": ["/industries/saas", "/industries/startups", "/services/aeo-consulting"], "serp_field": "9 agency/vendor guides, 0 overlap with every other sampled term"},
+    {"rank": 3, "slug": "ai-visibility-tools-compared", "previous_rank": null, "role": "the ranked listicle the shipped hub deliberately is not", "target_words": "2500-3000", "note": "tryprofound.com ranks on both the listicle and the evaluation SERP with two separate articles - existence proof the pages coexist. Hardest field sampled (hubspot, zapier, semrush, surferseo). Do after #1 and #2."},
+    {"rank": 4, "slug": "how-to-audit-ai-visibility", "previous_rank": 5, "role": "TOFU-to-service bridge for the page absorbing 44% of commercial links", "target_words": "2000-2500", "caveat": "self-cannibalizing; write the manual method plus where it breaks at scale"},
+    {"rank": 5, "slug": "what-is-aeo", "previous_rank": null, "role": "expand existing cornerstone 1061 -> 2500+", "note": "not a new article; cheapest item that moves a headline metric"}
+  ],
+  "considered_below_line": [
+    {"slug": "geo-vs-aeo-vs-llm-seo", "reason": "SERP now includes ahrefs.com arguing the term is noise, plus neilpatel.com; purely definitional, far from money pages"},
+    {"slug": "llms-txt-guide", "reason": "documentation-led SERP, weak commercial proximity, standard not widely adopted"}
+  ],
+  "priority_actions": [
+    "Tier 0.1 - wire reddit-ai-visibility-guide to its 4 spokes (4 insertions, ~10 min); de-orphans how-we-verify-reddit-threads and sentiment-in-ai-citations",
+    "Tier 0.2 - de-orphan best-ai-visibility-tools: inbound from both vs-posts (reciprocal pairs 1 -> 3) plus measure-ai-citation-roi, plus RELATED on /services/ai-visibility-audit and /industries/software",
+    "Tier 0.3 - add return links from the 7 posts what-is-aeo links to (reciprocal pairs -> 8)",
+    "Tier 0.4 - link /pricing from the 3 BOFU posts and measure-ai-citation-roi",
+    "Tier 0.5 - give /services/aeo-consulting and all four /industries/* their first blog inbound links",
+    "Tier 0.6 - hub-to-hub links: what-is-aeo <-> each of the other three hubs, so the clusters stop being islands",
+    "Tier 1 - publish ai-citation-playbook, then aeo-for-b2b-saas",
+    "Tier 2 - fix best-ai-visibility-tools metaTitle (promises 'Best AI Visibility Tools', body deliberately is not a list)",
+    "Tier 2 - expand what-is-aeo to pillar length; correct 16 inflated read-time labels"
+  ],
+  "checklist": {
+    "no_duplicate_primary_keywords": "pass",
+    "every_spoke_ge3_inbound": "fail - 9 of 19 below 3, 3 at zero",
+    "spoke_links_to_pillar": "fail - 0 of 20 mandatory pairs bidirectional",
+    "pillar_links_to_every_spoke": "partial - 7/7 and 2/2 pass, 0/4 for Cluster 3, Cluster 2 has no pillar",
+    "no_orphans": "fail - 3 site-wide, 7 blog-graph",
+    "template_matches_intent": "pass",
+    "word_count_in_spec": "fail - 0 at pillar spec, 3 of 19 at spoke spec",
+    "cluster_size_in_spec": "fail - Clusters 2 and 3 have 5 members",
+    "serp_overlap_supports_groupings": "inconclusive - max overlap 0 across 28 pairs; no paid SERP API, clustering rests on topical-entity and link-graph evidence"
+  }
+}
