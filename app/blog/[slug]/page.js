@@ -881,16 +881,21 @@ export default function BlogPost({ params }) {
             {post.sections.map((section, i) => (
               <div key={i} style={{ marginBottom: 32 }}>
                 {section.heading && (
-                  <h3
+                  // h2, not h3: the post title is the h1, so body sections
+                  // are its direct children. Leaving these at h3 skipped a
+                  // level and left "More from the blog" as the only h2 on
+                  // the page, outranking every section of the article.
+                  <h2
                     style={{
                       fontSize: 24,
                       lineHeight: 1.3,
                       marginBottom: 14,
                       color: "var(--text)",
+                      textAlign: "left",
                     }}
                   >
                     {section.heading}
-                  </h3>
+                  </h2>
                 )}
                 {section.content.split("\n\n").map((para, j) => (
                   <p
