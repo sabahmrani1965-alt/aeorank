@@ -31,7 +31,7 @@ const posts = {
   'getting-cited-by-claude': {
     tag: 'AEO · Claude',
     title: "Getting Cited by Claude: Why It's the Hardest Engine to Crack",
-    metaTitle: 'Getting Cited by Claude: Why Its the Hardest | AEOrank',
+    metaTitle: 'Getting Cited by Claude: Why It's the Hardest | AEOrank',
     metaDescription: "Claude declines to recommend products more than any other major engine. Here's what it actually trusts, and a realistic timeline for earning a citation.",
     description: "Claude declines to recommend a specific product more often than any other major engine. Here's what it actually trusts when it does cite, and a realistic timeline for earning one.",
     tags: ['aeo', 'claude', 'b2b-saas', 'ai-citations', 'entity-authority'],
@@ -699,7 +699,7 @@ const posts = {
     sections: [
       {
         heading: null,
-        content: `If you\'re evaluating Reddit focused AI visibility tools, CrowdReply is probably one of the names that comes up. Worth being straight about what it actually does versus what AEOrank does, since the two overlap a lot more than tools like [Profound or Peec AI](/blog/profound-vs-peec-vs-aeorank) do with either of us. Those two measure whether an AI cited you. CrowdReply and AEOrank both go further and get involved in the actual Reddit conversation.`
+        content: `If you\'re evaluating Reddit-focused AI visibility tools, CrowdReply is probably one of the names that comes up. Worth being straight about what it actually does versus what AEOrank does, since the two overlap a lot more than tools like [Profound or Peec AI](/blog/profound-vs-peec-vs-aeorank) do with either of us. Those two measure whether an AI cited you. CrowdReply and AEOrank both go further and get involved in the actual Reddit conversation.`
       },
       {
         heading: 'What CrowdReply actually offers',
@@ -707,7 +707,7 @@ const posts = {
       },
       {
         heading: 'How it actually posts, and why that\'s worth asking about',
-        content: `This part is sourced from third party reviews of CrowdReply, not from their own site, so treat it as reported rather than confirmed. Multiple reviews describe CrowdReply's "Engagement Engine" as using aged, high karma Reddit accounts specifically so replies look organic, plus a "controlled upvoting" feature to push comments up a thread. One 14 day hands on review reported a sub 5% comment removal rate under that approach, along with real per-comment costs that add up fast at mid tier usage.\n\nWe can't independently verify the account mechanics ourselves. But if it's accurate, it's worth knowing before you buy: aged accounts and upvote manipulation are both against Reddit's own terms of service, and a sub 5% removal rate still means roughly 1 in 20 replies gets caught and pulled.`
+        content: `This part is sourced from third-party reviews of CrowdReply, not from their own site, so treat it as reported rather than confirmed. Multiple reviews describe CrowdReply's "Engagement Engine" as using aged, high-karma Reddit accounts specifically so replies look organic, plus a "controlled upvoting" feature to push comments up a thread. One 14-day hands-on review reported a sub-5% comment removal rate under that approach, along with real per-comment costs that add up fast at mid-tier usage.\n\nWe can't independently verify the account mechanics ourselves. But if it's accurate, it's worth knowing before you buy: aged accounts and upvote manipulation are both against Reddit's own terms of service, and a sub 5% removal rate still means roughly 1 in 20 replies gets caught and pulled.`
       },
       {
         heading: 'What AEOrank does differently',

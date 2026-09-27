@@ -1,0 +1,194 @@
+{
+  "category": "Content Architecture",
+  "generated": "2026-09-27",
+  "method": {
+    "serp_source": "WebSearch live SERPs (no paid SERP API configured)",
+    "serp_api_available": false,
+    "head_terms_sampled": 11,
+    "pairs_scored": 55,
+    "confidence": "medium",
+    "limits": [
+      "WebSearch returns ~9 results with no positions; overlap scores are floor estimates",
+      "No volume/difficulty/CPC data; missing-article ranking is by commercial proximity, not volume",
+      "Link graph, orphan list, word counts and sitemap omission are exact (static analysis)"
+    ]
+  },
+  "score": 42,
+  "corpus": {
+    "posts_in_data_file": 17,
+    "posts_in_sitemap": 16,
+    "missing_from_sitemap": ["what-is-aeo"],
+    "total_prose_words": 14512,
+    "mean_words": 854,
+    "posts_meeting_spoke_spec_1200_1800": ["chatgpt-vs-claude-vs-gemini-citations", "aeo-schema-markup-guide"],
+    "posts_meeting_pillar_spec_2500_4000": [],
+    "blog_to_blog_links": 40,
+    "reciprocal_pairs": 1,
+    "blog_to_commercial_links": 32,
+    "commercial_to_blog_links": 0
+  },
+  "cannibalization": {
+    "verdict": "clean",
+    "pairs_same_post_7_to_10": 0,
+    "pairs_same_cluster_4_to_6": 0,
+    "pairs_interlink_2_to_3": 0,
+    "max_exact_url_overlap": 0,
+    "max_domain_overlap": 2,
+    "duplicate_primary_keywords": 0,
+    "note": "No two posts compete on the same SERP. Do not merge. Zero overlap across all pairs is itself evidence of a missing shared head term (hub) above the spokes."
+  },
+  "clusters": [
+    {
+      "id": 1,
+      "name": "AEO Foundations",
+      "hub": "what-is-aeo",
+      "hub_status": "exists_but_broken",
+      "hub_defects": ["absent from app/sitemap.js blogSlugs", "zero incoming internal links", "1104 words vs 2500 minimum"],
+      "spokes": ["aeo-vs-seo", "aeo-schema-markup-guide", "entity-authority-ai-citation"],
+      "funnels_to": ["/services/entity-optimization", "/services/aeo-consulting"],
+      "template": "definitional pillar + comparison/how-to spokes",
+      "intent": "Informational -> Commercial"
+    },
+    {
+      "id": 2,
+      "name": "Engine-Specific Citation",
+      "hub": null,
+      "hub_status": "missing",
+      "de_facto_hub": "chatgpt-vs-claude-vs-gemini-citations",
+      "spokes": ["how-to-get-cited-by-chatgpt", "getting-cited-by-claude", "optimize-for-perplexity", "google-ai-overviews-guide", "chatgpt-vs-claude-vs-gemini-citations"],
+      "oversized": true,
+      "note": "5 members exceeds the 2-4 per-cluster spec; split Google surface into a sub-cluster",
+      "funnels_to": ["/services/citation-building", "/services/aeo-management"],
+      "intent": "Informational -> Commercial"
+    },
+    {
+      "id": 3,
+      "name": "Reddit & Source Credibility",
+      "hub": null,
+      "hub_status": "missing",
+      "de_facto_hub": "why-chatgpt-cites-reddit-threads",
+      "spokes": ["why-chatgpt-cites-reddit-threads", "reply-to-reddit-without-getting-removed", "how-we-verify-reddit-threads", "sentiment-in-ai-citations"],
+      "mean_words": 682,
+      "note": "Most differentiated cluster (proprietary verification method); thinnest average post",
+      "funnels_to": ["/services/citation-building", "/services/ai-visibility-audit"],
+      "intent": "Informational -> Commercial"
+    },
+    {
+      "id": 4,
+      "name": "Comparison / BOFU",
+      "hub": null,
+      "hub_status": "missing",
+      "spokes": ["profound-vs-peec-vs-aeorank", "crowdreply-vs-aeorank"],
+      "note": "Both members 539-580 words against 1500-3000 word competitor listicles",
+      "funnels_to": ["/services/aeo-management", "/services/ai-visibility-audit"],
+      "intent": "Commercial / Transactional"
+    }
+  ],
+  "unclustered": [
+    {
+      "slug": "partner-network-ai-visibility",
+      "words": 494,
+      "reason": "affiliate/partner distribution tactic with no sibling content; fold into Cluster 3 or seed a distribution cluster"
+    }
+  ],
+  "orphans": [
+    { "slug": "what-is-aeo", "in": 0, "out": 7, "severity": "critical", "note": "intended cornerstone" },
+    { "slug": "how-we-verify-reddit-threads", "in": 0, "out": 0, "severity": "critical", "note": "367 words, fully isolated, best trust asset on site" },
+    { "slug": "getting-cited-by-claude", "in": 0, "out": 2, "severity": "high" },
+    { "slug": "sentiment-in-ai-citations", "in": 0, "out": 2, "severity": "high" },
+    { "slug": "crowdreply-vs-aeorank", "in": 0, "out": 1, "severity": "high", "note": "BOFU page with no internal support" },
+    { "slug": "partner-network-ai-visibility", "in": 0, "out": 1, "severity": "medium" }
+  ],
+  "link_equity_misallocation": {
+    "highest_inbound_post": { "slug": "aeo-vs-seo", "inbound": 8, "role": "spoke", "problem": "8 of 40 internal links pool in a definitional spoke with only 2 outbound links" },
+    "commercial_link_distribution": {
+      "/services/ai-visibility-audit": 15,
+      "/services/citation-building": 8,
+      "/services/entity-optimization": 5,
+      "/services/aeo-management": 3,
+      "/services": 1,
+      "/services/aeo-consulting": 0,
+      "/industries/saas": 0,
+      "/industries/startups": 0,
+      "/industries/tech-it": 0,
+      "/industries/software": 0
+    },
+    "zero_support_commercial_pages": ["/services/aeo-consulting", "/industries/saas", "/industries/startups", "/industries/tech-it", "/industries/software"]
+  },
+  "missing_articles_ranked_by_commercial_proximity": [
+    {
+      "rank": 1,
+      "slug": "best-ai-visibility-tools",
+      "title": "Best AI Visibility Tools / AEO Platforms, Compared",
+      "role": "hub for Cluster 4",
+      "commercial_proximity": "highest",
+      "intent": "Commercial",
+      "feeds": ["/services/aeo-management", "/services/ai-visibility-audit", "/industries/software"],
+      "target_words": "2500-3000",
+      "template": "comparison table",
+      "evidence": "9 of 9 SERP results are competitor/vendor ranked listicles; AEOrank absent from its own category buying shortlist"
+    },
+    {
+      "rank": 2,
+      "slug": "aeo-for-b2b-saas",
+      "title": "Answer Engine Optimization for B2B SaaS",
+      "role": "only article that can legitimately link into /industries/*",
+      "commercial_proximity": "very high",
+      "intent": "Commercial",
+      "feeds": ["/industries/saas", "/industries/startups", "/services/aeo-consulting"],
+      "target_words": "2000-2500",
+      "template": "vertical guide",
+      "evidence": "All 17 posts tag b2b-saas but none is audience-scoped; SERP includes 'best AEO agencies for B2B SaaS' (hiring intent)"
+    },
+    {
+      "rank": 3,
+      "slug": "reddit-ai-visibility-guide",
+      "title": "Reddit and AI Visibility: The Complete Guide",
+      "role": "hub for Cluster 3",
+      "commercial_proximity": "high",
+      "intent": "Informational -> Commercial",
+      "feeds": ["/services/citation-building", "/services/ai-visibility-audit"],
+      "target_words": "2500-3000",
+      "template": "pillar guide",
+      "evidence": "Rescues 4 thin posts averaging 682 words; Reddit is #2 most-cited ChatGPT domain; proprietary verification angle"
+    },
+    {
+      "rank": 4,
+      "slug": "ai-citation-playbook",
+      "title": "How to Get Cited by AI: The Cross-Engine Playbook",
+      "role": "hub for Cluster 2 (largest cluster, 5 orphan-ish posts)",
+      "commercial_proximity": "high",
+      "intent": "Informational -> Commercial",
+      "feeds": ["/services/aeo-management", "/services/citation-building"],
+      "target_words": "3000-4000",
+      "template": "pillar guide",
+      "evidence": "Cross-engine framing maps to retainer positioning; biggest structural hole in the blog"
+    },
+    {
+      "rank": 5,
+      "slug": "how-to-audit-ai-visibility",
+      "title": "How to Run an AI Visibility Audit (Step by Step)",
+      "role": "informational support for the site's main conversion target",
+      "commercial_proximity": "high, with self-cannibalization risk",
+      "intent": "Informational",
+      "feeds": ["/services/ai-visibility-audit"],
+      "target_words": "2000-2500",
+      "template": "step-by-step how-to",
+      "evidence": "Target page receives 15 of 32 internal commercial links but has zero informational support; SERP is free checklists promising 'no paid tools'",
+      "caveat": "Must teach the manual method credibly, then be explicit about where it breaks at scale"
+    }
+  ],
+  "considered_below_top_5": [
+    { "slug": "geo-vs-aeo-vs-llm-seo", "reason": "purely definitional, far from any money page, partly covered by aeo-vs-seo" },
+    { "slug": "llms-txt-guide", "reason": "standard not widely adopted; documentation-led SERP; weak commercial proximity" }
+  ],
+  "priority_actions": [
+    { "priority": 1, "effort": "trivial", "action": "Add 'what-is-aeo' to blogSlugs in app/sitemap.js", "file": "app/sitemap.js" },
+    { "priority": 2, "effort": "low", "action": "Add return links from the 7 posts what-is-aeo links to, making Cluster 1 pillar/spoke bidirectional", "file": "app/blog/[slug]/page.js" },
+    { "priority": 3, "effort": "medium", "action": "Add 3-4 blog links to each /services/[slug] and /industries/[slug] page", "files": ["app/services/[slug]/page.js", "app/industries/[slug]/page.js"] },
+    { "priority": 4, "effort": "low", "action": "De-orphan the 6 zero-inbound posts; link how-we-verify-reddit-threads from all three Reddit siblings" },
+    { "priority": 5, "effort": "high", "action": "Publish missing articles 1 and 2" },
+    { "priority": 6, "effort": "medium", "action": "Expand what-is-aeo to 2500+ words; correct 15 inflated read-time labels" },
+    { "priority": 7, "effort": "high", "action": "Publish missing articles 3, 4, 5 as cluster hubs wired per the mandatory link matrix" }
+  ]
+}
