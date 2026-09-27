@@ -1,7 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "regions": ["iad1"],
+  "regions": [
+    "iad1"
+  ],
   "functions": {
     "app/report/[brand]/page.js": {
       "maxDuration": 60
@@ -29,6 +31,9 @@
     },
     "app/api/admin/notify-activated/route.js": {
       "maxDuration": 60
+    },
+    "app/api/cron/refresh-opportunities/route.js": {
+      "maxDuration": 60
     }
   },
   "crons": [
@@ -47,6 +52,10 @@
     {
       "path": "/api/cron/refresh-mentions",
       "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/cron/refresh-opportunities",
+      "schedule": "0 11 * * *"
     }
   ]
 }
