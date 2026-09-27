@@ -70,6 +70,21 @@ export default function About() {
             </ul>
           </div>
 
+          {/* /about named no human and the site published no email
+              anywhere, so the byline on 19 posts resolved to nothing. */}
+          <div className="card" style={{ marginTop: 20 }}>
+            <h3 style={{ marginBottom: 12 }}>Who runs this</h3>
+            <p style={{ color: "var(--text-dim)", lineHeight: 1.8, margin: 0 }}>
+              AEOrank is run by <strong>Ilyas Lemzouri</strong>, who writes
+              everything published here. If something on this site is wrong,
+              or you want to argue with it, the address is{" "}
+              <a href="mailto:ilyas@aeorank.tech" style={{ color: "var(--accent)" }}>
+                ilyas@aeorank.tech
+              </a>{" "}
+              and it reaches a person rather than a queue.
+            </p>
+          </div>
+
           <div style={{ textAlign: "center", marginTop: 32 }}>
             <Link href="/contact" className="btn btn-primary btn-large">
               Talk to us →

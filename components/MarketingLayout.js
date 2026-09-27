@@ -30,6 +30,27 @@ const organizationJsonLd = {
   logo: `${SITE_URL}/logo.png`,
   description: SITE_DESCRIPTION,
   sameAs: ["https://www.linkedin.com/company/aeoranktech"],
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer support",
+    email: "ilyas@aeorank.tech",
+    url: `${SITE_URL}/contact`,
+  },
+  founder: { "@id": `${SITE_URL}/#ilyas-lemzouri` },
+};
+
+// The byline on all 19 posts was a bare string appearing nowhere else on
+// the site, so it resolved to nothing. Now a real Person node the posts
+// and the Organization both point at. No sameAs yet: a personal profile
+// URL has not been confirmed, and the rule here is confirmed or omitted.
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": `${SITE_URL}/#ilyas-lemzouri`,
+  name: "Ilyas Lemzouri",
+  email: "ilyas@aeorank.tech",
+  url: `${SITE_URL}/about`,
+  worksFor: { "@id": `${SITE_URL}/#organization` },
 };
 
 // WebSite, bound to the Organization above. Deliberately no SearchAction:
@@ -55,6 +76,10 @@ export default function MarketingLayout({ children }) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
       />
       <Header />
       {children}

@@ -80,6 +80,24 @@ export default function ContactPage({ searchParams }) {
           <div className="card" style={{ padding: 30 }}>
             <ContactForm defaultPlan={planKey} planLabel={plan.label} />
           </div>
+
+          {/* The contact page offered a form and a Calendly link and no
+              address, which is a trust gap for a buyer who wants to email
+              a person before booking anything. */}
+          <p
+            style={{
+              textAlign: "center",
+              color: "var(--text-dim)",
+              marginTop: 20,
+              lineHeight: 1.7,
+            }}
+          >
+            Or email{" "}
+            <a href="mailto:ilyas@aeorank.tech" style={{ color: "var(--accent)" }}>
+              ilyas@aeorank.tech
+            </a>{" "}
+            directly. It reaches Ilyas, not a shared inbox.
+          </p>
         </div>
       </section>
     </MarketingLayout>

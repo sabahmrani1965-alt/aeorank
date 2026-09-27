@@ -891,7 +891,7 @@ export default function BlogPost({ params }) {
     // Without it no post is eligible, however good the rest is. Points at
     // the generated card in app/opengraph-image.js — a real 1200x630 PNG.
     image: ['https://www.aeorank.tech/opengraph-image'],
-    author: { '@type': 'Person', name: post.author, worksFor: { '@type': 'Organization', name: 'AEOrank', url: 'https://www.aeorank.tech' } },
+    author: { '@id': 'https://www.aeorank.tech/#ilyas-lemzouri', '@type': 'Person', name: post.author, email: 'ilyas@aeorank.tech', url: 'https://www.aeorank.tech/about' },
     publisher: {
       // Carries @id so this is the same entity as the sitewide
       // Organization, but keeps name/url/logo inline: Article rich
