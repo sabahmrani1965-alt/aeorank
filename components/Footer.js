@@ -29,6 +29,16 @@ export default function Footer() {
           <div className="footer-col">
             <h4>Company</h4>
             <Link href="/about">About</Link>
+            {/* The only confirmed sameAs in our Organization schema was not
+                linked from any page. A profile nothing points at is a weak
+                entity signal. */}
+            <a
+              href="https://www.linkedin.com/company/aeoranktech"
+              target="_blank"
+              rel="noopener"
+            >
+              LinkedIn
+            </a>
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>
           </div>

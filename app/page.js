@@ -32,19 +32,6 @@ export const metadata = {
   },
 };
 
-// Organization schema for entity recognition. sameAs only lists profiles
-// confirmed live (checked, not assumed) — add more here as they go live,
-// never before. No foundingDate yet: not a verified fact we have.
-const organizationJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": `${SITE_URL}/#organization`,
-  name: "AEOrank",
-  url: SITE_URL,
-  logo: `${SITE_URL}/icon.svg`,
-  description: SITE_DESCRIPTION,
-  sameAs: ["https://www.linkedin.com/company/aeoranktech"],
-};
 
 // FAQPage schema, built directly from the FAQ section's own visible
 // question/answer text below (see the "faq" section) rather than a
@@ -101,10 +88,6 @@ const faqJsonLd = {
 export default function Home() {
   return (
     <MarketingLayout>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
-      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
