@@ -2,6 +2,7 @@ import "./globals.css";
 import Script from "next/script";
 import { Inter, Caveat } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const GA_MEASUREMENT_ID = "G-D8ZMJKS5NF";
 
@@ -55,6 +56,8 @@ export default function RootLayout({ children }) {
       <body>
         {children}
         <Analytics />
+        {/* Real-visitor Core Web Vitals; the site has too little traffic for CrUX. */}
+        <SpeedInsights />
         {/* lazyOnload, not afterInteractive: gtag.js is ~172KB, about a
             third of every page's transferred weight, and it was competing
             with the render on mobile where LCP sits above 5s on the blog

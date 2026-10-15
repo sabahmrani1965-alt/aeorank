@@ -152,7 +152,7 @@ export const posts = [
     title: "AEO Schema Markup: The Tags That Actually Move AI Citations",
     excerpt:
       "Most schema advice is recycled SEO with 'AEO' stamped on top. The schema types that actually move AI citations for B2B SaaS, ranked by impact.",
-    date: "April 24, 2026",
+    date: "April 29, 2026",
     readTime: "6 min read",
     slug: "aeo-schema-markup-guide",
   },
@@ -161,7 +161,7 @@ export const posts = [
     title: "ChatGPT vs Claude vs Gemini: Why Your Brand Shows Up Differently in Each",
     excerpt:
       "Same query, different brands cited. ChatGPT, Claude, and Gemini build their answers from different signals. How each one actually behaves and what to do about it.",
-    date: "April 17, 2026",
+    date: "April 29, 2026",
     readTime: "7 min read",
     slug: "chatgpt-vs-claude-vs-gemini-citations",
   },
@@ -170,7 +170,7 @@ export const posts = [
     title: "Getting Your SaaS Cited by ChatGPT: What Actually Works in 2026",
     excerpt:
       "Six months of testing what moves AI citations and what doesn't. Entity work matters more than content volume. Third-party citations matter more than either.",
-    date: "April 10, 2026",
+    date: "April 16, 2026",
     readTime: "4 min read",
     slug: "how-to-get-cited-by-chatgpt",
   },
@@ -179,7 +179,7 @@ export const posts = [
     title: "Measuring AEO ROI Without Lying to Yourself",
     excerpt:
       "Most AI attribution is guesswork dressed up as data. The honest framework for figuring out whether AEO is actually working, what it's worth, and when to stop.",
-    date: "April 3, 2026",
+    date: "April 16, 2026",
     readTime: "4 min read",
     slug: "measure-ai-citation-roi",
   },
@@ -188,7 +188,7 @@ export const posts = [
     title: "The Real Reason Some SaaS Brands Get Cited by AI and Others Don't",
     excerpt:
       "Spoiler: it's almost never the content. It's entity authority. What that actually means and why most SaaS companies are bad at it.",
-    date: "March 27, 2026",
+    date: "April 16, 2026",
     readTime: "4 min read",
     slug: "entity-authority-ai-citation",
   },
@@ -197,7 +197,7 @@ export const posts = [
     title: "Perplexity Is Different. Here's What It Actually Wants.",
     excerpt:
       "Perplexity is where the highest-intent technical buyers actually research. It retrieves differently. It weights differently. Here's what matters.",
-    date: "March 20, 2026",
+    date: "April 16, 2026",
     readTime: "4 min read",
     slug: "optimize-for-perplexity",
   },
@@ -206,7 +206,7 @@ export const posts = [
     title: "AEO vs SEO: Stop Pretending They're the Same Job",
     excerpt:
       "Most agencies selling AEO are just rebranding SEO services. They're not the same discipline. How they actually differ and why both still matter.",
-    date: "March 13, 2026",
+    date: "April 16, 2026",
     readTime: "4 min read",
     slug: "aeo-vs-seo",
   },
@@ -216,7 +216,7 @@ export const posts = [
       "Google AI Overviews: What We've Learned After a Year of Optimization",
     excerpt:
       "AI Overviews went from annoying feature to dominant placement. What gets featured, what doesn't, and what's changed since launch.",
-    date: "March 6, 2026",
+    date: "April 16, 2026",
     readTime: "4 min read",
     slug: "google-ai-overviews-guide",
   },

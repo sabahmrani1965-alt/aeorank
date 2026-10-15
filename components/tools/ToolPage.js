@@ -124,11 +124,10 @@ export default function ToolPage({ slug, title, intro, children, guide = [], faq
           </div>
           <div className="card" style={{ marginTop: 28, textAlign: "center" }}>
             <p style={{ color: "var(--text-dim)", marginBottom: 14 }}>
-              Want to know which Reddit threads ChatGPT, Claude and Gemini actually cite in your
-              category? That is what AEOrank tracks.
+              Does ChatGPT name your brand when buyers ask about your category? Check it free.
             </p>
-            <Link href="/pricing" className="btn btn-primary">
-              See AEOrank plans →
+            <Link href="/free-ai-visibility-checker" className="btn btn-primary">
+              Free AI visibility check →
             </Link>
           </div>
         </div>

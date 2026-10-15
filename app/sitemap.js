@@ -46,6 +46,7 @@ export default function sitemap() {
     { url: `${BASE_URL}/contact`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/privacy`, changeFrequency: "yearly", priority: 0.3 },
     { url: `${BASE_URL}/terms`, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/free-ai-visibility-checker`, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE_URL}/tools`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/tools/reddit-markdown-formatter`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/tools/reddit-title-checker`, changeFrequency: "monthly", priority: 0.7 },

@@ -21,9 +21,34 @@ import GoogleAuthButton from "@/components/GoogleAuthButton";
 // changes to pick up useSearchParams below.
 export default function SignupForm(props) {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<SignupFormPlaceholder />}>
       <SignupFormInner {...props} />
     </Suspense>
+  );
+}
+
+// Server-rendered stand-in for the form while the client half loads, so the
+// page's HTML contains a real, labelled form (for crawlers, agents and slow
+// connections) instead of nothing. Same markup, inert until hydrated.
+function SignupFormPlaceholder() {
+  return (
+    <form aria-busy="true">
+      <label className="auth-field">
+        <span>Email</span>
+        <input type="email" name="email" placeholder="you@company.com" disabled />
+      </label>
+      <label className="auth-field">
+        <span>Password</span>
+        <input type="password" name="password" placeholder="At least 8 characters" disabled />
+      </label>
+      <label className="auth-field">
+        <span>Confirm password</span>
+        <input type="password" name="confirm" placeholder="••••••••" disabled />
+      </label>
+      <button type="submit" className="btn btn-primary" disabled style={{ width: "100%" }}>
+        Sign up →
+      </button>
+    </form>
   );
 }
 

@@ -25,7 +25,7 @@ export default function AuthSplitLayout({ children }) {
   if (poster) {
     return (
       <div className="auth-split kc-theme">
-        <div className="auth-split-form">
+        <main className="auth-split-form">
           <div className="auth-split-form-inner">
             <Link
               href="/apply-poster"
@@ -38,7 +38,7 @@ export default function AuthSplitLayout({ children }) {
             </Link>
             {children}
           </div>
-        </div>
+        </main>
         <div className="auth-split-visual">
           <h3>Get paid to post on Reddit</h3>
           <p>
@@ -66,7 +66,7 @@ export default function AuthSplitLayout({ children }) {
 
   return (
     <div className="auth-split light-theme">
-      <div className="auth-split-form">
+      <main className="auth-split-form">
         <div className="auth-split-form-inner">
           <Link href="/" className="logo" aria-label="AEOrank home" style={{ display: "inline-flex", marginBottom: 32 }}>
             <Image src="/logo.svg" alt="AEOrank" width={150} height={34} priority className="logo-on-dark" />
@@ -74,7 +74,7 @@ export default function AuthSplitLayout({ children }) {
           </Link>
           {children}
         </div>
-      </div>
+      </main>
       <div className="auth-split-visual">
         <h3>Rank in AI Answers via Reddit signals</h3>
         <p>

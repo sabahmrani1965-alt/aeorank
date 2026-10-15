@@ -50,7 +50,7 @@ async function loadChecks() {
 
   const { data: checks } = await admin
     .from("prompt_checks")
-    .select("created_at, mentioned, model")
+    .select("created_at, mentioned, model, brands")
     .in("prompt_id", promptIds)
     .order("created_at", { ascending: true });
   if (!checks) return null;
@@ -63,7 +63,23 @@ async function loadChecks() {
     if (c.mentioned) byModel[m].mentions += 1;
   }
 
+  // Who the engines named instead. The engines and their parent companies
+  // are left out: an answer about AI search naming ChatGPT says nothing
+  // about competitors.
+  const ENGINES = new Set(["chatgpt", "claude", "gemini", "perplexity", "openai", "anthropic", "google", "bing", "copilot", "microsoft", "reddit"]);
+  const named = {};
+  for (const c of checks) {
+    for (const b of new Set(c.brands || [])) {
+      if (ENGINES.has(String(b).toLowerCase())) continue;
+      named[b] = (named[b] || 0) + 1;
+    }
+  }
+  const namedInstead = Object.entries(named)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 8);
+
   return {
+    namedInstead,
     prompts: (prompts || []).map((p) => p.text),
     total: checks.length,
     mentions: checks.filter((c) => c.mentioned).length,
@@ -87,9 +103,33 @@ function Figure({ value, label }) {
 
 export default async function Proof() {
   const d = await loadChecks();
+  const rate = d ? ((d.mentions / Math.max(d.total, 1)) * 100).toFixed(1) : null;
+  const engines = d ? Object.keys(d.byModel).length : 0;
+  // The finding as one quotable sentence, built from the live numbers.
+  const finding = d
+    ? `Between ${d.first} and ${d.last}, AEOrank was named in ${d.mentions} of ${d.total} AI answers (${rate}%) across ${engines} AI engines, when asked ${d.prompts.length} fixed questions about improving visibility in AI answers.`
+    : null;
+  const datasetLd = d
+    ? {
+        "@context": "https://schema.org",
+        "@type": "Dataset",
+        name: "AEOrank's own AI visibility measurement",
+        description: finding,
+        url: `${SITE_URL}/proof`,
+        creator: { "@id": `${SITE_URL}/#organization` },
+        temporalCoverage: `${d.first}/${d.last}`,
+        dateModified: d.last,
+        isAccessibleForFree: true,
+        variableMeasured: ["Whether AEOrank is named in the answer", "Answer engine", "Brands named in the answer"],
+        measurementTechnique: "Fixed questions sent to AI engines on a schedule; brand names extracted from each answer.",
+      }
+    : null;
 
   return (
     <MarketingLayout>
+      {datasetLd ? (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetLd) }} />
+      ) : null}
       <section className="section">
         <div className="container-narrow" style={{ textAlign: "center" }}>
           <span className="section-tag">( our own numbers )</span>
@@ -108,14 +148,13 @@ export default async function Proof() {
         <>
           <section className="section" style={{ paddingTop: 0 }}>
             <div className="container-narrow">
+              <h2 style={{ fontSize: 24, marginBottom: 10, textAlign: "left" }}>The finding</h2>
+              <p style={{ fontSize: 19, lineHeight: 1.6, color: "var(--text)", marginBottom: 22 }}>{finding}</p>
               <div className="card" style={{ padding: 28 }}>
                 <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
                   <Figure value={d.total} label="checks recorded" />
                   <Figure value={d.mentions} label="times we were named" />
-                  <Figure
-                    value={`${((d.mentions / Math.max(d.total, 1)) * 100).toFixed(1)}%`}
-                    label="mention rate"
-                  />
+                  <Figure value={`${rate}%`} label="mention rate" />
                   <Figure value={d.days} label="days measured" />
                 </div>
                 <p
@@ -196,6 +235,38 @@ export default async function Proof() {
                 handful of checks cannot support a claim at all. We would rather
                 publish that caveat than a blended number that hides it.
               </p>
+            </div>
+          </section>
+
+          {d.namedInstead.length > 0 ? (
+            <section className="section" style={{ paddingTop: 0 }}>
+              <div className="container-narrow">
+                <h2 style={{ fontSize: 24, marginBottom: 14, textAlign: "left" }}>Who the engines named instead</h2>
+                <p style={{ color: "var(--text-muted)", lineHeight: 1.7 }}>
+                  Brands named most often in the same answers, counted once per answer. The engines
+                  themselves and their parent companies are left out.
+                </p>
+                <ol style={{ color: "var(--text-dim)", paddingLeft: 22, lineHeight: 1.9 }}>
+                  {d.namedInstead.map(([name, n]) => (
+                    <li key={name}>
+                      <strong style={{ color: "var(--text)" }}>{name}</strong>: named in {n} of {d.total} answers
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </section>
+          ) : null}
+
+          <section className="section" style={{ paddingTop: 0 }}>
+            <div className="container-narrow">
+              <h2 style={{ fontSize: 24, marginBottom: 14, textAlign: "left" }}>How we measure</h2>
+              <ul style={{ color: "var(--text-dim)", paddingLeft: 22, lineHeight: 1.9 }}>
+                <li>The same fixed questions are sent to each AI engine we can reach, on a schedule, roughly once a day per question.</li>
+                <li>Each full answer is stored. A language model extracts every brand named in it, in order.</li>
+                <li>A check counts as a mention only if AEOrank is among those brands or named literally, and never when the answer says it does not know the brand.</li>
+                <li>Engines reached: {Object.keys(d.byModel).join(", ")}. Coverage is uneven, as the table above shows.</li>
+                <li>The numbers on this page are read live from the same database the product writes to, refreshed hourly.</li>
+              </ul>
             </div>
           </section>
 

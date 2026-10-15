@@ -34,6 +34,9 @@
     },
     "app/api/cron/refresh-opportunities/route.js": {
       "maxDuration": 60
+    },
+    "app/api/free-check/route.js": {
+      "maxDuration": 60
     }
   },
   "crons": [

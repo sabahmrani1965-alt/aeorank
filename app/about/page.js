@@ -35,7 +35,7 @@ export default function About() {
           </p>
 
           <div className="card" style={{ marginBottom: 24 }}>
-            <h3 style={{ marginBottom: 12 }}>What we do</h3>
+            <h2 className="card-h" style={{ marginBottom: 12 }}>What we do</h2>
             <p style={{ color: "var(--text-dim)" }}>
               We map the Reddit communities where your audience already
               discusses the problems your product solves. Then we help you
@@ -51,7 +51,7 @@ export default function About() {
           </div>
 
           <div className="card" style={{ marginBottom: 24 }}>
-            <h3 style={{ marginBottom: 12 }}>How it works</h3>
+            <h2 className="card-h" style={{ marginBottom: 12 }}>How it works</h2>
             <ol style={{ color: "var(--text-dim)", paddingLeft: 22, lineHeight: 1.8 }}>
               <li><strong>Sign up</strong>: create your account and tell us your website, we get an instant scan of relevant subreddits, posts, and keyword angles.</li>
               <li><strong>Onboarding call</strong>: we align on tone, target communities, and goals.</li>
@@ -61,7 +61,7 @@ export default function About() {
           </div>
 
           <div className="card">
-            <h3 style={{ marginBottom: 12 }}>What we won't do</h3>
+            <h2 className="card-h" style={{ marginBottom: 12 }}>What we won't do</h2>
             <ul style={{ color: "var(--text-dim)", paddingLeft: 22, lineHeight: 1.8 }}>
               <li>We don't post in subreddits that disallow commercial content.</li>
               <li>We don't promise specific LLM citations. Nobody can.</li>
@@ -72,7 +72,7 @@ export default function About() {
           {/* /about named no human and the site published no email
               anywhere, so the byline on 19 posts resolved to nothing. */}
           <div className="card" style={{ marginTop: 20 }}>
-            <h3 style={{ marginBottom: 12 }}>Who runs this</h3>
+            <h2 className="card-h" style={{ marginBottom: 12 }}>Who runs this</h2>
             <p style={{ color: "var(--text-dim)", lineHeight: 1.8, margin: 0 }}>
               AEOrank is run by <strong>Ilyas Lemzouri</strong>, who writes
               everything published here. If something on this site is wrong,

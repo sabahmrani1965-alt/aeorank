@@ -25,6 +25,7 @@ export default function Footer() {
             <Link href="/industries">Industries</Link>
             <Link href="/blog">Blog</Link>
             <Link href="/#faq">FAQ</Link>
+            <Link href="/free-ai-visibility-checker">Free AI visibility checker</Link>
             <Link href="/tools">Free Reddit tools</Link>
             <Link href="/affiliates">Affiliates</Link>
             <Link href="/contact">Contact</Link>

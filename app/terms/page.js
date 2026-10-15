@@ -29,7 +29,7 @@ export default function Terms() {
           </p>
 
           <div className="card" style={{ marginBottom: 20 }}>
-            <h3 style={{ marginBottom: 10 }}>Service description</h3>
+            <h2 className="card-h" style={{ marginBottom: 10 }}>Service description</h2>
             <p style={{ color: "var(--text-dim)" }}>
               AEOrank provides Reddit-engagement and AI-visibility services
               under written agreement. The "Analyze a website" report tool
@@ -39,7 +39,7 @@ export default function Terms() {
           </div>
 
           <div className="card" style={{ marginBottom: 20 }}>
-            <h3 style={{ marginBottom: 10 }}>No guarantees on AI outputs</h3>
+            <h2 className="card-h" style={{ marginBottom: 10 }}>No guarantees on AI outputs</h2>
             <p style={{ color: "var(--text-dim)" }}>
               We do not control how third-party AI systems (ChatGPT, Claude,
               Gemini, etc.) generate their responses. We do not guarantee that
@@ -49,7 +49,7 @@ export default function Terms() {
           </div>
 
           <div className="card" style={{ marginBottom: 20 }}>
-            <h3 style={{ marginBottom: 10 }}>Acceptable use</h3>
+            <h2 className="card-h" style={{ marginBottom: 10 }}>Acceptable use</h2>
             <p style={{ color: "var(--text-dim)" }}>
               You agree not to use AEOrank to defame third parties, spam
               communities that prohibit commercial content, manipulate votes,
@@ -59,7 +59,7 @@ export default function Terms() {
           </div>
 
           <div className="card">
-            <h3 style={{ marginBottom: 10 }}>Liability</h3>
+            <h2 className="card-h" style={{ marginBottom: 10 }}>Liability</h2>
             <p style={{ color: "var(--text-dim)" }}>
               Reports are provided "as is" without warranty. Liability
               under any paid engagement is governed by your service agreement

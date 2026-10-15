@@ -29,7 +29,7 @@ export default function Privacy() {
           </p>
 
           <div className="card" style={{ marginBottom: 20 }}>
-            <h3 style={{ marginBottom: 10 }}>What we collect</h3>
+            <h2 className="card-h" style={{ marginBottom: 10 }}>What we collect</h2>
             <p style={{ color: "var(--text-dim)" }}>
               When you submit the contact form, we collect the name, email,
               company, and message you provide. When you run a website
@@ -39,7 +39,7 @@ export default function Privacy() {
           </div>
 
           <div className="card" style={{ marginBottom: 20 }}>
-            <h3 style={{ marginBottom: 10 }}>How we use it</h3>
+            <h2 className="card-h" style={{ marginBottom: 10 }}>How we use it</h2>
             <p style={{ color: "var(--text-dim)" }}>
               Contact-form submissions are used solely to reply to you about
               your inquiry. URLs you submit are used to fetch public
@@ -49,7 +49,7 @@ export default function Privacy() {
           </div>
 
           <div className="card" style={{ marginBottom: 20 }}>
-            <h3 style={{ marginBottom: 10 }}>Third-party services</h3>
+            <h2 className="card-h" style={{ marginBottom: 10 }}>Third-party services</h2>
             <p style={{ color: "var(--text-dim)" }}>
               We query Reddit's public read-only JSON endpoints to surface
               community and post data. We do not share your contact details
@@ -58,7 +58,7 @@ export default function Privacy() {
           </div>
 
           <div className="card">
-            <h3 style={{ marginBottom: 10 }}>Your rights</h3>
+            <h2 className="card-h" style={{ marginBottom: 10 }}>Your rights</h2>
             <p style={{ color: "var(--text-dim)" }}>
               You can request a copy or deletion of any personal data we
               hold about you by emailing us via the{" "}
