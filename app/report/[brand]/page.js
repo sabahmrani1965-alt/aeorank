@@ -15,7 +15,7 @@ import {
   pickCategoryQuery,
 } from "@/lib/keywords";
 import { searchSubreddits, searchPosts, timeAgo } from "@/lib/reddit";
-import { generateKeywordsFromLlm, suggestRedditPost, isLlmConfigured, filterCommentablePosts } from "@/lib/llm";
+import { generateKeywordsFromLlm, suggestRedditPost, isLlmConfigured, filterCommentablePosts, detectCategory } from "@/lib/llm";
 import { analyzeBrandVisibility, isAiVisibilityConfigured } from "@/lib/aivisibility";
 
 export const dynamic = "force-dynamic";
@@ -66,7 +66,8 @@ export default async function ReportPage({ params, searchParams }) {
   // itself with "A2A" — account-to-account — got matched to agent-to-agent
   // AI subreddits). Used when we hand-craft a report link for outreach.
   const categoryOverride = String(searchParams?.category || "").trim().slice(0, 60);
-  const categoryQuery = categoryOverride || pickCategoryQuery(description, brand);
+  const categoryQuery =
+    categoryOverride || (await detectCategory(brand, description, params.brand)) || pickCategoryQuery(description, brand);
   const postQuery = `${brand} ${categoryQuery}`;
 
   const llmEnabled = isLlmConfigured();

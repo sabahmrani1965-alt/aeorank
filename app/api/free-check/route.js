@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { fetchSiteMeta } from "@/lib/siteFetch";
 import { extractBrandFromTitle, prettyBrand, urlToSlug } from "@/lib/site";
 import { pickCategoryQuery } from "@/lib/keywords";
+import { detectCategory } from "@/lib/llm";
 import { analyzeBrandVisibility, isAiVisibilityConfigured } from "@/lib/aivisibility";
 import { addToAudience } from "@/lib/email";
 
@@ -85,7 +86,7 @@ export async function POST(req) {
   } catch {}
   const brand = extractBrandFromTitle(meta.title) || prettyBrand(slug);
   const description = meta.description || meta.title || `${brand} platform`;
-  const categoryQuery = pickCategoryQuery(description, brand);
+  const categoryQuery = (await detectCategory(brand, description, domain)) || pickCategoryQuery(description, brand);
 
   const result = await analyzeBrandVisibility(brand, categoryQuery, { deadline });
   // A score from one answer reads as 0% or 100%, which says almost nothing.

@@ -4,6 +4,7 @@ import { hasActiveSubscription } from "@/lib/subscription";
 import { getActiveCompanyProfile } from "@/lib/brands";
 import { analyzeBrandVisibility, isAiVisibilityConfigured } from "@/lib/aivisibility";
 import { pickCategoryQuery } from "@/lib/keywords";
+import { detectCategory } from "@/lib/llm";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -38,7 +39,7 @@ export async function POST() {
       { status: 400 }
     );
   }
-  const categoryQuery = pickCategoryQuery(description, brand);
+  const categoryQuery = (await detectCategory(brand, description, profile?.website)) || pickCategoryQuery(description, brand);
 
   const aiVisibility = await analyzeBrandVisibility(brand, categoryQuery, { deadline });
   if (!aiVisibility) {
