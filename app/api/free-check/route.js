@@ -17,6 +17,7 @@ const PER_EMAIL_PER_DAY = 1;
 const PER_IP_PER_DAY = 2;
 const GLOBAL_PER_DAY = Number(process.env.FREE_CHECK_DAILY_CAP || 40);
 const BUCKET = "free-checks";
+const MIN_ANSWERS = 2;
 
 const busy = (msg, status = 429) => NextResponse.json({ ok: false, error: msg }, { status });
 
@@ -85,8 +86,12 @@ export async function POST(req) {
   const categoryQuery = pickCategoryQuery(description, brand);
 
   const result = await analyzeBrandVisibility(brand, categoryQuery);
-  if (!result || result.score === null) {
-    return busy("We couldn't reach the AI engines just now. Please try again in a few minutes.", 502);
+  // A score from one answer reads as 0% or 100%, which says almost nothing.
+  // Below the minimum, report the failure and give the visitor's daily
+  // check back rather than show it.
+  if (!result || result.score === null || result.total < MIN_ANSWERS) {
+    await bucket.remove([path]);
+    return busy("We couldn't reach enough AI engines just now. Please try again in a little while.", 502);
   }
 
   await Promise.all([

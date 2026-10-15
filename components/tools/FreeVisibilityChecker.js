@@ -67,7 +67,8 @@ export default function FreeVisibilityChecker() {
           </div>
           <p style={{ color: "var(--text-dim)" }}>
             We asked AI engines questions a buyer would ask about <strong>{r.query}</strong>. {r.brand} was named in{" "}
-            {r.hits} of {r.total} answers.
+            {r.hits} of {r.total} answers from {Object.keys(r.byEngine).length}{" "}
+            {Object.keys(r.byEngine).length === 1 ? "engine" : "engines"}.
           </p>
           <ul className="tool-checks">
             {Object.entries(r.byEngine).map(([engine, v]) => (
