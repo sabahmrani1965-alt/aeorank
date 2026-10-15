@@ -40,6 +40,9 @@
     },
     "app/api/cron/engine-health/route.js": {
       "maxDuration": 150
+    },
+    "app/api/cron/category-data/route.js": {
+      "maxDuration": 280
     }
   },
   "crons": [
@@ -66,6 +69,10 @@
     {
       "path": "/api/cron/engine-health",
       "schedule": "30 8 * * *"
+    },
+    {
+      "path": "/api/cron/category-data",
+      "schedule": "0 6 * * *"
     }
   ]
 }

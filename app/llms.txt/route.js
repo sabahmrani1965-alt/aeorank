@@ -17,6 +17,7 @@ Not to be confused with aeorank.ai or aeorank.dev, which are unrelated products.
 ## Product
 - [Pricing](${BASE}/pricing): plans, credits and per-comment costs
 - [Proof](${BASE}/proof): AEOrank's own live AI visibility score
+- [AI recommendations](${BASE}/ai-recommendations): daily data on which brands ChatGPT, Claude and Gemini name in software categories
 - [About](${BASE}/about): who runs AEOrank and how it works
 - [Free AI visibility checker](${BASE}/free-ai-visibility-checker): see whether AI engines name your brand, one free check per day
 - [Free Reddit tools](${BASE}/tools): markdown formatter, title checker, self-promotion checker

@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { posts } from "./blog/page";
 import { services } from "./services/[slug]/page";
 import { industries } from "./industries/[slug]/page";
+import { DATA_CATEGORIES } from "@/lib/categoryData";
 
 // Derived, not hand-maintained. The previous version copied three slug
 // arrays by hand and had already drifted: /blog/what-is-aeo was live and
@@ -52,6 +53,8 @@ export default function sitemap() {
     { url: `${BASE_URL}/tools/reddit-title-checker`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/tools/reddit-self-promotion-checker`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/affiliates`, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${BASE_URL}/ai-recommendations`, changeFrequency: "daily", priority: 0.8 },
+    ...DATA_CATEGORIES.map((c) => ({ url: `${BASE_URL}/ai-recommendations/${c.slug}`, changeFrequency: "daily", priority: 0.8 })),
   ].map((p) => ({ ...p, lastModified: buildDate }));
 
   const blogPages = posts.map((post) => ({

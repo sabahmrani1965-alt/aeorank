@@ -22,6 +22,7 @@ export default function Footer() {
             <Link href="/services">Services</Link>
             <Link href="/pricing">Pricing</Link>
             <Link href="/proof">Our own score</Link>
+            <Link href="/ai-recommendations">What AI recommends</Link>
             <Link href="/industries">Industries</Link>
             <Link href="/blog">Blog</Link>
             <Link href="/#faq">FAQ</Link>
