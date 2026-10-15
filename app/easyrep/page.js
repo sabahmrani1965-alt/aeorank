@@ -1,7 +1,8 @@
 // EasyRep AI's product site, served at easyrepai.app (middleware rewrites
 // that domain's root here). The app is live, so every call to action goes
 // to the App Store. Screens shown are real app screens, cut from the store
-// screenshots. Honest by design: no download counts or ratings we do not
+// screenshots; the lifestyle photos behind them are AI-generated scenes,
+// never presented as customers. Honest by design: no download counts or ratings we do not
 // have, and nothing the app does not do.
 
 const APP_STORE_URL = "https://apps.apple.com/us/app/easyrep-ai/id6809562228";
@@ -22,6 +23,8 @@ export const metadata = {
 const FEATURES = [
   {
     img: "/easyrep/v2/phone-scan.webp",
+    photo: "/easyrep/v2/photo-scan.webp",
+    phoneSide: "left",
     kicker: "MACHINE SCANNER",
     title: "Point at any machine. Know how to use it.",
     body: "Aim your camera at anything on the gym floor. EasyRep names it, shows the muscles it works and walks you through the setup, step by step.",
@@ -29,6 +32,8 @@ const FEATURES = [
   },
   {
     img: "/easyrep/v2/phone-form.webp",
+    photo: "/easyrep/v2/photo-form.webp",
+    phoneSide: "left",
     kicker: "FORM CHECK",
     title: "See your form, live.",
     body: "Record a set and EasyRep tracks your body as you move: your skeleton on screen, a depth check on squats and lunges, and a rep count. Afterwards you get what you did well and one thing to adjust.",
@@ -37,6 +42,8 @@ const FEATURES = [
   },
   {
     img: "/easyrep/v2/phone-session.webp",
+    photo: "/easyrep/v2/photo-session.webp",
+    phoneSide: "right",
     kicker: "YOUR WORKOUT",
     title: "Every set, one tap.",
     body: "Follow today's session and tick off each set as you go. A machine is taken? Swap it for an equivalent in one tap and keep moving.",
@@ -44,6 +51,8 @@ const FEATURES = [
   },
   {
     img: "/easyrep/v2/phone-nutrition.webp",
+    photo: "/easyrep/v2/photo-nutrition.webp",
+    phoneSide: "left",
     kicker: "NUTRITION",
     title: "Snap your plate. See your day.",
     body: "Photograph a meal or type it in. Calories, protein, carbs and fat add up against targets worked out from your body, and the app always says when a number is an estimate.",
@@ -52,6 +61,8 @@ const FEATURES = [
   },
   {
     img: "/easyrep/v2/phone-ask.webp",
+    photo: "/easyrep/v2/photo-ask.webp",
+    phoneSide: "left",
     kicker: "AI COACH",
     title: "Ask what you'd never ask out loud.",
     body: "Rest days, protein, soreness, the unwritten rules of the gym floor. Plain, judgement-free answers that know your plan.",
@@ -196,9 +207,14 @@ html, body { background:#F5F7FA; margin:0; }
 .er .sec-head p { font-size:18px; color:var(--muted); line-height:1.6; margin:0; }
 
 .er .feat { display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; margin-top:90px; }
-.er .feat .stage { background:linear-gradient(160deg,#EAF1FE,#F8FAFF); border-radius:36px; padding:48px 0 0;
-  display:flex; justify-content:center; overflow:hidden; height:560px; border:1px solid var(--line); }
-.er .feat .stage img { width:300px; height:auto; align-self:flex-start; filter:drop-shadow(0 30px 40px rgba(30,64,175,.22)); }
+.er .feat .stage { position:relative; border-radius:36px; overflow:hidden; height:560px; background:#DCE6F7; }
+.er .feat .stage .photo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.er .feat .stage:after { content:""; position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(15,23,42,0) 45%, rgba(15,23,42,.35)); }
+/* The real screen, overlapping the photo's lower corner. */
+.er .feat .stage .phone { position:absolute; z-index:1; right:28px; bottom:-90px; width:230px; height:auto;
+  filter:drop-shadow(0 24px 40px rgba(15,23,42,.35)); }
+.er .feat .stage .phone.left { right:auto; left:28px; }
 .er .feat h3 { font-size:clamp(28px,3.2vw,40px); font-weight:800; letter-spacing:-.035em; line-height:1.08; margin:0 0 16px; }
 .er .feat p { font-size:17.5px; color:var(--muted); line-height:1.65; margin:0 0 22px; }
 .er .chips { display:flex; flex-wrap:wrap; gap:8px; }
@@ -254,8 +270,9 @@ html, body { background:#F5F7FA; margin:0; }
   .er .facts, .er .steps { grid-template-columns:1fr; }
   .er .feat { grid-template-columns:1fr; gap:28px; margin-top:64px; }
   .er .feat.flip .stage { order:0; }
-  .er .feat .stage { height:440px; padding-top:36px; }
-  .er .feat .stage img { width:240px; }
+  .er .feat .stage { height:440px; }
+  .er .feat .stage .phone { width:180px; right:18px; bottom:-70px; }
+  .er .feat .stage .phone.left { right:auto; left:18px; }
   .er .sec-head, .er .mission, .er .final { margin-top:88px; }
   .er .mission, .er .final { grid-template-columns:1fr; }
   .er .mission .img { min-height:300px; }
@@ -322,7 +339,8 @@ export default function EasyRepLanding() {
         {FEATURES.map((f) => (
           <section key={f.title} className={`feat${f.flip ? " flip" : ""}`}>
             <div className="stage">
-              <img src={f.img} alt="" loading="lazy" />
+              <img className="photo" src={f.photo} alt="" loading="lazy" />
+              <img className={`phone ${f.phoneSide}`} src={f.img} alt="" loading="lazy" />
             </div>
             <div>
               <div className="eyebrow">{f.kicker}</div>
