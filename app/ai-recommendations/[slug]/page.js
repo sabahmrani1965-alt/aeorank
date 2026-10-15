@@ -68,7 +68,7 @@ export default async function CategoryData({ params }) {
   const [b1, b2, b3] = d?.brands || [];
   const finding =
     d && b1
-      ? `Between ${d.firstDay} and ${d.lastDay}, ${b1.name} was named in ${b1.share}% of ${d.totalAnswers} AI answers about ${cat.name}` +
+      ? `${d.firstDay === d.lastDay ? `On ${d.lastDay}` : `Between ${d.firstDay} and ${d.lastDay}`}, ${b1.name} was named in ${b1.share}% of ${d.totalAnswers} AI answers about ${cat.name}` +
         (b2 ? `, ahead of ${b2.name} (${b2.share}%)` : "") +
         (b3 ? ` and ${b3.name} (${b3.share}%)` : "") +
         `, across ${engineNames.join(", ")}.`
@@ -124,7 +124,7 @@ export default async function CategoryData({ params }) {
                 <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
                   <Figure value={d.totalAnswers} label="AI answers read" />
                   <Figure value={d.brands.length >= 15 ? "15+" : d.brands.length} label="brands named" />
-                  <Figure value={engineNames.length} label="AI engines" />
+                  <Figure value={engineNames.length} label={engineNames.length === 1 ? "AI engine" : "AI engines"} />
                   <Figure value={d.days} label={d.days === 1 ? "day measured" : "days measured"} />
                 </div>
                 <p style={{ color: "var(--text-muted)", marginTop: 18, marginBottom: 0, lineHeight: 1.7 }}>
