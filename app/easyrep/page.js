@@ -24,7 +24,7 @@ const FEATURES = [
   {
     img: "/easyrep/v2/phone-scan.webp",
     photo: "/easyrep/v2/photo-scan.webp",
-    phoneSide: "left",
+    phoneSide: "right",
     kicker: "MACHINE SCANNER",
     title: "Point at any machine. Know how to use it.",
     body: "Aim your camera at anything on the gym floor. EasyRep names it, shows the muscles it works and walks you through the setup, step by step.",
@@ -33,7 +33,7 @@ const FEATURES = [
   {
     img: "/easyrep/v2/phone-form.webp",
     photo: "/easyrep/v2/photo-form.webp",
-    phoneSide: "left",
+    phoneSide: "right",
     kicker: "FORM CHECK",
     title: "See your form, live.",
     body: "Record a set and EasyRep tracks your body as you move: your skeleton on screen, a depth check on squats and lunges, and a rep count. Afterwards you get what you did well and one thing to adjust.",
@@ -52,7 +52,7 @@ const FEATURES = [
   {
     img: "/easyrep/v2/phone-nutrition.webp",
     photo: "/easyrep/v2/photo-nutrition.webp",
-    phoneSide: "left",
+    phoneSide: "right",
     kicker: "NUTRITION",
     title: "Snap your plate. See your day.",
     body: "Photograph a meal or type it in. Calories, protein, carbs and fat add up against targets worked out from your body, and the app always says when a number is an estimate.",
