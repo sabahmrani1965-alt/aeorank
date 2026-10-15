@@ -30,6 +30,24 @@ export const posts = [
     slug: "reddit-ai-visibility-guide",
   },
   {
+    tag: "Tools & Comparison",
+    title: "The Best Reddit Marketing Tools in 2026, Compared",
+    excerpt:
+      "Five Reddit marketing tools compared on price, how they post, and what they track, written by one of them, with sources for every claim.",
+    date: "October 15, 2026",
+    readTime: "5 min read",
+    slug: "best-reddit-marketing-tools",
+  },
+  {
+    tag: "AEO · Comparison",
+    title: "Bazzly vs. AEOrank: Pricing, Features and Fit",
+    excerpt:
+      "Both place Reddit comments through established accounts from $199/mo. How the credits compare, what each tracks, and which fits your team.",
+    date: "October 15, 2026",
+    readTime: "3 min read",
+    slug: "bazzly-vs-aeorank",
+  },
+  {
     tag: "AEO · Comparison",
     title: "ReddGrow vs. AEOrank: Pricing, Features and Fit",
     excerpt:

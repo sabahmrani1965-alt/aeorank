@@ -25,6 +25,20 @@ export async function GET(req) {
       // /poster instead — mirrors app/login/page.js's role check, so
       // every auth path (password, magic link, OAuth) agrees on where a
       // poster ends up.
+      // Affiliate attribution for Google sign-ups (email sign-ups set it in
+      // SignupForm). Only on an account created in the last 10 minutes, so a
+      // returning customer is never credited to an affiliate link.
+      const via = req.cookies.get("aeorank_via")?.value;
+      const createdAt = data?.user?.created_at ? new Date(data.user.created_at).getTime() : 0;
+      if (via && data?.user && !data.user.user_metadata?.affiliate && Date.now() - createdAt < 10 * 60 * 1000 && cookieIntent !== "crewquest") {
+        const admin = createAdminClient();
+        if (admin) {
+          await admin.auth.admin.updateUserById(data.user.id, {
+            user_metadata: { ...(data.user.user_metadata || {}), affiliate: decodeURIComponent(via) },
+          });
+        }
+      }
+
       let next = explicitNext || "/dashboard";
       if (!explicitNext && data?.user) {
         const { data: profile } = await supabase

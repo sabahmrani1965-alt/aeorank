@@ -46,6 +46,11 @@ export default function sitemap() {
     { url: `${BASE_URL}/contact`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/privacy`, changeFrequency: "yearly", priority: 0.3 },
     { url: `${BASE_URL}/terms`, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/tools`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/tools/reddit-markdown-formatter`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/tools/reddit-title-checker`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/tools/reddit-self-promotion-checker`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/affiliates`, changeFrequency: "monthly", priority: 0.6 },
   ].map((p) => ({ ...p, lastModified: buildDate }));
 
   const blogPages = posts.map((post) => ({

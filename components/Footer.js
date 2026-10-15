@@ -25,11 +25,15 @@ export default function Footer() {
             <Link href="/industries">Industries</Link>
             <Link href="/blog">Blog</Link>
             <Link href="/#faq">FAQ</Link>
+            <Link href="/tools">Free Reddit tools</Link>
+            <Link href="/affiliates">Affiliates</Link>
             <Link href="/contact">Contact</Link>
           </div>
 
           <div className="footer-col">
             <h4>Compare</h4>
+            <Link href="/blog/best-reddit-marketing-tools">Best Reddit marketing tools</Link>
+            <Link href="/blog/bazzly-vs-aeorank">Bazzly vs AEOrank</Link>
             <Link href="/blog/crowdreply-vs-aeorank">CrowdReply vs AEOrank</Link>
             <Link href="/blog/reddgrow-vs-aeorank">ReddGrow vs AEOrank</Link>
             <Link href="/blog/reddireach-vs-aeorank">ReddiReach vs AEOrank</Link>

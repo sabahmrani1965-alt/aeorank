@@ -61,10 +61,16 @@ function SignupFormInner({ redirectTo = "/onboarding", intent = "aeorank" }) {
     setLoading(true);
     try {
       const supabase = createClient();
+      // Affiliate attribution: the ?via= code middleware stored in a cookie
+      // goes onto the new account's metadata. Customers only, not posters.
+      const via = intent === "aeorank" ? document.cookie.match(/(?:^|; )aeorank_via=([^;]+)/)?.[1] : null;
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
-        options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          ...(via ? { data: { affiliate: decodeURIComponent(via) } } : {}),
+        },
       });
       if (signUpError) throw signUpError;
       if (data?.session) {

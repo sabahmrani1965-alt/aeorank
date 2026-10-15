@@ -50,7 +50,7 @@ function matchesPrefix(pathname, prefix) {
 // /poster (CrewQuest side) are handled by their own explicit branches
 // below — each has a more specific destination on the other domain than
 // the generic marketing-homepage fallback, so they're not repeated here.
-const AEORANK_ONLY = ["/report", "/services", "/industries", "/blog", "/checkout", "/contact", "/about", "/pricing", "/proof", "/llms.txt", "/compare"];
+const AEORANK_ONLY = ["/report", "/services", "/industries", "/blog", "/checkout", "/contact", "/about", "/pricing", "/proof", "/llms.txt", "/compare", "/tools", "/affiliates"];
 // Shared but AEOrank-branded: still served on the poster domain, kept out of its index.
 const SHARED_NOINDEX = ["/privacy", "/terms", "/login", "/forgot-password", "/reset-password"];
 const CREWQUEST_ONLY = ["/crewquest"];
@@ -122,6 +122,12 @@ export async function middleware(request) {
       return response;
     }
   } else {
+    // Affiliate links (?via=CODE). First touch wins for 60 days; the code is
+    // copied onto the account at signup (SignupForm, auth/callback).
+    const via = request.nextUrl.searchParams.get("via");
+    if (via && /^[A-Za-z0-9_-]{2,32}$/.test(via) && !request.cookies.get("aeorank_via")) {
+      response.cookies.set("aeorank_via", via, { path: "/", maxAge: 60 * 60 * 24 * 60, sameSite: "lax" });
+    }
     if (matchesPrefix(pathname, "/apply-poster")) return redirectTo("/signup", true);
     if (matchesPrefix(pathname, "/poster")) return redirectTo("/login");
     if (CREWQUEST_ONLY.some((p) => matchesPrefix(pathname, p))) return redirectTo("/");
