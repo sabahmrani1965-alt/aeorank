@@ -85,9 +85,9 @@ export const industries = {
       'Monitoring specifically calibrated for SaaS buyer query patterns and purchase intent signals.',
     ],
     results: [
-      { num: '+312%', label: 'Average AI Citation Increase' },
-      { num: '4–6mo', label: 'To Meaningful Share-of-Voice' },
-      { num: '+180%', label: 'AI-Sourced Pipeline Growth' },
+      { num: '3', label: 'AI engines tracked: ChatGPT, Claude, Gemini' },
+      { num: 'Weekly', label: 'Brand and competitor mention checks' },
+      { num: 'Live', label: 'Our own score, published on /proof' },
     ],
     guide: [
       {
@@ -116,7 +116,7 @@ export const industries = {
   'startups': {
     title: 'AEO for Startups',
     tag: 'Startup Companies',
-    description: 'AEO for early and growth-stage startups. Build category authority faster than competitors and establish your brand as the AI-recommended choice before you\'re a household name.',
+    description: 'AEO for early and growth-stage startups: build category authority and become the brand AI assistants recommend before you\'re a household name.',
     hero: 'AEO for <em>Fast-Growing Startups</em>',
     intro: 'Startups can\'t outspend incumbents on paid channels. But with the right AEO strategy, you can outrank them in AI answers, becoming the default recommendation even before you have brand recognition.',
     challenges: [
@@ -133,9 +133,9 @@ export const industries = {
       'Aggressive competitive monitoring to spot and exploit gaps in incumbent coverage.',
     ],
     results: [
-      { num: '+417%', label: 'Citation Growth for Emerging Categories' },
-      { num: '3–4mo', label: 'To First Meaningful Wins' },
-      { num: '+560%', label: 'AI-Sourced Lead Volume' },
+      { num: '3', label: 'AI engines tracked: ChatGPT, Claude, Gemini' },
+      { num: 'Weekly', label: 'Brand and competitor mention checks' },
+      { num: 'Live', label: 'Our own score, published on /proof' },
     ],
     guide: [
       {
@@ -177,9 +177,9 @@ export const industries = {
       'Monitoring of technical-specific queries and competitor positioning in enterprise AI research.',
     ],
     results: [
-      { num: '+312%', label: 'Technical Query Citations' },
-      { num: '+189%', label: 'Enterprise-Qualified Leads' },
-      { num: '6–9mo', label: 'To Category Dominance' },
+      { num: '3', label: 'AI engines tracked: ChatGPT, Claude, Gemini' },
+      { num: 'Weekly', label: 'Brand and competitor mention checks' },
+      { num: 'Live', label: 'Our own score, published on /proof' },
     ],
     guide: [
       {
@@ -204,7 +204,7 @@ export const industries = {
   'software': {
     title: 'AEO for Software Companies',
     tag: 'Software Companies',
-    description: 'AEO for software companies across every vertical. Whether you\'re building HR tech, fintech, edtech, or vertical SaaS, we help you dominate AI answers in your niche.',
+    description: 'AEO for software companies in every vertical, from HR tech and fintech to edtech and vertical SaaS: get your brand into the AI answers in your niche.',
     hero: 'AEO for <em>Software Companies</em>',
     intro: 'From vertical SaaS to horizontal platforms, software companies across every market face the same question: will AI engines recommend us when buyers ask? We make sure the answer is yes.',
     challenges: [
@@ -221,9 +221,9 @@ export const industries = {
       'Dedicated monitoring of vertical-specific AI queries that generic AEO providers miss.',
     ],
     results: [
-      { num: '+241%', label: 'Vertical-Specific AI Citations' },
-      { num: '+130%', label: 'Demo Requests from AI Traffic' },
-      { num: '4–8mo', label: 'To Vertical Category Leadership' },
+      { num: '3', label: 'AI engines tracked: ChatGPT, Claude, Gemini' },
+      { num: 'Weekly', label: 'Brand and competitor mention checks' },
+      { num: 'Live', label: 'Our own score, published on /proof' },
     ],
     guide: [
       {
@@ -254,7 +254,7 @@ export async function generateMetadata({ params }) {
   const industry = industries[params.slug]
   if (!industry) return {}
   return {
-    title: industry.title,
+    title: industry.title.includes('AEOrank') ? industry.title : `${industry.title} | AEOrank`,
     description: industry.description,
     alternates: { canonical: `https://www.aeorank.tech/industries/${params.slug}` },
     openGraph: {

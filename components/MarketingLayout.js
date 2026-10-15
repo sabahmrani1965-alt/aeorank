@@ -23,6 +23,9 @@ const organizationJsonLd = {
   "@type": "Organization",
   "@id": `${SITE_URL}/#organization`,
   name: "AEOrank",
+  // Other products share the name (aeorank.ai, aeorank.dev); the domain is
+  // the unambiguous handle.
+  alternateName: "aeorank.tech",
   url: SITE_URL,
   // Raster, not icon.svg: Google's Logo guidance requires at least
   // 112x112px and the SVG declares 60x60. /logo.png is 512x512 on white.
@@ -48,6 +51,7 @@ const personJsonLd = {
   "@type": "Person",
   "@id": `${SITE_URL}/#ilyas-lemzouri`,
   name: "Ilyas Lemzouri",
+  jobTitle: "Founder, AEOrank",
   email: "ilyas@aeorank.tech",
   url: `${SITE_URL}/about`,
   worksFor: { "@id": `${SITE_URL}/#organization` },

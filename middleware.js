@@ -50,7 +50,9 @@ function matchesPrefix(pathname, prefix) {
 // /poster (CrewQuest side) are handled by their own explicit branches
 // below — each has a more specific destination on the other domain than
 // the generic marketing-homepage fallback, so they're not repeated here.
-const AEORANK_ONLY = ["/report", "/services", "/industries", "/blog", "/checkout", "/contact", "/about"];
+const AEORANK_ONLY = ["/report", "/services", "/industries", "/blog", "/checkout", "/contact", "/about", "/pricing", "/proof", "/llms.txt", "/compare"];
+// Shared but AEOrank-branded: still served on the poster domain, kept out of its index.
+const SHARED_NOINDEX = ["/privacy", "/terms", "/login", "/forgot-password", "/reset-password"];
 const CREWQUEST_ONLY = ["/crewquest"];
 
 // EasyRep AI's product site rides on this same deployment: easyrepai.app
@@ -80,6 +82,9 @@ export async function middleware(request) {
     if (pathname === "/privacy") return rewriteTo("/easyrep/privacy");
     if (pathname === "/terms") return rewriteTo("/easyrep/terms");
     if (matchesPrefix(pathname, "/easyrep")) return response;
+    // Answered per host by app/robots.js and app/sitemap.js; redirecting
+    // them to the homepage served HTML where crawlers expected XML.
+    if (pathname === "/robots.txt" || pathname === "/sitemap.xml") return response;
     // The signup form posts from this domain, so its API has to survive
     // the catch-all below, which otherwise sends anything unrecognised
     // back to the homepage and silently breaks the form.
@@ -112,6 +117,10 @@ export async function middleware(request) {
     if (matchesPrefix(pathname, "/onboarding")) return redirectTo("/apply-poster");
     if (matchesPrefix(pathname, "/dashboard")) return redirectTo("/poster");
     if (AEORANK_ONLY.some((p) => matchesPrefix(pathname, p))) return redirectTo("/crewquest");
+    if (SHARED_NOINDEX.some((p) => matchesPrefix(pathname, p))) {
+      response.headers.set("X-Robots-Tag", "noindex");
+      return response;
+    }
   } else {
     if (matchesPrefix(pathname, "/apply-poster")) return redirectTo("/signup", true);
     if (matchesPrefix(pathname, "/poster")) return redirectTo("/login");

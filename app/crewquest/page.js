@@ -13,6 +13,14 @@ export const metadata = {
   title: "CrewQuest: Complete Missions. Get Paid.",
   description:
     "CrewQuest is a creator marketplace. Complete real posting and commenting missions on Reddit and get paid per mission.",
+  // The root layout's og:url is AEOrank's; without this the CrewQuest card
+  // claimed to be www.aeorank.tech.
+  alternates: { canonical: process.env.NEXT_PUBLIC_POSTER_SITE_URL || "https://www.joincrewquest.com" },
+  openGraph: {
+    siteName: "CrewQuest",
+    url: process.env.NEXT_PUBLIC_POSTER_SITE_URL || "https://www.joincrewquest.com",
+    title: "CrewQuest: Complete Missions. Get Paid.",
+  },
 };
 
 export default async function CrewQuestLandingPage() {

@@ -29,6 +29,14 @@ export default function Footer() {
           </div>
 
           <div className="footer-col">
+            <h4>Compare</h4>
+            <Link href="/blog/crowdreply-vs-aeorank">CrowdReply vs AEOrank</Link>
+            <Link href="/blog/reddgrow-vs-aeorank">ReddGrow vs AEOrank</Link>
+            <Link href="/blog/reddireach-vs-aeorank">ReddiReach vs AEOrank</Link>
+            <Link href="/blog/profound-vs-peec-vs-aeorank">Profound vs Peec AI</Link>
+          </div>
+
+          <div className="footer-col">
             <h4>Company</h4>
             <Link href="/about">About</Link>
             {/* The only confirmed sameAs in our Organization schema was not

@@ -21,6 +21,21 @@ const nextConfig = {
       dynamic: 1,
     },
   },
+  // Baseline security headers for the pages. /api is left alone: the iOS
+  // apps' endpoints set their own CORS headers and need nothing else.
+  async headers() {
+    return [
+      {
+        source: "/((?!api/).*)",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+        ],
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

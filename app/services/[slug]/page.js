@@ -81,10 +81,10 @@ const RELATED = {
 // Exported so app/sitemap.js derives slugs from the same source.
 export const services = {
   'aeo-management': {
-    title: 'AEO Management Services',
+    title: 'Managed Answer Engine Optimization',
     tag: 'Full-Service AEO',
-    description: 'Full-service Answer Engine Optimization management for B2B SaaS. We handle every aspect of getting your brand cited by ChatGPT, Perplexity, and Google AI.',
-    hero: 'Fully Managed AEO for <em>SaaS Growth Teams</em>',
+    description: 'Managed answer engine optimization (AEO) for B2B SaaS: we run the work of getting your brand cited by ChatGPT, Claude, Gemini, Perplexity and Google AI.',
+    hero: 'Managed <em>Answer Engine Optimization</em> for SaaS Growth Teams',
     intro: 'Our AEO Management service is a complete done-for-you program. You focus on your product; we focus on making sure every AI engine cites your brand when buyers ask.',
     benefits: [
       { title: 'Dedicated AEO Strategist', desc: 'A senior strategist who owns your AEO roadmap, reports weekly, and adjusts based on real data.' },
@@ -117,7 +117,7 @@ export const services = {
       },
     ],
     faqs: [
-      { q: 'Who is AEO Management best for?', a: 'B2B SaaS companies generating $1M+ ARR who want to treat AEO as a serious growth channel. Typical clients are Series A to Series C companies with sales-led or PLG motions.' },
+      { q: 'Who is AEO Management best for?', a: 'B2B SaaS companies generating $1M+ ARR who want to treat AEO as a serious growth channel. It suits Series A to Series C companies with sales-led or PLG motions.' },
       { q: 'How long until we see results?', a: 'Initial citation improvements within 60–90 days. Meaningful share-of-voice gains typically take 4–6 months of consistent execution.' },
       { q: 'Do you work with our existing marketing team?', a: 'Yes. We integrate with your team, slot into your cadence, and provide transparent documentation so your internal team learns AEO as we execute.' },
     ],
@@ -126,7 +126,7 @@ export const services = {
   'aeo-consulting': {
     title: 'Answer Engine Optimization Consulting',
     tag: 'Strategic Advisory',
-    description: 'Answer Engine Optimization (AEO) consulting for B2B SaaS teams who execute internally. We provide the roadmap, frameworks and expertise for getting cited by ChatGPT, Claude, Gemini and Perplexity; your team ships it.',
+    description: 'AEO consulting for B2B SaaS teams that execute in-house: the roadmap and frameworks for getting cited by ChatGPT, Claude, Gemini and Perplexity.',
     hero: 'Strategic <em>Answer Engine Optimization</em> Consulting for In-House Teams',
     intro: 'For SaaS companies with strong in-house marketing teams, AEO consulting gives you the strategy, frameworks, and expert guidance to build AEO capability internally, without outsourcing execution.',
     benefits: [
@@ -162,14 +162,14 @@ export const services = {
     faqs: [
       { q: 'Is consulting cheaper than full management?', a: 'Typically yes, consulting is 30–50% less than managed services. You save on execution fees by using your in-house team.' },
       { q: 'What if we don\'t have an in-house team?', a: 'We recommend AEO Management in that case. Consulting works best when you have at least 2–3 marketing team members who can execute.' },
-      { q: 'Can we upgrade to full management later?', a: 'Yes. Many clients start with consulting and upgrade to full management as AEO becomes a priority channel.' },
+      { q: 'Can we upgrade to full management later?', a: 'Yes. A common path is to start with consulting and move to full management as AEO becomes a priority channel.' },
     ],
   },
 
   'citation-building': {
     title: 'AI Citation Building Services',
     tag: 'Earned Citations',
-    description: 'AI citation building for B2B SaaS \u2014 not local NAP directory listings. We secure mentions in the publications and directories that ChatGPT, Claude, Gemini and Perplexity draw on when answering buyer questions.',
+    description: 'AI citation building for B2B SaaS: mentions in the publications and directories ChatGPT, Claude, Gemini and Perplexity draw on for buyer questions.',
     hero: 'Secure the <em>AI Citations</em> Engines Actually Trust',
     intro: 'Citations are the single strongest external signal AI engines use to decide which brands to recommend. Our citation building service secures mentions in the exact publications and directories that influence AI citation behavior.',
     benefits: [
@@ -192,10 +192,6 @@ export const services = {
       {
         heading: 'What actually earns an AI citation?',
         content: `A model quotes a passage because it answers the question better than the alternatives in front of it. That is the whole mechanism, and it rules out most of what gets sold.\n\n• **First-hand specificity.** "It took three weeks and the import choked above 50k rows" is citable. "Industry-leading performance" is not.\n• **Question-shaped source material.** Threads, documentation and comparisons that map onto what someone is actually asking.\n• **Independence.** A third party describing you carries weight your own page cannot.\n• **Durability.** A good thread answer keeps being read for years, which is why shortcuts that get removed cost more than they appear to.`,
-      },
-      {
-        heading: 'What we will not do',
-        content: `| Tactic | Why not |\n| --- | --- |\n| Aged or purchased accounts | Against Reddit's terms; removal takes the citation with it |\n| Coordinated upvoting | Vote manipulation, detectable, and it risks the account |\n| Undisclosed employee comments | Removed on discovery, and the reputational cost lands publicly |\n| Guaranteed citation counts | Nobody controls what a model says |\n\nEvery reply we draft is reviewed by you and posted from your own account, disclosed as you. We do not operate accounts on your behalf and we do not touch upvotes. The reasoning is in [Reddit marketing for AI search visibility](/blog/reddit-ai-visibility-guide).`,
       },
       {
         heading: 'How is it measured?',
@@ -304,7 +300,7 @@ export async function generateMetadata({ params }) {
   const service = services[params.slug]
   if (!service) return {}
   return {
-    title: service.title,
+    title: `${service.title} | AEOrank`,
     description: service.description,
     alternates: { canonical: `https://www.aeorank.tech/services/${params.slug}` },
     openGraph: {

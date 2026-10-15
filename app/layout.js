@@ -12,10 +12,14 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+// Decorative only (a handful of script accents), so it is not preloaded:
+// preloading it on every page competed with the text that is the LCP on
+// mobile. It still swaps in once loaded.
 const caveat = Caveat({
   subsets: ["latin"],
   weight: ["500", "600"],
   display: "swap",
+  preload: false,
   variable: "--font-caveat",
 });
 

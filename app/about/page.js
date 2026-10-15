@@ -63,7 +63,6 @@ export default function About() {
           <div className="card">
             <h3 style={{ marginBottom: 12 }}>What we won't do</h3>
             <ul style={{ color: "var(--text-dim)", paddingLeft: 22, lineHeight: 1.8 }}>
-              <li>We don't run vote rings or operate fake accounts.</li>
               <li>We don't post in subreddits that disallow commercial content.</li>
               <li>We don't promise specific LLM citations. Nobody can.</li>
               <li>We disclose affiliations whenever a community requires it.</li>

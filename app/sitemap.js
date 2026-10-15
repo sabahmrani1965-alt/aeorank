@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { posts } from "./blog/page";
 import { services } from "./services/[slug]/page";
 import { industries } from "./industries/[slug]/page";
@@ -19,6 +20,20 @@ function postDate(post, fallback) {
 
 export default function sitemap() {
   const buildDate = new Date().toISOString().slice(0, 10);
+
+  // The same deployment serves easyrepai.app and joincrewquest.com, which
+  // used to receive AEOrank's full URL list here. Each host gets its own.
+  const host = (headers().get("host") || "").split(":")[0].replace(/^www\./, "");
+  if (host === "easyrepai.app") {
+    return [
+      { url: "https://www.easyrepai.app", lastModified: buildDate, priority: 1.0 },
+      { url: "https://www.easyrepai.app/privacy", lastModified: buildDate, priority: 0.3 },
+      { url: "https://www.easyrepai.app/terms", lastModified: buildDate, priority: 0.3 },
+    ];
+  }
+  if (host === "joincrewquest.com") {
+    return [{ url: "https://www.joincrewquest.com", lastModified: buildDate, priority: 1.0 }];
+  }
 
   const staticPages = [
     { url: BASE_URL, changeFrequency: "weekly", priority: 1.0 },

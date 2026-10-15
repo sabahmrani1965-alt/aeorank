@@ -31,9 +31,27 @@ export const posts = [
   },
   {
     tag: "AEO · Comparison",
+    title: "ReddGrow vs. AEOrank: Pricing, Features and Fit",
+    excerpt:
+      "ReddGrow and AEOrank both target the Reddit threads AI assistants cite. Plans, prices, how each works, and which fits which team.",
+    date: "October 15, 2026",
+    readTime: "3 min read",
+    slug: "reddgrow-vs-aeorank",
+  },
+  {
+    tag: "AEO · Comparison",
+    title: "ReddiReach vs. AEOrank: Agency or Platform?",
+    excerpt:
+      "A Reddit marketing agency for AI search versus a self-serve Reddit and AI visibility platform. How each works and who each suits.",
+    date: "October 15, 2026",
+    readTime: "3 min read",
+    slug: "reddireach-vs-aeorank",
+  },
+  {
+    tag: "AEO · Comparison",
     title: "CrowdReply vs. AEOrank: What Each One Actually Does",
     excerpt:
-      "CrowdReply and AEOrank overlap more than most AI visibility tools. An honest look at pricing, how each one actually posts to Reddit, and which fits which team.",
+      "CrowdReply and AEOrank overlap more than most AI visibility tools. Plans, per-comment pricing, how each one posts to Reddit, and which fits which team.",
     date: "August 28, 2026",
     readTime: "2 min read",
     slug: "crowdreply-vs-aeorank",

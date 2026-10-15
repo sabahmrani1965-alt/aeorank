@@ -2,6 +2,7 @@ import MarketingLayout from "@/components/MarketingLayout";
 import PricingTiers from "@/components/PricingTiers";
 import Link from "next/link";
 import { CALENDLY_URL } from "@/lib/links";
+import { PLANS } from "@/lib/stripe";
 
 // /pricing did not exist. The subscription tiers lived only behind the
 // product, dashboard billing, onboarding, and the report page, so a buyer
@@ -51,11 +52,35 @@ export default function Pricing() {
     ],
   };
 
+  // The three plans as Offers, priced from the same PLANS Stripe charges.
+  const productLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "AEOrank",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    url: SITE_URL,
+    publisher: { "@id": `${SITE_URL}/#organization` },
+    offers: Object.values(PLANS).map((p) => ({
+      "@type": "Offer",
+      name: p.label.replace("AEOrank — ", ""),
+      price: (p.amount / 100).toFixed(2),
+      priceCurrency: p.currency.toUpperCase(),
+      url: `${SITE_URL}/pricing`,
+      category: "subscription",
+      description: p.description,
+    })),
+  };
+
   return (
     <MarketingLayout>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productLd) }}
       />
 
       <section className="section">
@@ -66,7 +91,7 @@ export default function Pricing() {
           </h1>
           <p className="section-sub">
             Every plan includes monthly credits and a 7-day free trial. Credits pay
-            for the things that actually move citations, comments, posts, scans , 
+            for the things that actually move citations (comments, posts, scans),
             so the cost tracks the work rather than a seat count.
           </p>
         </div>

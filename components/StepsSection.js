@@ -172,7 +172,7 @@ export default function StepsSection({
           <div className="card">
             <div className="reddit-mock">
               <div className="reddit-mock-meta">
-                AI Visibility Score · {showcase ? "Sample dashboard" : "Last 30 days"}
+                AI Visibility Score · Example dashboard, illustrative figures
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
                 <div style={{

@@ -10,7 +10,7 @@ import BusinessModelsSection from "@/components/BusinessModelsSection";
 import { CALENDLY_URL } from "@/lib/links";
 
 const SITE_URL = "https://www.aeorank.tech";
-const SITE_TITLE = "AEOrank: Reddit & AI Visibility Report";
+const SITE_TITLE = "AEOrank (aeorank.tech): Reddit & AI Visibility Tool";
 const SITE_DESCRIPTION =
   "Help your brand show up in ChatGPT, Claude, and Gemini answers through measurable Reddit engagement.";
 

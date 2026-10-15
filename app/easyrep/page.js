@@ -12,6 +12,7 @@ export const metadata = {
   description:
     "Scan any gym machine, check your form with live body tracking, log meals from a photo and follow a plan built for beginners. Free on the App Store.",
   itunes: { appId: "6809562228" },
+  alternates: { canonical: "https://www.easyrepai.app" },
   openGraph: {
     title: "EasyRep AI - Your personal AI fitness coach",
     description: "The gym, without the guesswork. Free on the App Store.",

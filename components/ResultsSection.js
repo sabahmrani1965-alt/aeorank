@@ -127,10 +127,10 @@ function VisitsChart() {
       <div style={{ display: "inline-block", border: "1px solid #ece7dd", borderRadius: 10, padding: "10px 14px", marginBottom: 18 }}>
         <div style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: ".04em", color: "#8a96b0", textTransform: "uppercase" }}>Total Visits (all time)</div>
         <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginTop: 4 }}>
-          <span style={{ fontSize: 24, fontWeight: 800 }}>2.4M</span>
-          <Pill>↑ 312%</Pill>
+          <span style={{ fontSize: 24, fontWeight: 800 }}>Example</span>
+          <Pill>illustrative</Pill>
         </div>
-        <div style={{ fontSize: 11, color: "#8a96b0", marginTop: 2 }}>vs previous 12 months</div>
+        <div style={{ fontSize: 11, color: "#8a96b0", marginTop: 2 }}>not client data</div>
       </div>
       <svg viewBox={`0 0 ${w} ${h + 24}`} width="100%" height="140">
         <defs>
@@ -272,8 +272,8 @@ function AIAnswerMock() {
 
 const PANELS_TOP = [
   {
-    title: "Take advantage of over 5.5B monthly visitors",
-    body: "With 1.2B monthly visitors, Reddit threads now rank within the top 5 results for almost anything you search for on Google. Anyone from consumers to CEOs relies on Reddit when making buying decisions.",
+    title: "Reddit is where buyers go for honest answers",
+    body: "Reddit threads rank near the top of Google for a huge range of buying questions. Anyone from consumers to CEOs relies on Reddit when making buying decisions.",
     Visual: TrafficChart,
   },
   {
@@ -296,12 +296,12 @@ const PANELS_TOP = [
 const PANELS_BOTTOM = [
   {
     title: "You'll get new customers from Reddit, month after month",
-    body: "Once your brand owns the top comment, you'll capture 90% of the demand. We've seen one well-placed comment generate $50K+.",
+    body: "A well-placed answer in a thread people keep finding can keep sending visitors long after it is posted.",
     Visual: ResultsGridMock,
   },
   {
-    title: "You'll rank #1 on AI search & LLMs",
-    body: "Reddit is the top cited source for AI & LLM answers. That means: when your brand is mentioned on Reddit, you'll also show up in Google AI Answers, ChatGPT, Gemini and other AI models.",
+    title: "Show up where AI answers come from",
+    body: "Reddit is one of the sources AI assistants cite most. Being part of the threads they read gives your brand a chance to appear in Google AI answers, ChatGPT, Gemini and other models. Nobody can guarantee a citation.",
     Visual: AIAnswerMock,
   },
 ];
