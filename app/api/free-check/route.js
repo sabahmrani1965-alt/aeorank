@@ -11,12 +11,12 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 // Each check costs roughly eight paid model calls, so the public checker is
-// capped three ways and fails closed: if the limits can't be read, it does
-// not run.
+// capped three ways (per email and per IP per UTC day, and a global daily
+// cap) and fails closed: if the limits can't be read, it does not run.
 const PER_EMAIL_PER_DAY = 1;
 const PER_IP_PER_DAY = 2;
 const GLOBAL_PER_DAY = Number(process.env.FREE_CHECK_DAILY_CAP || 40);
-const DAY_MS = 24 * 60 * 60 * 1000;
+const BUCKET = "free-checks";
 
 const busy = (msg, status = 429) => NextResponse.json({ ok: false, error: msg }, { status });
 
@@ -46,39 +46,33 @@ export async function POST(req) {
   if (!admin) return busy("The checker is unavailable right now. Try again later.", 503);
 
   const ip = (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() || "unknown";
-  const ipHash = createHash("sha256").update(`${ip}|${process.env.CRON_SECRET || "aeorank"}`).digest("hex").slice(0, 32);
-  const since = new Date(Date.now() - DAY_MS).toISOString();
+  const salt = process.env.CRON_SECRET || "aeorank";
+  const ipHash = createHash("sha256").update(`${ip}|${salt}`).digest("hex").slice(0, 24);
+  const emailHash = createHash("sha256").update(`${email}|${salt}`).digest("hex").slice(0, 24);
 
-  const count = async (filter) => {
-    let q = admin.from("free_checks").select("id", { count: "exact", head: true }).gte("created_at", since);
-    if (filter) q = filter(q);
-    const { count: n, error } = await q;
-    if (error) throw error;
-    return n || 0;
-  };
-  try {
-    const [global, byEmail, byIp] = await Promise.all([
-      count(),
-      count((q) => q.eq("email", email)),
-      count((q) => q.eq("ip_hash", ipHash)),
-    ]);
-    if (global >= GLOBAL_PER_DAY) return busy("Today's free checks are used up. Please try again tomorrow.");
-    if (byEmail >= PER_EMAIL_PER_DAY || byIp >= PER_IP_PER_DAY)
-      return busy("You've used your free check for today. Try again tomorrow, or start a trial for daily tracking.");
-  } catch (e) {
-    console.error("[free-check] limit check failed:", e?.message || e);
+  // Each check is one small JSON file in a private Storage bucket, under
+  // a folder per UTC day; the limits are counts of today's files. Storage,
+  // not a table, so no schema change was needed to ship this.
+  const bucket = admin.storage.from(BUCKET);
+  const day = new Date().toISOString().slice(0, 10);
+  const { data: today, error: listError } = await bucket.list(day, { limit: 1000 });
+  if (listError) {
+    console.error("[free-check] limit check failed:", listError.message);
     return busy("The checker is unavailable right now. Try again later.", 503);
   }
+  const names = (today || []).map((f) => f.name);
+  if (names.length >= GLOBAL_PER_DAY) return busy("Today's free checks are used up. Please try again tomorrow.");
+  if (names.filter((n) => n.includes(`_e${emailHash}_`)).length >= PER_EMAIL_PER_DAY || names.filter((n) => n.endsWith(`_i${ipHash}.json`)).length >= PER_IP_PER_DAY)
+    return busy("You've used your free check for today. Try again tomorrow, or start a trial for daily tracking.");
 
   // Reserve the slot before spending anything, so parallel requests can't
   // all slip under the limit.
-  const { data: row, error: insertError } = await admin
-    .from("free_checks")
-    .insert({ email, ip_hash: ipHash, domain })
-    .select("id")
-    .single();
-  if (insertError) {
-    console.error("[free-check] reserve failed:", insertError.message);
+  const path = `${day}/${Date.now()}_e${emailHash}_i${ipHash}.json`;
+  const save = (record) =>
+    bucket.upload(path, JSON.stringify(record), { contentType: "application/json", upsert: true });
+  const { error: reserveError } = await save({ email, domain, at: new Date().toISOString() });
+  if (reserveError) {
+    console.error("[free-check] reserve failed:", reserveError.message);
     return busy("The checker is unavailable right now. Try again later.", 503);
   }
 
@@ -96,10 +90,16 @@ export async function POST(req) {
   }
 
   await Promise.all([
-    admin
-      .from("free_checks")
-      .update({ brand, score: result.score, total: result.total, hits: result.hits, competitors: result.competitors || [] })
-      .eq("id", row.id),
+    save({
+      email,
+      domain,
+      brand,
+      at: new Date().toISOString(),
+      score: result.score,
+      total: result.total,
+      hits: result.hits,
+      competitors: result.competitors || [],
+    }),
     addToAudience({ email, name: "" }),
   ]);
 
