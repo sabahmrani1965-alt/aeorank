@@ -14,9 +14,9 @@ export const metadata = {
   openGraph: {
     title: "EasyRep AI - Your personal AI fitness coach",
     description: "The gym, without the guesswork. Free on the App Store.",
-    images: [{ url: "/easyrep/v2/og.jpg", width: 1200, height: 630 }],
+    images: [{ url: "https://www.easyrepai.app/easyrep/v2/og.jpg", width: 1200, height: 630 }],
   },
-  twitter: { card: "summary_large_image", images: ["/easyrep/v2/og.jpg"] },
+  twitter: { card: "summary_large_image", images: ["https://www.easyrepai.app/easyrep/v2/og.jpg"] },
 };
 
 const FEATURES = [
