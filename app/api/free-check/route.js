@@ -22,6 +22,8 @@ const MIN_ANSWERS = 2;
 const busy = (msg, status = 429) => NextResponse.json({ ok: false, error: msg }, { status });
 
 export async function POST(req) {
+  // Engines get until ~46s; competitor extraction and the response need the rest of the 60s.
+  const deadline = Date.now() + 46000;
   let body = {};
   try {
     body = await req.json();
@@ -85,7 +87,7 @@ export async function POST(req) {
   const description = meta.description || meta.title || `${brand} platform`;
   const categoryQuery = pickCategoryQuery(description, brand);
 
-  const result = await analyzeBrandVisibility(brand, categoryQuery);
+  const result = await analyzeBrandVisibility(brand, categoryQuery, { deadline });
   // A score from one answer reads as 0% or 100%, which says almost nothing.
   // Below the minimum, report the failure and give the visitor's daily
   // check back rather than show it.

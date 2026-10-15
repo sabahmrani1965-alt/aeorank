@@ -33,6 +33,9 @@ function isAuthorizedCronRequest(req) {
 // day. This is what makes AI-citation tracking continuous instead of
 // on-demand only.
 export async function GET(req) {
+  // Every engine call ends by this point, so finished prompts are saved
+  // before Vercel kills the function at maxDuration.
+  const deadline = Date.now() + 255000;
   if (!isAuthorizedCronRequest(req)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
@@ -80,8 +83,8 @@ export async function GET(req) {
   let checked = 0;
   await runWithConcurrency(prompts, CONCURRENCY, async (prompt) => {
     const brand = brandById.get(prompt.company_profile_id);
-    if (!brand) return;
-    const results = await checkPrompt(prompt.text, brand).catch((e) => {
+    if (!brand || deadline - Date.now() < 20000) return;
+    const results = await checkPrompt(prompt.text, brand, { deadline }).catch((e) => {
       console.error("[cron/check-prompts] checkPrompt failed:", e?.message || e);
       return null;
     });

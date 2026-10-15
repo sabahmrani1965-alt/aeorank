@@ -11,6 +11,7 @@ export const maxDuration = 30;
 // On-demand re-check of an existing customer's own brand — free, same as
 // the anonymous/logged-in "analyze a URL" report (app/report/[brand]).
 export async function POST() {
+  const deadline = Date.now() + 22000;
   const supabase = createClient();
   const {
     data: { user },
@@ -39,7 +40,7 @@ export async function POST() {
   }
   const categoryQuery = pickCategoryQuery(description, brand);
 
-  const aiVisibility = await analyzeBrandVisibility(brand, categoryQuery);
+  const aiVisibility = await analyzeBrandVisibility(brand, categoryQuery, { deadline });
   if (!aiVisibility) {
     return NextResponse.json({ error: "Could not generate the report. Try again." }, { status: 500 });
   }

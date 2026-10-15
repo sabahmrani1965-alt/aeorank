@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createHash, timingSafeEqual } from "crypto";
-import { checkEngines, sendEngineAlert } from "@/lib/engineHealth";
+import { checkEngines, probeCloroConcurrency, sendEngineAlert } from "@/lib/engineHealth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -19,6 +19,11 @@ function authorized(req) {
 
 export async function GET(req) {
   if (!authorized(req)) return NextResponse.json({ error: "not found" }, { status: 404 });
+  const params = new URL(req.url).searchParams;
+  if (params.get("probe") === "concurrency") {
+    const n = Math.min(8, Math.max(2, Number(params.get("n")) || 4));
+    return NextResponse.json({ probe: n, results: await probeCloroConcurrency(n) });
+  }
   const results = await checkEngines();
   // ?alert=test sends a sample alert through the real email + Discord path.
   if (new URL(req.url).searchParams.get("alert") === "test") {

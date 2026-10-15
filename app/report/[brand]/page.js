@@ -85,7 +85,7 @@ export default async function ReportPage({ params, searchParams }) {
         ? generateKeywordsFromLlm(brand, description, 20)
         : Promise.resolve(null),
       isAiVisibilityConfigured()
-        ? analyzeBrandVisibility(brand, categoryQuery)
+        ? analyzeBrandVisibility(brand, categoryQuery, { deadline: Date.now() + 45000 })
         : Promise.resolve({ score: null, total: 0, hits: 0, rows: [], competitors: [] }),
     ]);
 

@@ -11,6 +11,7 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 export async function POST(req, { params }) {
+  const deadline = Date.now() + 48000;
   const supabase = createClient();
   const {
     data: { user },
@@ -55,7 +56,7 @@ export async function POST(req, { params }) {
     return NextResponse.json({ error: "Prompt not found." }, { status: 404 });
   }
 
-  const results = await checkPrompt(prompt.text, brand);
+  const results = await checkPrompt(prompt.text, brand, { deadline });
   if (!results) {
     return NextResponse.json(
       { error: "Couldn't check this prompt right now. Try again." },
