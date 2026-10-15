@@ -1,199 +1,268 @@
 // EasyRep AI's product site, served at easyrepai.app (middleware rewrites
-// that domain's root here). Image-led: a wide hero render, then one scene
-// per feature, using the same 3D renders as the App Store screenshots so
-// the site, the listing and the app read as one product. Honest by
-// design: no download counts, no store badges, no ratings until the app
-// is actually live.
-import SignupForm from "./signup-form";
+// that domain's root here). The app is live, so every call to action goes
+// to the App Store. Screens shown are real app screens, cut from the store
+// screenshots. Honest by design: no download counts or ratings we do not
+// have, and nothing the app does not do.
+
+const APP_STORE_URL = "https://apps.apple.com/us/app/easyrep-ai/id6809562228";
 
 export const metadata = {
-  title: "EasyRep AI - Gym & Calorie AI Coach",
+  title: "EasyRep AI - Your personal AI fitness coach",
   description:
-    "Scan any gym machine to learn it. Snap your plate for calories and protein. Get kind feedback on your form, and a plan that starts easy.",
+    "Scan any gym machine, check your form with live body tracking, log meals from a photo and follow a plan built for beginners. Free on the App Store.",
+  itunes: { appId: "6809562228" },
+  openGraph: {
+    title: "EasyRep AI - Your personal AI fitness coach",
+    description: "The gym, without the guesswork. Free on the App Store.",
+    images: [{ url: "/easyrep/v2/og.jpg", width: 1200, height: 630 }],
+  },
+  twitter: { card: "summary_large_image", images: ["/easyrep/v2/og.jpg"] },
 };
 
 const FEATURES = [
   {
-    img: "/easyrep/scan.jpg",
+    img: "/easyrep/v2/phone-scan.webp",
     kicker: "MACHINE SCANNER",
-    title: "What is this machine?",
-    body: "Point your camera at anything on the gym floor and get its name, what it works, how to set it up, and how to do the movement. No guessing, no asking anyone. Every machine you learn goes into your own list.",
+    title: "Point at any machine. Know how to use it.",
+    body: "Aim your camera at anything on the gym floor. EasyRep names it, shows the muscles it works and walks you through the setup, step by step.",
+    chips: ["Live viewfinder", "Muscles worked", "Step-by-step setup"],
   },
   {
-    img: "/easyrep/food.jpg",
-    kicker: "CALORIE TRACKING",
-    title: "Snap your plate",
-    body: "Photograph your meal for an approximate calorie and protein count. Approximate is the honest word, and the app says so on every result rather than pretending to be a food scale.",
-    flip: true,
-  },
-  {
-    img: "/easyrep/body.jpg",
-    kicker: "AI BODY SCAN",
-    title: "Know where you start",
-    body: "One full-length photo gives you a body fat range, what your build already has going for it, and a single thing to focus on. A range, never a fake-precise number, and the result stays on your phone.",
-  },
-  {
-    img: "/easyrep/form.jpg",
+    img: "/easyrep/v2/phone-form.webp",
     kicker: "FORM CHECK",
-    title: "Feedback that stays kind",
-    body: "Record a short clip of your lift. The feedback always opens with what you did well, then one or two fixes and why they matter. The video never leaves your phone: six frames are taken on your device and only those are analyzed.",
+    title: "See your form, live.",
+    body: "Record a set and EasyRep tracks your body as you move: your skeleton on screen, a depth check on squats and lunges, and a rep count. Afterwards you get what you did well and one thing to adjust.",
+    chips: ["Live body tracking", "Depth check", "Video stays on your phone"],
     flip: true,
   },
   {
-    img: "/easyrep/plan.jpg",
-    kicker: "YOUR PLAN",
-    title: "Built from what scares you",
-    body: "The setup asks what feels hardest about the gym, then builds two to five short sessions a week around it. Machines first, so the equipment guides the movement. A machine is busy? One tap swaps it for an equivalent.",
+    img: "/easyrep/v2/phone-session.webp",
+    kicker: "YOUR WORKOUT",
+    title: "Every set, one tap.",
+    body: "Follow today's session and tick off each set as you go. A machine is taken? Swap it for an equivalent in one tap and keep moving.",
+    chips: ["Tick off sets", "Swap a busy machine", "Built for beginners"],
   },
   {
-    img: "/easyrep/coach.jpg",
+    img: "/easyrep/v2/phone-nutrition.webp",
+    kicker: "NUTRITION",
+    title: "Snap your plate. See your day.",
+    body: "Photograph a meal or type it in. Calories, protein, carbs and fat add up against targets worked out from your body, and the app always says when a number is an estimate.",
+    chips: ["Meal photos", "Macros", "Water"],
+    flip: true,
+  },
+  {
+    img: "/easyrep/v2/phone-ask.webp",
     kicker: "AI COACH",
-    title: "Ask what you'd never ask out loud",
-    body: "How long can I stay on a machine? Is this soreness normal? What are the unwritten rules? Ask the things you would never say to a stranger and get plain, judgment-free answers.",
-    flip: true,
+    title: "Ask what you'd never ask out loud.",
+    body: "Rest days, protein, soreness, the unwritten rules of the gym floor. Plain, judgement-free answers that know your plan.",
+    chips: ["Training", "Nutrition", "Technique"],
   },
+];
+
+const STEPS = [
+  { n: "1", title: "Tell us what feels hard", body: "A two-minute setup asks your goal, your week and what worries you about the gym." },
+  { n: "2", title: "Get a plan that starts easy", body: "Short sessions, machines first, so the equipment guides the movement while you learn." },
+  { n: "3", title: "Train with a coach in your pocket", body: "Scan machines, check your form, log meals and ask anything, whenever you need it." },
 ];
 
 const FAQ = [
   {
-    q: "What does EasyRep AI actually do?",
-    a: "It identifies gym machines from a photo and explains how to use them, estimates the calories and protein in a meal from a photo, gives a rough body composition read, reviews your exercise form from a short video, answers gym questions in plain language, and builds a beginner plan around what worries you.",
-  },
-  {
-    q: "Is it really for complete beginners?",
-    a: "That is the whole point. The setup asks what feels scariest about the gym, and the plan starts on machines because they guide the movement for you. Nothing in the app assumes you know anything.",
-  },
-  {
-    q: "Do my form check videos get uploaded?",
-    a: "No. The video never leaves your phone. The app takes six still frames on your device and sends only those for analysis. The frames are processed and not stored on our servers.",
-  },
-  {
-    q: "How accurate are the scans?",
-    a: "Machine recognition is reliable for common gym equipment. Meal and body estimates are approximate by nature, and the app says so on every result instead of inventing precision it does not have.",
+    q: "Who is EasyRep for?",
+    a: "Anyone who wants to train but feels lost in the gym. The setup asks what feels hardest, and the plan starts on machines because they guide the movement for you. Nothing assumes you already know anything.",
   },
   {
     q: "Is it free?",
-    a: "The plan, streak, week view and machine list are free. You also get a few free scans to try each tool. EasyRep Pro makes all of them unlimited, monthly or yearly, with a 3 day free trial.",
+    a: "EasyRep is free to download. Your plan, streak, week view and machine list are free, and you get free tries of each AI tool. EasyRep Pro makes scans, form checks and coach questions unlimited, monthly or yearly.",
+  },
+  {
+    q: "Does my workout video get uploaded?",
+    a: "No. The live body tracking runs on your iPhone, and the video never leaves it. For the review afterwards, six still frames are taken on your phone and only those are analysed. They are not stored on our servers.",
+  },
+  {
+    q: "How accurate are the scans?",
+    a: "Machine recognition is reliable for common gym equipment. Meal and body estimates are approximate by nature, and the app says so on every result instead of inventing precision.",
+  },
+  {
+    q: "Which devices does it run on?",
+    a: "EasyRep is an iPhone app, available on the App Store.",
   },
   {
     q: "Is this medical advice?",
-    a: "No. Everything in the app is general exercise guidance, not medical advice. If you have a condition or an injury, talk to a professional first, and if something hurts beyond normal effort, stop.",
-  },
-  {
-    q: "What data do you collect?",
-    a: "As little as possible. Signing in is optional, there are no ads and no tracking SDKs, and we never sell data. The full detail is in the privacy policy.",
-  },
-  {
-    q: "How do I get access?",
-    a: "Leave your email and we will let you in as places open. Access is free to start, and we will never email you about anything else.",
+    a: "No. Everything in the app is general exercise guidance. If you have a condition or an injury, talk to a professional first, and if something hurts beyond normal effort, stop.",
   },
 ];
 
+const stroke = { fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round" };
+const ICONS = {
+  target: (<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" {...stroke} /><circle cx="12" cy="12" r="5" {...stroke} /><circle cx="12" cy="12" r="1.5" fill="currentColor" /></svg>),
+  spark: (<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z" {...stroke} /><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z" {...stroke} /></svg>),
+  lock: (<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2.5" {...stroke} /><path d="M8 11V8a4 4 0 0 1 8 0v3" {...stroke} /></svg>),
+  check: (<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" {...stroke} strokeWidth={3} /></svg>),
+};
+
+function AppStoreBadge({ dark = true, size = "lg" }) {
+  return (
+    <a
+      className={`badge ${dark ? "badge-dark" : "badge-light"} badge-${size}`}
+      href={APP_STORE_URL}
+      aria-label="Download EasyRep AI on the App Store"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          fill="currentColor"
+          d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"
+        />
+      </svg>
+      <span>
+        <small>Download on the</small>
+        <b>App Store</b>
+      </span>
+    </a>
+  );
+}
+
 const css = `
-html, body { background:#fff; margin:0; }
-.er { background:#fff; color:#0B0B0F; overflow-x:hidden;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+html, body { background:#F5F7FA; margin:0; }
+.er { --ink:#0F172A; --ink2:#334155; --muted:#64748B; --blue:#2563EB; --blue-deep:#1D4ED8;
+  --soft:#EAF1FE; --line:#E6EAF0; --paper:#F5F7FA;
+  background:var(--paper); color:var(--ink); overflow-x:hidden;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased; }
 .er * { box-sizing:border-box; }
 .er a { text-decoration:none; color:inherit; }
-.er .wrap { max-width:1120px; margin:0 auto; padding:0 24px; }
-.er .nav { display:flex; align-items:center; justify-content:space-between; padding:20px 26px;
-  background:rgba(244,245,246,.9); border-radius:999px; margin:16px auto 0; max-width:1120px; }
-.er .logo { font-weight:800; font-size:17px; letter-spacing:-.01em; }
-.er .links { display:flex; gap:24px; font-size:14px; color:#3f4249; font-weight:500; }
-.er .soon { background:#0B0B0F; color:#fff; border-radius:999px; padding:9px 18px; font-size:13px;
-  font-weight:700; white-space:nowrap; }
-.er .banner { text-align:left; padding:0; position:relative; margin-top:22px; border-radius:32px; overflow:hidden; min-height:560px;
-  display:flex; align-items:center; }
-.er .banner img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
-.er .banner .scrim { position:absolute; inset:0;
-  background:linear-gradient(100deg,rgba(255,255,255,.985) 0%,rgba(255,255,255,.96) 42%,rgba(255,255,255,.55) 60%,rgba(255,255,255,0) 86%); }
-.er .banner .inner { text-align:left; position:relative; padding:56px 48px; max-width:640px; }
-.er .kick { display:inline-flex; align-items:center; gap:8px; color:#2563EB; font-weight:800;
-  font-size:12.5px; letter-spacing:.12em; margin-bottom:16px; }
-.er h1 { font-size:clamp(40px,5.4vw,64px); font-weight:800; letter-spacing:-.035em; line-height:1.02;
-  margin:0 0 18px; }
-.er .lead { font-size:19px; color:#4b5058; line-height:1.6; margin:0 0 28px; max-width:44ch; }
-.er a.cta { display:inline-block; background:#0B0B0F; color:#fff; border-radius:999px; padding:16px 30px;
-  font-size:16px; font-weight:700; }
-.er .fine { font-size:13.5px; color:#8a8f98; margin:14px 0 0; line-height:1.5; max-width:46ch; }
-.er .feat { display:grid; grid-template-columns:1fr 1fr; gap:44px; align-items:center; margin-top:104px; }
-.er .feat .shot { border-radius:26px; overflow:hidden; aspect-ratio:4/5; background:#F2F3F5; }
-.er .feat .shot img { width:100%; height:100%; object-fit:cover; display:block; }
-.er .feat h2 { font-size:clamp(28px,3.4vw,40px); font-weight:800; letter-spacing:-.03em;
-  line-height:1.1; margin:0 0 14px; }
-.er .feat p { font-size:17px; color:#4b5058; line-height:1.65; margin:0; }
-.er .feat.flip .shot { order:2; }
-.er .band { background:#F4F5F6; border-radius:28px; padding:40px; margin-top:104px; }
-.er .band h2 { font-size:26px; font-weight:800; letter-spacing:-.02em; margin:0 0 10px; }
-.er .band p { font-size:16px; color:#4b5058; line-height:1.65; margin:0; }
-.er h2.sec { font-size:clamp(28px,3.4vw,40px); font-weight:800; letter-spacing:-.03em;
-  text-align:center; margin:104px 0 32px; }
-.er .faq { max-width:780px; margin:0 auto; }
-.er .faq details { background:#F4F5F6; border-radius:18px; margin-bottom:10px; }
-.er .faq summary { cursor:pointer; list-style:none; display:flex; align-items:center; gap:14px;
-  padding:19px 22px; font-size:16px; font-weight:600; }
+.er .wrap { max-width:1160px; margin:0 auto; padding:0 24px; }
+
+/* nav */
+.er .nav { position:sticky; top:12px; z-index:20; display:flex; align-items:center; justify-content:space-between;
+  margin:12px auto 0; max-width:1160px; padding:10px 12px 10px 18px; border-radius:999px;
+  background:rgba(255,255,255,.78); backdrop-filter:saturate(1.6) blur(18px); -webkit-backdrop-filter:saturate(1.6) blur(18px);
+  border:1px solid rgba(15,23,42,.06); box-shadow:0 8px 30px rgba(15,23,42,.06); }
+.er .brand { display:flex; align-items:center; gap:10px; font-weight:700; font-size:17px; letter-spacing:-.01em; }
+.er .brand img { width:30px; height:30px; border-radius:8px; }
+.er .links { display:flex; gap:26px; font-size:14.5px; color:var(--ink2); font-weight:500; }
+.er .links a:hover { color:var(--blue); }
+.er .navcta { background:var(--ink); color:#fff; border-radius:999px; padding:10px 18px; font-size:14px; font-weight:600; }
+
+/* hero */
+.er .er-hero { display:grid; grid-template-columns:1.05fr 1fr; gap:48px; align-items:center; padding:72px 0 40px; position:relative; }
+.er .er-hero:before { content:""; position:absolute; right:-160px; top:-60px; width:640px; height:640px; border-radius:50%;
+  background:radial-gradient(circle, rgba(37,99,235,.20), rgba(37,99,235,0) 65%); pointer-events:none; }
+.er .pill { display:inline-flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--line); border-radius:999px;
+  padding:7px 14px 7px 8px; font-size:13.5px; font-weight:600; color:var(--ink2); margin-bottom:22px; }
+.er .pill i { width:22px; height:22px; border-radius:50%; background:var(--soft); display:inline-flex; align-items:center; justify-content:center;
+  font-style:normal; color:var(--blue); font-size:12px; }
+.er h1 { font-size:clamp(40px,5vw,66px); font-weight:800; letter-spacing:-.045em; line-height:.98; margin:0 0 22px; }
+.er h1 em { font-style:normal; color:var(--blue); display:block; white-space:nowrap; }
+.er .lead { font-size:19px; color:var(--muted); line-height:1.6; margin:0 0 30px; max-width:42ch; }
+.er .cta-row { display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+.er .note { font-size:14px; color:var(--muted); }
+.er .visual { position:relative; min-height:560px; }
+.er .visual .photo { position:absolute; right:0; top:0; width:78%; height:540px; border-radius:36px; overflow:hidden;
+  box-shadow:0 30px 80px rgba(30,64,175,.22); }
+.er .visual .photo img { width:100%; height:100%; object-fit:cover; object-position:50% 30%; }
+.er .visual .photo:after { content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(37,99,235,0) 55%, rgba(29,78,216,.55)); }
+.er .visual .phone { position:absolute; left:-4%; bottom:-28px; width:38%; max-width:220px; filter:drop-shadow(0 30px 50px rgba(15,23,42,.30)); }
+.er .visual .tag { position:absolute; right:22px; bottom:42px; background:rgba(255,255,255,.92); backdrop-filter:blur(10px);
+  border-radius:18px; padding:12px 16px; font-size:13.5px; font-weight:600; display:flex; gap:10px; align-items:center;
+  box-shadow:0 12px 30px rgba(15,23,42,.18); }
+.er .visual .tag b { color:var(--blue); }
+
+/* badge */
+.er .badge { display:inline-flex; align-items:center; gap:10px; border-radius:14px; padding:10px 20px 10px 16px; transition:transform .15s ease; }
+.er .badge:hover { transform:translateY(-1px); }
+.er .badge svg { width:26px; height:26px; }
+.er .badge span { display:flex; flex-direction:column; line-height:1.05; }
+.er .badge small { font-size:11px; font-weight:500; letter-spacing:.01em; }
+.er .badge b { font-size:21px; font-weight:600; letter-spacing:-.01em; }
+.er .badge-dark { background:#000; color:#fff; }
+.er .badge-light { background:#fff; color:#000; }
+.er .badge-sm { padding:8px 16px 8px 12px; }
+.er .badge-sm svg { width:20px; height:20px; }
+.er .badge-sm b { font-size:17px; }
+
+/* facts strip */
+.er .facts { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:56px 0 0; }
+.er .fact { background:#fff; border:1px solid var(--line); border-radius:22px; padding:22px 22px; display:flex; gap:14px; align-items:flex-start; }
+.er .fact .ic { flex:none; width:40px; height:40px; border-radius:12px; background:var(--soft); color:var(--blue);
+  display:flex; align-items:center; justify-content:center; }
+.er .fact .ic svg { width:20px; height:20px; }
+.er .fact b { display:block; font-size:16px; margin-bottom:3px; }
+.er .fact span { font-size:14.5px; color:var(--muted); line-height:1.5; }
+
+/* sections */
+.er .eyebrow { color:var(--blue); font-weight:700; font-size:12.5px; letter-spacing:.14em; margin-bottom:14px; }
+.er h2 { font-size:clamp(32px,4vw,50px); font-weight:800; letter-spacing:-.04em; line-height:1.04; margin:0 0 16px; }
+.er .sec-head { text-align:center; max-width:720px; margin:130px auto 56px; }
+.er .sec-head p { font-size:18px; color:var(--muted); line-height:1.6; margin:0; }
+
+.er .feat { display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; margin-top:90px; }
+.er .feat .stage { background:linear-gradient(160deg,#EAF1FE,#F8FAFF); border-radius:36px; padding:48px 0 0;
+  display:flex; justify-content:center; overflow:hidden; height:560px; border:1px solid var(--line); }
+.er .feat .stage img { width:300px; height:auto; align-self:flex-start; filter:drop-shadow(0 30px 40px rgba(30,64,175,.22)); }
+.er .feat h3 { font-size:clamp(28px,3.2vw,40px); font-weight:800; letter-spacing:-.035em; line-height:1.08; margin:0 0 16px; }
+.er .feat p { font-size:17.5px; color:var(--muted); line-height:1.65; margin:0 0 22px; }
+.er .chips { display:flex; flex-wrap:wrap; gap:8px; }
+.er .chips span { background:#fff; border:1px solid var(--line); border-radius:999px; padding:8px 14px; font-size:14px; font-weight:600; color:var(--ink2); }
+.er .feat.flip .stage { order:2; }
+
+/* steps */
+.er .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+.er .step { background:#fff; border:1px solid var(--line); border-radius:26px; padding:30px 28px; }
+.er .step .n { width:40px; height:40px; border-radius:50%; background:var(--blue); color:#fff; font-weight:800;
+  display:flex; align-items:center; justify-content:center; margin-bottom:20px; }
+.er .step b { display:block; font-size:19px; letter-spacing:-.01em; margin-bottom:8px; }
+.er .step p { font-size:15.5px; color:var(--muted); line-height:1.6; margin:0; }
+
+/* mission */
+.er .mission { margin-top:130px; display:grid; grid-template-columns:.9fr 1.1fr; gap:0; border-radius:36px; overflow:hidden;
+  background:var(--ink); color:#fff; }
+.er .mission .img { min-height:440px; background:url(/easyrep/v2/athlete.webp) center 25%/cover; }
+.er .mission .txt { padding:56px 52px; display:flex; flex-direction:column; justify-content:center; }
+.er .mission .eyebrow { color:#93C5FD; }
+.er .mission h2 { color:#fff; }
+.er .mission p { color:rgba(255,255,255,.75); font-size:17.5px; line-height:1.7; margin:0 0 14px; }
+
+/* faq */
+.er .faq { max-width:800px; margin:0 auto; }
+.er .faq details { background:#fff; border:1px solid var(--line); border-radius:20px; margin-bottom:10px; }
+.er .faq summary { cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; gap:14px;
+  padding:20px 24px; font-size:16.5px; font-weight:600; }
 .er .faq summary::-webkit-details-marker { display:none; }
-.er .faq summary::before { content:"+"; font-weight:700; font-size:19px; line-height:1; color:#2563EB; }
-.er .faq details[open] summary::before { content:"\\2212"; }
-.er .faq .a { padding:0 22px 20px 50px; font-size:15.5px; color:#4b5058; line-height:1.7; }
-.er .final { position:relative; border-radius:32px; overflow:hidden; margin-top:104px; min-height:420px;
-  display:flex; align-items:center; justify-content:center; text-align:center; }
-.er .final img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
-.er .final .scrim { position:absolute; inset:0; background:rgba(11,11,15,.62); }
-.er .final .inner { position:relative; padding:64px 28px; }
-.er .final h2 { color:#fff; font-size:clamp(28px,3.6vw,42px); font-weight:800; letter-spacing:-.03em;
-  margin:0 0 14px; }
-.er .final p { color:rgba(255,255,255,.82); font-size:17px; line-height:1.6; margin:0 auto 26px;
-  max-width:52ch; }
-.er .final a { background:#fff; color:#0B0B0F; border-radius:999px; padding:16px 32px; font-weight:700;
-  font-size:16px; display:inline-block; }
+.er .faq summary::after { content:"+"; font-weight:500; font-size:24px; line-height:1; color:var(--blue); }
+.er .faq details[open] summary::after { content:"\\2212"; }
+.er .faq .a { padding:0 24px 22px; font-size:15.5px; color:var(--muted); line-height:1.7; }
+
+/* final cta */
+.er .final { margin-top:130px; border-radius:40px; overflow:hidden; position:relative;
+  background:linear-gradient(135deg,var(--blue),var(--blue-deep)); color:#fff; display:grid; grid-template-columns:1.2fr .8fr; align-items:end; }
+.er .final .txt { padding:64px 56px; }
+.er .final h2 { color:#fff; margin-bottom:14px; }
+.er .final p { color:rgba(255,255,255,.82); font-size:18px; line-height:1.6; margin:0 0 30px; max-width:40ch; }
+.er .final .ph { display:flex; justify-content:center; padding-top:48px; height:100%; overflow:hidden; }
+.er .final .ph img { width:280px; align-self:flex-start; filter:drop-shadow(0 30px 50px rgba(0,0,0,.3)); }
+
 .er .foot { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;
-  padding:40px 4px 52px; color:#8a8f98; font-size:14px; }
-.er .foot a { color:#4b5058; font-weight:500; margin-left:18px; }
-/* Early access form. Two variants: on the light hero and on the dark
-   closing section, which is why the colours are set per variant rather
-   than inherited. */
-.er .su { margin:0 0 4px; max-width:460px; }
-.er .su-row { display:flex; gap:10px; flex-wrap:wrap; }
-.er .su input { flex:1 1 220px; min-width:0; padding:15px 18px; font-size:16px;
-  border-radius:999px; border:1.5px solid #DDE1E6; background:#fff; color:#0B0B0F;
-  font-family:inherit; outline:none; }
-.er .su input:focus { border-color:#2563EB; box-shadow:0 0 0 3px rgba(37,99,235,.15); }
-.er .su button { padding:15px 26px; font-size:16px; font-weight:700; border:0;
-  border-radius:999px; background:#0B0B0F; color:#fff; cursor:pointer; font-family:inherit;
-  white-space:nowrap; }
-.er .su button:hover { background:#25252c; }
-.er .su button:disabled { opacity:.6; cursor:default; }
-.er .su-err { color:#C0392B; font-size:14px; margin:10px 2px 0; }
-.er .su-done { display:flex; flex-direction:column; gap:5px; padding:18px 22px;
-  border-radius:20px; background:#EAF1FE; border:1px solid rgba(37,99,235,.25); }
-.er .su-done strong { font-size:17px; color:#0B0B0F; }
-.er .su-done span { font-size:14.5px; color:#4b5058; line-height:1.5; }
+  padding:44px 4px 56px; color:var(--muted); font-size:14px; }
+.er .foot a { color:var(--ink2); font-weight:500; margin-left:20px; }
 
-.er .su-dark input { background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.28);
-  color:#fff; }
-.er .su-dark input::placeholder { color:rgba(255,255,255,.55); }
-.er .su-dark input:focus { border-color:#fff; box-shadow:0 0 0 3px rgba(255,255,255,.18); }
-.er .su-dark button { background:#fff; color:#0B0B0F; }
-.er .su-dark button:hover { background:#e8e8ea; }
-.er .su-dark.su-done { background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.3); }
-.er .su-dark.su-done strong { color:#fff; }
-.er .su-dark.su-done span { color:rgba(255,255,255,.75); }
-.er .su-dark .su-err { color:#ffb4ab; }
-
-/* The nav pill is a link now, so it needs the anchor colour pinned. */
-.er a.soon { color:#fff; display:inline-block; }
-
-@media (max-width:860px){
-.er .links { display:none; }
-.er .banner { min-height:auto; }
-.er .banner .inner { padding:36px 24px 44px; }
-.er .banner .scrim { background:linear-gradient(180deg,rgba(255,255,255,.96) 0%,rgba(255,255,255,.92) 55%,rgba(255,255,255,.4) 100%); }
-.er .feat { grid-template-columns:1fr; gap:22px; margin-top:64px; }
-.er .feat.flip .shot { order:0; }
-.er .band, .er h2.sec, .er .final { margin-top:64px; }
-.er .band { padding:28px; }
+@media (max-width:900px){
+  .er .links { display:none; }
+  .er .er-hero { grid-template-columns:1fr; padding-top:44px; gap:32px; }
+  .er .visual { min-height:470px; }
+  .er .visual .photo { width:84%; height:440px; }
+  .er .visual .phone { width:42%; }
+  .er .facts, .er .steps { grid-template-columns:1fr; }
+  .er .feat { grid-template-columns:1fr; gap:28px; margin-top:64px; }
+  .er .feat.flip .stage { order:0; }
+  .er .feat .stage { height:440px; padding-top:36px; }
+  .er .feat .stage img { width:240px; }
+  .er .sec-head, .er .mission, .er .final { margin-top:88px; }
+  .er .mission, .er .final { grid-template-columns:1fr; }
+  .er .mission .img { min-height:300px; }
+  .er .mission .txt, .er .final .txt { padding:36px 28px; }
+  .er .final .ph { height:340px; }
 }
+@media (prefers-reduced-motion:reduce){ .er .badge { transition:none; } }
 `;
 
 export default function EasyRepLanding() {
@@ -202,58 +271,102 @@ export default function EasyRepLanding() {
       <style dangerouslySetInnerHTML={{ __html: css }} />
       <div className="wrap">
         <nav className="nav">
-          <div className="logo">EasyRep AI</div>
+          <a className="brand" href="/">
+            <img src="/easyrep/icon.svg" alt="" />
+            EasyRep AI
+          </a>
           <div className="links">
             <a href="#features">Features</a>
+            <a href="#how">How it works</a>
             <a href="#faq">FAQ</a>
-            <a href="mailto:abdelhadi@easyrepai.app">Contact</a>
           </div>
-          <a className="soon" href="#get">Get access</a>
+          <a className="navcta" href={APP_STORE_URL}>Download</a>
         </nav>
 
-        <section className="banner">
-          <img src="/easyrep/hero.jpg" alt="" />
-          <div className="scrim" />
-          <div className="inner">
-            <div className="kick">AI GYM COACH FOR BEGINNERS</div>
-            <h1>The gym, without the guesswork.</h1>
+        <section className="er-hero">
+          <div>
+            <div className="pill"><i>{ICONS.check}</i>Now on the App Store</div>
+            <h1>
+              Your personal <em>AI fitness coach.</em>
+            </h1>
             <p className="lead">
-              Scan any machine to learn it. Snap your plate for calories and protein. Get kind
-              feedback on your form, and follow a plan that starts easy.
+              Scan any gym machine, check your form with live body tracking, log meals from a photo
+              and follow a plan built for beginners.
             </p>
-            <SignupForm variant="hero" source="hero" />
-            <p className="fine">
-              Early access is free. One email when your place is ready, and nothing else.
-            </p>
+            <div className="cta-row">
+              <AppStoreBadge />
+              <span className="note">Free to download · iPhone</span>
+            </div>
+          </div>
+          <div className="visual">
+            <div className="photo">
+              <img src="/easyrep/v2/athlete.webp" alt="A man doing a one-arm dumbbell row in a gym" />
+            </div>
+            <img className="phone" src="/easyrep/v2/phone-today.webp" alt="EasyRep's Today screen with the day's workout and calories" />
+            <div className="tag">Today's workout · <b>Full body 3</b></div>
           </div>
         </section>
 
-        <div id="features" />
+        <section className="facts">
+          <div className="fact"><div className="ic">{ICONS.target}</div><div><b>Built for beginners</b><span>Machines first, short sessions, nothing assumed.</span></div></div>
+          <div className="fact"><div className="ic">{ICONS.spark}</div><div><b>Six AI tools in one app</b><span>Machines, form, meals, body, plan and a coach.</span></div></div>
+          <div className="fact"><div className="ic">{ICONS.lock}</div><div><b>Private by design</b><span>Form videos stay on your phone. No ads, no tracking SDKs.</span></div></div>
+        </section>
+
+        <div className="sec-head" id="features">
+          <div className="eyebrow">FEATURES</div>
+          <h2>Everything you need to walk in with a plan.</h2>
+          <p>One app for the moments beginners get stuck: the machine you don't know, the set you're unsure of, the meal you can't count.</p>
+        </div>
+
         {FEATURES.map((f) => (
           <section key={f.title} className={`feat${f.flip ? " flip" : ""}`}>
-            <div className="shot">
+            <div className="stage">
               <img src={f.img} alt="" loading="lazy" />
             </div>
             <div>
-              <div className="kick">{f.kicker}</div>
-              <h2>{f.title}</h2>
+              <div className="eyebrow">{f.kicker}</div>
+              <h3>{f.title}</h3>
               <p>{f.body}</p>
+              <div className="chips">{f.chips.map((c) => <span key={c}>{c}</span>)}</div>
             </div>
           </section>
         ))}
 
-        <section className="band">
-          <h2>Built to collect as little as possible</h2>
-          <p>
-            No ads, no tracking SDKs, nothing sold to anyone. Form check videos never leave your
-            phone. Signing in is optional. Everything in the app is general exercise guidance, not
-            medical advice. The details are in the{" "}
-            <a href="/easyrep/privacy" style={{ color: "#2563EB", fontWeight: 600 }}>privacy policy</a>{" "}
-            and <a href="/easyrep/terms" style={{ color: "#2563EB", fontWeight: 600 }}>terms of use</a>.
-          </p>
+        <div className="sec-head" id="how">
+          <div className="eyebrow">HOW IT WORKS</div>
+          <h2>From first download to first workout.</h2>
+        </div>
+        <section className="steps">
+          {STEPS.map((s) => (
+            <div className="step" key={s.n}>
+              <div className="n">{s.n}</div>
+              <b>{s.title}</b>
+              <p>{s.body}</p>
+            </div>
+          ))}
         </section>
 
-        <h2 className="sec" id="faq">Questions</h2>
+        <section className="mission">
+          <div className="img" role="img" aria-label="An athlete training with a dumbbell" />
+          <div className="txt">
+            <div className="eyebrow">WHY WE BUILD EASYREP</div>
+            <h2>The hardest visit is the first one.</h2>
+            <p>
+              Most people who want to train never feel at home in a gym. Not because it's hard, but
+              because nobody explains it: which machine, how to set it up, whether your form is right.
+            </p>
+            <p>
+              EasyRep is the knowledgeable friend in your pocket. It answers the questions you'd never
+              ask out loud, and it's kind about it.
+            </p>
+          </div>
+        </section>
+
+        <div className="sec-head" id="faq">
+          <div className="eyebrow">FAQ</div>
+          <h2>Questions, answered.</h2>
+        </div>
         <section className="faq">
           {FAQ.map((f) => (
             <details key={f.q}>
@@ -263,23 +376,21 @@ export default function EasyRepLanding() {
           ))}
         </section>
 
-        <div id="get" />
         <section className="final">
-          <img src="/easyrep/plan.jpg" alt="" loading="lazy" />
-          <div className="scrim" />
-          <div className="inner">
-            <h2>The hardest visit is the first one.</h2>
-            <p>
-              EasyRep AI exists so you never walk in without a plan again. Put your email in and
-              we will let you know the moment your place is ready.
-            </p>
-            <SignupForm variant="dark" source="footer" />
+          <div className="txt">
+            <h2>Start training with confidence.</h2>
+            <p>Download EasyRep for free and walk into your next session with a plan.</p>
+            <AppStoreBadge dark={false} />
+          </div>
+          <div className="ph">
+            <img src="/easyrep/v2/phone-form.webp" alt="" loading="lazy" />
           </div>
         </section>
 
         <footer className="foot">
-          <div>EasyRep AI</div>
+          <div>© {new Date().getFullYear()} EasyRep AI</div>
           <div>
+            <a href={APP_STORE_URL}>App Store</a>
             <a href="/easyrep/privacy">Privacy</a>
             <a href="/easyrep/terms">Terms</a>
             <a href="mailto:abdelhadi@easyrepai.app">Contact</a>
