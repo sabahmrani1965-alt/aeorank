@@ -25,6 +25,10 @@ const IconCoin = () => <IconProps><circle cx="10" cy="10" r="6.5" /><path d="M10
 const IconCard = () => <IconProps><rect x="3" y="5" width="14" height="10" rx="2" /><path d="M3 8.5h14" /></IconProps>;
 const IconMenu = () => <IconProps><path d="M3 5.5h14M3 10h14M3 14.5h14" /></IconProps>;
 
+// Internal plan keys (lib/stripe.js) → the names on the pricing page.
+const PLAN_NAMES = { starter: "Lite", growth: "Pro", scale: "Max", comp: "Comp" };
+const UPGRADE_TO = { starter: "Pro", growth: "Max" };
+
 const NAV_GROUPS = [
   { label: null, links: [{ href: "/dashboard", label: "Dashboard", icon: IconGrid }] },
   {
@@ -171,7 +175,7 @@ export default function DashboardShell({
               )}
               <div className="app-sidebar-project-info">
                 <div className="app-sidebar-project-name">{projectLabel}</div>
-                <span className="app-sidebar-project-plan">{plan ? `${plan} Plan` : "No plan"}</span>
+                <span className="app-sidebar-project-plan">{plan ? `${PLAN_NAMES[plan] || plan} plan` : "No plan"}</span>
               </div>
             </button>
             {brandMenuOpen && (
@@ -231,6 +235,24 @@ export default function DashboardShell({
             </div>
           ))}
         </nav>
+
+        {/* Existing subscribers upgrade through billing (the Stripe portal),
+            never /start, which would open a second subscription. */}
+        {(!plan || UPGRADE_TO[plan]) && (
+          <div className="app-sidebar-upgrade">
+            <strong>{plan ? `Upgrade to ${UPGRADE_TO[plan]}` : "Start your 7-day trial"}</strong>
+            <span>
+              {plan === "starter"
+                ? "Weekly thread scans, daily mentions, 6 brands and cheaper comments."
+                : plan === "growth"
+                  ? "Daily thread scans, 10 brands and the lowest price per comment."
+                  : "Find opportunities, track mentions and check your AI visibility daily."}
+            </span>
+            <Link href="/dashboard/billing" className="btn btn-primary btn-sm">
+              {plan ? "Upgrade" : "Choose a plan"} →
+            </Link>
+          </div>
+        )}
       </aside>
 
       <div className="app-main">
