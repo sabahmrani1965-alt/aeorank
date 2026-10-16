@@ -25,8 +25,8 @@ export default function AiVisibilityRecheckButton() {
 
   return (
     <div>
-      <button type="button" className="btn btn-secondary" onClick={run} disabled={loading}>
-        {loading ? "Checking…" : "Re-check my brand's AI visibility"}
+      <button type="button" className="btn btn-primary" onClick={run} disabled={loading}>
+        {loading ? "Checking… (up to a minute)" : "Run a fresh check →"}
       </button>
       {error && (
         <p role="alert" style={{ color: "var(--state-danger-fg)", marginTop: 8, fontSize: 13.5 }}>

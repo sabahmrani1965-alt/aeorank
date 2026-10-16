@@ -218,7 +218,9 @@ export default function DashboardShell({
           </div>
         )}
 
-        <nav style={{ display: "flex", flexDirection: "column", gap: 18, flex: 1, overflowY: "auto" }}>
+        {/* Never shrinks: on short screens the whole sidebar scrolls
+            instead, so the upgrade card can't squeeze menu items away. */}
+        <nav style={{ display: "flex", flexDirection: "column", gap: 18, flex: "1 0 auto" }}>
           {NAV_GROUPS.map((group, i) => (
             <div className="app-sidebar-group" key={group.label || `top-${i}`}>
               {group.label && <div className="app-sidebar-group-label">{group.label}</div>}

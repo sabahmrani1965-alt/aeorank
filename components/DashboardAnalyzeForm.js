@@ -30,8 +30,7 @@ export default function DashboardAnalyzeForm() {
   }
 
   return (
-    <div className="card" style={{ padding: 24, marginBottom: 32 }}>
-      <div style={{ fontWeight: 600, marginBottom: 12 }}>Analyze a website</div>
+    <div>
       <form onSubmit={submit} style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
         <input
           type="text"

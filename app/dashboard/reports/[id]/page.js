@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AiVisibilityScoreCard from "@/components/AiVisibilityScoreCard";
@@ -29,19 +30,25 @@ export default async function DashboardReportDetailPage({ params }) {
 
   return (
     <>
-      <section className="section" style={{ paddingBottom: 0 }}>
-        <div className="container">
-          <span className="section-tag">
-            ( saved {new Date(report.created_at).toLocaleDateString()} )
-          </span>
-          <h2>{report.brand}</h2>
-          {report.url && (
-            <p className="section-sub">
-              <a href={report.url} target="_blank" rel="noopener noreferrer">
-                {report.url}
-              </a>
+      <section className="dashboard-page" style={{ paddingBottom: 0 }}>
+        <Link href="/dashboard/reports" className="dx-link">
+          ← All reports
+        </Link>
+        <div className="op-head" style={{ marginTop: 10, marginBottom: 0 }}>
+          <div>
+            <h1 className="command-greeting">{report.brand}</h1>
+            <p className="command-greeting-sub" style={{ marginBottom: 0 }}>
+              Checked {new Date(report.created_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+              {report.url ? (
+                <>
+                  {" · "}
+                  <a href={report.url} target="_blank" rel="noopener noreferrer" className="dx-link">
+                    {report.url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}
+                  </a>
+                </>
+              ) : null}
             </p>
-          )}
+          </div>
         </div>
       </section>
       <AiVisibilityScoreCard brand={report.brand} aiVisibility={aiVisibility} />

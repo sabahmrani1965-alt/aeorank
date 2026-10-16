@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { hasActiveSubscription } from "@/lib/subscription";
 import { getActiveCompanyProfile } from "@/lib/brands";
 import PromptsManager from "@/components/PromptsManager";
-import PromptTrendChart from "@/components/PromptTrendChart";
+import VisibilityTrendChart from "@/components/VisibilityTrendChart";
 import RedeemCodeForm from "@/components/RedeemCodeForm";
 
 export const dynamic = "force-dynamic";
@@ -47,7 +47,7 @@ function computeStats(checks, brand) {
     .map((m) => ({ model: m, ...byEngine.get(m), pct: pct(byEngine.get(m).hits, byEngine.get(m).total) }));
 
   // Daily-bucketed visibility % — one point per day that actually has
-  // checks, nothing padded (same honesty rule as PromptTrendChart itself).
+  // checks, nothing padded (the chart plots only real days).
   const byDay = new Map();
   for (const c of checks) {
     const day = String(c.created_at).slice(0, 10);
@@ -58,10 +58,7 @@ function computeStats(checks, brand) {
   }
   const trendPoints = [...byDay.entries()]
     .sort(([a], [b]) => (a < b ? -1 : 1))
-    .map(([day, d]) => ({
-      label: new Date(`${day}T00:00:00Z`).toLocaleDateString(undefined, { month: "short", day: "numeric" }),
-      value: pct(d.hits, d.total) ?? 0,
-    }));
+    .map(([day, d]) => ({ d: day, rate: pct(d.hits, d.total) ?? 0, n: d.total }));
 
   // Share of voice: how often each named brand shows up across all
   // answers in the window. The user's own brand is counted via the
@@ -76,13 +73,13 @@ function computeStats(checks, brand) {
       brandCounts.get(key).count += 1;
     }
   }
-  const shareOfVoice = [
-    { name: brand, count: mentionedCount, isYou: true },
-    ...[...brandCounts.values()],
-  ]
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 8)
+  // The brand itself always stays in the list, with its true rank, even
+  // when it isn't in the top 8: at 0% that row is the point of the table.
+  const ranked = [{ name: brand, count: mentionedCount, isYou: true }, ...brandCounts.values()]
+    .sort((a, b) => b.count - a.count || (a.isYou ? 1 : -1))
     .map((b, i) => ({ ...b, rank: i + 1, pct: pct(b.count, total) ?? 0 }));
+  const shareOfVoice = ranked.slice(0, 8);
+  if (!shareOfVoice.some((b) => b.isYou)) shareOfVoice.push(ranked.find((b) => b.isYou));
 
   return {
     total,
@@ -184,105 +181,105 @@ export default async function PromptsPage() {
     list.sort((a, b) => engineRank(a.model) - engineRank(b.model));
   }
 
+  const maxEngine = Math.max(1, ...(stats?.engines || []).map((e) => e.pct || 0));
+  const maxVoice = Math.max(1, ...(stats?.shareOfVoice || []).map((b) => b.pct));
+
   return (
-    <section className="dashboard-page">
-      <div className="app-sidebar-group-label" style={{ padding: 0, marginBottom: 6 }}>Analyze</div>
-      <h2 style={{ marginBottom: 8 }}>Prompts</h2>
-      <p style={{ color: "var(--text-dim)", marginBottom: 28, maxWidth: 640 }}>
-        Real questions checked against live AI models — ChatGPT, Perplexity, Gemini and Claude —
-        showing whether, and where, your brand actually gets mentioned when someone asks.
-      </p>
+    <section className="dashboard-page-wide pr-page">
+      <div className="op-head">
+        <div>
+          <h1 className="command-greeting">Prompts</h1>
+          <p className="command-greeting-sub" style={{ marginBottom: 0 }}>
+            Questions your buyers ask AI assistants, checked daily on ChatGPT, Gemini and Claude, with whether and where{" "}
+            {brand || "your brand"} is named.
+          </p>
+        </div>
+      </div>
 
       {stats && (
         <>
-          <div className="kpi-row" style={{ gridTemplateColumns: "repeat(4, 1fr)", marginBottom: 20 }}>
-            <div className="kpi">
-              <div className="kpi-label">Visibility score ({STATS_WINDOW_DAYS}d)</div>
-              <div className="kpi-value">{stats.visibilityPct != null ? `${stats.visibilityPct}%` : "-"}</div>
-            </div>
-            <div className="kpi">
-              <div className="kpi-label">Avg. position</div>
-              <div className="kpi-value">{stats.avgPosition != null ? `#${stats.avgPosition}` : "-"}</div>
-            </div>
-            <div className="kpi">
-              <div className="kpi-label">Prompts tracked</div>
-              <div className="kpi-value">{(prompts || []).length}</div>
-            </div>
-            <div className="kpi">
-              <div className="kpi-label">Checks ({STATS_WINDOW_DAYS}d)</div>
-              <div className="kpi-value">{stats.total}</div>
-            </div>
+          <div className="dx-kpis">
+            {[
+              { label: `Visibility (${STATS_WINDOW_DAYS} days)`, value: stats.visibilityPct != null ? `${stats.visibilityPct}%` : "–", sub: "Share of answers naming you", tone: "rose", icon: "chart" },
+              { label: "Average position", value: stats.avgPosition != null ? `#${stats.avgPosition}` : "–", sub: stats.avgPosition != null ? "When you are named" : "Not named yet", tone: "amber", icon: "rank" },
+              { label: "Prompts tracked", value: (prompts || []).length, sub: "Checked every day", tone: "blue", icon: "list" },
+              { label: `Answers read (${STATS_WINDOW_DAYS} days)`, value: stats.total, sub: `Across ${stats.engines.length} AI ${stats.engines.length === 1 ? "engine" : "engines"}`, tone: "green", icon: "chat" },
+            ].map((k) => (
+              <div key={k.label} className="dx-kpi mn-kpi">
+                <span className={`dx-kpi-icon tone-${k.tone}`} aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    {k.icon === "chart" ? <><path d="M3 3v18h18" /><path d="M8 16v-5M13 16V8M18 16v-9" /></> : k.icon === "rank" ? <><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z" /></> : k.icon === "list" ? <><path d="M9 6h11M9 12h11M9 18h11" /><circle cx="4" cy="6" r="1" /><circle cx="4" cy="12" r="1" /><circle cx="4" cy="18" r="1" /></> : <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />}
+                  </svg>
+                </span>
+                <span className="dx-kpi-body">
+                  <span className="dx-kpi-label">{k.label}</span>
+                  <span className="dx-kpi-value">{k.value}</span>
+                  <span className="dx-kpi-sub">{k.sub}</span>
+                </span>
+              </div>
+            ))}
           </div>
 
-          {stats.engines.length > 0 && (
-            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 20 }}>
-              {stats.engines.map((e) => (
-                <div key={e.model} className="card" style={{ padding: "14px 18px", flex: "1 1 150px", minWidth: 150 }}>
-                  <div style={{ fontSize: 12.5, color: "var(--text-dim)", marginBottom: 4 }}>{e.model}</div>
-                  <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-                    <span style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-.02em" }}>
-                      {e.pct != null ? `${e.pct}%` : "-"}
+          <div className="dx-row dx-row-wide">
+            <section className="dx-panel">
+              <div className="dx-panel-head">
+                <h2>Visibility over time</h2>
+                <span className="dx-panel-note">Last {STATS_WINDOW_DAYS} days</span>
+              </div>
+              {stats.trendPoints.length > 1 ? (
+                <VisibilityTrendChart points={stats.trendPoints} />
+              ) : (
+                <p className="dx-muted">The trend appears after two days of checks.</p>
+              )}
+            </section>
+            <section className="dx-panel">
+              <div className="dx-panel-head">
+                <h2>By AI engine</h2>
+              </div>
+              <ul className="dx-subs">
+                {stats.engines.map((e) => (
+                  <li key={e.model}>
+                    <span className="dx-sub-name">
+                      {e.model}
+                      <span className="dx-sub-n">
+                        Named in {e.hits} of {e.total} answers
+                      </span>
                     </span>
-                    <span style={{ fontSize: 12, color: "var(--text-muted)" }}>
-                      {e.hits}/{e.total} checks
+                    <span className="dx-bar">
+                      <span style={{ width: `${((e.pct || 0) / maxEngine) * 100}%` }} />
                     </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {stats.trendPoints.length > 1 && (
-            <div className="card" style={{ padding: 20, marginBottom: 20 }}>
-              <div style={{ fontWeight: 700, marginBottom: 12 }}>Visibility over time</div>
-              <PromptTrendChart points={stats.trendPoints} />
-            </div>
-          )}
+                    <span className="dx-sub-pct">{e.pct != null ? `${e.pct}%` : "–"}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
 
           {stats.shareOfVoice.length > 1 && (
-            <div className="card" style={{ padding: 20, marginBottom: 28 }}>
-              <div style={{ fontWeight: 700, marginBottom: 4 }}>Share of voice</div>
-              <p style={{ fontSize: 13, color: "var(--text-dim)", margin: "0 0 12px" }}>
-                How often each brand shows up across every AI answer checked in the last {STATS_WINDOW_DAYS} days.
-              </p>
-              <div style={{ overflowX: "auto" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                  <thead>
-                    <tr style={{ borderBottom: "1px solid var(--card-border-soft)" }}>
-                      <th style={{ textAlign: "left", padding: "8px 10px", color: "var(--text-dim)", fontSize: 13, width: 50 }}>#</th>
-                      <th style={{ textAlign: "left", padding: "8px 10px", color: "var(--text-dim)", fontSize: 13 }}>Brand</th>
-                      <th style={{ textAlign: "right", padding: "8px 10px", color: "var(--text-dim)", fontSize: 13 }}>Visibility</th>
-                      <th style={{ textAlign: "right", padding: "8px 10px", color: "var(--text-dim)", fontSize: 13 }}>Appearances</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {stats.shareOfVoice.map((b) => (
-                      <tr
-                        key={b.name}
-                        style={{
-                          borderBottom: "1px solid var(--card-border-soft)",
-                          background: b.isYou ? "var(--accent-dim)" : "transparent",
-                        }}
-                      >
-                        <td style={{ padding: "8px 10px", color: "var(--text-dim)" }}>{b.rank}</td>
-                        <td style={{ padding: "8px 10px", fontWeight: b.isYou ? 700 : 400 }}>
-                          {b.name}
-                          {b.isYou && (
-                            <span style={{ fontSize: 11.5, fontWeight: 700, color: "var(--accent)", marginLeft: 8 }}>
-                              You
-                            </span>
-                          )}
-                        </td>
-                        <td style={{ padding: "8px 10px", textAlign: "right" }}>{b.pct}%</td>
-                        <td style={{ padding: "8px 10px", textAlign: "right", color: "var(--text-dim)" }}>
-                          {b.count}/{stats.total}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            <section className="dx-panel pr-voice">
+              <div className="dx-panel-head">
+                <h2>Share of voice</h2>
+                <span className="dx-panel-note">Brands named across all answers, last {STATS_WINDOW_DAYS} days</span>
               </div>
-            </div>
+              <ol className="pr-voice-list">
+                {stats.shareOfVoice.map((b) => (
+                  <li key={b.name} className={b.isYou ? "is-you" : undefined}>
+                    <span className="pr-voice-rank">{b.count ? b.rank : "–"}</span>
+                    <span className="pr-voice-name">
+                      {b.name}
+                      {b.isYou ? <span className="pr-you">You</span> : null}
+                    </span>
+                    <span className="dx-bar">
+                      <span style={{ width: `${(b.pct / maxVoice) * 100}%`, background: b.isYou ? "var(--accent-3)" : undefined }} />
+                    </span>
+                    <span className="dx-sub-pct">{b.pct}%</span>
+                    <span className="pr-voice-n">
+                      {b.count}/{stats.total}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </section>
           )}
         </>
       )}
