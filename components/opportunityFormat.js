@@ -33,8 +33,10 @@ export function cleanPostText(text, title = "") {
   let t = decodeEntities(String(text || ""))
     // Reddit's feed format ends posts with "submitted by /u/x [link] [comments]".
     .replace(/\s*submitted by\s+\/?u\/\S+[\s\S]*$/i, "")
-    .replace(/^Title:.*$/gim, "")
-    .replace(/^#{1,6}\s*/gm, "")
+    .replace(/Reddit\s*-\s*(The heart of the internet|Dive into anything)/gi, " ")
+    .replace(/(^|\s)Title:\s*/gi, " ")
+    .replace(/#{1,6}\s*/g, "")
+    .replace(/Post details\.?\s*Content\.?\s*/gi, " ")
     .replace(/Skip to main content/gi, " ")
     .replace(/\s*Skip to( main( con\w*)?)?\s*$/i, "") // cut off at 130 chars
     .replace(/\s+/g, " ")

@@ -3,16 +3,12 @@ import { createClient } from "@/lib/supabase/server";
 import { timeAgo } from "@/lib/reddit";
 import { hasActiveSubscription } from "@/lib/subscription";
 import { getActiveCompanyProfile } from "@/lib/brands";
+import { brandNeedles, isRealMention } from "@/lib/mentionMatch";
 import MentionsRefreshButton from "@/components/MentionsRefreshButton";
+import MentionsView from "@/components/MentionsView";
 import RedeemCodeForm from "@/components/RedeemCodeForm";
 
 export const dynamic = "force-dynamic";
-
-function sentimentColor(sentiment) {
-  if (sentiment === "positive") return { bg: "var(--state-success-bg)", fg: "var(--state-success-fg)" };
-  if (sentiment === "negative") return { bg: "var(--state-danger-bg)", fg: "var(--state-danger-fg)" };
-  return { bg: "var(--state-neutral-bg)", fg: "var(--text-dim)" };
-}
 
 export default async function MentionsPage() {
   const supabase = createClient();
@@ -23,20 +19,15 @@ export default async function MentionsPage() {
   const hasPlan = await hasActiveSubscription(supabase, user.id);
   if (!hasPlan) {
     return (
-      <section className="section">
-        <div className="container">
-          <span className="section-tag">( mentions )</span>
-          <h2>Brand mention tracking</h2>
-          <div className="card" style={{ textAlign: "center", padding: 32 }}>
-            <p style={{ color: "var(--text-dim)", marginBottom: 16 }}>
-              This is available on any active plan.
-            </p>
-            <div style={{ display: "flex", gap: 14, justifyContent: "center", alignItems: "center", flexWrap: "wrap" }}>
-              <Link href="/dashboard/billing" className="btn btn-primary">
-                View plans →
-              </Link>
-              <RedeemCodeForm />
-            </div>
+      <section className="dashboard-page">
+        <h1 className="command-greeting">Mentions</h1>
+        <div className="card" style={{ textAlign: "center", padding: 32 }}>
+          <p style={{ color: "var(--text-dim)", marginBottom: 16 }}>This is available on any active plan.</p>
+          <div style={{ display: "flex", gap: 14, justifyContent: "center", alignItems: "center", flexWrap: "wrap" }}>
+            <Link href="/dashboard/billing" className="btn btn-primary">
+              View plans →
+            </Link>
+            <RedeemCodeForm />
           </div>
         </div>
       </section>
@@ -44,8 +35,7 @@ export default async function MentionsPage() {
   }
 
   const profile = await getActiveCompanyProfile(supabase, user.id);
-
-  const { data: mentions } = profile
+  const { data: rows } = profile
     ? await supabase
         .from("mentions")
         .select("id, sub, title, snippet, permalink, ups, comments, post_created_at, sentiment, sentiment_reason, fetched_at")
@@ -54,126 +44,46 @@ export default async function MentionsPage() {
         .order("post_created_at", { ascending: false, nullsFirst: false })
     : { data: [] };
 
+  // Only posts that are really about the brand (lib/mentionMatch.js).
+  const needles = brandNeedles(profile);
+  const mentions = (rows || []).filter((m) => isRealMention(m, needles));
+
+  // Mentions accumulate across refreshes, so the newest fetch time has to
+  // be found explicitly rather than read off the first row.
+  const lastRefreshedAt = (rows || []).reduce((max, m) => (!max || new Date(m.fetched_at) > new Date(max) ? m.fetched_at : max), null);
   const hasProfile = Boolean(profile?.company_name);
-  // Mentions accumulate across refreshes (see app/api/mentions/refresh),
-  // so the list is ordered by post date, not fetch recency — the most
-  // recent fetch time has to be found explicitly rather than read off the
-  // first row.
-  const lastRefreshedAt = (mentions || []).reduce(
-    (max, m) => (!max || new Date(m.fetched_at) > new Date(max) ? m.fetched_at : max),
-    null
-  );
-  const classified = (mentions || []).filter((m) => m.sentiment);
-  const positivePct = classified.length
-    ? Math.round((classified.filter((m) => m.sentiment === "positive").length / classified.length) * 100)
-    : null;
 
   return (
-    <section className="section">
-      <div className="container">
-        <span className="section-tag">( mentions )</span>
-        <h2>Brand mention tracking</h2>
-        <p className="section-sub">
-          Real Reddit posts and comments that already mention your brand,
-          with sentiment. Read-only monitoring, nothing here posts,
-          votes, or replies on your behalf.
-        </p>
-
-        {!hasProfile ? (
-          <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
-            Complete your company profile first so we know what brand to
-            search for. <Link href="/onboarding" style={{ color: "var(--accent)", fontWeight: 600 }}>Go to onboarding →</Link>
+    <section className="dashboard-page-wide">
+      <div className="op-head">
+        <div>
+          <h1 className="command-greeting">Mentions</h1>
+          <p className="command-greeting-sub" style={{ marginBottom: 0 }}>
+            Where {profile?.company_name || "your brand"} is discussed on Reddit, with the sentiment of each post. Read-only: nothing is posted for you.
+          </p>
+        </div>
+        {hasProfile ? (
+          <div className="op-head-actions">
+            <MentionsRefreshButton />
+            {lastRefreshedAt && <span className="op-refreshed">Last refreshed {timeAgo(new Date(lastRefreshedAt).getTime())}</span>}
           </div>
-        ) : (
-          <>
-            <div style={{ marginBottom: 24, display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
-              <MentionsRefreshButton />
-              {lastRefreshedAt && (
-                <span style={{ fontSize: 13, color: "var(--text-muted)" }}>
-                  Last refreshed {timeAgo(new Date(lastRefreshedAt).getTime())}
-                </span>
-              )}
-            </div>
-
-            {positivePct != null && (
-              <div className="card" style={{ padding: 20, marginBottom: 24 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-                  <span style={{ fontSize: 13, color: "var(--text-dim)" }}>
-                    Sentiment · {classified.length} classified of {mentions.length} total
-                  </span>
-                  <strong style={{ color: "var(--state-success-fg)" }}>{positivePct}% positive</strong>
-                </div>
-                <div style={{ height: 8, borderRadius: 999, background: "var(--state-danger-bg)", overflow: "hidden" }}>
-                  <div style={{ width: `${positivePct}%`, height: "100%", background: "var(--state-success-fg)" }} />
-                </div>
-              </div>
-            )}
-
-            {!mentions || mentions.length === 0 ? (
-              <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
-                No mentions found yet. Click "Refresh mentions" to search Reddit.
-              </div>
-            ) : (
-              <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                {mentions.map((m) => {
-                  const colors = sentimentColor(m.sentiment);
-                  return (
-                    <a
-                      key={m.id}
-                      href={m.permalink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="card"
-                      style={{ display: "block", padding: 20 }}
-                    >
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap", marginBottom: 8 }}>
-                        <div className="post-meta">
-                          <span>{m.sub}</span>
-                          {m.post_created_at && (
-                            <>
-                              <span>·</span>
-                              <span>{timeAgo(new Date(m.post_created_at).getTime())}</span>
-                            </>
-                          )}
-                        </div>
-                        {m.sentiment && (
-                          <span
-                            style={{
-                              fontSize: 12,
-                              fontWeight: 700,
-                              padding: "4px 10px",
-                              borderRadius: 999,
-                              background: colors.bg,
-                              color: colors.fg,
-                              textTransform: "capitalize",
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            {m.sentiment}
-                          </span>
-                        )}
-                      </div>
-                      <div className="post-title">{m.title}</div>
-                      {m.snippet && <div className="post-snippet">{m.snippet}…</div>}
-                      {(m.ups > 0 || m.comments > 0) && (
-                        <div className="post-stats">
-                          {m.ups > 0 && <span className="post-stat">↑ {m.ups.toLocaleString()}</span>}
-                          {m.comments > 0 && <span className="post-stat">💬 {m.comments.toLocaleString()}</span>}
-                        </div>
-                      )}
-                      {m.sentiment_reason && (
-                        <p style={{ marginTop: 10, fontSize: 13.5, color: "var(--text-dim)", lineHeight: 1.5 }}>
-                          {m.sentiment_reason}
-                        </p>
-                      )}
-                    </a>
-                  );
-                })}
-              </div>
-            )}
-          </>
-        )}
+        ) : null}
       </div>
+
+      {!hasProfile ? (
+        <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
+          Complete your company profile first so we know what brand to search for.{" "}
+          <Link href="/onboarding" style={{ color: "var(--accent)", fontWeight: 600 }}>
+            Go to onboarding →
+          </Link>
+        </div>
+      ) : mentions.length === 0 ? (
+        <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
+          No mentions found yet. Click "Refresh mentions" to search Reddit.
+        </div>
+      ) : (
+        <MentionsView mentions={mentions} brandTerms={[profile.company_name, ...(profile.brand_variations || [])].filter(Boolean)} />
+      )}
     </section>
   );
 }
