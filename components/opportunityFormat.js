@@ -15,13 +15,24 @@ export function intentLabel(intent) {
   return null;
 }
 
+// Post text from Reddit arrives HTML-escaped ("I&#39;ve", "&amp;").
+function decodeEntities(s) {
+  const named = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " " };
+  return s
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
+    .replace(/&(amp|lt|gt|quot|apos|nbsp);/g, (_, k) => named[k]);
+}
+
 // Threads found through web search before the lib/reddit.js fix stored the
 // page's raw text: "Title: <title> : r/sub", a "# <title>" heading and
 // Reddit's "Skip to main content" chrome. Strip all of that; return "" when
 // nothing beyond the title is left, so no empty or repeated quote shows.
 export function cleanPostText(text, title = "") {
   const norm = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
-  let t = String(text || "")
+  let t = decodeEntities(String(text || ""))
+    // Reddit's feed format ends posts with "submitted by /u/x [link] [comments]".
+    .replace(/\s*submitted by\s+\/?u\/\S+[\s\S]*$/i, "")
     .replace(/^Title:.*$/gim, "")
     .replace(/^#{1,6}\s*/gm, "")
     .replace(/Skip to main content/gi, " ")
