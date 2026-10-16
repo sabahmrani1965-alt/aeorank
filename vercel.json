@@ -46,6 +46,9 @@
     },
     "app/api/cron/weekly-ai-report/route.js": {
       "maxDuration": 60
+    },
+    "app/api/cron/outreach/route.js": {
+      "maxDuration": 60
     }
   },
   "crons": [
@@ -80,6 +83,10 @@
     {
       "path": "/api/cron/weekly-ai-report",
       "schedule": "0 13 * * 1"
+    },
+    {
+      "path": "/api/cron/outreach",
+      "schedule": "0 14 * * 1-5"
     }
   ]
 }
