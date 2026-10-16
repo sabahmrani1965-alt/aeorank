@@ -49,6 +49,9 @@ export async function POST(req) {
     brand: profile?.company_name || "",
     description: profile?.description || "",
     existingText: body.existingText || "",
+    threadBody: String(body.threadBody || "").slice(0, 3000),
+    mentionBrand: body.mentionBrand !== false,
+    link: body.includeLink && profile?.website ? profile.website : "",
   });
 
   if (!result) {

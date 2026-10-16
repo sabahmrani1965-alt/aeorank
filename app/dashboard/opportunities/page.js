@@ -42,7 +42,7 @@ export default async function OpportunitiesPage() {
     ? await supabase
         .from("opportunities")
         .select(
-          "id, sub, title, snippet, permalink, ups, comments, post_created_at, relevance_score, relevance_reason, relevance_reasons, buying_intent, saved, fetched_at"
+          "id, sub, title, snippet, thread_selftext, permalink, ups, comments, post_created_at, relevance_score, relevance_reason, relevance_reasons, buying_intent, saved, fetched_at"
         )
         .eq("user_id", user.id)
         .eq("company_profile_id", profile.id)
@@ -51,9 +51,6 @@ export default async function OpportunitiesPage() {
 
   const hasProfile = Boolean(profile?.description || profile?.company_name);
   const competitors = profile?.competitors || [];
-
-  const saved = (opportunities || []).filter((o) => o.saved);
-  const rest = (opportunities || []).filter((o) => !o.saved);
 
   // Opportunities now accumulate across refreshes instead of being replaced
   // each time (see app/api/opportunities/refresh/route.js), so the list is
@@ -66,12 +63,20 @@ export default async function OpportunitiesPage() {
 
   return (
     <section className="dashboard-page-wide">
-      <div className="app-sidebar-group-label" style={{ padding: 0, marginBottom: 6 }}>Discover</div>
-      <h2 style={{ marginBottom: 8 }}>Reddit threads worth engaging with</h2>
-      <p style={{ color: "var(--text-dim)", marginBottom: 28, maxWidth: 640 }}>
-        Real threads matched to your company profile, scored for relevance. Nothing here is
-        posted automatically. Browse and decide what's worth a reply from your own account.
-      </p>
+      <div className="op-head">
+        <div>
+          <h1 className="command-greeting">Opportunities</h1>
+          <p className="command-greeting-sub" style={{ marginBottom: 0 }}>
+            Reddit threads where your brand can genuinely help, scored for fit. Nothing is posted automatically.
+          </p>
+        </div>
+        {hasProfile ? (
+          <div className="op-head-actions">
+            <OpportunityRefreshButton />
+            {lastRefreshedAt && <span className="op-refreshed">Last refreshed {timeAgo(new Date(lastRefreshedAt).getTime())}</span>}
+          </div>
+        ) : null}
+      </div>
 
       {!hasProfile ? (
         <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
@@ -81,24 +86,13 @@ export default async function OpportunitiesPage() {
           </Link>
         </div>
       ) : (
-        <>
-          <div style={{ marginBottom: 24, display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
-            <OpportunityRefreshButton />
-            {lastRefreshedAt && (
-              <span style={{ fontSize: 13, color: "var(--text-muted)" }}>
-                Last refreshed {timeAgo(new Date(lastRefreshedAt).getTime())}
-              </span>
-            )}
+        !opportunities || opportunities.length === 0 ? (
+          <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
+            No opportunities yet. Click "Refresh opportunities" to search Reddit.
           </div>
-
-          {!opportunities || opportunities.length === 0 ? (
-            <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
-              No opportunities yet. Click "Refresh opportunities" to search Reddit.
-            </div>
-          ) : (
-            <OpportunityList saved={saved} rest={rest} competitors={competitors} />
-          )}
-        </>
+        ) : (
+          <OpportunityList opportunities={opportunities} competitors={competitors} brandWebsite={profile?.website || ""} />
+        )
       )}
     </section>
   );

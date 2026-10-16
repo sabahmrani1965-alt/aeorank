@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import OpportunityListItem from "./OpportunityListItem";
 import OpportunityDetailPane from "./OpportunityDetailPane";
 
@@ -27,62 +27,114 @@ function findCompetitorMention(text, competitors) {
   return null;
 }
 
-function freshnessLabel(postCreatedAt) {
-  if (!postCreatedAt) return null;
-  const hours = (Date.now() - new Date(postCreatedAt).getTime()) / 3600000;
-  if (hours < 24) return "New";
-  if (hours < 24 * 7) return "This week";
-  return "Older";
-}
+const TABS = [
+  { key: "all", label: "All", test: () => true },
+  { key: "high", label: "High intent", test: (o) => o.buying_intent === "high" },
+  { key: "saved", label: "Saved", test: (o) => o.saved },
+];
 
-// Two-pane layout: a compact scrollable list on the left, full detail +
-// inline draft-and-create-task composer on the right for whichever
-// opportunity is selected. Defaults to the first item so the pane is never
-// empty on load.
-export default function OpportunityList({ saved, rest, competitors }) {
-  const all = [...saved, ...rest];
-  const [selectedId, setSelectedId] = useState(all[0]?.id ?? null);
-  const selected = all.find((o) => o.id === selectedId) || null;
+const SORTS = {
+  relevance: (a, b) => (b.relevance_score ?? -1) - (a.relevance_score ?? -1),
+  newest: (a, b) => (Date.parse(b.post_created_at) || 0) - (Date.parse(a.post_created_at) || 0),
+  comments: (a, b) => (b.comments || 0) - (a.comments || 0),
+};
 
-  function renderItem(o) {
-    return (
-      <OpportunityListItem
-        key={o.id}
-        opportunity={o}
-        freshness={freshnessLabel(o.post_created_at)}
-        isSelected={selectedId === o.id}
-        onSelect={setSelectedId}
-      />
-    );
+// Two-pane layout: a filterable list on the left, the selected thread with
+// its AI comment composer on the right. Saved and dismissed state is kept
+// here so the list updates without a reload.
+export default function OpportunityList({ opportunities, competitors, brandWebsite }) {
+  const [items, setItems] = useState(opportunities);
+  const [tab, setTab] = useState("all");
+  const [sub, setSub] = useState("");
+  const [sort, setSort] = useState("relevance");
+
+  const subs = useMemo(() => {
+    const counts = new Map();
+    for (const o of items) counts.set(o.sub, (counts.get(o.sub) || 0) + 1);
+    return [...counts.entries()].sort((a, b) => b[1] - a[1]);
+  }, [items]);
+
+  const visible = useMemo(() => {
+    const t = TABS.find((x) => x.key === tab) || TABS[0];
+    return items.filter((o) => t.test(o) && (!sub || o.sub === sub)).sort(SORTS[sort]);
+  }, [items, tab, sub, sort]);
+
+  const [selectedId, setSelectedId] = useState(visible[0]?.id ?? null);
+  const selected = visible.find((o) => o.id === selectedId) || visible[0] || null;
+
+  function update(id, patch) {
+    setItems((xs) => xs.map((o) => (o.id === id ? { ...o, ...patch } : o)));
+  }
+  function remove(id) {
+    const i = visible.findIndex((o) => o.id === id);
+    const next = visible[i + 1] || visible[i - 1] || null;
+    setItems((xs) => xs.filter((o) => o.id !== id));
+    setSelectedId(next?.id ?? null);
   }
 
   return (
-    <div className="opp-split">
-      <div className="opp-list-col">
-        {saved.length > 0 && (
-          <div style={{ marginBottom: 24 }}>
-            <h3 className="opp-list-col-heading">Saved</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>{saved.map(renderItem)}</div>
-          </div>
-        )}
-        <div>
-          {saved.length > 0 && <h3 className="opp-list-col-heading">All opportunities</h3>}
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>{rest.map(renderItem)}</div>
+    <div className="op-split">
+      <div className="op-list-col">
+        <div className="op-tabs" role="tablist">
+          {TABS.map((t) => (
+            <button
+              key={t.key}
+              type="button"
+              role="tab"
+              aria-selected={tab === t.key}
+              className={`op-tab${tab === t.key ? " is-active" : ""}`}
+              onClick={() => setTab(t.key)}
+            >
+              {t.label} <span className="op-tab-n">{items.filter(t.test).length}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="op-filters">
+          <label>
+            <span className="sr-only">Subreddit</span>
+            <select value={sub} onChange={(e) => setSub(e.target.value)} className="op-select">
+              <option value="">All subreddits</option>
+              {subs.map(([s, n]) => (
+                <option key={s} value={s}>
+                  {s} ({n})
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            <span className="sr-only">Sort by</span>
+            <select value={sort} onChange={(e) => setSort(e.target.value)} className="op-select">
+              <option value="relevance">Most relevant</option>
+              <option value="newest">Newest</option>
+              <option value="comments">Most comments</option>
+            </select>
+          </label>
+        </div>
+
+        <div className="op-list">
+          {visible.length === 0 ? (
+            <p className="op-empty">{tab === "saved" ? "No saved threads yet. Use Save on a thread to keep it here." : "No threads match these filters."}</p>
+          ) : (
+            visible.map((o) => (
+              <OpportunityListItem key={o.id} opportunity={o} isSelected={selected?.id === o.id} onSelect={setSelectedId} />
+            ))
+          )}
         </div>
       </div>
 
-      <div className="opp-detail-col">
+      <div className="op-detail-col">
         {selected ? (
           <OpportunityDetailPane
             key={selected.id}
             opportunity={selected}
+            brandWebsite={brandWebsite}
             competitorMatch={findCompetitorMention(`${selected.title} ${selected.snippet || ""}`, competitors)}
-            freshness={freshnessLabel(selected.post_created_at)}
+            onSavedChange={(saved) => update(selected.id, { saved })}
+            onDismissed={() => remove(selected.id)}
           />
         ) : (
-          <div className="card" style={{ textAlign: "center", color: "var(--text-dim)", padding: 32 }}>
-            Select an opportunity to see details.
-          </div>
+          <div className="op-detail op-detail-empty">Select a thread to see why it fits and draft a comment.</div>
         )}
       </div>
     </div>

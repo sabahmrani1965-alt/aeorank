@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { addDismissed } from "@/lib/dismissed";
 
 export const runtime = "nodejs";
 
@@ -17,6 +18,25 @@ export async function PATCH(req, { params }) {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON." }, { status: 400 });
+  }
+
+  // "Not relevant": remember the thread so refreshes skip it, then delete
+  // the row (lib/dismissed.js).
+  if (body.dismissed === true) {
+    const { data: row } = await supabase
+      .from("opportunities")
+      .select("id, permalink, company_profile_id")
+      .eq("id", params.id)
+      .eq("user_id", user.id)
+      .maybeSingle();
+    if (!row) return NextResponse.json({ error: "Not found." }, { status: 404 });
+    await addDismissed(user.id, row.company_profile_id, row.permalink);
+    const { error: delError } = await supabase.from("opportunities").delete().eq("id", row.id).eq("user_id", user.id);
+    if (delError) {
+      console.error("[opportunities] dismiss failed:", delError.message);
+      return NextResponse.json({ error: "Could not remove this thread." }, { status: 500 });
+    }
+    return NextResponse.json({ ok: true, dismissed: true });
   }
 
   const updates = {};

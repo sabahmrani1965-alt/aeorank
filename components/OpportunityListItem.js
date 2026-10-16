@@ -1,45 +1,38 @@
 "use client";
 
-function tierColor(score) {
-  if (score == null) return { fg: "var(--text-dim)", bg: "var(--state-neutral-bg)" };
-  if (score >= 85) return { fg: "var(--state-success-fg)", bg: "var(--state-success-bg)" };
-  if (score >= 60) return { fg: "var(--accent)", bg: "rgba(242,168,59,.15)" };
-  return { fg: "var(--state-danger-fg)", bg: "var(--state-danger-bg)" };
-}
+import { ago, cleanPostText, intentLabel, scoreTier } from "./opportunityFormat";
 
-// Compact row for the left-hand list — full detail lives in
-// OpportunityDetailPane, this is scan-and-pick only.
-export default function OpportunityListItem({ opportunity: o, freshness, isSelected, onSelect }) {
-  const tier = tierColor(o.relevance_score);
-
+// One row in the left-hand list: enough to judge a thread without opening
+// it (subreddit, age, title, a line of the post, score, intent, comments).
+export default function OpportunityListItem({ opportunity: o, isSelected, onSelect }) {
+  const tier = scoreTier(o.relevance_score);
+  const intent = intentLabel(o.buying_intent);
+  const snippet = cleanPostText(o.snippet, o.title);
   return (
-    <button
-      type="button"
-      onClick={() => onSelect(o.id)}
-      className={`opp-list-item${isSelected ? " is-selected" : ""}`}
-    >
-      <div className="opp-list-item-meta">
+    <button type="button" onClick={() => onSelect(o.id)} className={`op-item${isSelected ? " is-selected" : ""}`} aria-pressed={isSelected}>
+      <span className="op-item-meta">
         <span>{o.sub}</span>
-        {freshness && (
-          <>
-            <span>·</span>
-            <span>{freshness}</span>
-          </>
-        )}
-        {o.saved && <span className="opp-list-item-saved">★</span>}
-      </div>
-      <div className="opp-list-item-title">{o.title}</div>
-      <div className="opp-list-item-footer">
-        <span className="opp-list-item-score" style={{ color: tier.fg, background: tier.bg }}>
-          {o.relevance_score ?? "-"}
-        </span>
-        {(o.ups > 0 || o.comments > 0) && (
-          <span className="opp-list-item-stats">
-            {o.ups > 0 && <span>↑ {o.ups.toLocaleString()}</span>}
-            {o.comments > 0 && <span>💬 {o.comments.toLocaleString()}</span>}
+        {o.post_created_at ? <span>· {ago(o.post_created_at)}</span> : null}
+        {o.saved ? (
+          <span className="op-item-saved" aria-label="Saved">
+            ★
           </span>
-        )}
-      </div>
+        ) : null}
+      </span>
+      <span className="op-item-title">{o.title}</span>
+      {snippet ? <span className="op-item-snippet">{snippet}</span> : null}
+      <span className="op-item-foot">
+        <span className={`op-score ${tier.cls}`}>{o.relevance_score ?? "–"}</span>
+        {intent ? <span className={`op-intent ${intent.cls}`}>{intent.label}</span> : null}
+        {o.comments > 0 ? (
+          <span className="op-item-comments" aria-label={`${o.comments} comments`}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+            {o.comments.toLocaleString()}
+          </span>
+        ) : null}
+      </span>
     </button>
   );
 }
