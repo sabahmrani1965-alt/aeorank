@@ -325,6 +325,13 @@ export default async function Proof() {
             A flat result is a real finding. If this number never moves, the
             useful thing is knowing why.
           </p>
+          <p style={{ color: "var(--text-dim)", lineHeight: 1.8 }}>
+            We run the same measurement on whole software categories and publish it daily:{" "}
+            <Link href="/ai-recommendations" style={{ color: "var(--accent)" }}>
+              which brands AI assistants recommend
+            </Link>
+            .
+          </p>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 20 }}>
             <Link href="/services/ai-visibility-audit" className="btn btn-primary">
               Get your own baseline →

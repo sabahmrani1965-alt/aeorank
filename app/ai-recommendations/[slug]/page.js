@@ -25,7 +25,8 @@ export async function generateMetadata({ params }) {
     title,
     description,
     alternates: { canonical: `${SITE_URL}/ai-recommendations/${cat.slug}` },
-    openGraph: { title, description, type: "website", url: `${SITE_URL}/ai-recommendations/${cat.slug}`, images: ["/opengraph-image"] },
+    // No images here: the segment's opengraph-image.js draws a card per category.
+    openGraph: { title, description, type: "website", url: `${SITE_URL}/ai-recommendations/${cat.slug}` },
   };
 }
 

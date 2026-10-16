@@ -79,6 +79,11 @@ export default function Page() {
             <Link href="/proof">our proof page</Link>, including where it is zero.
           </p>
           <p>
+            To see who the engines favour across a whole category, browse our{" "}
+            <Link href="/ai-recommendations">daily data on which brands AI assistants recommend</Link>, from CRM
+            software to SEO tools.
+          </p>
+          <p>
             For the reasons behind a result, see <Link href="/blog/how-to-get-cited-by-chatgpt">how to get cited by ChatGPT</Link>{" "}
             and <Link href="/blog/why-chatgpt-cites-reddit-threads">why ChatGPT cites Reddit threads</Link>.
           </p>
