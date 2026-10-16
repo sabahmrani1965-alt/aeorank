@@ -34,6 +34,14 @@ export async function POST(req) {
 
   const email = String(body.email || "").trim().toLowerCase().slice(0, 200);
   const rawUrl = String(body.url || "").trim().slice(0, 300);
+  // Optional: the visitor's own words for what they sell, used instead of
+  // the detected category (and to correct a wrong detection).
+  const userCategory = String(body.category || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9 &/+-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 60);
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return busy("Please enter a valid email address.", 400);
   const slug = urlToSlug(rawUrl);
   if (!slug) return busy("Please enter a valid website.", 400);
@@ -66,12 +74,17 @@ export async function POST(req) {
   }
   const names = (today || []).map((f) => f.name);
   if (names.length >= GLOBAL_PER_DAY) return busy("Today's free checks are used up. Please try again tomorrow.");
-  if (names.filter((n) => n.includes(`_e${emailHash}_`)).length >= PER_EMAIL_PER_DAY || names.filter((n) => n.endsWith(`_i${ipHash}.json`)).length >= PER_IP_PER_DAY)
+  // A check with a category the visitor typed is marked "c" in the file
+  // name; each email gets one detected-category check and one typed one a
+  // day, so a wrong detection can be corrected without opening the limit.
+  const mine = names.filter((n) => n.includes(`_e${emailHash}_`));
+  const usedOwnKind = mine.filter((n) => /^\d+c_/.test(n) === Boolean(userCategory)).length;
+  if (usedOwnKind >= PER_EMAIL_PER_DAY || names.filter((n) => n.endsWith(`_i${ipHash}.json`)).length >= PER_IP_PER_DAY)
     return busy("You've used your free check for today. Try again tomorrow, or start a trial for daily tracking.");
 
   // Reserve the slot before spending anything, so parallel requests can't
   // all slip under the limit.
-  const path = `${day}/${Date.now()}_e${emailHash}_i${ipHash}.json`;
+  const path = `${day}/${Date.now()}${userCategory ? "c" : ""}_e${emailHash}_i${ipHash}.json`;
   const save = (record) =>
     bucket.upload(path, JSON.stringify(record), { contentType: "application/json", upsert: true });
   const { error: reserveError } = await save({ email, domain, at: new Date().toISOString() });
@@ -86,7 +99,8 @@ export async function POST(req) {
   } catch {}
   const brand = extractBrandFromTitle(meta.title) || prettyBrand(slug);
   const description = meta.description || meta.title || `${brand} platform`;
-  const categoryQuery = (await detectCategory(brand, description, domain)) || pickCategoryQuery(description, brand);
+  const categoryQuery =
+    userCategory || (await detectCategory(brand, description, domain)) || pickCategoryQuery(description, brand);
 
   const result = await analyzeBrandVisibility(brand, categoryQuery, { deadline });
   // A score from one answer reads as 0% or 100%, which says almost nothing.
@@ -102,6 +116,8 @@ export async function POST(req) {
       email,
       domain,
       brand,
+      category: categoryQuery,
+      categoryTyped: Boolean(userCategory),
       at: new Date().toISOString(),
       score: result.score,
       total: result.total,
@@ -122,6 +138,7 @@ export async function POST(req) {
     ok: true,
     brand,
     query: categoryQuery,
+    categoryTyped: Boolean(userCategory),
     score: result.score,
     hits: result.hits,
     total: result.total,

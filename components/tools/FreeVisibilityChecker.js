@@ -7,12 +7,27 @@ export default function FreeVisibilityChecker() {
   const [url, setUrl] = useState("");
   const [email, setEmail] = useState("");
   const [trap, setTrap] = useState("");
+  const [category, setCategory] = useState("");
+  const [fix, setFix] = useState("");
   const [state, setState] = useState("idle"); // idle | busy | done | error
   const [error, setError] = useState("");
   const [r, setR] = useState(null);
 
-  async function submit(e) {
+  function submit(e) {
     e.preventDefault();
+    run(category);
+  }
+
+  // A second check with the visitor's own category, when the detected one
+  // was wrong. The API allows one of these per email per day.
+  function recheck(e) {
+    e.preventDefault();
+    if (!fix.trim()) return;
+    setCategory(fix.trim());
+    run(fix.trim());
+  }
+
+  async function run(cat) {
     if (state === "busy") return;
     setState("busy");
     setError("");
@@ -20,11 +35,12 @@ export default function FreeVisibilityChecker() {
       const res = await fetch("/api/free-check", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, email, company_site: trap }),
+        body: JSON.stringify({ url, email, category: cat || "", company_site: trap }),
       });
       const j = await res.json().catch(() => ({}));
       if (!res.ok || !j.ok) throw new Error(j.error || "Something went wrong. Please try again.");
       setR(j);
+      setFix(j.query || "");
       setState("done");
     } catch (err) {
       setError(err.message);
@@ -42,6 +58,13 @@ export default function FreeVisibilityChecker() {
         <div>
           <label htmlFor="fc-email" className="tool-label">Your email</label>
           <input id="fc-email" type="email" className="input" style={{ width: "100%" }} placeholder="you@company.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        </div>
+        <div>
+          <label htmlFor="fc-cat" className="tool-label">
+            What do you sell? <span style={{ fontWeight: 400, color: "var(--text-muted)" }}>(optional)</span>
+          </label>
+          <input id="fc-cat" className="input" style={{ width: "100%" }} placeholder="e.g. issue tracking software" maxLength={60} value={category} onChange={(e) => setCategory(e.target.value)} />
+          <p className="tool-meta" style={{ margin: "6px 0 0" }}>Leave it empty and we'll work it out from your website.</p>
         </div>
         {/* Honeypot for bots; hidden from people and screen readers. */}
         <input type="text" name="company_site" value={trap} onChange={(e) => setTrap(e.target.value)} tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: "absolute", left: "-9999px" }} />
@@ -80,6 +103,19 @@ export default function FreeVisibilityChecker() {
               </li>
             ))}
           </ul>
+          {!r.categoryTyped ? (
+            <form onSubmit={recheck} style={{ marginTop: 14, display: "grid", gap: 8 }}>
+              <label htmlFor="fc-fix" className="tool-meta" style={{ margin: 0 }}>
+                Not your category? Correct it and check again (once a day).
+              </label>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <input id="fc-fix" className="input" style={{ flex: "1 1 220px" }} maxLength={60} value={fix} onChange={(e) => setFix(e.target.value)} />
+                <button type="submit" className="btn btn-ghost" disabled={state === "busy" || !fix.trim() || fix.trim() === r.query}>
+                  Re-check
+                </button>
+              </div>
+            </form>
+          ) : null}
           {r.competitors?.length ? (
             <>
               <p style={{ fontWeight: 700, marginTop: 18 }}>Named instead</p>
