@@ -132,6 +132,7 @@ export default function OpportunityList({ opportunities, competitors, brandWebsi
             competitorMatch={findCompetitorMention(`${selected.title} ${selected.snippet || ""}`, competitors)}
             onSavedChange={(saved) => update(selected.id, { saved })}
             onDismissed={() => remove(selected.id)}
+            onPostLoaded={(patch) => update(selected.id, patch)}
           />
         ) : (
           <div className="op-detail op-detail-empty">Select a thread to see why it fits and draft a comment.</div>
