@@ -43,6 +43,9 @@
     },
     "app/api/cron/category-data/route.js": {
       "maxDuration": 280
+    },
+    "app/api/cron/weekly-ai-report/route.js": {
+      "maxDuration": 60
     }
   },
   "crons": [
@@ -73,6 +76,10 @@
     {
       "path": "/api/cron/category-data",
       "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/weekly-ai-report",
+      "schedule": "0 13 * * 1"
     }
   ]
 }
