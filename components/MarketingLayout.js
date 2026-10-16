@@ -44,8 +44,8 @@ const organizationJsonLd = {
 
 // The byline on all 19 posts was a bare string appearing nowhere else on
 // the site, so it resolved to nothing. Now a real Person node the posts
-// and the Organization both point at. No sameAs yet: a personal profile
-// URL has not been confirmed, and the rule here is confirmed or omitted.
+// and the Organization both point at. sameAs holds only profiles the
+// founder confirmed (LinkedIn, 2026-10-15).
 const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
@@ -54,6 +54,7 @@ const personJsonLd = {
   jobTitle: "Founder, AEOrank",
   email: "ilyas@aeorank.tech",
   url: `${SITE_URL}/about`,
+  sameAs: ["https://www.linkedin.com/in/lemzouri-ilyas/"],
   worksFor: { "@id": `${SITE_URL}/#organization` },
 };
 

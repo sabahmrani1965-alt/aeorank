@@ -74,7 +74,11 @@ export default function About() {
           <div className="card" style={{ marginTop: 20 }}>
             <h2 className="card-h" style={{ marginBottom: 12 }}>Who runs this</h2>
             <p style={{ color: "var(--text-dim)", lineHeight: 1.8, margin: 0 }}>
-              AEOrank is run by <strong>Ilyas Lemzouri</strong>, who writes
+              AEOrank is run by{" "}
+              <a href="https://www.linkedin.com/in/lemzouri-ilyas/" rel="me noopener" target="_blank" style={{ color: "var(--accent)" }}>
+                <strong>Ilyas Lemzouri</strong>
+              </a>
+              , who writes
               everything published here. If something on this site is wrong,
               or you want to argue with it, the address is{" "}
               <a href="mailto:ilyas@aeorank.tech" style={{ color: "var(--accent)" }}>
