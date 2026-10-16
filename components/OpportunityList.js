@@ -42,7 +42,7 @@ const SORTS = {
 // Two-pane layout: a filterable list on the left, the selected thread with
 // its AI comment composer on the right. Saved and dismissed state is kept
 // here so the list updates without a reload.
-export default function OpportunityList({ opportunities, competitors, brandWebsite }) {
+export default function OpportunityList({ opportunities, competitors, brandWebsite, commentCost }) {
   const [items, setItems] = useState(opportunities);
   const [tab, setTab] = useState("all");
   const [sub, setSub] = useState("");
@@ -129,6 +129,7 @@ export default function OpportunityList({ opportunities, competitors, brandWebsi
             key={selected.id}
             opportunity={selected}
             brandWebsite={brandWebsite}
+            commentCost={commentCost}
             competitorMatch={findCompetitorMention(`${selected.title} ${selected.snippet || ""}`, competitors)}
             onSavedChange={(saved) => update(selected.id, { saved })}
             onDismissed={() => remove(selected.id)}

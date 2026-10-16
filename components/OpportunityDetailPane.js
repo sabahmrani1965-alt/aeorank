@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CREDIT_COSTS } from "@/lib/credits";
 import { normalizeRedditUrl } from "@/lib/format";
 import { ago, cleanPostText, intentLabel, scoreTier } from "./opportunityFormat";
 
@@ -12,7 +11,6 @@ const LENGTHS = [
   { key: "medium", label: "Medium" },
   { key: "long", label: "Long" },
 ];
-const SAVE_COST = CREDIT_COSTS.generate_comment;
 
 const Svg = ({ children }) => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -24,7 +22,8 @@ const Svg = ({ children }) => (
 // top-level comment (an opportunity IS a Reddit post, so responding to it
 // is commenting on it). Generating is free; credits are charged only when
 // the comment is saved as a task (app/api/drafts/route.js).
-export default function OpportunityDetailPane({ opportunity: o, brandWebsite, competitorMatch, onSavedChange, onDismissed, onPostLoaded }) {
+// commentCost: credits per ordered comment on the customer's plan.
+export default function OpportunityDetailPane({ opportunity: o, brandWebsite, commentCost, competitorMatch, onSavedChange, onDismissed, onPostLoaded }) {
   const [saved, setSaved] = useState(Boolean(o.saved));
   const [busy, setBusy] = useState("");
   const [actionError, setActionError] = useState("");
@@ -281,7 +280,7 @@ export default function OpportunityDetailPane({ opportunity: o, brandWebsite, co
       <section className="op-composer" id="op-composer">
         <div className="op-composer-top">
           <h3>Post a comment on this thread</h3>
-          <span className="op-price">{SAVE_COST} credits</span>
+          <span className="op-price">{commentCost} credits</span>
         </div>
         {savedInfo ? (
           <div className="op-saved">
@@ -369,7 +368,7 @@ export default function OpportunityDetailPane({ opportunity: o, brandWebsite, co
             ) : null}
 
             <button type="button" onClick={createTask} disabled={saving || !body.trim()} className="btn btn-primary op-post-btn">
-              {saving ? "Ordering…" : `Post this comment · ${SAVE_COST} credits`}
+              {saving ? "Ordering…" : `Post this comment · ${commentCost} credits`}
             </button>
             <p className="op-hint op-post-hint">
               {body.trim()

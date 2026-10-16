@@ -1,12 +1,18 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { CREDIT_COSTS } from "@/lib/credits";
+import { planItemCosts } from "@/lib/credits";
+import { getActivePlan } from "@/lib/subscription";
 import BuyCreditsButton from "@/components/BuyCreditsButton";
 
 export const dynamic = "force-dynamic";
 
 export default async function BuyCreditsPage() {
   const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  // "About N comments" at the customer's own plan prices.
+  const prices = planItemCosts(user ? await getActivePlan(supabase, user.id) : null);
   const { data: packages } = await supabase
     .from("credit_packages")
     .select("id, name, credits, bonus_credits, price_cents, currency, badge, description")
@@ -35,8 +41,8 @@ export default async function BuyCreditsPage() {
                 style: "currency",
                 currency: pkg.currency.toUpperCase(),
               });
-              const approxComments = Math.round(total / CREDIT_COSTS.generate_comment);
-              const approxPosts = Math.round(total / CREDIT_COSTS.generate_post);
+              const approxComments = Math.floor(total / prices.comment);
+              const approxPosts = Math.floor(total / prices.post);
 
               return (
                 <div

@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { timeAgo } from "@/lib/reddit";
-import { hasActiveSubscription } from "@/lib/subscription";
+import { hasActiveSubscription, getActivePlan } from "@/lib/subscription";
+import { itemCreditCost } from "@/lib/credits";
 import { getActiveCompanyProfile } from "@/lib/brands";
 import OpportunityRefreshButton from "@/components/OpportunityRefreshButton";
 import OpportunityList from "@/components/OpportunityList";
@@ -36,7 +37,7 @@ export default async function OpportunitiesPage() {
     );
   }
 
-  const profile = await getActiveCompanyProfile(supabase, user.id);
+  const [profile, plan] = await Promise.all([getActiveCompanyProfile(supabase, user.id), getActivePlan(supabase, user.id)]);
 
   const { data: opportunities } = profile
     ? await supabase
@@ -91,7 +92,7 @@ export default async function OpportunitiesPage() {
             No opportunities yet. Click "Refresh opportunities" to search Reddit.
           </div>
         ) : (
-          <OpportunityList opportunities={opportunities} competitors={competitors} brandWebsite={profile?.website || ""} />
+          <OpportunityList opportunities={opportunities} competitors={competitors} brandWebsite={profile?.website || ""} commentCost={itemCreditCost(plan, "comment")} />
         )
       )}
     </section>

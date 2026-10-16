@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CREDIT_COSTS, upvoteCreditCost } from "@/lib/credits";
 import { needsTargetUrl, normalizeRedditUrl } from "@/lib/format";
@@ -28,7 +28,8 @@ const selectStyle = {
   fontFamily: "inherit",
 };
 
-const SAVE_COST = {
+// Lite prices until the customer's own plan prices load from /api/credits.
+const DEFAULT_COST = {
   comment: CREDIT_COSTS.generate_comment,
   reply: CREDIT_COSTS.generate_reply,
   post: CREDIT_COSTS.generate_post,
@@ -63,9 +64,16 @@ function NewDraftForm() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [savedInfo, setSavedInfo] = useState(null); // { creditsCharged, creditsRemaining }
+  const [costs, setCosts] = useState(DEFAULT_COST);
+  useEffect(() => {
+    fetch("/api/credits")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => j?.prices && setCosts(j.prices))
+      .catch(() => {});
+  }, []);
 
   const ready = needsTargetUrl(type) ? Boolean(normalizeRedditUrl(targetUrl)) : Boolean(subreddit.trim());
-  const totalCost = type === "upvote" ? upvoteCreditCost(qty) : SAVE_COST[type];
+  const totalCost = type === "upvote" ? upvoteCreditCost(qty) : costs[type];
 
   async function generate() {
     setError("");

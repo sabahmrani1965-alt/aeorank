@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getActiveCompanyProfile } from "@/lib/brands";
-import { withCredits, getBalance, CREDIT_COSTS, upvoteCreditCost } from "@/lib/credits";
+import { withCredits, getBalance, itemCreditCost, upvoteCreditCost } from "@/lib/credits";
+import { getActivePlan } from "@/lib/subscription";
 import { needsTargetUrl, normalizeRedditUrl, normalizeSubredditInput } from "@/lib/format";
 import { parseRedditUrl } from "@/lib/reddit";
 import { notifyNewTask } from "@/lib/discord";
@@ -118,7 +119,9 @@ export async function POST(req) {
     type === "reply" ? "generate_reply" :
     type === "upvote" ? "generate_upvote" :
     "generate_comment";
-  const amount = type === "upvote" ? upvoteCreditCost(qty) : CREDIT_COSTS[action] * qty;
+  // Comments, replies and posts cost what the customer's plan says.
+  const plan = type === "upvote" ? null : await getActivePlan(supabase, user.id);
+  const amount = type === "upvote" ? upvoteCreditCost(qty) : itemCreditCost(plan, type) * qty;
 
   const outcome = await withCredits({
     admin,
