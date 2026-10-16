@@ -192,6 +192,16 @@ export default function OpportunityDetailPane({ opportunity: o, brandWebsite, co
       </header>
 
       <div className="op-actions">
+        <button
+          type="button"
+          className="btn btn-primary btn-sm"
+          onClick={() => {
+            document.getElementById("op-composer")?.scrollIntoView({ behavior: "smooth", block: "center" });
+            setTimeout(() => document.getElementById("op-comment")?.focus({ preventScroll: true }), 300);
+          }}
+        >
+          Post a comment
+        </button>
         <a href={o.permalink} target="_blank" rel="noopener noreferrer" className="op-btn">
           View on Reddit
           <Svg>
@@ -268,22 +278,55 @@ export default function OpportunityDetailPane({ opportunity: o, brandWebsite, co
         ) : null}
       </section>
 
-      <section className="op-composer">
-        <h3>Write a comment with AI</h3>
+      <section className="op-composer" id="op-composer">
+        <div className="op-composer-top">
+          <h3>Post a comment on this thread</h3>
+          <span className="op-price">{SAVE_COST} credits</span>
+        </div>
         {savedInfo ? (
           <div className="op-saved">
-            <strong>Saved to your tasks</strong>
+            <strong>Comment ordered</strong>
             <p>
+              It will be posted on {o.sub} after a quick review. The live link appears in Track tasks once it's up.
+            </p>
+            <p className="op-hint">
               −{savedInfo.creditsCharged} credits
               {typeof savedInfo.creditsRemaining === "number" ? ` · ${savedInfo.creditsRemaining} credits left` : ""}
             </p>
             <Link href="/dashboard/drafts" className="op-btn">
-              Open Track tasks →
+              Track it →
             </Link>
           </div>
         ) : (
-          <div className="op-composer-grid">
-            <div className="op-composer-controls">
+          <>
+            <div className="op-composer-output">
+              <textarea
+                id="op-comment"
+                value={body}
+                onChange={(e) => setBody(e.target.value.slice(0, 2000))}
+                rows={7}
+                placeholder="Write the comment you want posted, or let AI write a first draft from the post."
+                className="op-textarea"
+                aria-label="Comment to post"
+              />
+              <div className="op-output-foot">
+                <span>{body.length}/2000</span>
+                <button type="button" onClick={copy} disabled={!body} className="op-btn op-btn-sm">
+                  {copied ? "Copied" : "Copy"}
+                </button>
+              </div>
+            </div>
+
+            <div className="op-ai-row">
+              <button type="button" onClick={generateComment} disabled={generating} className="op-btn">
+                <Svg>
+                  <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6" />
+                </Svg>
+                {generating ? "Writing…" : body ? "Rewrite with AI" : "Write it with AI"}
+              </button>
+              <details className="op-ai-options">
+                <summary>AI options</summary>
+                <div className="op-composer-controls">
               <div className="op-composer-row">
                 <label>
                   <span>Tone</span>
@@ -315,45 +358,30 @@ export default function OpportunityDetailPane({ opportunity: o, brandWebsite, co
                   Add your link
                 </label>
               </fieldset>
-              <button type="button" onClick={generateComment} disabled={generating} className="btn btn-primary">
-                {generating ? "Writing…" : body ? "Rewrite with AI" : "Generate comment"}
-              </button>
-              <p className="op-hint">Free to generate. Saving it as a task costs {SAVE_COST} credits.</p>
-              {generateError ? (
-                <p role="alert" className="op-error">
-                  {generateError}
-                </p>
-              ) : null}
+                </div>
+              </details>
+              <span className="op-hint">Free to use</span>
             </div>
+            {generateError ? (
+              <p role="alert" className="op-error">
+                {generateError}
+              </p>
+            ) : null}
 
-            <div className="op-composer-output">
-              <div className="op-output-head">
-                <span>Your comment</span>
-                <button type="button" onClick={copy} disabled={!body} className="op-btn op-btn-sm">
-                  {copied ? "Copied" : "Copy"}
-                </button>
-              </div>
-              <textarea
-                value={body}
-                onChange={(e) => setBody(e.target.value.slice(0, 2000))}
-                rows={8}
-                placeholder="Generate a draft, or write your own. Edit it until it sounds like you."
-                className="op-textarea"
-                aria-label="Your comment"
-              />
-              <div className="op-output-foot">
-                <span>{body.length}/2000</span>
-                <button type="button" onClick={createTask} disabled={saving || !body.trim()} className="btn btn-secondary btn-sm">
-                  {saving ? "Saving…" : `Save as task (−${SAVE_COST} credits)`}
-                </button>
-              </div>
-              {saveError ? (
-                <p role="alert" className="op-error">
-                  {saveError}
-                </p>
-              ) : null}
-            </div>
-          </div>
+            <button type="button" onClick={createTask} disabled={saving || !body.trim()} className="btn btn-primary op-post-btn">
+              {saving ? "Ordering…" : `Post this comment · ${SAVE_COST} credits`}
+            </button>
+            <p className="op-hint op-post-hint">
+              {body.trim()
+                ? `After a quick review, a member of our posting network publishes it on ${o.sub}. The live link appears in Track tasks.`
+                : "Write the comment above, or let AI draft it, then post it."}
+            </p>
+            {saveError ? (
+              <p role="alert" className="op-error">
+                {saveError}
+              </p>
+            ) : null}
+          </>
         )}
       </section>
     </article>

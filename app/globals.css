@@ -3016,3 +3016,16 @@ a.dx-list-title:hover { color: var(--accent); }
   .mn-row-side { order: -1; }
   .mn-filters { grid-template-columns: 1fr; }
 }
+
+/* Opportunities composer: posting is the main action, writing comes first. */
+.op-composer { display: flex; flex-direction: column; gap: 12px; }
+.op-composer-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.op-composer-top h3 { margin: 0; font-size: 17px; text-transform: none; letter-spacing: -.01em; color: var(--text); }
+.op-price { font-size: 13px; font-weight: 700; color: var(--accent-3); background: var(--card); border: 1px solid rgba(242, 168, 59, 0.45); border-radius: 999px; padding: 4px 11px; white-space: nowrap; }
+.op-ai-row { display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
+.op-ai-row > .op-hint { align-self: center; }
+.op-ai-options { flex: 1; min-width: 200px; }
+.op-ai-options summary { cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text-dim); padding: 8px 4px; list-style: revert; }
+.op-ai-options[open] summary { margin-bottom: 8px; }
+.op-post-btn { width: 100%; justify-content: center; font-size: 16.5px; padding: 15px 20px; }
+.op-post-hint { text-align: center; margin-top: -4px; }

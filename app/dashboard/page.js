@@ -332,7 +332,7 @@ function Overview({ s, example }) {
           {s.top.relevance_reason && <p className="opportunity-spotlight-reason">{s.top.relevance_reason}</p>}
           <div className="opportunity-spotlight-actions">
             <Link href={`/dashboard/drafts/new?url=${encodeURIComponent(s.top.permalink || "")}`} className="btn btn-primary btn-sm">
-              Generate reply →
+              Post a comment →
             </Link>
             <a href={s.top.permalink} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-sm">
               View thread ↗
@@ -435,10 +435,10 @@ function Overview({ s, example }) {
                   </span>
                   {o.permalink ? (
                     <Link href={`/dashboard/drafts/new?url=${encodeURIComponent(o.permalink)}`} className="dx-action">
-                      Reply →
+                      Comment →
                     </Link>
                   ) : (
-                    <span className="dx-action">Reply →</span>
+                    <span className="dx-action">Comment →</span>
                   )}
                 </li>
               ))}
