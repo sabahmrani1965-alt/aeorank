@@ -15,10 +15,10 @@ export async function GET(req) {
   const cron = process.env.CRON_SECRET && req.headers.get("authorization") === `Bearer ${process.env.CRON_SECRET}`;
   if (!cron && !hasAdminToken(req)) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
-  // Owner token with ?only=reddit refreshes just the Reddit threads (all of
-  // them), without asking the engines again.
+  // Owner token with ?only=reddit refreshes just the stale Reddit threads,
+  // without asking the engines again. Repeat it until nothing is left.
   if (!cron && new URL(req.url).searchParams.get("only") === "reddit") {
-    return NextResponse.json({ reddit: await refreshReddit({ deadline, force: true }) });
+    return NextResponse.json({ reddit: await refreshReddit({ deadline }) });
   }
   const collected = await collectDay({ deadline });
   const summaries = await rebuildSummaries();

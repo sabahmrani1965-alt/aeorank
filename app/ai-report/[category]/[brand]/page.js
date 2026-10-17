@@ -106,7 +106,7 @@ export default async function BrandReport({ params, searchParams }) {
   // Only threads whose text we actually have can say who is (not) in them.
   const brandRe = nameRe(brand);
   const threads = (reddit?.threads || [])
-    .filter((t) => t.text && t.text.length > 1500)
+    .filter((t) => t.text && reddit.v === 2)
     .slice(0, 6)
     .map((t) => ({ ...t, names: d.brands.filter((b) => keyOf(b.name) !== k && nameRe(b.name).test(t.text)).map((b) => b.name), has: brandRe.test(t.text) }));
   const without = threads.filter((t) => !t.has).length;
@@ -161,13 +161,16 @@ export default async function BrandReport({ params, searchParams }) {
           <div className="container-narrow">
             <H2>Where buyers ask about {cat.name} on Reddit</H2>
             <p style={{ color: "var(--text-dim)", lineHeight: 1.7, marginBottom: 14 }}>
-              Threads like these are what the engines learn a category from. {brand} is missing from {without} of these {threads.length}
+              The busiest threads where people ask for {cat.name}: what the engines learn the category from. {brand}
+              isn&apos;t in {without} of these {threads.length}
               {lead && leadIn ? `; ${lead.name} is in ${leadIn}` : ""}.
             </p>
             <div style={{ display: "grid", gap: 12 }}>
               {threads.map((t) => (
                 <a key={t.url} href={t.url} target="_blank" rel="noopener noreferrer nofollow" className="card" style={{ padding: "16px 20px", textDecoration: "none", display: "block" }}>
-                  <div style={{ color: "var(--text-muted)", fontSize: 13, marginBottom: 4 }}>r/{t.sub}</div>
+                  <div style={{ color: "var(--text-muted)", fontSize: 13, marginBottom: 4 }}>
+                    r/{t.sub} · {t.ups} upvotes · {t.comments} comments
+                  </div>
                   <div style={{ color: "var(--text)", fontWeight: 700, lineHeight: 1.4, marginBottom: 10 }}>{t.title}</div>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                     <Chip tone={t.has ? "good" : "bad"}>{t.has ? `${brand} mentioned` : `No ${brand}`}</Chip>
@@ -179,6 +182,9 @@ export default async function BrandReport({ params, searchParams }) {
                 </a>
               ))}
             </div>
+            <p style={{ color: "var(--text-muted)", fontSize: 13, marginTop: 10 }}>
+              Checked against each thread&apos;s post and its top comments.
+            </p>
           </div>
         </section>
       ) : null}
