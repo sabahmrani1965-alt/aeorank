@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { hasAdminToken } from "@/lib/adminToken";
-import { collectDay, rebuildSummaries, DATA_CATEGORIES } from "@/lib/categoryData";
+import { collectDay, rebuildSummaries, refreshReddit, DATA_CATEGORIES } from "@/lib/categoryData";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -15,9 +15,15 @@ export async function GET(req) {
   const cron = process.env.CRON_SECRET && req.headers.get("authorization") === `Bearer ${process.env.CRON_SECRET}`;
   if (!cron && !hasAdminToken(req)) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
+  // Owner token with ?only=reddit refreshes just the Reddit threads (all of
+  // them), without asking the engines again.
+  if (!cron && new URL(req.url).searchParams.get("only") === "reddit") {
+    return NextResponse.json({ reddit: await refreshReddit({ deadline, force: true }) });
+  }
   const collected = await collectDay({ deadline });
   const summaries = await rebuildSummaries();
+  const reddit = await refreshReddit({ deadline: deadline + 20000 }).catch(() => ({}));
   revalidatePath("/ai-recommendations");
   for (const c of DATA_CATEGORIES) revalidatePath(`/ai-recommendations/${c.slug}`);
-  return NextResponse.json({ ...collected, summaries });
+  return NextResponse.json({ ...collected, summaries, reddit });
 }

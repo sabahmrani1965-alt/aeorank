@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import MarketingLayout from "@/components/MarketingLayout";
-import { getCategory, loadSummary } from "@/lib/categoryData";
+import { getCategory, loadReddit, loadSummary } from "@/lib/categoryData";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 // One brand's AI report, the page the outreach email links to: what the
@@ -68,13 +68,28 @@ function Bar({ name, share, you }) {
   );
 }
 
+// "HubSpot CRM" -> /\bhubspot\b/i, so the short name people write counts.
+function nameRe(name) {
+  const core = String(name).toLowerCase().replace(/\s+(crm|software|app|platform|suite)$/, "").trim();
+  return new RegExp(`\\b${core.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i");
+}
+
+function Chip({ children, tone }) {
+  const c = tone === "bad" ? "#d4553a" : tone === "good" ? "#2f8f5b" : "var(--text-dim)";
+  return (
+    <span style={{ display: "inline-block", fontSize: 13, padding: "3px 9px", borderRadius: 999, border: `1px solid ${tone ? c : "var(--border)"}`, color: c, fontWeight: tone ? 700 : 500 }}>
+      {children}
+    </span>
+  );
+}
+
 const H2 = ({ children }) => <h2 style={{ fontSize: 24, marginBottom: 14, textAlign: "left", textWrap: "balance" }}>{children}</h2>;
 
 export default async function BrandReport({ params, searchParams }) {
   const cat = getCategory(params.category);
   if (!cat) notFound();
   const brand = decodeURIComponent(params.brand).slice(0, 60);
-  const d = await loadSummary(cat.slug);
+  const [d, reddit] = await Promise.all([loadSummary(cat.slug), loadReddit(cat.slug).catch(() => null)]);
   if (!d?.brands?.length) notFound();
   if (searchParams?.r) await recordVisit(cat.slug, brand, String(searchParams.r).slice(0, 20));
 
@@ -87,6 +102,15 @@ export default async function BrandReport({ params, searchParams }) {
   const others = d.brands.filter((b) => keyOf(b.name) !== k).slice(0, 8);
   const [lead] = others;
   const range = d.firstDay === d.lastDay ? `on ${longDate(d.firstDay)}` : `from ${longDate(d.firstDay)} to ${longDate(d.lastDay)}`;
+
+  // Only threads whose text we actually have can say who is (not) in them.
+  const brandRe = nameRe(brand);
+  const threads = (reddit?.threads || [])
+    .filter((t) => t.text && t.text.length > 1500)
+    .slice(0, 6)
+    .map((t) => ({ ...t, names: d.brands.filter((b) => keyOf(b.name) !== k && nameRe(b.name).test(t.text)).map((b) => b.name), has: brandRe.test(t.text) }));
+  const without = threads.filter((t) => !t.has).length;
+  const leadIn = lead ? threads.filter((t) => t.names.includes(lead.name)).length : 0;
 
   const headline = !mentioned
     ? `${brand} isn't in the AI answers for ${cat.name}`
@@ -131,6 +155,34 @@ export default async function BrandReport({ params, searchParams }) {
         </div>
       </section>
 
+
+      {threads.length ? (
+        <section className="section" style={{ paddingTop: 0 }}>
+          <div className="container-narrow">
+            <H2>Where buyers ask about {cat.name} on Reddit</H2>
+            <p style={{ color: "var(--text-dim)", lineHeight: 1.7, marginBottom: 14 }}>
+              Threads like these are what the engines learn a category from. {brand} is missing from {without} of these {threads.length}
+              {lead && leadIn ? `; ${lead.name} is in ${leadIn}` : ""}.
+            </p>
+            <div style={{ display: "grid", gap: 12 }}>
+              {threads.map((t) => (
+                <a key={t.url} href={t.url} target="_blank" rel="noopener noreferrer nofollow" className="card" style={{ padding: "16px 20px", textDecoration: "none", display: "block" }}>
+                  <div style={{ color: "var(--text-muted)", fontSize: 13, marginBottom: 4 }}>r/{t.sub}</div>
+                  <div style={{ color: "var(--text)", fontWeight: 700, lineHeight: 1.4, marginBottom: 10 }}>{t.title}</div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    <Chip tone={t.has ? "good" : "bad"}>{t.has ? `${brand} mentioned` : `No ${brand}`}</Chip>
+                    {t.names.slice(0, 5).map((n) => (
+                      <Chip key={n}>{n}</Chip>
+                    ))}
+                    {t.names.length > 5 ? <Chip>+{t.names.length - 5} more</Chip> : null}
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       {d.latest?.length ? (
         <section className="section" style={{ paddingTop: 0 }}>
           <div className="container-narrow">
@@ -161,7 +213,7 @@ export default async function BrandReport({ params, searchParams }) {
             These engines don&apos;t rank websites. They repeat what they have read about a category: Reddit threads
             where people compare tools, review sites and &ldquo;best {cat.name}&rdquo; roundups. The brands that keep
             coming up in those conversations are the ones the answers name.{" "}
-            {lead ? `${lead.name} is everywhere in them. ` : ""}
+            {lead ? `${lead.name} comes up in them again and again. ` : ""}
             {mentioned ? `${brand} shows up too rarely to make most answers.` : `${brand} isn't there often enough to be named at all.`}
           </p>
         </div>
