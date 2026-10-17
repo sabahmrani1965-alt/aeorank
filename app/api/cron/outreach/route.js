@@ -163,7 +163,7 @@ export async function GET(req) {
     })
   );
   if (toSend.length) {
-    await bucket.upload(QUEUE, JSON.stringify(items, null, 1), { contentType: "application/json", upsert: true });
+    await bucket.upload(QUEUE, JSON.stringify(items, null, 1), { contentType: "application/json", upsert: true, // Storage caches a file for an hour by default; these are rewritten and re-read. cacheControl: "60" });
   }
   return NextResponse.json({
     sent: sent.length,
