@@ -50,7 +50,7 @@ function matchesPrefix(pathname, prefix) {
 // /poster (CrewQuest side) are handled by their own explicit branches
 // below — each has a more specific destination on the other domain than
 // the generic marketing-homepage fallback, so they're not repeated here.
-const AEORANK_ONLY = ["/report", "/services", "/industries", "/blog", "/checkout", "/contact", "/about", "/pricing", "/proof", "/llms.txt", "/compare", "/tools", "/affiliates", "/free-ai-visibility-checker", "/ai-recommendations", "/start"];
+const AEORANK_ONLY = ["/report", "/services", "/industries", "/blog", "/checkout", "/contact", "/about", "/pricing", "/proof", "/llms.txt", "/compare", "/tools", "/affiliates", "/free-ai-visibility-checker", "/ai-recommendations", "/ai-report", "/start"];
 // Shared but AEOrank-branded: still served on the poster domain, kept out of its index.
 const SHARED_NOINDEX = ["/privacy", "/terms", "/login", "/forgot-password", "/reset-password"];
 const CREWQUEST_ONLY = ["/crewquest"];

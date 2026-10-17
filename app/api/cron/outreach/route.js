@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createHash } from "node:crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { hasAdminToken } from "@/lib/adminToken";
 import { getCategory, loadSummary } from "@/lib/categoryData";
@@ -52,32 +53,28 @@ function render(item, summary) {
   const cat = getCategory(item.category);
   const name = cat?.name || item.category;
   const [a, b] = summary.brands;
-  const url = `https://www.aeorank.tech/ai-recommendations/${item.category}`;
   const hi = item.firstname ? `Hi ${item.firstname},` : "Hi,";
   const since = new Date(`${summary.firstDay}T12:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
-  const text = `${hi}
+  // r = a short hash of the address, so the report visit log says who opened it.
+  const ref = createHash("sha256").update(String(item.to).toLowerCase()).digest("hex").slice(0, 10);
+  const url = `https://www.aeorank.tech/ai-report/${item.category}/${encodeURIComponent(item.brand)}?r=${ref}`;
+  const paras = [
+    hi,
+    `When buyers ask ChatGPT, Claude or Gemini to recommend ${name}, ${item.brand} doesn't come up. I've asked them the same questions every day since ${since}, and ${item.brand} wasn't named in any of the ${summary.totalAnswers} answers. ${leaders(a, b)}`,
+    `I put it all on one page for ${item.brand}: what each engine said word for word, who it recommends instead, and what would get ${item.brand} into those answers.`,
+  ];
+  const sig = ["Ilyas Lemzouri", "Founder, AEOrank", "https://www.linkedin.com/in/lemzouri-ilyas/"];
+  const optout = `If this isn't relevant, reply "no" and I won't email again.`;
+  const label = `See ${item.brand}'s AI report`;
+  const text = [...paras, `${label}: ${url}`, sig.join("\n"), optout].join("\n\n");
 
-When buyers ask ChatGPT, Claude or Gemini to recommend ${name}, ${item.brand} doesn't come up. I've asked them the same questions every day since ${since}, and ${item.brand} wasn't named in any of the ${summary.totalAnswers} answers. ${leaders(a, b)}
-
-Every answer is public and updated daily: ${url}
-
-Those engines mostly repeat what they read in a handful of Reddit threads and review pages. AEOrank finds the ones behind the ${name} answers, gets ${item.brand} into those conversations, and reports each week whether the answers have changed.
-
-Plans start at $199 a month, and the first 7 days are free: https://www.aeorank.tech/start?brand=${encodeURIComponent(item.brand)}
-
-Or see it for yourself first: enter your website in our free checker and it shows how often AI engines name ${item.brand}: https://www.aeorank.tech/free-ai-visibility-checker
-
-Ilyas Lemzouri
-Founder, AEOrank
-https://www.linkedin.com/in/lemzouri-ilyas/
-
-If this isn't relevant, reply "no" and I won't email again.`;
-  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  const html = `<div style="font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.6;color:#222">${esc(text)
-    .replace(/(https:\/\/[^\s<]+)/g, '<a href="$1">$1</a>')
-    .split("\n\n")
-    .map((p) => `<p>${p.replace(/\n/g, "<br>")}</p>`)
-    .join("")}</div>`;
+  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const p = (s) => `<p style="margin:0 0 16px">${s}</p>`;
+  const html = `<div style="font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.6;color:#222;max-width:560px">${paras
+    .map((x) => p(esc(x)))
+    .join("")}<p style="margin:22px 0 24px"><a href="${esc(url)}" style="display:inline-block;background:#111;color:#fff;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:8px">${esc(label)} &rarr;</a></p>${p(
+    `${esc(sig[0])}<br>${esc(sig[1])}<br><a href="${sig[2]}" style="color:#555">LinkedIn</a>`
+  )}<p style="margin:0;color:#777;font-size:13px">${esc(optout)}</p></div>`;
   return { subject: `${item.brand} is missing from AI answers for ${name}`, text, html };
 }
 
@@ -125,7 +122,7 @@ export async function GET(req) {
     return NextResponse.json({
       queued: items.filter((x) => (x.status || "queued") === "queued").length,
       startsOn: START,
-      next: next.map((x) => ({ to: x.to, ...render(x, summaries[x.category]), html: undefined })),
+      next: next.map((x) => ({ to: x.to, ...render(x, summaries[x.category]) })),
     });
   }
 
