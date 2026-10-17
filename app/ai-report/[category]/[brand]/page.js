@@ -5,6 +5,7 @@ import MarketingLayout from "@/components/MarketingLayout";
 import ReportPdfButton from "@/components/ReportPdfButton";
 import { getCategory, loadReddit, loadSummary, REDDIT_VERSION } from "@/lib/categoryData";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { OUTREACH_BUCKET } from "@/lib/outreach";
 
 // One brand's AI report, the page the outreach email links to: what the
 // engines answered for its category, who they named instead, the Reddit
@@ -51,7 +52,7 @@ async function recordVisit(category, brand, ref) {
   const at = new Date().toISOString();
   const body = { at, category, brand, ref: ref || null, ua: h.get("user-agent") || null, country: h.get("x-vercel-ip-country") || null };
   await admin.storage
-    .from("outreach")
+    .from(OUTREACH_BUCKET)
     .upload(`visits/${at.replace(/[:.]/g, "-")}-${keyOf(brand)}.json`, JSON.stringify(body), { contentType: "application/json" })
     .catch(() => {});
 }

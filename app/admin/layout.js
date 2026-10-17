@@ -32,6 +32,7 @@ export default async function AdminLayout({ children }) {
             <a href="/admin/referrals" className="header-link">Referrals</a>
             <a href="/admin/affiliates" className="header-link">Affiliates</a>
             <a href="/admin/credits" className="header-link">Credits</a>
+            <a href="/admin/outreach" className="header-link">Outreach</a>
           </div>
         </div>
       </section>

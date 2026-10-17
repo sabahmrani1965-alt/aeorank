@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { createHash } from "node:crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { hasAdminToken } from "@/lib/adminToken";
 import { getCategory, loadReddit, loadSummary, REDDIT_VERSION } from "@/lib/categoryData";
+import { readQueue, refOf, writeQueue } from "@/lib/outreach";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -14,12 +14,15 @@ export const maxDuration = 60;
 // [{ to, firstname, brand, category, status }]. Each email is written at
 // send time from that day's /ai-recommendations summary, so the numbers are
 // current, and a brand the engines have started naming is skipped.
-// Owner token with ?mode=preview shows the next emails without sending.
+// One follow-up, FOLLOWUP_DAYS later, to people who neither replied nor opted
+// out (the owner marks those on /admin/outreach), quoting that day's numbers.
+// Owner token with ?mode=preview shows the next emails and follow-ups
+// without sending.
 const DAILY_N = 20;
+const FOLLOWUP_DAYS = 4;
+const FOLLOWUP_N = 20;
 const START = "2026-10-23"; // enough answers per category to quote
 const BOUNCE_PAUSE = 3;
-const BUCKET = "outreach";
-const QUEUE = "queue.json";
 const FROM = "Ilyas Lemzouri <ilyas@aeorank.tech>";
 const REPLY_TO = "ilyas@aeorank.tech";
 
@@ -29,17 +32,6 @@ const keyOf = (n) =>
     .replace(/\.(com|io|ai|co|app)$/, "")
     .replace(/\s+(crm|software|app|platform|suite|desk|books)$/, "")
     .replace(/[^a-z0-9]/g, "");
-
-async function readQueue(bucket) {
-  const { data } = await bucket.download(QUEUE);
-  if (!data) return [];
-  try {
-    const j = JSON.parse(await data.text());
-    return Array.isArray(j) ? j : [];
-  } catch {
-    return [];
-  }
-}
 
 // "HubSpot and Pipedrive were named in every one." / "Zendesk was named in 91% of them, Freshdesk in 73%."
 function leaders(a, b) {
@@ -56,7 +48,7 @@ function render(item, summary) {
   const hi = item.firstname ? `Hi ${item.firstname},` : "Hi,";
   const since = new Date(`${summary.firstDay}T12:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
   // r = a short hash of the address, so the report visit log says who opened it.
-  const ref = createHash("sha256").update(String(item.to).toLowerCase()).digest("hex").slice(0, 10);
+  const ref = refOf(item.to);
   const url = `https://www.aeorank.tech/ai-report/${item.category}/${encodeURIComponent(item.brand)}?r=${ref}`;
   const paras = [
     hi,
@@ -68,24 +60,65 @@ function render(item, summary) {
   const label = `See ${item.brand}'s AI report`;
   const text = [...paras, `${label}: ${url}`, sig.join("\n"), optout].join("\n\n");
 
+  return { subject: subjectOf(item, name), text, html: htmlOf(paras, url, label, sig, optout) };
+}
+
+const subjectOf = (item, name) => `${item.brand} is missing from AI answers for ${name}`;
+
+function htmlOf(paras, url, label, sig, optout) {
   const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   const p = (s) => `<p style="margin:0 0 16px">${s}</p>`;
-  const html = `<div style="font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.6;color:#222;max-width:560px">${paras
+  return `<div style="font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.6;color:#222;max-width:560px">${paras
     .map((x) => p(esc(x)))
     .join("")}<p style="margin:22px 0 24px"><a href="${esc(url)}" style="display:inline-block;background:#111;color:#fff;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:8px">${esc(label)} &rarr;</a></p>${p(
     `${esc(sig[0])}<br>${esc(sig[1])}<br><a href="${sig[2]}" style="color:#555">LinkedIn</a>`
   )}<p style="margin:0;color:#777;font-size:13px">${esc(optout)}</p></div>`;
-  return { subject: `${item.brand} is missing from AI answers for ${name}`, text, html };
+}
+
+// The follow-up: what changed since the first email, and an easy reply.
+// Never mentions whether they opened the report.
+function renderFollowup(item, summary) {
+  const cat = getCategory(item.category);
+  const name = cat?.name || item.category;
+  const [a] = summary.brands;
+  const hi = item.firstname ? `Hi ${item.firstname},` : "Hi,";
+  const url = `https://www.aeorank.tech/ai-report/${item.category}/${encodeURIComponent(item.brand)}?r=${refOf(item.to)}`;
+  const more = summary.totalAnswers - (item.sent_total || summary.totalAnswers);
+  const paras = [
+    hi,
+    more >= 3
+      ? `A quick follow-up. Since my last email, ChatGPT, Claude and Gemini answered ${more} more questions about ${name}, and ${item.brand} still wasn't named in any of them. Across all ${summary.totalAnswers} answers, ${a.name} was named in ${Math.round(a.share)}%.`
+      : `A quick follow-up. ${item.brand} still hasn't been named in any of the ${summary.totalAnswers} AI answers about ${name}, while ${a.name} was named in ${Math.round(a.share)}%.`,
+    `If it helps, reply "threads" and I'll send you the three Reddit threads I'd start with for ${item.brand}. No call, no strings.`,
+  ];
+  const sig = ["Ilyas Lemzouri", "Founder, AEOrank", "https://www.linkedin.com/in/lemzouri-ilyas/"];
+  const optout = `If this isn't relevant, reply "no" and I won't email again.`;
+  const label = `See ${item.brand}'s updated report`;
+  const text = [...paras, `${label}: ${url}`, sig.join("\n"), optout].join("\n\n");
+  return { subject: `Re: ${subjectOf(item, name)}`, text, html: htmlOf(paras, url, label, sig, optout) };
+}
+
+async function send(key, to, { subject, text, html }) {
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ from: FROM, to: [to], reply_to: REPLY_TO, subject, text, html }),
+  });
+  if (!res.ok) throw new Error(`resend ${res.status}`);
+  return (await res.json()).id;
 }
 
 // Bounces among emails sent in the last 3 days, read from Resend itself
 // (AEOrank has no email-events table).
 async function recentBounces(items, key) {
   const since = Date.now() - 3 * 86400000;
-  const recent = items.filter((x) => x.resend_id && Date.parse(x.sent_at || 0) > since);
+  const recent = items.flatMap((x) => [
+    x.resend_id && Date.parse(x.sent_at || 0) > since ? x.resend_id : null,
+    x.followup_id && Date.parse(x.followup_at || 0) > since ? x.followup_id : null,
+  ]).filter(Boolean);
   const events = await Promise.all(
-    recent.map((x) =>
-      fetch(`https://api.resend.com/emails/${x.resend_id}`, { headers: { Authorization: `Bearer ${key}` } })
+    recent.map((id) =>
+      fetch(`https://api.resend.com/emails/${id}`, { headers: { Authorization: `Bearer ${key}` } })
         .then((r) => r.json())
         .then((j) => j.last_event)
         .catch(() => null)
@@ -102,8 +135,7 @@ export async function GET(req) {
   const admin = createAdminClient();
   const key = process.env.RESEND_API_KEY;
   if (!admin || !key) return NextResponse.json({ error: "not configured" }, { status: 500 });
-  const bucket = admin.storage.from(BUCKET);
-  const items = await readQueue(bucket);
+  const items = await readQueue(admin);
   const today = new Date().toISOString().slice(0, 10);
 
   const summaries = {};
@@ -121,12 +153,20 @@ export async function GET(req) {
     return s?.brands.some((b) => keyOf(b.name) === keyOf(it.brand));
   };
 
+  // Due for the follow-up: first email sent FOLLOWUP_DAYS+ ago, no reply or
+  // opt-out marked, still not named.
+  const dueFollowup = (x) =>
+    x.status === "sent" && !x.followup_at && Date.now() - Date.parse(x.sent_at || 0) >= FOLLOWUP_DAYS * 86400000;
+
   if (preview) {
     const next = items.filter((x) => (x.status || "queued") === "queued" && summaries[x.category]?.brands?.length >= 2 && !named(x)).slice(0, 5);
+    // ?as=followup previews the follow-up for the same people.
+    const asFollowup = new URL(req.url).searchParams.get("as") === "followup";
     return NextResponse.json({
       queued: items.filter((x) => (x.status || "queued") === "queued").length,
+      followupsDue: items.filter(dueFollowup).length,
       startsOn: START,
-      next: next.map((x) => ({ to: x.to, ...render(x, summaries[x.category]) })),
+      next: next.map((x) => ({ to: x.to, ...(asFollowup ? renderFollowup({ ...x, sent_total: summaries[x.category].totalAnswers - 20 }, summaries[x.category]) : render(x, summaries[x.category])) })),
     });
   }
 
@@ -145,28 +185,46 @@ export async function GET(req) {
         it.status = "skipped_named";
         return;
       }
-      const { subject, text, html } = render(it, s);
       try {
-        const res = await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ from: FROM, to: [it.to], reply_to: REPLY_TO, subject, text, html }),
-        });
-        if (!res.ok) throw new Error(`resend ${res.status}`);
-        it.resend_id = (await res.json()).id;
+        it.resend_id = await send(key, it.to, render(it, s));
         it.status = "sent";
         it.sent_at = new Date().toISOString();
+        it.sent_total = s.totalAnswers; // the follow-up says what changed since
         sent.push(it.to);
       } catch {
         it.status = "failed";
       }
     })
   );
-  if (toSend.length) {
-    await bucket.upload(QUEUE, JSON.stringify(items, null, 1), { contentType: "application/json", upsert: true, cacheControl: "60" });
-  }
+
+  const followedToday = items.filter((x) => (x.followup_at || "").startsWith(today)).length;
+  const toFollow = items.filter(dueFollowup).slice(0, Math.max(0, FOLLOWUP_N - followedToday));
+  const followed = [];
+  await Promise.all(
+    toFollow.map(async (it) => {
+      const s = summaries[it.category];
+      if (!(s?.brands?.length >= 1)) return;
+      if (named(it)) {
+        it.followup_at = new Date().toISOString();
+        it.followup_skipped = "now_named"; // the first email's claim no longer holds
+        return;
+      }
+      try {
+        it.followup_id = await send(key, it.to, renderFollowup(it, s));
+        it.followup_at = new Date().toISOString();
+        it.status = "followed_up";
+        followed.push(it.to);
+      } catch {
+        it.followup_at = new Date().toISOString();
+        it.followup_skipped = "send_failed";
+      }
+    })
+  );
+
+  if (toSend.length || toFollow.length) await writeQueue(admin, items);
   return NextResponse.json({
     sent: sent.length,
+    followedUp: followed.length,
     remaining: items.filter((x) => (x.status || "queued") === "queued").length,
     bounces,
   });
