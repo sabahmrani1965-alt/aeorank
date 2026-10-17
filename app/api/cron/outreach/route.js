@@ -43,18 +43,21 @@ async function readQueue(bucket) {
 function render(item, summary) {
   const cat = getCategory(item.category);
   const name = cat?.name || item.category;
-  const top = summary.brands.slice(0, 3);
+  const [a, b] = summary.brands;
   const url = `https://www.aeorank.tech/ai-recommendations/${item.category}`;
   const hi = item.firstname ? `Hi ${item.firstname},` : "Hi,";
+  const since = new Date(`${summary.firstDay}T12:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
   const text = `${hi}
 
-I track which brands ChatGPT, Claude and Gemini name when buyers ask them for ${name}. In the ${summary.totalAnswers} answers collected since ${summary.firstDay}, ${item.brand} didn't come up. ${top[0].name}, ${top[1].name} and ${top[2].name} did, in ${top[0].share}%, ${top[1].share}% and ${top[2].share}% of them.
+When buyers ask ChatGPT, Claude or Gemini to recommend ${name}, ${item.brand} doesn't come up. I've asked them the same questions every day since ${since}, and ${item.brand} wasn't named in any of the ${summary.totalAnswers} answers. ${a.name} was named in ${Math.round(a.share)}% of them, ${b.name} in ${Math.round(b.share)}%.
 
-The data is public and updates daily: ${url}
+Every answer is public and updated daily: ${url}
 
-AEOrank finds the Reddit threads and sources those engines rely on for ${name} and gets ${item.brand} into them, then tracks whether the answers change. Plans start at $199 a month with a 7-day trial: https://www.aeorank.tech/start?brand=${encodeURIComponent(item.brand)}
+Those engines mostly repeat what they read in a handful of Reddit threads and review pages. AEOrank finds the ones behind the ${name} answers, gets ${item.brand} into those conversations, and reports each week whether the answers have changed.
 
-Or check your own buyer questions first, free: https://www.aeorank.tech/free-ai-visibility-checker
+Plans start at $199 a month, and the first 7 days are free: https://www.aeorank.tech/start?brand=${encodeURIComponent(item.brand)}
+
+Or see it for yourself first: enter your website in our free checker and it shows how often AI engines name ${item.brand}: https://www.aeorank.tech/free-ai-visibility-checker
 
 Ilyas Lemzouri
 Founder, AEOrank
@@ -67,7 +70,7 @@ If this isn't relevant, reply "no" and I won't email again.`;
     .split("\n\n")
     .map((p) => `<p>${p.replace(/\n/g, "<br>")}</p>`)
     .join("")}</div>`;
-  return { subject: `${item.brand} in AI answers for ${name}`, text, html };
+  return { subject: `${item.brand} is missing from AI answers for ${name}`, text, html };
 }
 
 // Bounces among emails sent in the last 3 days, read from Resend itself
@@ -100,10 +103,17 @@ export async function GET(req) {
 
   const summaries = {};
   for (const slug of new Set(items.map((x) => x.category))) summaries[slug] = await loadSummary(slug).catch(() => null);
-  const named = (it) => summaries[it.category]?.brands.some((b) => keyOf(b.name) === keyOf(it.brand));
+  const named = (it) => {
+    const s = summaries[it.category];
+    // The summary keys names with its own keyOf (no desk/books stripping),
+    // so try both spellings.
+    const plain = String(it.brand).toLowerCase().replace(/[^a-z0-9]/g, "");
+    if (s?.mentioned) return s.mentioned.includes(keyOf(it.brand)) || s.mentioned.includes(plain);
+    return s?.brands.some((b) => keyOf(b.name) === keyOf(it.brand));
+  };
 
   if (preview) {
-    const next = items.filter((x) => (x.status || "queued") === "queued" && summaries[x.category] && !named(x)).slice(0, 5);
+    const next = items.filter((x) => (x.status || "queued") === "queued" && summaries[x.category]?.brands?.length >= 2 && !named(x)).slice(0, 5);
     return NextResponse.json({
       queued: items.filter((x) => (x.status || "queued") === "queued").length,
       startsOn: START,
@@ -121,7 +131,7 @@ export async function GET(req) {
   await Promise.all(
     toSend.map(async (it) => {
       const s = summaries[it.category];
-      if (!s?.brands?.length) return; // no data yet; stays queued
+      if (!(s?.brands?.length >= 2)) return; // not enough data yet; stays queued
       if (named(it)) {
         it.status = "skipped_named";
         return;
