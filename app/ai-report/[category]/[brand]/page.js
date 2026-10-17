@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import MarketingLayout from "@/components/MarketingLayout";
 import ReportPdfButton from "@/components/ReportPdfButton";
-import { getCategory, loadReddit, loadSummary } from "@/lib/categoryData";
+import { getCategory, loadReddit, loadSummary, REDDIT_VERSION } from "@/lib/categoryData";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 // One brand's AI report, the page the outreach email links to: what the
@@ -259,8 +259,8 @@ export default async function BrandReport({ params, searchParams }) {
   const range = d.firstDay === d.lastDay ? `on ${longDate(d.firstDay)}` : `from ${longDate(d.firstDay)} to ${longDate(d.lastDay)}`;
   const brandRe = nameRe(brand);
 
-  // Only threads opened with their comments (v2) can say who is (not) in them.
-  const threads = (reddit?.v === 2 ? reddit.threads : [])
+  // Only threads opened with their comments (current version) can say who is (not) in them.
+  const threads = (reddit?.v === REDDIT_VERSION ? reddit.threads : [])
     .filter((t) => t.text)
     .slice(0, 6)
     .map((t) => ({ ...t, names: d.brands.filter((b) => keyOf(b.name) !== k && nameRe(b.name).test(t.text)).map((b) => b.name), has: brandRe.test(t.text) }));

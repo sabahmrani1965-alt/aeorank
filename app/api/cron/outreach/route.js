@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { hasAdminToken } from "@/lib/adminToken";
-import { getCategory, loadReddit, loadSummary } from "@/lib/categoryData";
+import { getCategory, loadReddit, loadSummary, REDDIT_VERSION } from "@/lib/categoryData";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -110,7 +110,7 @@ export async function GET(req) {
   for (const slug of new Set(items.map((x) => x.category))) {
     const [sum, reddit] = await Promise.all([loadSummary(slug).catch(() => null), loadReddit(slug).catch(() => null)]);
     // Same test the report page uses before it shows the Reddit section.
-    summaries[slug] = sum && { ...sum, hasReddit: reddit?.v === 2 && reddit.threads.length > 0 };
+    summaries[slug] = sum && { ...sum, hasReddit: reddit?.v === REDDIT_VERSION && reddit.threads.length > 0 };
   }
   const named = (it) => {
     const s = summaries[it.category];
