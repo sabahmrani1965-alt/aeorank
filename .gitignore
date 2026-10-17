@@ -15,3 +15,7 @@ supabase/.temp/
 
 # Audit screenshots: 12MB of binaries, regenerable, not source.
 www.aeorank.tech-audit/screenshots/
+
+# SEO audit of a different site: documents usernames and enumeration
+# vectors for givemecouponss.com. This repo is public - keep it local.
+givemecouponss-audit/

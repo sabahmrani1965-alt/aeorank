@@ -40,6 +40,14 @@ async function readQueue(bucket) {
   }
 }
 
+// "HubSpot and Pipedrive were named in every one." / "Zendesk was named in 91% of them, Freshdesk in 73%."
+function leaders(a, b) {
+  const pa = Math.round(a.share), pb = Math.round(b.share);
+  if (pa === 100 && pb === 100) return `${a.name} and ${b.name} were named in every one.`;
+  if (pa === 100) return `${a.name} was named in every one, ${b.name} in ${pb}%.`;
+  return `${a.name} was named in ${pa}% of them, ${b.name} in ${pb}%.`;
+}
+
 function render(item, summary) {
   const cat = getCategory(item.category);
   const name = cat?.name || item.category;
@@ -49,7 +57,7 @@ function render(item, summary) {
   const since = new Date(`${summary.firstDay}T12:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
   const text = `${hi}
 
-When buyers ask ChatGPT, Claude or Gemini to recommend ${name}, ${item.brand} doesn't come up. I've asked them the same questions every day since ${since}, and ${item.brand} wasn't named in any of the ${summary.totalAnswers} answers. ${a.name} was named in ${Math.round(a.share)}% of them, ${b.name} in ${Math.round(b.share)}%.
+When buyers ask ChatGPT, Claude or Gemini to recommend ${name}, ${item.brand} doesn't come up. I've asked them the same questions every day since ${since}, and ${item.brand} wasn't named in any of the ${summary.totalAnswers} answers. ${leaders(a, b)}
 
 Every answer is public and updated daily: ${url}
 
