@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { hasAdminToken } from "@/lib/adminToken";
-import { getCategory, loadSummary } from "@/lib/categoryData";
+import { getCategory, loadReddit, loadSummary } from "@/lib/categoryData";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -61,7 +61,7 @@ function render(item, summary) {
   const paras = [
     hi,
     `When buyers ask ChatGPT, Claude or Gemini to recommend ${name}, ${item.brand} doesn't come up. I've asked them the same questions every day since ${since}, and ${item.brand} wasn't named in any of the ${summary.totalAnswers} answers. ${leaders(a, b)}`,
-    `I put it all on one page for ${item.brand}: what each engine said word for word, who it recommends instead, the Reddit threads where buyers ask about ${name}, and what would get ${item.brand} into those answers.`,
+    `I put it all on one page for ${item.brand}: what each engine said word for word, who it recommends instead, ${summary.hasReddit ? `the Reddit threads where buyers ask about ${name}, ` : ""}and what would get ${item.brand} into those answers.`,
   ];
   const sig = ["Ilyas Lemzouri", "Founder, AEOrank", "https://www.linkedin.com/in/lemzouri-ilyas/"];
   const optout = `If this isn't relevant, reply "no" and I won't email again.`;
@@ -107,7 +107,11 @@ export async function GET(req) {
   const today = new Date().toISOString().slice(0, 10);
 
   const summaries = {};
-  for (const slug of new Set(items.map((x) => x.category))) summaries[slug] = await loadSummary(slug).catch(() => null);
+  for (const slug of new Set(items.map((x) => x.category))) {
+    const [sum, reddit] = await Promise.all([loadSummary(slug).catch(() => null), loadReddit(slug).catch(() => null)]);
+    // Same test the report page uses before it shows the Reddit section.
+    summaries[slug] = sum && { ...sum, hasReddit: reddit?.v === 2 && reddit.threads.length > 0 };
+  }
   const named = (it) => {
     const s = summaries[it.category];
     // The summary keys names with its own keyOf (no desk/books stripping),
