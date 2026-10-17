@@ -156,12 +156,51 @@ export default async function BrandReport({ params, searchParams }) {
       </section>
 
 
+      <section className="section" style={{ paddingTop: 0 }}>
+        <div className="container-narrow">
+          <H2>Why Reddit shapes these answers</H2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
+            {[
+              {
+                t: "It's the site AI engines cite most",
+                b: "A March 2026 study of 30 million AI citations ranked Reddit first overall, and first or second on every engine tested: ChatGPT, Gemini, Google AI Overviews and Perplexity.",
+                src: "Peec AI",
+                href: "https://docs.peec.ai/research/most-cited-domains-in-ai-search",
+              },
+              {
+                t: "Google and OpenAI pay for it",
+                b: "Both signed data deals with Reddit in 2024. OpenAI's gives ChatGPT real-time access to Reddit conversations; Google's was reported at about $60 million a year.",
+                src: "Fortune",
+                href: "https://fortune.com/2024/05/16/sam-altman-openai-reddit-partner",
+              },
+              {
+                t: "It's where buyers compare tools",
+                b: `When someone asks which ${cat.name} to pick, real users answer with the tools they use. An engine asked the same question repeats the names it keeps reading there.`,
+              },
+            ].map((x) => (
+              <div key={x.t} className="card" style={{ padding: 20 }}>
+                <div style={{ color: "var(--text)", fontWeight: 700, marginBottom: 8, lineHeight: 1.35 }}>{x.t}</div>
+                <p style={{ color: "var(--text-dim)", lineHeight: 1.65, margin: 0, fontSize: 15 }}>{x.b}</p>
+                {x.href ? (
+                  <a href={x.href} target="_blank" rel="noopener noreferrer nofollow" style={{ display: "inline-block", marginTop: 10, fontSize: 13, color: "var(--text-muted)" }}>
+                    Source: {x.src} ↗
+                  </a>
+                ) : null}
+              </div>
+            ))}
+          </div>
+          <p style={{ color: "var(--text-dim)", lineHeight: 1.7, marginTop: 16, marginBottom: 0 }}>
+            So a brand that isn&apos;t in the Reddit threads where its category gets discussed is rarely in the answers either.
+          </p>
+        </div>
+      </section>
+
       {threads.length ? (
         <section className="section" style={{ paddingTop: 0 }}>
           <div className="container-narrow">
             <H2>Where buyers ask about {cat.name} on Reddit</H2>
             <p style={{ color: "var(--text-dim)", lineHeight: 1.7, marginBottom: 14 }}>
-              The busiest threads where people ask for {cat.name}: what the engines learn the category from.{" "}
+              The busiest threads where people ask for {cat.name}.{" "}
               {brand} isn&apos;t in {without} of these {threads.length}
               {lead && leadIn ? `; ${lead.name} is in ${leadIn}` : ""}.
             </p>
