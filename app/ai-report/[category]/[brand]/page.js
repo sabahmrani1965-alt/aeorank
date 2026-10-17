@@ -152,27 +152,63 @@ const CSS = `
 .rp-step h3 { font-size: 17.5px; margin: 0 0 6px; color: var(--text); line-height: 1.35; }
 .rp-step p { margin: 0; color: var(--text-dim); line-height: 1.65; font-size: 16px; }
 
-.rp-cta { padding: 34px; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 28px; align-items: center; border-color: var(--accent); }
-.rp-cta h2 { font-size: 28px; margin-bottom: 10px; }
-.rp-cta p { color: var(--text-dim); font-size: 17px; line-height: 1.65; margin: 0; }
-.rp-cta ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 9px; }
-.rp-cta li { display: flex; gap: 10px; color: var(--text); line-height: 1.5; font-size: 16px; }
-.rp-cta li::before { content: "✓"; color: var(--accent); font-weight: 800; }
-.rp-cta-actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-.rp-cta-actions small { color: var(--text-muted); font-size: 14.5px; }
 .rp-method { color: var(--text-muted); font-size: 14.5px; line-height: 1.7; margin: 20px 0 0; }
 
+.rp-step-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.rp-step-top .rp-step-n { margin-bottom: 0; }
+.rp-tag { font-size: 12.5px; font-weight: 700; letter-spacing: .03em; padding: 4px 10px; border-radius: 999px; background: var(--state-neutral-bg, rgba(0,0,0,.05)); color: var(--text-dim); }
+.rp-tag.good { background: var(--rp-good-bg); color: var(--rp-good); }
+.rp-step { display: flex; flex-direction: column; }
+.rp-step-data { margin-top: auto; padding-top: 14px; font-size: 14.5px; color: var(--text-dim); border-top: 1px dashed var(--card-border); margin-top: 16px; }
+.rp-step-data b { color: var(--text); }
+
+.rp-inline { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; border-radius: 12px; background: var(--accent-dim); }
+.rp-inline span { color: var(--text); font-weight: 600; font-size: 16.5px; }
+.rp-inline a { color: var(--text); font-weight: 800; text-decoration: none; white-space: nowrap; border-bottom: 2px solid var(--accent); }
+
+.rp-close { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 0; border-radius: 20px; overflow: hidden; background: #14161b; color: #f4f6f8; box-shadow: 0 24px 60px -24px rgba(20,22,27,.55); }
+.rp-close-main { padding: 36px; }
+.rp-close-eyebrow { font-size: 12.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+.rp .rp-close h2 { color: #fff; font-size: 30px; line-height: 1.15; margin-bottom: 22px; }
+.rp-plan { list-style: none; padding: 0; margin: 0 0 28px; display: grid; gap: 14px; }
+.rp-plan li { display: grid; grid-template-columns: 92px 1fr; gap: 14px; align-items: baseline; }
+.rp-plan b { color: var(--accent); font-size: 14.5px; }
+.rp-plan span { color: #d7dbe3; font-size: 16.5px; line-height: 1.55; }
+.rp-close-actions { display: grid; gap: 12px; justify-items: start; }
+.rp-btn { display: inline-flex; align-items: center; padding: 16px 26px; border-radius: 12px; font-weight: 800; font-size: 17.5px; color: #14161b; text-decoration: none; background: linear-gradient(135deg, var(--accent) 0%, var(--accent-3, #e8862a) 100%); box-shadow: 0 10px 30px -8px var(--accent-glow); transition: transform .15s; }
+.rp-btn:hover { transform: translateY(-1px); }
+.rp-btn:focus-visible, .rp-sticky a:focus-visible, .rp-inline a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.rp-reassure { color: #aab1be; font-size: 14px; }
+.rp-score { padding: 32px 30px; background: #1c1f27; display: flex; flex-direction: column; gap: 10px; }
+.rp-score-title { font-size: 12.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #aab1be; margin-bottom: 4px; }
+.rp-score-row { display: flex; justify-content: space-between; gap: 12px; padding: 12px 14px; border-radius: 10px; background: rgba(255,255,255,.05); font-size: 16px; }
+.rp-score-row span { color: #e6e9ef; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rp-score-row b { color: #fff; font-variant-numeric: tabular-nums; }
+.rp-score-row.you { background: rgba(255,120,95,.14); box-shadow: inset 0 0 0 1px rgba(255,120,95,.45); }
+.rp-score-row.you span, .rp-score-row.you b { color: #ff8a70; font-weight: 800; }
+.rp-score-foot { color: #8b93a1; font-size: 13px; line-height: 1.5; }
+.rp-ask { margin-top: auto; padding-top: 12px; color: #e6e9ef; font-weight: 600; font-size: 15px; text-decoration: none; }
+.rp-ask:hover { color: #fff; text-decoration: underline; }
+
+.rp-sticky { position: sticky; bottom: 16px; z-index: 20; max-width: 640px; margin: 0 auto 24px; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 10px 10px 10px 20px; border-radius: 999px; background: #14161b; color: #d7dbe3; font-size: 15px; box-shadow: 0 14px 40px -12px rgba(20,22,27,.6); }
+.rp-sticky b { color: #fff; }
+.rp-sticky a { flex-shrink: 0; padding: 10px 18px; border-radius: 999px; font-weight: 800; color: #14161b; text-decoration: none; background: var(--accent); }
+
 @media (max-width: 760px) {
+  .rp-close { grid-template-columns: 1fr; }
+  .rp-close-main, .rp-score { padding: 24px; }
+  .rp .rp-close h2 { font-size: 25px; }
+  .rp-plan li { grid-template-columns: 1fr; gap: 2px; }
+  .rp-sticky { margin: 0 12px 16px; font-size: 14px; }
   .rp-hero { padding: 44px 0 28px; }
   .rp-sec { padding-bottom: 48px; }
   .rp-wrap { padding: 0 16px; }
-  .rp-verdict, .rp-cta { grid-template-columns: 1fr; }
+  .rp-verdict { grid-template-columns: 1fr; }
   .rp-v-main { border-right: 0; border-bottom: 1px solid var(--card-border); }
   .rp-v-num { font-size: 52px; }
   .rp-why, .rp-steps { grid-template-columns: 1fr; }
   .rp-thread { grid-template-columns: 1fr; }
   .rp-thread-status { grid-column: 1; grid-row: auto; }
-  .rp-cta { padding: 24px; }
 }
 `;
 
@@ -367,6 +403,12 @@ export default async function BrandReport({ params, searchParams }) {
                 ))}
               </div>
               <p className="rp-note">Checked against each thread&apos;s post and its top comments.</p>
+              <div className="rp-inline">
+                <span>
+                  These are the threads we&apos;d start with for {brand}.
+                </span>
+                <Link href={`/start?brand=${encodeURIComponent(brand)}`}>Start with these threads →</Link>
+              </div>
             </div>
           </section>
         ) : null}
@@ -418,48 +460,93 @@ export default async function BrandReport({ params, searchParams }) {
             <p className="rp-sub">
               {lead ? `${lead.name} comes up in these conversations again and again. ` : ""}
               {mentioned ? `${brand} shows up too rarely to make most answers.` : `${brand} isn't there often enough to be named at all.`} Changing
-              that takes three steps.
+              that takes three steps, and the first one is already done.
             </p>
             <div className="rp-steps">
               <div className="rp-card rp-step">
-                <div className="rp-step-n">1</div>
+                <div className="rp-step-top">
+                  <div className="rp-step-n">1</div>
+                  <span className="rp-tag good">{threads.length ? "Started" : "Day 1"}</span>
+                </div>
                 <h3>Find the sources behind the answers</h3>
-                <p>The Reddit threads and pages the engines draw on for {cat.name}, ranked by how much buying intent they carry.</p>
+                <p>The Reddit threads and pages the engines draw on for {cat.name}, ranked by buying intent.</p>
+                {threads.length ? (
+                  <div className="rp-step-data">
+                    <b>{threads.length}</b> threads found above, {brand} missing from <b>{without}</b>
+                  </div>
+                ) : null}
               </div>
               <div className="rp-card rp-step">
-                <div className="rp-step-n">2</div>
+                <div className="rp-step-top">
+                  <div className="rp-step-n">2</div>
+                  <span className="rp-tag">Week 1</span>
+                </div>
                 <h3>Put {brand} in those conversations</h3>
-                <p>Useful, honest comments from real accounts where people are choosing a tool. Not ads.</p>
+                <p>You pick the threads; useful, honest comments go up from real accounts where people are choosing a tool. Not ads.</p>
+                <div className="rp-step-data">Where {lead ? lead.name : "the leaders"} already {lead && leadIn ? `is in ${leadIn} of ${threads.length}` : "shows up"}</div>
               </div>
               <div className="rp-card rp-step">
-                <div className="rp-step-n">3</div>
-                <h3>Ask again every day</h3>
-                <p>The same questions, the same engines, so you see the week {brand} starts being named.</p>
+                <div className="rp-step-top">
+                  <div className="rp-step-n">3</div>
+                  <span className="rp-tag">Every day</span>
+                </div>
+                <h3>Watch the answers change</h3>
+                <p>The same questions to the same engines every day, so you see the week {brand} starts being named.</p>
+                <div className="rp-step-data">
+                  Today: <b style={{ color: named ? undefined : "var(--rp-bad)" }}>{named} of {d.totalAnswers}</b> answers
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="rp-sec">
+        <section className="rp-sec" id="start">
           <div className="rp-wrap">
-            <div className="rp-card rp-cta">
-              <div>
-                <h2>Want this done for {brand}?</h2>
-                <p>AEOrank does all three, and sends you this report every week with the answers as they change.</p>
+            <div className="rp-close">
+              <div className="rp-close-main">
+                <div className="rp-close-eyebrow">Your first 7 days, free</div>
+                <h2>Get {brand} into the answers {lead ? `${lead.name} owns today` : "buyers read"}</h2>
+                <ul className="rp-plan">
+                  <li>
+                    <b>Day 1</b>
+                    <span>Your dashboard opens with the {cat.name} threads where buyers are asking right now.</span>
+                  </li>
+                  <li>
+                    <b>Days 2–7</b>
+                    <span>Comments for {brand} go up in the threads you choose.</span>
+                  </li>
+                  <li>
+                    <b>Every day</b>
+                    <span>ChatGPT, Claude and Gemini are re-asked, and you see {brand}&apos;s score move.</span>
+                  </li>
+                </ul>
+                <div className="rp-close-actions">
+                  <Link href={`/start?brand=${encodeURIComponent(brand)}`} className="rp-btn">
+                    Start {brand}&apos;s free trial →
+                  </Link>
+                  <div className="rp-reassure">7 days free · cancel in two clicks · then from $199/month</div>
+                </div>
               </div>
-              <ul>
-                <li>The threads that matter for {cat.name}, found daily</li>
-                <li>Comments written and posted for {brand}</li>
-                <li>ChatGPT, Claude and Gemini re-asked every day</li>
-              </ul>
-              <div className="rp-cta-actions">
-                <Link href={`/start?brand=${encodeURIComponent(brand)}`} className="btn btn-primary">
-                  Start the 7-day free trial →
-                </Link>
-                <a href={`mailto:ilyas@aeorank.tech?subject=${encodeURIComponent(`${brand} and AI answers`)}`} className="btn btn-ghost">
-                  Ask me a question
+              <div className="rp-score">
+                <div className="rp-score-title">The scoreboard today</div>
+                <div className="rp-score-row you">
+                  <span>{brand}</span>
+                  <b>
+                    {named}/{d.totalAnswers}
+                  </b>
+                </div>
+                {others.slice(0, 3).map((b) => (
+                  <div key={b.name} className="rp-score-row">
+                    <span>{b.name}</span>
+                    <b>
+                      {b.answers}/{d.totalAnswers}
+                    </b>
+                  </div>
+                ))}
+                <div className="rp-score-foot">AI answers naming each brand, {range}.</div>
+                <a className="rp-ask" href={`mailto:ilyas@aeorank.tech?subject=${encodeURIComponent(`${brand} and AI answers`)}`}>
+                  Not ready? Ask me anything about this report →
                 </a>
-                <small>Cancel before day 7 and pay nothing.</small>
               </div>
             </div>
             <p className="rp-method">
@@ -469,6 +556,16 @@ export default async function BrandReport({ params, searchParams }) {
             </p>
           </div>
         </section>
+
+        <div className="rp-sticky" aria-label={`${brand} summary`}>
+          <span>
+            <b style={{ color: named ? undefined : "#ff8a70" }}>
+              {brand}: {named}/{d.totalAnswers}
+            </b>{" "}
+            AI answers
+          </span>
+          <Link href={`/start?brand=${encodeURIComponent(brand)}`}>Start free trial →</Link>
+        </div>
       </div>
     </MarketingLayout>
   );
