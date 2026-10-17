@@ -161,8 +161,8 @@ export default async function BrandReport({ params, searchParams }) {
           <div className="container-narrow">
             <H2>Where buyers ask about {cat.name} on Reddit</H2>
             <p style={{ color: "var(--text-dim)", lineHeight: 1.7, marginBottom: 14 }}>
-              The busiest threads where people ask for {cat.name}: what the engines learn the category from. {brand}
-              isn&apos;t in {without} of these {threads.length}
+              The busiest threads where people ask for {cat.name}: what the engines learn the category from.{" "}
+              {brand} isn&apos;t in {without} of these {threads.length}
               {lead && leadIn ? `; ${lead.name} is in ${leadIn}` : ""}.
             </p>
             <div style={{ display: "grid", gap: 12 }}>

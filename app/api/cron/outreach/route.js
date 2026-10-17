@@ -61,7 +61,7 @@ function render(item, summary) {
   const paras = [
     hi,
     `When buyers ask ChatGPT, Claude or Gemini to recommend ${name}, ${item.brand} doesn't come up. I've asked them the same questions every day since ${since}, and ${item.brand} wasn't named in any of the ${summary.totalAnswers} answers. ${leaders(a, b)}`,
-    `I put it all on one page for ${item.brand}: what each engine said word for word, who it recommends instead, and what would get ${item.brand} into those answers.`,
+    `I put it all on one page for ${item.brand}: what each engine said word for word, who it recommends instead, the Reddit threads where buyers ask about ${name}, and what would get ${item.brand} into those answers.`,
   ];
   const sig = ["Ilyas Lemzouri", "Founder, AEOrank", "https://www.linkedin.com/in/lemzouri-ilyas/"];
   const optout = `If this isn't relevant, reply "no" and I won't email again.`;
