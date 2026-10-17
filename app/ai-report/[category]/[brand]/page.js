@@ -296,7 +296,7 @@ export default async function BrandReport({ params, searchParams }) {
               <i />
               <span>Prepared for {brand}</span>
               <i />
-              <span>{longDate(d.lastDay)}</span>
+              <span>Updated {longDate(d.lastDay)}</span>
               <ReportPdfButton brand={brand} className="rp-pdf" />
             </div>
             <div className="rp-print-only rp-print-head">
