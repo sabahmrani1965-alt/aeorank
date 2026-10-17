@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import MarketingLayout from "@/components/MarketingLayout";
+import ReportPdfButton from "@/components/ReportPdfButton";
 import { getCategory, loadReddit, loadSummary } from "@/lib/categoryData";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -127,7 +128,7 @@ const CSS = `
 .rp-thread-title { grid-column: 1; color: var(--text); font-weight: 700; font-size: 17px; line-height: 1.4; }
 .rp-thread-status { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
 .rp-thread-names { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-.rp-chip { display: inline-block; font-size: 13.5px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--card-border); color: var(--text-dim); }
+.rp-chip { display: inline-block; white-space: nowrap; font-size: 13.5px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--card-border); color: var(--text-dim); }
 .rp-chip.bad { border-color: var(--rp-bad); color: var(--rp-bad); background: var(--rp-bad-bg); font-weight: 700; }
 .rp-chip.good { border-color: var(--rp-good); color: var(--rp-good); background: var(--rp-good-bg); font-weight: 700; }
 .rp-note { color: var(--text-muted); font-size: 14px; margin: 10px 0 0; }
@@ -194,6 +195,33 @@ const CSS = `
 .rp-sticky b { color: #fff; }
 .rp-sticky a { flex-shrink: 0; padding: 10px 18px; border-radius: 999px; font-weight: 800; color: #14161b; text-decoration: none; background: var(--accent); }
 
+.rp-pdf { margin-left: auto; font: inherit; font-size: 14px; font-weight: 700; color: var(--text); background: transparent; border: 1px solid var(--card-border); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+.rp-pdf:hover { border-color: var(--accent); }
+.rp-pdf:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rp-print-only { display: none; }
+
+@media print {
+  @page { size: A4; margin: 14mm 12mm; }
+  html, body, .light-theme { background: #fff !important; }
+  .header, .footer, .rp-sticky, .rp-inline, .rp-pdf, .rp-btn, .rp-ask, .rp-answer summary { display: none !important; }
+  .rp * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .rp-print-only { display: block; }
+  .rp-print-head { font-size: 12px; color: var(--text-muted); margin: -6px 0 14px; }
+  .rp-print-foot { margin-top: 14px; font-size: 13px; color: var(--text); }
+  .rp-wrap { max-width: none; padding: 0; }
+  .rp-hero { padding: 0 0 18px; }
+  .rp-sec { padding: 0 0 22px; }
+  .rp h1 { font-size: 34px; }
+  .rp h2 { font-size: 21px; break-after: avoid; }
+  .rp-card, .rp-thread, .rp-answer, .rp-step, .rp-close, .rp-verdict, .rp-kicker, .rp-bars { break-inside: avoid; box-shadow: none !important; }
+  .rp-close { box-shadow: none; }
+  .rp-close-actions { gap: 0; }
+  .rp-answer details > *:not(summary) { display: inline; }
+  a { text-decoration: none; }
+  .rp .rp-verdict { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+  .rp .rp-v-main { border-right: 1px solid var(--card-border); border-bottom: 0; }
+}
+
 @media (max-width: 760px) {
   .rp-close { grid-template-columns: 1fr; }
   .rp-close-main, .rp-score { padding: 24px; }
@@ -253,6 +281,7 @@ export default async function BrandReport({ params, searchParams }) {
     </>
   );
   const allNames = d.brands.map((b) => b.name);
+  const liveUrl = `https://www.aeorank.tech/ai-report/${cat.slug}/${encodeURIComponent(brand)}`;
 
   return (
     <MarketingLayout>
@@ -268,6 +297,10 @@ export default async function BrandReport({ params, searchParams }) {
               <span>Prepared for {brand}</span>
               <i />
               <span>{longDate(d.lastDay)}</span>
+              <ReportPdfButton brand={brand} className="rp-pdf" />
+            </div>
+            <div className="rp-print-only rp-print-head">
+              AEOrank · Live, updated daily: {liveUrl}
             </div>
             <h1>{headline}</h1>
             <p className="rp-lede">
@@ -553,6 +586,9 @@ export default async function BrandReport({ params, searchParams }) {
               Method: the same fixed questions every day, for example &ldquo;{cat.questions[0]}&rdquo; Brand names are read from each
               answer, and a brand counts once per answer. Full category data:{" "}
               <Link href={`/ai-recommendations/${cat.slug}`}>{cap(cat.name)} in AI answers</Link>.
+            </p>
+            <p className="rp-print-only rp-print-foot">
+              See the live report, updated daily, and start the free trial: <b>{liveUrl}</b>
             </p>
           </div>
         </section>
