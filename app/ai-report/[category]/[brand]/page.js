@@ -169,7 +169,9 @@ export default async function BrandReport({ params, searchParams }) {
               {threads.map((t) => (
                 <a key={t.url} href={t.url} target="_blank" rel="noopener noreferrer nofollow" className="card" style={{ padding: "16px 20px", textDecoration: "none", display: "block" }}>
                   <div style={{ color: "var(--text-muted)", fontSize: 13, marginBottom: 4 }}>
-                    r/{t.sub} · {t.ups} upvotes · {t.comments} comments
+                    r/{t.sub}
+                    {t.ups ? ` · ${t.ups} upvotes` : ""}
+                    {t.comments ? ` · ${t.comments} comments` : ""}
                   </div>
                   <div style={{ color: "var(--text)", fontWeight: 700, lineHeight: 1.4, marginBottom: 10 }}>{t.title}</div>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
