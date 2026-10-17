@@ -674,6 +674,10 @@ const posts = {
         heading: 'The short version',
         content: `Ask how mentions are detected and what happens on a denial sentence. Ask for per-model rates and the raw check history. Ask for a flat result. Run your own queries manually before you believe any dashboard, including ours.\n\nIf you want the honest baseline on your own brand first, our [AI visibility audit](/services/ai-visibility-audit) produces one, and [measuring AI citation ROI](/blog/measure-ai-citation-roi) covers what to do with the number once you have it.\n\nTo see which tools in this category the engines themselves name today, with no vendor dashboard in between, see our daily data on [which AI visibility tools ChatGPT, Claude and Gemini recommend](/ai-recommendations/ai-visibility-tools).`,
       },
+      {
+        heading: 'Sources and further reading',
+        content: `• [AthenaHQ](https://www.athenahq.ai)\n• [CrowdReply](https://crowdreply.io)\n• [Peec AI](https://peec.ai)\n• [Profound](https://www.tryprofound.com)\n• [Scrunch](https://scrunchai.com)\n• [Peec AI: Most cited domains in AI search](https://docs.peec.ai/research/most-cited-domains-in-ai-search)`,
+      },
     ],
   },
   'reddit-ai-visibility-guide': {
@@ -731,6 +735,10 @@ const posts = {
       {
         heading: 'The short version',
         content: `Reddit matters to AI assistants because it contains specific, first-hand, question-shaped content that models can quote. You earn citations there by being genuinely useful in threads where you have real expertise, disclosing who you are, and being specific enough to be worth quoting.\n\nEverything sold as a shortcut, aged accounts, upvote rings, undisclosed astroturfing, trades a durable asset for a short-lived placement, and usually loses both.\n\nIf you want the same work done systematically, that is what [AEOrank](/services) is. If you would rather do it yourself, the order above is the one that works.`,
+      },
+      {
+        heading: 'Sources and further reading',
+        content: `• [Reddit: Reddit and OpenAI partnership](https://redditinc.com/blog/reddit-and-oai-partner)\n• [Google: An expanded partnership with Reddit](https://blog.google/inside-google/company-announcements/expanded-reddit-partnership/)\n• [Reddit Rules](https://www.redditinc.com/policies/reddit-rules)\n• [Reddit Content Policy](https://www.redditinc.com/policies/content-policy)\n• [Google Search Central: AI features and your website](https://developers.google.com/search/docs/appearance/ai-features)\n• [Google Search Central: Creating helpful, reliable, people-first content](https://developers.google.com/search/docs/fundamentals/creating-helpful-content)\n• [Schema.org: Organization](https://schema.org/Organization)`,
       },
     ],
   },
@@ -903,6 +911,10 @@ const posts = {
         heading: 'Which one fits which team',
         content: `ReddGrow fits a team that wants to do the Reddit work itself, with software that finds the threads and drafts the replies, and that wants the lowest entry price.\n\nAEOrank fits a team that wants the placement done for it and is happy to pay per comment for that.\n\nWhichever you choose, read Reddit\'s rules on self-promotion and vote manipulation first, and decide how much of that risk you want to carry. For a wider view of the category, see [how to evaluate AI visibility tools](/blog/best-ai-visibility-tools) and [CrowdReply vs AEOrank](/blog/crowdreply-vs-aeorank).`
       },
+      {
+        heading: 'Sources and further reading',
+        content: `• [ReddGrow pricing](https://reddgrow.ai/pricing)\n• [Reddit Rules](https://www.redditinc.com/policies/reddit-rules)`,
+      },
     ],
   },
 
@@ -934,6 +946,10 @@ const posts = {
         heading: 'Which one fits which team',
         content: `ReddiReach fits a company that wants an agency to own the whole channel, including writing, and that is comfortable with custom pricing.\n\nAEOrank fits a team that wants to see the data itself, choose the threads, and pay published per-placement prices.\n\nEither way, read Reddit\'s rules on self-promotion and vote manipulation first. For more comparisons see [CrowdReply vs AEOrank](/blog/crowdreply-vs-aeorank) and [ReddGrow vs AEOrank](/blog/reddgrow-vs-aeorank).`
       },
+      {
+        heading: 'Sources and further reading',
+        content: `• [ReddiReach pricing](https://reddireach.com/pricing)\n• [Discovered Labs: Reddit marketing agency cost](https://discoveredlabs.com/blog/reddit-marketing-agency-cost)\n• [Reddit Rules](https://www.redditinc.com/policies/reddit-rules)`,
+      },
     ],
   },
 
@@ -964,6 +980,10 @@ const posts = {
       {
         heading: 'Which one fits which team',
         content: `Bazzly fits a team whose goal is leads from Reddit: finding people asking for a product like theirs and reaching them quickly, including by DM.\n\nAEOrank fits a team whose goal is being recommended by AI assistants: knowing which threads those assistants rely on, and being present in them.\n\nWith either, read Reddit\'s rules on self-promotion and vote manipulation and decide how much of that risk you want to carry. More comparisons: [CrowdReply vs AEOrank](/blog/crowdreply-vs-aeorank), [ReddGrow vs AEOrank](/blog/reddgrow-vs-aeorank), [ReddiReach vs AEOrank](/blog/reddireach-vs-aeorank), and the [best Reddit marketing tools](/blog/best-reddit-marketing-tools).`
+      },
+      {
+        heading: 'Sources and further reading',
+        content: `• [Bazzly pricing](https://www.bazzly.ai/pricing)\n• [Reddit Rules](https://www.redditinc.com/policies/reddit-rules)`,
       },
     ],
   },
@@ -1011,6 +1031,10 @@ const posts = {
       {
         heading: 'How to choose',
         content: `Decide first whether you want **software you operate** (ReddGrow), **a platform that also places for you** (AEOrank, Bazzly, CrowdReply), or **an agency** (ReddiReach). Then decide what you are buying it for: leads, AI visibility, or both. And whichever you choose, read Reddit\'s sitewide rules and each subreddit\'s rules on self-promotion and vote manipulation, because the risk of breaking them sits with your brand, not the tool. For a general evaluation checklist, see [how to evaluate AI visibility tools](/blog/best-ai-visibility-tools).\n\nFor what the AI assistants themselves say when asked, see our daily data on [which Reddit marketing tools ChatGPT, Claude and Gemini recommend](/ai-recommendations/reddit-marketing-tools).`
+      },
+      {
+        heading: 'Sources and further reading',
+        content: `• [Bazzly pricing](https://www.bazzly.ai/pricing)\n• [CrowdReply pricing](https://crowdreply.io/pricing)\n• [ReddGrow pricing](https://reddgrow.ai/pricing)\n• [ReddiReach pricing](https://reddireach.com/pricing)\n• [Reddit Rules](https://www.redditinc.com/policies/reddit-rules)`,
       },
     ],
   },

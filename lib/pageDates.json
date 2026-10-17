@@ -1,0 +1,20 @@
+{
+  "/": "2026-10-15",
+  "/services": "2026-09-27",
+  "/services/*": "2026-10-15",
+  "/pricing": "2026-10-15",
+  "/proof": "2026-10-16",
+  "/blog": "2026-10-15",
+  "/industries": "2026-09-27",
+  "/industries/*": "2026-10-15",
+  "/about": "2026-10-16",
+  "/contact": "2026-09-27",
+  "/privacy": "2026-10-15",
+  "/terms": "2026-10-15",
+  "/free-ai-visibility-checker": "2026-10-16",
+  "/tools": "2026-10-15",
+  "/tools/reddit-markdown-formatter": "2026-10-15",
+  "/tools/reddit-title-checker": "2026-10-15",
+  "/tools/reddit-self-promotion-checker": "2026-10-15",
+  "/affiliates": "2026-10-15"
+}

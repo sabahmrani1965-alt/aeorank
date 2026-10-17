@@ -2007,9 +2007,11 @@ button { font-family: inherit; }
 .fade-in {
   animation: fadeIn .6s ease-out both;
 }
+/* Slide only, no fade: content that starts at opacity 0 isn't counted as
+   painted, so the hero headline couldn't be the LCP and mobile LCP waited. */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { transform: translateY(12px); }
+  to { transform: translateY(0); }
 }
 
 /* ----------------- Dashboard app shell ----------------- */
