@@ -84,11 +84,12 @@ function renderFollowup(item, summary) {
   const hi = item.firstname ? `Hi ${item.firstname},` : "Hi,";
   const url = `https://www.aeorank.tech/ai-report/${item.category}/${encodeURIComponent(item.brand)}?r=${refOf(item.to)}`;
   const more = summary.totalAnswers - (item.sent_total || summary.totalAnswers);
+  const leadShare = Math.round(a.share) === 100 ? "every one" : `${Math.round(a.share)}%`;
   const paras = [
     hi,
     more >= 3
-      ? `A quick follow-up. Since my last email, ChatGPT, Claude and Gemini answered ${more} more questions about ${name}, and ${item.brand} still wasn't named in any of them. Across all ${summary.totalAnswers} answers, ${a.name} was named in ${Math.round(a.share)}%.`
-      : `A quick follow-up. ${item.brand} still hasn't been named in any of the ${summary.totalAnswers} AI answers about ${name}, while ${a.name} was named in ${Math.round(a.share)}%.`,
+      ? `A quick follow-up. Since my last email, ChatGPT, Claude and Gemini answered ${more} more questions about ${name}, and ${item.brand} still wasn't named in any of them. Across all ${summary.totalAnswers} answers, ${a.name} was named in ${leadShare}.`
+      : `A quick follow-up. ${item.brand} still hasn't been named in any of the ${summary.totalAnswers} AI answers about ${name}, while ${a.name} was named in ${leadShare}.`,
     `If it helps, reply "threads" and I'll send you the three Reddit threads I'd start with for ${item.brand}. No call, no strings.`,
   ];
   const sig = ["Ilyas Lemzouri", "Founder, AEOrank", "https://www.linkedin.com/in/lemzouri-ilyas/"];
@@ -166,7 +167,7 @@ export async function GET(req) {
       queued: items.filter((x) => (x.status || "queued") === "queued").length,
       followupsDue: items.filter(dueFollowup).length,
       startsOn: START,
-      next: next.map((x) => ({ to: x.to, ...(asFollowup ? renderFollowup({ ...x, sent_total: summaries[x.category].totalAnswers - 20 }, summaries[x.category]) : render(x, summaries[x.category])) })),
+      next: next.map((x) => ({ to: x.to, ...(asFollowup ? renderFollowup({ ...x, sent_total: Math.round(summaries[x.category].totalAnswers * 0.6) }, summaries[x.category]) : render(x, summaries[x.category])) })),
     });
   }
 
