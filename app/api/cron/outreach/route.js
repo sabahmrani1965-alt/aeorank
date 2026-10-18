@@ -92,9 +92,9 @@ function render(item, summary) {
   if (q) {
     blocks.push({ p: `I asked ${q.engine}: "${q.question}" Part of its answer:` });
     blocks.push({ quote: q.quote });
-    blocks.push({ p: `No ${item.brand}. Not in that answer, and not in any of the ${summary.totalAnswers} answers ChatGPT, Claude and Gemini have given me to the same questions since ${since}.` });
+    blocks.push({ p: `No ${item.brand}. Not in that answer, and not in any of the ${summary.totalAnswers} answers I've collected from ChatGPT, Claude and Gemini.` });
   } else {
-    blocks.push({ p: `When buyers ask ChatGPT, Claude or Gemini to recommend ${name}, ${item.brand} doesn't come up. I've asked them the same questions every day since ${since}, and ${item.brand} wasn't named in any of the ${summary.totalAnswers} answers. ${leaders(a, b)}` });
+    blocks.push({ p: `When buyers ask ChatGPT, Claude or Gemini to recommend ${name}, ${item.brand} doesn't come up: it wasn't named in any of the ${summary.totalAnswers} answers I've collected. ${leaders(a, b)}` });
   }
   if (t) {
     blocks.push({ p: `The engines learn this from threads like "${t.title}" on r/${t.sub}${t.comments ? ` (${t.comments} comments)` : ""}: its post and top comments mention ${t.lead} ${t.leadCount} times and ${item.brand} not once.` });
