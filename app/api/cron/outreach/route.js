@@ -41,6 +41,41 @@ function leaders(a, b) {
   return `${a.name} was named in ${pa}% of them, ${b.name} in ${pb}%.`;
 }
 
+// "HubSpot CRM" -> /\bhubspot\b/gi, so the short name people write counts.
+const coreName = (n) => String(n).toLowerCase().replace(/\s+(crm|software|app|platform|suite)$/, "").trim();
+const nameRe = (n, flags = "i") => new RegExp(`\\b${coreName(n).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, flags);
+const plain = (t) => String(t).replace(/\*\*|__|`|#+\s/g, "").replace(/\s+/g, " ").trim();
+
+// A sentence of a real stored answer that names the leaders, quoted verbatim.
+// ChatGPT first: it's the engine the reader has heard of.
+function pickQuote(summary, brand) {
+  const order = ["ChatGPT", "Gemini", "Claude"];
+  const answers = [...(summary.latest || [])].sort((x, y) => order.indexOf(x.engine) - order.indexOf(y.engine));
+  const leaders = summary.brands.slice(0, 6).map((b) => b.name);
+  for (const minNames of [2, 1]) {
+    for (const l of answers) {
+      if (nameRe(brand).test(l.answer)) continue;
+      const parts = l.answer.split(/\n+|(?<=[.!?])\s+/).map(plain).filter((x) => x.length >= 40 && x.length <= 240);
+      const hit = parts.find((x) => leaders.filter((n) => nameRe(n).test(x)).length >= minNames);
+      if (hit) return { engine: l.engine, question: plain(l.question).replace(/\s*Name specific products\.?$/i, ""), quote: hit };
+    }
+  }
+  return null;
+}
+
+// The busiest stored thread where the leader is named and the brand isn't,
+// with real counts from its post and top comments.
+function pickThread(summary, brand) {
+  const lead = summary.brands[0]?.name;
+  if (!lead) return null;
+  const best = (summary.threads || [])
+    .map((t) => ({ ...t, leadCount: (t.text.match(nameRe(lead, "gi")) || []).length, own: nameRe(brand).test(t.text) }))
+    .filter((t) => !t.own && t.leadCount >= 3)
+    .sort((x, y) => (y.comments || 0) - (x.comments || 0) || y.leadCount - x.leadCount)[0];
+  // "HubSpot CRM" is counted as "hubspot", so it's shown that way too.
+  return best ? { ...best, lead: lead.replace(/\s+(CRM|Software|App|Platform|Suite)$/i, "") } : null;
+}
+
 function render(item, summary) {
   const cat = getCategory(item.category);
   const name = cat?.name || item.category;
@@ -50,17 +85,39 @@ function render(item, summary) {
   // r = a short hash of the address, so the report visit log says who opened it.
   const ref = refOf(item.to);
   const url = `https://www.aeorank.tech/ai-report/${item.category}/${encodeURIComponent(item.brand)}?r=${ref}`;
-  const paras = [
-    hi,
-    `When buyers ask ChatGPT, Claude or Gemini to recommend ${name}, ${item.brand} doesn't come up. I've asked them the same questions every day since ${since}, and ${item.brand} wasn't named in any of the ${summary.totalAnswers} answers. ${leaders(a, b)}`,
-    `I put it all on one page for ${item.brand}: what each engine said word for word, who it recommends instead, ${summary.hasReddit ? `the Reddit threads where buyers ask about ${name}, ` : ""}and what would get ${item.brand} into those answers.`,
-  ];
+  const q = pickQuote(summary, item.brand);
+  const t = pickThread(summary, item.brand);
+
+  const blocks = [{ p: hi }];
+  if (q) {
+    blocks.push({ p: `I asked ${q.engine}: "${q.question}" Part of its answer:` });
+    blocks.push({ quote: q.quote });
+    blocks.push({ p: `No ${item.brand}. Not in that answer, and not in any of the ${summary.totalAnswers} answers ChatGPT, Claude and Gemini have given me to the same questions since ${since}.` });
+  } else {
+    blocks.push({ p: `When buyers ask ChatGPT, Claude or Gemini to recommend ${name}, ${item.brand} doesn't come up. I've asked them the same questions every day since ${since}, and ${item.brand} wasn't named in any of the ${summary.totalAnswers} answers. ${leaders(a, b)}` });
+  }
+  if (t) {
+    blocks.push({ p: `The engines learn this from threads like "${t.title}" on r/${t.sub}${t.comments ? ` (${t.comments} comments)` : ""}: its post and top comments mention ${t.lead} ${t.leadCount} times and ${item.brand} not once.` });
+  }
+  blocks.push({ p: `I put the full answers${t ? " and those threads" : ""} on one page for ${item.brand}:` });
+
+  const label = `See ${item.brand}'s AI report`;
+  const closing = "Worth a look?";
   const sig = ["Ilyas Lemzouri", "Founder, AEOrank", "https://www.linkedin.com/in/lemzouri-ilyas/"];
   const optout = `If this isn't relevant, reply "no" and I won't email again.`;
-  const label = `See ${item.brand}'s AI report`;
-  const text = [...paras, `${label}: ${url}`, sig.join("\n"), optout].join("\n\n");
+  const text = [...blocks.map((x) => (x.quote ? `> ${x.quote}` : x.p)), `${label}: ${url}`, closing, sig.slice(0, 2).join("\n"), optout].join("\n\n");
 
-  return { subject: subjectOf(item, name), text, html: htmlOf(paras, url, label, sig, optout) };
+  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const body = blocks
+    .map((x) =>
+      x.quote
+        ? `<blockquote style="margin:0 0 16px;padding:10px 14px;border-left:3px solid #bbb;background:#f6f6f6;color:#333;font-style:italic">${esc(x.quote)}</blockquote>`
+        : `<p style="margin:0 0 16px">${esc(x.p)}</p>`
+    )
+    .join("");
+  const html = `<div style="font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.6;color:#222;max-width:560px">${body}<p style="margin:4px 0 22px"><a href="${esc(url)}" style="display:inline-block;background:#111;color:#fff;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:8px">${esc(label)} &rarr;</a></p><p style="margin:0 0 16px">${closing}</p><p style="margin:0 0 16px">${esc(sig[0])}<br>${esc(sig[1])} · <a href="${sig[2]}" style="color:#555">LinkedIn</a></p><p style="margin:0;color:#777;font-size:13px">${esc(optout)}</p></div>`;
+  const subject = q ? `What ${q.engine} recommends instead of ${item.brand}` : subjectOf(item, name);
+  return { subject, text, html };
 }
 
 const subjectOf = (item, name) => `${item.brand} is missing from AI answers for ${name}`;
@@ -96,7 +153,7 @@ function renderFollowup(item, summary) {
   const optout = `If this isn't relevant, reply "no" and I won't email again.`;
   const label = `See ${item.brand}'s updated report`;
   const text = [...paras, `${label}: ${url}`, sig.join("\n"), optout].join("\n\n");
-  return { subject: `Re: ${subjectOf(item, name)}`, text, html: htmlOf(paras, url, label, sig, optout) };
+  return { subject: `Re: ${item.subject || subjectOf(item, name)}`, text, html: htmlOf(paras, url, label, sig, optout) };
 }
 
 async function send(key, to, { subject, text, html }) {
@@ -143,7 +200,8 @@ export async function GET(req) {
   for (const slug of new Set(items.map((x) => x.category))) {
     const [sum, reddit] = await Promise.all([loadSummary(slug).catch(() => null), loadReddit(slug).catch(() => null)]);
     // Same test the report page uses before it shows the Reddit section.
-    summaries[slug] = sum && { ...sum, hasReddit: reddit?.v === REDDIT_VERSION && reddit.threads.length > 0 };
+    const threads = reddit?.v === REDDIT_VERSION ? reddit.threads : [];
+    summaries[slug] = sum && { ...sum, threads, hasReddit: threads.length > 0 };
   }
   const named = (it) => {
     const s = summaries[it.category];
@@ -187,7 +245,9 @@ export async function GET(req) {
         return;
       }
       try {
-        it.resend_id = await send(key, it.to, render(it, s));
+        const email = render(it, s);
+        it.resend_id = await send(key, it.to, email);
+        it.subject = email.subject; // the follow-up replies to this exact subject
         it.status = "sent";
         it.sent_at = new Date().toISOString();
         it.sent_total = s.totalAnswers; // the follow-up says what changed since
