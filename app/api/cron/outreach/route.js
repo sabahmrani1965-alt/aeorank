@@ -103,8 +103,7 @@ function render(item, summary) {
   const label = `See ${item.brand}'s AI report`;
   const closing = "Worth a look?";
   const sig = ["Ilyas", "Founder, AEOrank"];
-  const optout = `Not relevant? Just reply "no".`;
-  const text = [...blocks.map((x) => (x.quote ? `> ${x.quote}` : x.p)), `${label}: ${url}`, closing, sig.join("\n"), optout].join("\n\n");
+  const text = [...blocks.map((x) => (x.quote ? `> ${x.quote}` : x.p)), `${label}: ${url}`, closing, sig.join("\n")].join("\n\n");
 
   const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   const body = blocks
@@ -114,21 +113,21 @@ function render(item, summary) {
         : `<p style="margin:0 0 16px">${esc(x.p)}</p>`
     )
     .join("");
-  const html = `<div style="font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.6;color:#222;max-width:560px">${body}<p style="margin:4px 0 22px"><a href="${esc(url)}" style="display:inline-block;background:#111;color:#fff;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:8px">${esc(label)} &rarr;</a></p><p style="margin:0 0 16px">${closing}</p><p style="margin:0 0 16px">${esc(sig[0])}<br>${esc(sig[1])}</p><p style="margin:0;color:#777;font-size:13px">${esc(optout)}</p></div>`;
+  const html = `<div style="font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.6;color:#222;max-width:560px">${body}<p style="margin:4px 0 22px"><a href="${esc(url)}" style="display:inline-block;background:#111;color:#fff;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:8px">${esc(label)} &rarr;</a></p><p style="margin:0 0 16px">${closing}</p><p style="margin:0">${esc(sig[0])}<br>${esc(sig[1])}</p></div>`;
   const subject = q ? `What ${q.engine} recommends instead of ${item.brand}` : subjectOf(item, name);
   return { subject, text, html };
 }
 
 const subjectOf = (item, name) => `${item.brand} is missing from AI answers for ${name}`;
 
-function htmlOf(paras, url, label, sig, optout) {
+function htmlOf(paras, url, label, sig) {
   const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   const p = (s) => `<p style="margin:0 0 16px">${s}</p>`;
   return `<div style="font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.6;color:#222;max-width:560px">${paras
     .map((x) => p(esc(x)))
     .join("")}<p style="margin:22px 0 24px"><a href="${esc(url)}" style="display:inline-block;background:#111;color:#fff;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:8px">${esc(label)} &rarr;</a></p>${p(
     `${esc(sig[0])}<br>${esc(sig[1])}`
-  )}<p style="margin:0;color:#777;font-size:13px">${esc(optout)}</p></div>`;
+  )}</div>`;
 }
 
 // The follow-up: what changed since the first email, and an easy reply.
@@ -149,10 +148,9 @@ function renderFollowup(item, summary) {
     `If it helps, reply "threads" and I'll send you the three Reddit threads I'd start with for ${item.brand}. No call, no strings.`,
   ];
   const sig = ["Ilyas", "Founder, AEOrank"];
-  const optout = `Not relevant? Just reply "no".`;
   const label = `See ${item.brand}'s updated report`;
-  const text = [...paras, `${label}: ${url}`, sig.join("\n"), optout].join("\n\n");
-  return { subject: `Re: ${item.subject || subjectOf(item, name)}`, text, html: htmlOf(paras, url, label, sig, optout) };
+  const text = [...paras, `${label}: ${url}`, sig.join("\n")].join("\n\n");
+  return { subject: `Re: ${item.subject || subjectOf(item, name)}`, text, html: htmlOf(paras, url, label, sig) };
 }
 
 async function send(key, to, { subject, text, html }) {
