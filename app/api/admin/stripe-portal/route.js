@@ -46,6 +46,8 @@ export async function POST(req) {
           enabled: true,
           default_allowed_updates: ["price"],
           proration_behavior: "create_prorations",
+          // Switching during the 7-day trial keeps the trial; no surprise charge.
+          trial_update_behavior: "continue_trial",
           products: Object.values(prices).map((p) => ({ product: p.product, prices: [p.price] })),
         },
       },
