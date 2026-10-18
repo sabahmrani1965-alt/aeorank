@@ -134,7 +134,7 @@ function renderFollowup(item, summary) {
   const q = pickQuote(summary, item.brand, item.quote_engine);
   const count =
     more >= 3
-      ? `Since my last email they answered ${more} more times; ${item.brand} wasn't in any of them. Across all ${summary.totalAnswers} answers, ${a.name} was named in ${leadShare}.`
+      ? `Since my last email, ChatGPT, Claude and Gemini answered ${more} more times; ${item.brand} wasn't in any of them. Across all ${summary.totalAnswers} answers, ${a.name} was named in ${leadShare}.`
       : `${item.brand} still hasn't been named in any of the ${summary.totalAnswers} answers, while ${a.name} was named in ${leadShare}.`;
   const blocks = [{ p: hi }];
   if (q) {
