@@ -81,7 +81,6 @@ function render(item, summary) {
   const name = cat?.name || item.category;
   const [a, b] = summary.brands;
   const hi = item.firstname ? `Hi ${item.firstname},` : "Hi,";
-  const since = new Date(`${summary.firstDay}T12:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
   // r = a short hash of the address, so the report visit log says who opened it.
   const ref = refOf(item.to);
   const url = `https://www.aeorank.tech/ai-report/${item.category}/${encodeURIComponent(item.brand)}?r=${ref}`;
