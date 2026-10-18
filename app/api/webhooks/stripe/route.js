@@ -3,6 +3,7 @@ import { stripe, isStripeConfigured } from "@/lib/stripe";
 import { sendEmail, esc, isEmailConfigured, addToAudience } from "@/lib/email";
 import { createAdminClient, ensureUserId } from "@/lib/supabase/admin";
 import { grantCredits, PLAN_MONTHLY_CREDITS } from "@/lib/credits";
+import { buildWelcomeEmail, loginLinkFor } from "@/lib/welcomeEmail";
 
 // Stripe needs the *raw* request body to verify the signature, so we read
 // it as text and pass it untouched into stripe.webhooks.constructEvent.
@@ -91,6 +92,14 @@ async function provisionSubscription(session) {
   const subscription = await stripe().subscriptions.retrieve(session.subscription);
   const plan = session.metadata?.plan;
 
+  // Stripe retries webhooks, so the welcome email goes out only the first time
+  // this subscription is recorded.
+  const { data: existing } = await admin
+    .from("subscriptions")
+    .select("id")
+    .eq("stripe_subscription_id", session.subscription)
+    .maybeSingle();
+
   await admin.from("subscriptions").upsert(
     {
       user_id: userId,
@@ -116,6 +125,25 @@ async function provisionSubscription(session) {
   // handler below — same event that already handles every later renewal.
   if (subscription.status !== "trialing") {
     await grantMonthlyCredits(admin, userId, plan);
+  }
+
+  // The account was created here, without a password: the welcome email is
+  // how the buyer gets in (a one-time sign-in link, with a password-reset
+  // fallback). Never blocks provisioning.
+  if (!existing) {
+    try {
+      const loginUrl = await loginLinkFor(admin, email);
+      const msg = buildWelcomeEmail({
+        name: session.customer_details?.name,
+        plan,
+        brand: session.metadata?.brand,
+        loginUrl,
+        trialEnd: subscription.trial_end,
+      });
+      await sendEmail({ to: email, ...msg, replyTo: "ilyas@aeorank.tech" });
+    } catch (e) {
+      console.error("[stripe webhook] welcome email failed:", e?.message || e);
+    }
   }
 }
 

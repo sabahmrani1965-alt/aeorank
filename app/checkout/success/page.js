@@ -41,7 +41,7 @@ export default async function CheckoutSuccess({ searchParams }) {
             You're <span className="accent">in.</span>
           </h2>
           <p className="section-sub">
-            Thanks for joining AEOrank{plan ? ` on the ${plan} plan` : ""}. We'll be in touch within one business day to kick off onboarding.
+            Thanks for joining AEOrank. Your account is ready: we've just emailed you a link that signs you into your dashboard.
           </p>
 
           <div
@@ -71,8 +71,12 @@ export default async function CheckoutSuccess({ searchParams }) {
           <div className="card" style={{ marginBottom: 24 }}>
             <h3 style={{ marginBottom: 12 }}>What happens next</h3>
             <ol style={{ color: "var(--text-dim)", paddingLeft: 18, lineHeight: 1.7 }}>
-              <li>You'll get a welcome email{email ? ` at ${email}` : ""} within minutes confirming the charge.</li>
-              <li>Book the kickoff call above (or reply to the welcome email if you prefer async).</li>
+              <li>
+                Check your inbox{email ? <> at <strong>{email}</strong></> : null}: your welcome email has a button that
+                signs you straight into your dashboard, no password needed. Nothing there after a few minutes? Look in
+                spam, or <Link href="/forgot-password">set a password</Link> with the same email.
+              </li>
+              <li>Add your brand in the dashboard, then book the kickoff call above (or reply to the welcome email if you prefer async).</li>
               <li>We'll share your first batch of posts and comments within 48 hours of the call, ready for your approval before anything goes live.</li>
             </ol>
           </div>

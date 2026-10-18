@@ -44,7 +44,9 @@ function LoginForm() {
   const [error, setError] = useState(
     searchParams.get("error") === "auth"
       ? "Something went wrong signing in with Google. Please try again, or use email and password below."
-      : ""
+      : searchParams.get("error") === "link_expired"
+        ? "That sign-in link has expired or was already used. Use “Forgot password” below with the same email to set a password."
+        : ""
   );
   const router = useRouter();
 
