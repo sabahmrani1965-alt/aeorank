@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { stripe, PLANS, isStripeConfigured, priceDataForPlan } from "@/lib/stripe";
+import { stripe, PLANS, isStripeConfigured, lineItemForPlan } from "@/lib/stripe";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -19,7 +19,7 @@ export async function GET(req) {
   try {
     const session = await stripe().checkout.sessions.create({
       mode: planConfig.mode,
-      line_items: [{ price_data: priceDataForPlan(plan), quantity: 1 }],
+      line_items: [await lineItemForPlan(plan)],
       success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/pricing`,
       allow_promotion_codes: true,

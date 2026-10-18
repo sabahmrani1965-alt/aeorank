@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { stripe, isStripeConfigured } from "@/lib/stripe";
+import { stripe, isStripeConfigured, planForPrice } from "@/lib/stripe";
 import { sendEmail, esc, isEmailConfigured, addToAudience } from "@/lib/email";
 import { createAdminClient, ensureUserId } from "@/lib/supabase/admin";
 import { grantCredits, PLAN_MONTHLY_CREDITS } from "@/lib/credits";
@@ -260,12 +260,15 @@ export async function POST(req) {
       }
     } else if (event.type === "customer.subscription.updated") {
       const subscription = event.data.object;
+      // A plan switched in the customer portal arrives here as a new price.
+      const newPlan = planForPrice(subscription.items?.data?.[0]?.price);
       await syncSubscriptionStatus(subscription.id, {
         status: subscription.status,
         current_period_end: subscription.current_period_end
           ? new Date(subscription.current_period_end * 1000).toISOString()
           : null,
         cancel_at_period_end: subscription.cancel_at_period_end,
+        ...(newPlan ? { plan: newPlan } : {}),
       });
     } else if (event.type === "customer.subscription.deleted") {
       const subscription = event.data.object;

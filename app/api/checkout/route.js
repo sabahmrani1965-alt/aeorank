@@ -3,7 +3,7 @@ import {
   stripe,
   PLANS,
   isStripeConfigured,
-  priceDataForPlan,
+  lineItemForPlan,
 } from "@/lib/stripe";
 import { createClient } from "@/lib/supabase/server";
 
@@ -105,12 +105,12 @@ export async function POST(req) {
     return NextResponse.json({ error: "Unknown plan." }, { status: 400 });
   }
 
-  const price_data = priceDataForPlan(plan);
+  const lineItem = await lineItemForPlan(plan);
 
   try {
     const session = await stripe().checkout.sessions.create({
       mode: planConfig.mode,
-      line_items: [{ price_data, quantity: 1 }],
+      line_items: [lineItem],
       success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/checkout/cancel`,
       allow_promotion_codes: true,
