@@ -23,7 +23,7 @@ const FOLLOWUP_DAYS = 4;
 const FOLLOWUP_N = 20;
 const START = "2026-10-19"; // moved up from 10-23 by the owner; categories quote ~20 answers by then
 const BOUNCE_PAUSE = 3;
-const FROM = "Ilyas Lemzouri <ilyas@aeorank.tech>";
+const FROM = "Ilyas from AEOrank <ilyas@aeorank.tech>";
 const REPLY_TO = "ilyas@aeorank.tech";
 
 const keyOf = (n) =>
