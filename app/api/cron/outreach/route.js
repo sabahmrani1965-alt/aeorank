@@ -48,9 +48,9 @@ const plain = (t) => String(t).replace(/\*\*|__|`|#+\s/g, "").replace(/\s+/g, " 
 
 // A sentence of a real stored answer that names the leaders, quoted verbatim.
 // ChatGPT first: it's the engine the reader has heard of.
-function pickQuote(summary, brand) {
+function pickQuote(summary, brand, skipEngine = null) {
   const order = ["ChatGPT", "Gemini", "Claude"];
-  const answers = [...(summary.latest || [])].sort((x, y) => order.indexOf(x.engine) - order.indexOf(y.engine));
+  const answers = [...(summary.latest || [])].filter((l) => l.engine !== skipEngine).sort((x, y) => order.indexOf(x.engine) - order.indexOf(y.engine));
   const leaders = summary.brands.slice(0, 6).map((b) => b.name);
   for (const minNames of [2, 1]) {
     for (const l of answers) {
@@ -115,23 +115,14 @@ function render(item, summary) {
     .join("");
   const html = `<div style="font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.6;color:#222;max-width:560px">${body}<p style="margin:4px 0 22px"><a href="${esc(url)}" style="display:inline-block;background:#111;color:#fff;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:8px">${esc(label)} &rarr;</a></p><p style="margin:0 0 16px">${closing}</p><p style="margin:0">${esc(sig[0])}<br>${esc(sig[1])}</p></div>`;
   const subject = q ? `What ${q.engine} recommends instead of ${item.brand}` : subjectOf(item, name);
-  return { subject, text, html };
+  return { subject, text, html, quoteEngine: q?.engine || null };
 }
 
 const subjectOf = (item, name) => `${item.brand} is missing from AI answers for ${name}`;
 
-function htmlOf(paras, url, label, sig) {
-  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-  const p = (s) => `<p style="margin:0 0 16px">${s}</p>`;
-  return `<div style="font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.6;color:#222;max-width:560px">${paras
-    .map((x) => p(esc(x)))
-    .join("")}<p style="margin:22px 0 24px"><a href="${esc(url)}" style="display:inline-block;background:#111;color:#fff;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:8px">${esc(label)} &rarr;</a></p>${p(
-    `${esc(sig[0])}<br>${esc(sig[1])}`
-  )}</div>`;
-}
-
-// The follow-up: what changed since the first email, and an easy reply.
-// Never mentions whether they opened the report.
+// The follow-up: new proof from a different engine than the first email,
+// the updated count, and an easy reply. Never mentions whether they opened
+// the report.
 function renderFollowup(item, summary) {
   const cat = getCategory(item.category);
   const name = cat?.name || item.category;
@@ -140,17 +131,33 @@ function renderFollowup(item, summary) {
   const url = `https://www.aeorank.tech/ai-report/${item.category}/${encodeURIComponent(item.brand)}?r=${refOf(item.to)}`;
   const more = summary.totalAnswers - (item.sent_total || summary.totalAnswers);
   const leadShare = Math.round(a.share) === 100 ? "every one" : `${Math.round(a.share)}%`;
-  const paras = [
-    hi,
+  const q = pickQuote(summary, item.brand, item.quote_engine);
+  const count =
     more >= 3
-      ? `A quick follow-up. Since my last email, ChatGPT, Claude and Gemini answered ${more} more questions about ${name}, and ${item.brand} still wasn't named in any of them. Across all ${summary.totalAnswers} answers, ${a.name} was named in ${leadShare}.`
-      : `A quick follow-up. ${item.brand} still hasn't been named in any of the ${summary.totalAnswers} AI answers about ${name}, while ${a.name} was named in ${leadShare}.`,
-    `If it helps, reply "threads" and I'll send you the three Reddit threads I'd start with for ${item.brand}. No call, no strings.`,
-  ];
+      ? `Since my last email they answered ${more} more times; ${item.brand} wasn't in any of them. Across all ${summary.totalAnswers} answers, ${a.name} was named in ${leadShare}.`
+      : `${item.brand} still hasn't been named in any of the ${summary.totalAnswers} answers, while ${a.name} was named in ${leadShare}.`;
+  const blocks = [{ p: hi }];
+  if (q) {
+    blocks.push({ p: `Same kind of question, asked to ${q.engine} this time:` });
+    blocks.push({ quote: q.quote });
+    blocks.push({ p: count });
+  } else {
+    blocks.push({ p: `A quick follow-up. ${count}` });
+  }
+  blocks.push({ p: `If it helps, reply "threads" and I'll send you the three Reddit threads I'd start with for ${item.brand}.` });
   const sig = ["Ilyas", "Founder, AEOrank"];
   const label = `See ${item.brand}'s updated report`;
-  const text = [...paras, `${label}: ${url}`, sig.join("\n")].join("\n\n");
-  return { subject: `Re: ${item.subject || subjectOf(item, name)}`, text, html: htmlOf(paras, url, label, sig) };
+  const text = [...blocks.map((x) => (x.quote ? `> ${x.quote}` : x.p)), `${label}: ${url}`, sig.join("\n")].join("\n\n");
+  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const body = blocks
+    .map((x) =>
+      x.quote
+        ? `<blockquote style="margin:0 0 16px;padding:10px 14px;border-left:3px solid #bbb;background:#f6f6f6;color:#333;font-style:italic">${esc(x.quote)}</blockquote>`
+        : `<p style="margin:0 0 16px">${esc(x.p)}</p>`
+    )
+    .join("");
+  const html = `<div style="font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.6;color:#222;max-width:560px">${body}<p style="margin:4px 0 22px"><a href="${esc(url)}" style="display:inline-block;background:#111;color:#fff;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:8px">${esc(label)} &rarr;</a></p><p style="margin:0">${esc(sig[0])}<br>${esc(sig[1])}</p></div>`;
+  return { subject: `Re: ${item.subject || subjectOf(item, name)}`, text, html };
 }
 
 async function send(key, to, { subject, text, html }) {
@@ -222,7 +229,12 @@ export async function GET(req) {
       queued: items.filter((x) => (x.status || "queued") === "queued").length,
       followupsDue: items.filter(dueFollowup).length,
       startsOn: START,
-      next: next.map((x) => ({ to: x.to, ...(asFollowup ? renderFollowup({ ...x, sent_total: Math.round(summaries[x.category].totalAnswers * 0.6) }, summaries[x.category]) : render(x, summaries[x.category])) })),
+      next: next.map((x) => {
+        const s = summaries[x.category];
+        if (!asFollowup) return { to: x.to, ...render(x, s) };
+        const first = render(x, s);
+        return { to: x.to, ...renderFollowup({ ...x, subject: first.subject, quote_engine: first.quoteEngine, sent_total: Math.round(s.totalAnswers * 0.6) }, s) };
+      }),
     });
   }
 
@@ -245,6 +257,7 @@ export async function GET(req) {
         const email = render(it, s);
         it.resend_id = await send(key, it.to, email);
         it.subject = email.subject; // the follow-up replies to this exact subject
+        it.quote_engine = email.quoteEngine || null; // the follow-up quotes another engine
         it.status = "sent";
         it.sent_at = new Date().toISOString();
         it.sent_total = s.totalAnswers; // the follow-up says what changed since
