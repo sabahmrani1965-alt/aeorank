@@ -205,8 +205,14 @@ async function recentBounces(items, key) {
 
 export async function GET(req) {
   const cron = process.env.CRON_SECRET && req.headers.get("authorization") === `Bearer ${process.env.CRON_SECRET}`;
-  const preview = hasAdminToken(req) && new URL(req.url).searchParams.get("mode") === "preview";
-  if (!cron && !preview) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const params = new URL(req.url).searchParams;
+  const preview = hasAdminToken(req) && params.get("mode") === "preview";
+  // Owner token with ?mode=send&limit=N runs a send now (e.g. to resend emails
+  // a run failed on), at most N first emails and no follow-ups, within the
+  // same daily cap.
+  const manual = hasAdminToken(req) && params.get("mode") === "send";
+  const manualLimit = manual ? Math.max(0, Math.min(DAILY_N, Number(params.get("limit")) || 0)) : null;
+  if (!cron && !preview && !manual) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
   const admin = createAdminClient();
   const key = process.env.RESEND_API_KEY;
@@ -257,7 +263,8 @@ export async function GET(req) {
   if (bounces >= BOUNCE_PAUSE) return NextResponse.json({ paused: true, bounces });
 
   const sentToday = items.filter((x) => x.status === "sent" && (x.sent_at || "").startsWith(today)).length;
-  const toSend = items.filter((x) => (x.status || "queued") === "queued").slice(0, Math.max(0, DAILY_N - sentToday));
+  const room = Math.max(0, DAILY_N - sentToday);
+  const toSend = items.filter((x) => (x.status || "queued") === "queued").slice(0, manual ? Math.min(room, manualLimit) : room);
   const sent = [];
   for (const it of toSend) {
     {
@@ -287,7 +294,7 @@ export async function GET(req) {
   }
 
   const followedToday = items.filter((x) => (x.followup_at || "").startsWith(today)).length;
-  const toFollow = items.filter(dueFollowup).slice(0, Math.max(0, FOLLOWUP_N - followedToday));
+  const toFollow = manual ? [] : items.filter(dueFollowup).slice(0, Math.max(0, FOLLOWUP_N - followedToday));
   const followed = [];
   for (const it of toFollow) {
     {
