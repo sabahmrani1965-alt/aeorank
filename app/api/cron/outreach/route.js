@@ -144,7 +144,7 @@ function renderPartial(item, summary, st) {
   const url = `https://www.aeorank.tech/ai-report/${item.category}/${encodeURIComponent(item.brand)}?r=${refOf(item.to)}`;
   const missingNames = st.missing.map((m) => m.engine);
   const missingAnswers = st.missing.reduce((n, m) => n + m.of, 0);
-  const good = andList(st.namedBy.map((x, i) => `${i === 0 ? "" : ""}${x.engine} in ${x.count} of its ${x.of} answers`));
+  const good = andList(st.namedBy.map((x) => (x.count === x.of ? `${x.engine} in all ${x.of} of its answers` : `${x.engine} in ${x.count} of its ${x.of} answers`)));
   const q = pickQuote(summary, item.brand, null, missingNames);
   const t = pickThread(summary, item.brand);
   const blocks = [
