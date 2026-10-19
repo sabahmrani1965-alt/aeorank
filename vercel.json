@@ -48,7 +48,7 @@
       "maxDuration": 60
     },
     "app/api/cron/outreach/route.js": {
-      "maxDuration": 60
+      "maxDuration": 120
     }
   },
   "crons": [

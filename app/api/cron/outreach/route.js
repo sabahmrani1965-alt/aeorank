@@ -6,7 +6,7 @@ import { readQueue, refOf, writeQueue } from "@/lib/outreach";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
+export const maxDuration = 120; // emails go one at a time (see send)
 
 // Daily cold outreach to brands the AI engines leave out of a category
 // (same design as SaaSOffers' sender, approved by the owner 2026-10-16).
@@ -160,15 +160,29 @@ function renderFollowup(item, summary) {
   return { subject: `Re: ${item.subject || subjectOf(item, name)}`, text, html };
 }
 
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// Resend allows 2 requests a second. The first run (2026-10-19) sent all 20 at
+// once and 7 were refused, so emails now go one at a time, spaced, with one
+// retry when Resend says to slow down.
 async function send(key, to, { subject, text, html }) {
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: FROM, to: [to], reply_to: REPLY_TO, subject, text, html }),
-  });
-  if (!res.ok) throw new Error(`resend ${res.status}`);
-  return (await res.json()).id;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ from: FROM, to: [to], reply_to: REPLY_TO, subject, text, html }),
+    });
+    if (res.ok) return (await res.json()).id;
+    const detail = (await res.text().catch(() => "")).slice(0, 200);
+    if (res.status === 429 && attempt < 2) {
+      await sleep(1500 * (attempt + 1));
+      continue;
+    }
+    throw new Error(`resend ${res.status} ${detail}`);
+  }
 }
+const PACE_MS = 650;
+const MAX_ATTEMPTS = 3; // a first email that keeps failing is given up after this many days
 
 // Bounces among emails sent in the last 3 days, read from Resend itself
 // (AEOrank has no email-events table).
@@ -245,13 +259,13 @@ export async function GET(req) {
   const sentToday = items.filter((x) => x.status === "sent" && (x.sent_at || "").startsWith(today)).length;
   const toSend = items.filter((x) => (x.status || "queued") === "queued").slice(0, Math.max(0, DAILY_N - sentToday));
   const sent = [];
-  await Promise.all(
-    toSend.map(async (it) => {
+  for (const it of toSend) {
+    {
       const s = summaries[it.category];
-      if (!(s?.brands?.length >= 2)) return; // not enough data yet; stays queued
+      if (!(s?.brands?.length >= 2)) continue; // not enough data yet; stays queued
       if (named(it)) {
         it.status = "skipped_named";
-        return;
+        continue;
       }
       try {
         const email = render(it, s);
@@ -262,35 +276,41 @@ export async function GET(req) {
         it.sent_at = new Date().toISOString();
         it.sent_total = s.totalAnswers; // the follow-up says what changed since
         sent.push(it.to);
-      } catch {
-        it.status = "failed";
+      } catch (e) {
+        // Stays queued for the next run unless it has failed too often.
+        it.send_attempts = (it.send_attempts || 0) + 1;
+        it.last_error = String(e?.message || e).slice(0, 200);
+        if (it.send_attempts >= MAX_ATTEMPTS) it.status = "failed";
       }
-    })
-  );
+      await sleep(PACE_MS);
+    }
+  }
 
   const followedToday = items.filter((x) => (x.followup_at || "").startsWith(today)).length;
   const toFollow = items.filter(dueFollowup).slice(0, Math.max(0, FOLLOWUP_N - followedToday));
   const followed = [];
-  await Promise.all(
-    toFollow.map(async (it) => {
+  for (const it of toFollow) {
+    {
       const s = summaries[it.category];
-      if (!(s?.brands?.length >= 1)) return;
+      if (!(s?.brands?.length >= 1)) continue;
       if (named(it)) {
         it.followup_at = new Date().toISOString();
         it.followup_skipped = "now_named"; // the first email's claim no longer holds
-        return;
+        continue;
       }
       try {
         it.followup_id = await send(key, it.to, renderFollowup(it, s));
         it.followup_at = new Date().toISOString();
         it.status = "followed_up";
         followed.push(it.to);
-      } catch {
+      } catch (e) {
         it.followup_at = new Date().toISOString();
         it.followup_skipped = "send_failed";
+        it.last_error = String(e?.message || e).slice(0, 200);
       }
-    })
-  );
+      await sleep(PACE_MS);
+    }
+  }
 
   if (toSend.length || toFollow.length) await writeQueue(admin, items);
   return NextResponse.json({
