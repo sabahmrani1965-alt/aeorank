@@ -20,6 +20,10 @@ export async function GET(req) {
   if (!cron && new URL(req.url).searchParams.get("only") === "reddit") {
     return NextResponse.json({ reddit: await refreshReddit({ deadline }) });
   }
+  // ?only=summaries rebuilds the summaries from the stored days, no new answers.
+  if (!cron && new URL(req.url).searchParams.get("only") === "summaries") {
+    return NextResponse.json({ summaries: await rebuildSummaries() });
+  }
   const collected = await collectDay({ deadline });
   const summaries = await rebuildSummaries();
   const reddit = await refreshReddit({ deadline: deadline + 20000 }).catch(() => ({}));

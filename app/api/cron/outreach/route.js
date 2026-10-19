@@ -48,9 +48,9 @@ const plain = (t) => String(t).replace(/\*\*|__|`|#+\s/g, "").replace(/\s+/g, " 
 
 // A sentence of a real stored answer that names the leaders, quoted verbatim.
 // ChatGPT first: it's the engine the reader has heard of.
-function pickQuote(summary, brand, skipEngine = null) {
+function pickQuote(summary, brand, skipEngine = null, onlyEngines = null) {
   const order = ["ChatGPT", "Gemini", "Claude"];
-  const answers = [...(summary.latest || [])].filter((l) => l.engine !== skipEngine).sort((x, y) => order.indexOf(x.engine) - order.indexOf(y.engine));
+  const answers = [...(summary.latest || [])].filter((l) => l.engine !== skipEngine && (!onlyEngines || onlyEngines.includes(l.engine))).sort((x, y) => order.indexOf(x.engine) - order.indexOf(y.engine));
   const leaders = summary.brands.slice(0, 6).map((b) => b.name);
   for (const minNames of [2, 1]) {
     for (const l of answers) {
@@ -116,6 +116,64 @@ function render(item, summary) {
   const html = `<div style="font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.6;color:#222;max-width:560px">${body}<p style="margin:4px 0 22px"><a href="${esc(url)}" style="display:inline-block;background:#111;color:#fff;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:8px">${esc(label)} &rarr;</a></p><p style="margin:0 0 16px">${closing}</p><p style="margin:0">${esc(sig[0])}<br>${esc(sig[1])}</p></div>`;
   const subject = q ? `What ${q.engine} recommends instead of ${item.brand}` : subjectOf(item, name);
   return { subject, text, html, quoteEngine: q?.engine || null };
+}
+
+const andList = (xs) => (xs.length <= 1 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`);
+
+function emailParts(blocks, url, label, closing) {
+  const sig = ["Ilyas", "Founder, AEOrank"];
+  const text = [...blocks.map((x) => (x.quote ? `> ${x.quote}` : x.p)), `${label}: ${url}`, ...(closing ? [closing] : []), sig.join("\n")].join("\n\n");
+  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const body = blocks
+    .map((x) =>
+      x.quote
+        ? `<blockquote style="margin:0 0 16px;padding:10px 14px;border-left:3px solid #bbb;background:#f6f6f6;color:#333;font-style:italic">${esc(x.quote)}</blockquote>`
+        : `<p style="margin:0 0 16px">${esc(x.p)}</p>`
+    )
+    .join("");
+  const html = `<div style="font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.6;color:#222;max-width:560px">${body}<p style="margin:4px 0 22px"><a href="${esc(url)}" style="display:inline-block;background:#111;color:#fff;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:8px">${esc(label)} &rarr;</a></p>${closing ? `<p style="margin:0 0 16px">${closing}</p>` : ""}<p style="margin:0">${esc(sig[0])}<br>${esc(sig[1])}</p></div>`;
+  return { text, html };
+}
+
+// For a brand some engines name and others never do (stats from engineStats):
+// the good news first, then the engines that leave it out, quoted.
+function renderPartial(item, summary, st) {
+  const cat = getCategory(item.category);
+  const name = cat?.name || item.category;
+  const hi = item.firstname ? `Hi ${item.firstname},` : "Hi,";
+  const url = `https://www.aeorank.tech/ai-report/${item.category}/${encodeURIComponent(item.brand)}?r=${refOf(item.to)}`;
+  const missingNames = st.missing.map((m) => m.engine);
+  const missingAnswers = st.missing.reduce((n, m) => n + m.of, 0);
+  const good = andList(st.namedBy.map((x, i) => `${i === 0 ? "" : ""}${x.engine} in ${x.count} of its ${x.of} answers`));
+  const q = pickQuote(summary, item.brand, null, missingNames);
+  const t = pickThread(summary, item.brand);
+  const blocks = [
+    { p: hi },
+    { p: `Good news first: when I asked AI assistants to recommend ${name}, ${good.replace(/^(\w+) in/, `$1 named ${item.brand} in`)}.` },
+    { p: `The rest is less good. ${andList(missingNames)} ${missingNames.length > 1 ? "haven't" : "hasn't"} named ${item.brand} once in ${missingNames.length > 1 ? "their" : "its"} ${missingAnswers} answers.${q ? ` Here's part of what ${q.engine} said instead, asked "${q.question}":` : ""}` },
+  ];
+  if (q) blocks.push({ quote: q.quote });
+  if (t) blocks.push({ p: `These engines learn from threads like "${t.title}" on r/${t.sub}${t.comments ? ` (${t.comments} comments)` : ""}: its post and top comments mention ${t.lead} ${t.leadCount} times and ${item.brand} not once.` });
+  blocks.push({ p: `I put every answer${t ? " and those threads" : ""} on one page for ${item.brand}:` });
+  const { text, html } = emailParts(blocks, url, `See ${item.brand}'s AI report`, "Worth a look?");
+  return { subject: `${andList(missingNames)} ${missingNames.length > 1 ? "don't" : "doesn't"} recommend ${item.brand}`, text, html, quoteEngine: q?.engine || null };
+}
+
+function renderFollowupPartial(item, summary, st) {
+  const hi = item.firstname ? `Hi ${item.firstname},` : "Hi,";
+  const url = `https://www.aeorank.tech/ai-report/${item.category}/${encodeURIComponent(item.brand)}?r=${refOf(item.to)}`;
+  const missingNames = st.missing.map((m) => m.engine);
+  const missingAnswers = st.missing.reduce((n, m) => n + m.of, 0);
+  const q = pickQuote(summary, item.brand, item.quote_engine, missingNames) || pickQuote(summary, item.brand, null, missingNames);
+  const blocks = [{ p: hi }];
+  if (q) {
+    blocks.push({ p: `Same kind of question, asked to ${q.engine} this time:` });
+    blocks.push({ quote: q.quote });
+  }
+  blocks.push({ p: `${andList(missingNames)} still ${missingNames.length > 1 ? "haven't" : "hasn't"} named ${item.brand} in any of ${missingNames.length > 1 ? "their" : "its"} ${missingAnswers} answers, while ${andList(st.namedBy.map((x) => x.engine))} ${st.namedBy.length > 1 ? "do" : "does"}.` });
+  blocks.push({ p: `If it helps, reply "threads" and I'll send you the three Reddit threads I'd start with for ${item.brand}.` });
+  const { text, html } = emailParts(blocks, url, `See ${item.brand}'s updated report`, null);
+  return { subject: `Re: ${item.subject}`, text, html };
 }
 
 const subjectOf = (item, name) => `${item.brand} is missing from AI answers for ${name}`;
@@ -236,13 +294,30 @@ export async function GET(req) {
     return s?.brands.some((b) => keyOf(b.name) === keyOf(it.brand));
   };
 
+  // Which engines name the brand and which never do (with 3+ answers, enough
+  // to say so). kind: "none" (no engine names it: the main email), "partial"
+  // (the variant), "all" (every engine does: no email). Summaries from before
+  // the per-engine counts fall back to the old all-or-nothing check.
+  const engineStats = (it) => {
+    const s = summaries[it.category];
+    const plain = String(it.brand).toLowerCase().replace(/[^a-z0-9]/g, "");
+    const by = s?.mentionedByEngine?.[keyOf(it.brand)] || s?.mentionedByEngine?.[plain];
+    if (!s?.mentionedByEngine) return { kind: named(it) ? "all" : "none" };
+    if (!by) return { kind: "none" };
+    const namedBy = Object.keys(by).filter((e) => by[e] > 0).map((e) => ({ engine: e, count: by[e], of: s.engines[e] || 0 }));
+    if (!namedBy.length) return { kind: "none" };
+    const missing = Object.keys(s.engines || {}).filter((e) => !(by[e] > 0) && s.engines[e] >= 3).map((e) => ({ engine: e, of: s.engines[e] }));
+    return missing.length ? { kind: "partial", namedBy, missing } : { kind: "all" };
+  };
+
   // Due for the follow-up: first email sent FOLLOWUP_DAYS+ ago, no reply or
   // opt-out marked, still not named.
   const dueFollowup = (x) =>
     x.status === "sent" && !x.followup_at && Date.now() - Date.parse(x.sent_at || 0) >= FOLLOWUP_DAYS * 86400000;
 
   if (preview) {
-    const next = items.filter((x) => (x.status || "queued") === "queued" && summaries[x.category]?.brands?.length >= 2 && !named(x)).slice(0, 5);
+    const brandParam = params.get("brand");
+    const next = items.filter((x) => (brandParam ? x.brand === brandParam : (x.status || "queued") === "queued") && summaries[x.category]?.brands?.length >= 2 && engineStats(x).kind !== "all").slice(0, 5);
     // ?as=followup previews the follow-up for the same people.
     const asFollowup = new URL(req.url).searchParams.get("as") === "followup";
     return NextResponse.json({
@@ -251,8 +326,10 @@ export async function GET(req) {
       startsOn: START,
       next: next.map((x) => {
         const s = summaries[x.category];
-        if (!asFollowup) return { to: x.to, ...render(x, s) };
-        const first = render(x, s);
+        const st = engineStats(x);
+        const first = st.kind === "partial" ? renderPartial(x, s, st) : render(x, s);
+        if (!asFollowup) return { to: x.to, variant: st.kind, ...first };
+        if (st.kind === "partial") return { to: x.to, variant: st.kind, ...renderFollowupPartial({ ...x, subject: first.subject, quote_engine: first.quoteEngine }, s, st) };
         return { to: x.to, ...renderFollowup({ ...x, subject: first.subject, quote_engine: first.quoteEngine, sent_total: Math.round(s.totalAnswers * 0.6) }, s) };
       }),
     });
@@ -270,12 +347,14 @@ export async function GET(req) {
     {
       const s = summaries[it.category];
       if (!(s?.brands?.length >= 2)) continue; // not enough data yet; stays queued
-      if (named(it)) {
+      const st = engineStats(it);
+      if (st.kind === "all") {
         it.status = "skipped_named";
         continue;
       }
       try {
-        const email = render(it, s);
+        const email = st.kind === "partial" ? renderPartial(it, s, st) : render(it, s);
+        it.variant = st.kind;
         it.resend_id = await send(key, it.to, email);
         it.subject = email.subject; // the follow-up replies to this exact subject
         it.quote_engine = email.quoteEngine || null; // the follow-up quotes another engine
@@ -300,13 +379,17 @@ export async function GET(req) {
     {
       const s = summaries[it.category];
       if (!(s?.brands?.length >= 1)) continue;
-      if (named(it)) {
+      const st = engineStats(it);
+      const sentAs = it.variant || "none";
+      // The first email's claim must still hold: "none" stays none; a partial
+      // brand may still be partial, but not named by every engine now.
+      if (st.kind === "all" || (sentAs === "none" && st.kind !== "none")) {
         it.followup_at = new Date().toISOString();
-        it.followup_skipped = "now_named"; // the first email's claim no longer holds
+        it.followup_skipped = "now_named";
         continue;
       }
       try {
-        it.followup_id = await send(key, it.to, renderFollowup(it, s));
+        it.followup_id = await send(key, it.to, st.kind === "partial" ? renderFollowupPartial(it, s, st) : renderFollowup(it, s));
         it.followup_at = new Date().toISOString();
         it.status = "followed_up";
         followed.push(it.to);
