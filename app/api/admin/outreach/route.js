@@ -27,3 +27,17 @@ export async function POST(req) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ ok: true, status: it.status });
 }
+
+// Owner token only, read-only: the links in an email as Resend actually sent it
+// (?id=<resend id>), to check report links and their tracking code.
+export async function GET(req) {
+  const { hasAdminToken } = await import("@/lib/adminToken");
+  if (!hasAdminToken(req)) return NextResponse.json({ error: "not found" }, { status: 404 });
+  const id = new URL(req.url).searchParams.get("id");
+  const key = process.env.RESEND_API_KEY;
+  if (!id || !key) return NextResponse.json({ error: "id and RESEND_API_KEY required" }, { status: 400 });
+  const r = await fetch(`https://api.resend.com/emails/${encodeURIComponent(id)}`, { headers: { Authorization: `Bearer ${key}` } });
+  const j = await r.json().catch(() => ({}));
+  const links = [...String(j.html || "").matchAll(/href="([^"]+)"/g)].map((m) => m[1]);
+  return NextResponse.json({ status: r.status, to: j.to, subject: j.subject, last_event: j.last_event, links });
+}
