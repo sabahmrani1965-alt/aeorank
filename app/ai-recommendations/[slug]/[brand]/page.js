@@ -1,15 +1,17 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import MarketingLayout from "@/components/MarketingLayout";
-import { DATA_CATEGORIES, getCategory, hasBrandPage, loadReddit, loadSummary } from "@/lib/categoryData";
+import { getCategory, hasBrandPage, loadReddit, loadSummary } from "@/lib/categoryData";
 
 // One public page per brand the engines name often enough (lib/categoryData.js
 // hasBrandPage): does ChatGPT, Claude or Gemini recommend it, how often, next
 // to whom, in which words, and in which Reddit threads. Built from the same
 // daily summary as the category page, so every number here is on that page too.
 // The outreach report (/ai-report) is a different page, written to the brand.
-export const revalidate = 3600;
-export const dynamicParams = true;
+// Rendered per request: brands enter and leave the ranking daily, and the
+// Supabase client opts out of Next's data cache (lib/supabase/admin.js), so a
+// page generated on demand cannot stay static and would fail.
+export const dynamic = "force-dynamic";
 
 const SITE_URL = "https://www.aeorank.tech";
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -17,15 +19,6 @@ const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const shortName = (n) => String(n).replace(/\s+(crm|software|app|platform|suite)$/i, "");
 const longDate = (d) =>
   new Date(`${d}T12:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
-
-export async function generateStaticParams() {
-  const out = [];
-  for (const c of DATA_CATEGORIES) {
-    const d = await loadSummary(c.slug).catch(() => null);
-    for (const b of d?.brands || []) if (hasBrandPage(b) && b.slug) out.push({ slug: c.slug, brand: b.slug });
-  }
-  return out;
-}
 
 async function load(params) {
   const cat = getCategory(params.slug);
