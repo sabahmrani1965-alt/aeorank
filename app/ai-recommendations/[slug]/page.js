@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import MarketingLayout from "@/components/MarketingLayout";
-import { DATA_CATEGORIES, getCategory, loadSummary } from "@/lib/categoryData";
+import { DATA_CATEGORIES, getCategory, hasBrandPage, loadSummary } from "@/lib/categoryData";
 
 // Read from the summary the daily cron writes (lib/categoryData.js); the
 // cron also revalidates this path after each run.
@@ -157,7 +157,15 @@ export default async function CategoryData({ params }) {
                     {d.brands.map((b, i) => (
                       <tr key={b.name}>
                         <td style={td()}>{i + 1}</td>
-                        <td style={{ ...td(), color: "var(--text)", fontWeight: 600 }}>{b.name}</td>
+                        <td style={{ ...td(), color: "var(--text)", fontWeight: 600 }}>
+                          {b.slug && hasBrandPage(b) ? (
+                            <Link href={`/ai-recommendations/${cat.slug}/${b.slug}`} style={{ color: "var(--text)" }}>
+                              {b.name}
+                            </Link>
+                          ) : (
+                            b.name
+                          )}
+                        </td>
                         <td style={td(true)}>
                           <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
                             <span

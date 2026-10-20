@@ -68,6 +68,12 @@ export default async function sitemap() {
   const dataPages = [
     withDate({ url: `${BASE_URL}/ai-recommendations`, changeFrequency: "daily", priority: 0.8 }, latest),
     ...DATA_CATEGORIES.map((c) => withDate({ url: `${BASE_URL}/ai-recommendations/${c.slug}`, changeFrequency: "daily", priority: 0.8 }, dataDay(c.slug))),
+    // One page per brand the engines name often enough (the cron lists them in the index).
+    ...(index?.categories || []).flatMap((c) =>
+      (c.brandPages || []).map((b) =>
+        withDate({ url: `${BASE_URL}/ai-recommendations/${c.slug}/${b}`, changeFrequency: "daily", priority: 0.6 }, c.lastDay)
+      )
+    ),
   ];
 
   const blogPages = posts.map((post) => ({
