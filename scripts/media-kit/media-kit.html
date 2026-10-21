@@ -22,7 +22,7 @@
   .word { font-family: Fraunces, Georgia, serif; font-size: 25px; letter-spacing: -.5px; }
   .word b { color: var(--amber); font-weight: 700; } .word span { font-weight: 400; }
   .kit { margin-left: auto; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.65); font-weight: 600; }
-  h1 { font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 37px; line-height: 1.08; letter-spacing: -.8px; margin-top: 15mm; max-width: 150mm; text-wrap: balance; }
+  h1 { font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 37px; line-height: 1.08; letter-spacing: -.8px; margin-top: 10mm; max-width: 150mm; text-wrap: balance; }
   h1 em { font-style: normal; color: var(--amber); }
   .lede { margin-top: 6mm; font-size: 13.2px; line-height: 1.62; color: rgba(255,255,255,.82); max-width: 150mm; }
 
@@ -110,6 +110,11 @@
   .clients { margin-top: 6mm; display: flex; align-items: center; gap: 4mm; font-size: 10.5px; color: rgba(255,255,255,.6); letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
   .clients b { font-family: Inter, sans-serif; letter-spacing: 0; text-transform: none; font-size: 15px; font-weight: 800; color: #fff; }
   .clients i { width: 1px; height: 14px; background: rgba(255,255,255,.25); }
+  .feats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.6mm; }
+  .feats .card { padding: 3.6mm 4.6mm; }
+  .feats h3 { font-size: 12.4px; display: flex; align-items: center; gap: 2.2mm; }
+  .feats h3::before { content: ""; width: 7px; height: 7px; border-radius: 2px; background: var(--amber); flex: none; }
+  .feats p { font-size: 10.8px; margin-top: 1mm; line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -126,37 +131,26 @@
     <div class="clients">Recent clients <i></i> <b>Sovos</b> <i></i> <b>TINCheck</b></div>
   </div>
 
-  <div class="pad" style="margin-top:9mm">
+  <div class="pad" style="margin-top:7mm">
     <h2>What we do</h2>
     <div class="steps">
-      <div class="step"><div class="n">1</div><h3>Track AI answers</h3><p>Every day we ask ChatGPT, Gemini and Claude the questions a brand&rsquo;s buyers ask, and record whether the brand is named, its position, who is named instead and which pages ChatGPT cites.</p></div>
-      <div class="step"><div class="n">2</div><h3>Find the sources</h3><p>AI answers are built from what the web says, and Reddit is one of the sources they lean on most. We find the threads where buyers ask for tools in the brand&rsquo;s category.</p></div>
-      <div class="step"><div class="n">3</div><h3>Get the brand into them</h3><p>We write genuinely useful replies for those threads, the brand approves them, and they are published. Then we measure whether the AI answers move.</p></div>
+      <div class="step"><div class="n">1</div><h3>Track AI answers</h3><p>We ask ChatGPT, Gemini and Claude your buyers&rsquo; questions every day and see where you stand.</p></div>
+      <div class="step"><div class="n">2</div><h3>Find the sources</h3><p>AI answers repeat what the web says, Reddit above all. We find the threads that shape your category.</p></div>
+      <div class="step"><div class="n">3</div><h3>Get the brand into them</h3><p>Useful replies, approved by you, published in those threads. Then we measure how the AI answers move.</p></div>
     </div>
   </div>
 
-  <div class="pad" style="margin-top:9mm">
-    <h2>The opportunity</h2>
-    <div class="proof">
-      <div class="chart">
-        <div class="q">Share of AI answers naming each brand, <b>CRM software</b></div>
-        <div class="row"><span class="name">Pipedrive</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="pct">100%</span></div>
-        <div class="row"><span class="name">HubSpot</span><span class="track"><span class="fill" style="width:97%"></span></span><span class="pct">97%</span></div>
-        <div class="row"><span class="name">Zoho CRM</span><span class="track"><span class="fill" style="width:56%"></span></span><span class="pct">56%</span></div>
-        <div class="row"><span class="name">Salesforce</span><span class="track"><span class="fill" style="width:38%"></span></span><span class="pct">38%</span></div>
-        <div class="row"><span class="name">Monday.com</span><span class="track"><span class="fill" style="width:27%"></span></span><span class="pct">27%</span></div>
-        <div class="sep"></div>
-        <div class="row zero"><span class="name">Attio</span><span class="track"></span><span class="pct">0%</span></div>
-        <div class="row zero"><span class="name">Copper</span><span class="track"></span><span class="pct">0%</span></div>
-        <div class="row zero"><span class="name">Capsule CRM</span><span class="track"></span><span class="pct">0%</span></div>
-        <div class="src">AEOrank daily data, 15–21 October 2026: 34 answers from ChatGPT, Claude and Gemini to three fixed buyer questions. Live at aeorank.tech/ai-recommendations.</div>
-      </div>
-      <ul class="points">
-        <li><b>Buyers start in AI assistants.</b> A brand missing from the answer is missing from the shortlist, and SEO reports don&rsquo;t show it.</li>
-        <li><b>The gap is common.</b> In each of the 13 categories we track daily, a few brands take most mentions while well-funded products are absent.</li>
-        <li><b>It is measurable and fixable.</b> The answers lean on public sources, Reddit above all, which a brand can earn a place in.</li>
-        <li><b>Easy first conversation.</b> Any prospect sees their own gap in two minutes with the free check at aeorank.tech/free-ai-visibility-checker.</li>
-      </ul>
+  <div class="pad" style="margin-top:6mm">
+    <h2>Platform features</h2>
+    <div class="feats">
+      <div class="card"><h3>AI answer tracking</h3><p>Your buyers&rsquo; questions asked daily on ChatGPT (with web search), Gemini and Claude: named or not, position, and who is named instead.</p></div>
+      <div class="card"><h3>Share of voice</h3><p>Your share of AI answers against each competitor, per engine, with a trend over time.</p></div>
+      <div class="card"><h3>Cited sources</h3><p>The pages ChatGPT links to when it answers, and whether your site is one of them.</p></div>
+      <div class="card"><h3>Reddit opportunities</h3><p>The threads where buyers ask for tools in your category, ranked by traffic and freshness, rescanned automatically.</p></div>
+      <div class="card"><h3>Brand &amp; competitor mentions</h3><p>Every Reddit mention of you and your competitors, so you see the conversations as they happen.</p></div>
+      <div class="card"><h3>AI-drafted replies</h3><p>Helpful, on-topic comments and posts written for each thread. You edit and approve every one.</p></div>
+      <div class="card"><h3>Publishing &amp; tracking</h3><p>Post from your own account or have our network of Reddit users publish it, then follow each reply&rsquo;s reach.</p></div>
+      <div class="card"><h3>Reports</h3><p>A weekly email and on-demand reports on AI visibility, Reddit activity and what changed.</p></div>
     </div>
   </div>
 
@@ -187,7 +181,7 @@
         </div>
       </div>
       <div>
-        <p style="font-size:12px;color:var(--ink);font-weight:600">The same brands that lead this thread lead the AI answers on page 1. The ones missing here are missing there.</p>
+        <p style="font-size:12px;color:var(--ink);font-weight:600">The same brands lead the AI answers: in our daily data for CRM, HubSpot and Pipedrive are named in nearly every answer. The ones missing here are missing there too.</p>
         <p style="margin-top:3mm">That is the lever. A brand can&rsquo;t edit ChatGPT, but it can earn a place in the conversations ChatGPT learns from, by being genuinely useful in them.</p>
         <p style="margin-top:3mm;font-size:10px;color:var(--muted)">Thread from AEOrank&rsquo;s tracked Reddit set for CRM software, October 2026.</p>
       </div>

@@ -80,23 +80,24 @@ export default function MediaKit() {
 
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container-narrow">
-          <h2 style={{ fontSize: 26, textAlign: "left", marginBottom: 14 }}>The opportunity</h2>
-          <ul style={{ color: "var(--text-dim)", lineHeight: 1.85, paddingLeft: 22, margin: 0 }}>
-            <li>
-              Buyers increasingly start software research in an AI assistant. A brand missing from those answers is missing
-              from the shortlist, and classic SEO reports don&rsquo;t show it.
-            </li>
-            <li>
-              The gap is common and measurable. We publish daily data for {DATA_CATEGORIES.length} SaaS categories; in each,
-              a handful of brands take most of the mentions and well-known products are often absent.{" "}
-              <Link href="/ai-recommendations">See the live data</Link>.
-            </li>
-            <li>
-              Every prospect can see their own gap in two minutes with the{" "}
-              <Link href="/free-ai-visibility-checker">free AI visibility check</Link>, which makes AEOrank an easy first
-              introduction.
-            </li>
-          </ul>
+          <h2 style={{ fontSize: 26, textAlign: "left", marginBottom: 14 }}>Platform features</h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12 }}>
+            {[
+              ["AI answer tracking", "Your buyers\u2019 questions asked daily on ChatGPT (with web search), Gemini and Claude: named or not, position, and who is named instead."],
+              ["Share of voice", "Your share of AI answers against each competitor, per engine, with a trend over time."],
+              ["Cited sources", "The pages ChatGPT links to when it answers, and whether your site is one of them."],
+              ["Reddit opportunities", "The threads where buyers ask for tools in your category, ranked by traffic and freshness, rescanned automatically."],
+              ["Brand & competitor mentions", "Every Reddit mention of you and your competitors, so you see the conversations as they happen."],
+              ["AI-drafted replies", "Helpful, on-topic comments and posts written for each thread. You edit and approve every one."],
+              ["Publishing & tracking", "Post from your own account or have our network of Reddit users publish it, then follow each reply\u2019s reach."],
+              ["Reports", "A weekly email and on-demand reports on AI visibility, Reddit activity and what changed."],
+            ].map(([t, d]) => (
+              <div key={t} className="card" style={{ padding: 18 }}>
+                <div style={{ fontWeight: 800, color: "var(--text)" }}>{t}</div>
+                <p style={{ margin: "6px 0 0", color: "var(--text-dim)", lineHeight: 1.6, fontSize: 15 }}>{d}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
