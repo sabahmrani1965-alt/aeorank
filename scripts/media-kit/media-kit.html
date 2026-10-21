@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AEOrank media kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 0; }
+  :root { --navy: #06112a; --navy-2: #0f1f45; --amber: #f2a83b; --amber-dark: #c9801a; --ink: #14161b; --dim: #4a5160; --muted: #7a8190; --line: #e6e2d8; --paper: #fffdf8; --bar: #ece7dc; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--paper); color: var(--ink); font-family: Inter, -apple-system, "Segoe UI", sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page { width: 210mm; height: 297mm; position: relative; overflow: hidden; page-break-after: always; background: var(--paper); }
+  .page:last-child { page-break-after: auto; }
+  .pad { padding: 0 18mm; }
+
+  /* cover band */
+  .band { background: var(--navy); color: #fff; padding: 15mm 18mm 13mm; position: relative; }
+  .band::after { content: ""; position: absolute; right: -40mm; top: -40mm; width: 120mm; height: 120mm; border-radius: 50%; background: radial-gradient(circle, rgba(242,168,59,.22), rgba(242,168,59,0) 65%); }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo svg { width: 34px; height: 34px; }
+  .word { font-family: Fraunces, Georgia, serif; font-size: 25px; letter-spacing: -.5px; }
+  .word b { color: var(--amber); font-weight: 700; } .word span { font-weight: 400; }
+  .kit { margin-left: auto; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.65); font-weight: 600; }
+  h1 { font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 37px; line-height: 1.08; letter-spacing: -.8px; margin-top: 15mm; max-width: 150mm; text-wrap: balance; }
+  h1 em { font-style: normal; color: var(--amber); }
+  .lede { margin-top: 6mm; font-size: 13.2px; line-height: 1.62; color: rgba(255,255,255,.82); max-width: 150mm; }
+
+  h2 { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--amber-dark); font-weight: 700; margin-bottom: 3.2mm; }
+  h3 { font-size: 13.5px; font-weight: 700; color: var(--ink); }
+  p, li { font-size: 11.6px; line-height: 1.6; color: var(--dim); }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; }
+  .step { border: 1px solid var(--line); border-radius: 10px; padding: 4.2mm 4.2mm 4.6mm; background: #fff; }
+  .step .n { width: 22px; height: 22px; border-radius: 6px; background: var(--navy); color: var(--amber); font-weight: 800; font-size: 12px; display: grid; place-items: center; margin-bottom: 2.6mm; }
+  .step p { margin-top: 1.6mm; font-size: 11px; }
+
+  .proof { display: grid; grid-template-columns: 1.15fr 1fr; gap: 6mm; align-items: start; }
+  .chart { border: 1px solid var(--line); border-radius: 10px; padding: 4.5mm 5mm 4mm; background: #fff; }
+  .chart .q { font-size: 11px; color: var(--muted); margin-bottom: 3mm; }
+  .chart .q b { color: var(--ink); font-weight: 600; }
+  .row { display: grid; grid-template-columns: 34mm 1fr 12mm; align-items: center; gap: 3mm; padding: 1.25mm 0; font-size: 11.2px; }
+  .row .name { font-weight: 600; color: var(--ink); white-space: nowrap; }
+  .row .track { height: 8px; border-radius: 4px; background: var(--bar); overflow: hidden; }
+  .row .fill { display: block; height: 100%; border-radius: 4px; background: var(--navy-2); }
+  .row .pct { text-align: right; font-variant-numeric: tabular-nums; color: var(--dim); font-weight: 600; }
+  .row.zero .name, .row.zero .pct { color: #c4432a; }
+  .sep { border-top: 1px dashed var(--line); margin: 1.8mm 0; }
+  .chart .src { font-size: 9.5px; color: var(--muted); margin-top: 2.6mm; line-height: 1.45; }
+  .points li { margin-bottom: 2.4mm; list-style: none; padding-left: 4.5mm; position: relative; }
+  .points li::before { content: ""; position: absolute; left: 0; top: 6.3px; width: 6px; height: 6px; border-radius: 2px; background: var(--amber); }
+  .points b { color: var(--ink); }
+
+  .foot { position: absolute; left: 18mm; right: 18mm; bottom: 10mm; display: flex; justify-content: space-between; font-size: 9.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 3mm; }
+
+  /* page 2 */
+  .top { display: flex; align-items: center; padding: 12mm 18mm 0; }
+  .top .word { color: var(--navy); } .top .word span { color: var(--navy); }
+  table { width: 100%; border-collapse: collapse; font-size: 11.6px; }
+  th { text-align: right; font-weight: 700; color: var(--ink); padding: 0 0 2.6mm; font-size: 12.5px; }
+  th:first-child { text-align: left; }
+  th .price { display: block; font-family: Fraunces, Georgia, serif; font-size: 25px; color: var(--navy); margin-top: 1mm; letter-spacing: -.5px; }
+  th .price small { font-family: Inter, sans-serif; font-size: 10.5px; color: var(--muted); font-weight: 500; letter-spacing: 0; }
+  td { padding: 2.4mm 0; border-top: 1px solid var(--line); color: var(--dim); text-align: right; font-variant-numeric: tabular-nums; }
+  td:first-child { text-align: left; color: var(--ink); font-weight: 600; }
+  .plans { border: 1px solid var(--line); border-radius: 10px; padding: 5mm 6mm 2mm; background: #fff; }
+  .note { font-size: 10.5px; color: var(--muted); margin-top: 3mm; }
+  .incl { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.6mm 6mm; margin-top: 3.4mm; }
+  .incl li { list-style: none; font-size: 11px; padding-left: 4.5mm; position: relative; }
+  .incl li::before { content: "✓"; position: absolute; left: 0; color: var(--amber-dark); font-weight: 800; }
+
+  .partner { background: var(--navy); color: #fff; border-radius: 12px; padding: 7mm 8mm; display: grid; grid-template-columns: 1fr 52mm; gap: 6mm; align-items: center; }
+  .partner h3 { color: #fff; font-size: 17px; font-family: Fraunces, Georgia, serif; font-weight: 700; }
+  .partner p { color: rgba(255,255,255,.78); margin-top: 2mm; }
+  .big { text-align: center; border-left: 1px solid rgba(255,255,255,.15); }
+  .big b { display: block; font-family: Fraunces, Georgia, serif; font-size: 44px; color: var(--amber); line-height: 1; }
+  .big span { font-size: 10.5px; color: rgba(255,255,255,.7); letter-spacing: .04em; }
+  .earn { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm; margin-top: 4mm; }
+  .earn div { background: rgba(255,255,255,.06); border-radius: 8px; padding: 2.6mm 3mm; font-size: 10.5px; color: rgba(255,255,255,.7); }
+  .earn b { display: block; color: #fff; font-size: 14px; margin-top: .6mm; }
+
+  .who { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+  .contact { display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--line); border-radius: 10px; padding: 5mm 6mm; background: #fff; }
+  .contact .name { font-size: 15px; font-weight: 700; color: var(--ink); }
+  .contact p { margin-top: .8mm; }
+  .contact a { color: var(--navy); font-weight: 600; text-decoration: none; }
+  .cta { background: var(--amber); color: var(--navy); font-weight: 800; font-size: 11.5px; padding: 3mm 4.5mm; border-radius: 999px; white-space: nowrap; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE 1 ============ -->
+<section class="page">
+  <div class="band">
+    <div class="logo">
+      <svg viewBox="0 0 60 60"><rect width="60" height="60" rx="14" fill="#F2A83B"/><rect x="12" y="13" width="5" height="34" rx="2" fill="#06112A"/><rect x="43" y="13" width="5" height="34" rx="2" fill="#06112A"/><line x1="30" y1="44" x2="30" y2="22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round"/><polyline points="23,22 30,14 37,22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+      <div class="word"><b>AEO</b><span>rank</span></div>
+      <div class="kit">Media kit · 2026</div>
+    </div>
+    <h1>We get SaaS brands <em>named in AI answers</em>.</h1>
+    <p class="lede">When a buyer asks ChatGPT &ldquo;what is the best CRM for a small business?&rdquo;, the answer names three to six products. Most brands don&rsquo;t know whether they are among them. AEOrank measures it every day across ChatGPT, Gemini and Claude, finds the sources those answers are built from, and helps the brand get into them, starting with Reddit.</p>
+  </div>
+
+  <div class="pad" style="margin-top:9mm">
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><h3>Measure</h3><p>We ask ChatGPT, Gemini and Claude the questions a brand&rsquo;s buyers ask, every day: is the brand named, in what position, who is named instead, and which pages ChatGPT cites as sources.</p></div>
+      <div class="step"><div class="n">2</div><h3>Find the gaps</h3><p>AI assistants lean on Reddit threads and review pages. AEOrank finds the threads where buyers ask for tools in the category, and which competitors those threads name.</p></div>
+      <div class="step"><div class="n">3</div><h3>Act</h3><p>AEOrank drafts helpful, non-promotional replies. The brand approves each one, then publishes it or has our posting network publish it, and the tracker shows whether the answers change.</p></div>
+    </div>
+  </div>
+
+  <div class="pad" style="margin-top:9mm">
+    <h2>The opportunity</h2>
+    <div class="proof">
+      <div class="chart">
+        <div class="q">Share of AI answers naming each brand, <b>CRM software</b></div>
+        <div class="row"><span class="name">Pipedrive</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="pct">100%</span></div>
+        <div class="row"><span class="name">HubSpot</span><span class="track"><span class="fill" style="width:97%"></span></span><span class="pct">97%</span></div>
+        <div class="row"><span class="name">Zoho CRM</span><span class="track"><span class="fill" style="width:56%"></span></span><span class="pct">56%</span></div>
+        <div class="row"><span class="name">Salesforce</span><span class="track"><span class="fill" style="width:38%"></span></span><span class="pct">38%</span></div>
+        <div class="row"><span class="name">Monday.com</span><span class="track"><span class="fill" style="width:27%"></span></span><span class="pct">27%</span></div>
+        <div class="sep"></div>
+        <div class="row zero"><span class="name">Attio</span><span class="track"></span><span class="pct">0%</span></div>
+        <div class="row zero"><span class="name">Copper</span><span class="track"></span><span class="pct">0%</span></div>
+        <div class="row zero"><span class="name">Capsule CRM</span><span class="track"></span><span class="pct">0%</span></div>
+        <div class="src">AEOrank daily data, 15–21 October 2026: 34 answers from ChatGPT, Claude and Gemini to three fixed buyer questions. Live at aeorank.tech/ai-recommendations.</div>
+      </div>
+      <ul class="points">
+        <li><b>Buyers start in AI assistants.</b> A brand missing from the answer is missing from the shortlist, and SEO reports don&rsquo;t show it.</li>
+        <li><b>The gap is common.</b> In each of the 13 categories we track daily, a few brands take most mentions while well-funded products are absent.</li>
+        <li><b>It is measurable and fixable.</b> The answers lean on public sources, Reddit above all, which a brand can earn a place in.</li>
+        <li><b>Easy first conversation.</b> Any prospect sees their own gap in two minutes with the free check at aeorank.tech/free-ai-visibility-checker.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="foot"><span>AEOrank · aeorank.tech</span><span>1 / 2</span></div>
+</section>
+
+<!-- ============ PAGE 2 ============ -->
+<section class="page">
+  <div class="top">
+    <div class="logo">
+      <svg viewBox="0 0 60 60" style="width:28px;height:28px"><rect width="60" height="60" rx="14" fill="#F2A83B"/><rect x="12" y="13" width="5" height="34" rx="2" fill="#06112A"/><rect x="43" y="13" width="5" height="34" rx="2" fill="#06112A"/><line x1="30" y1="44" x2="30" y2="22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round"/><polyline points="23,22 30,14 37,22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+      <div class="word" style="font-size:21px"><b>AEO</b><span>rank</span></div>
+    </div>
+  </div>
+
+  <div class="pad" style="margin-top:8mm">
+    <h2>Plans</h2>
+    <div class="plans">
+      <table>
+        <thead><tr>
+          <th style="vertical-align:bottom;font-size:11px;color:var(--muted);font-weight:500">Monthly · cancel any time<br>7-day free trial on every plan</th>
+          <th>Lite<span class="price">$199<small> /mo</small></span></th>
+          <th>Pro<span class="price">$299<small> /mo</small></span></th>
+          <th>Max<span class="price">$449<small> /mo</small></span></th>
+        </tr></thead>
+        <tbody>
+          <tr><td>Credits included each month</td><td>$100</td><td>$200</td><td>$300</td></tr>
+          <tr><td>Reddit comment / post (from credits)</td><td>$10 / $20</td><td>$7 / $15</td><td>$5 / $10</td></tr>
+          <tr><td>Brands</td><td>3</td><td>6</td><td>10</td></tr>
+          <tr><td>Keywords monitored</td><td>50</td><td>75</td><td>100</td></tr>
+          <tr><td>Reddit thread scans</td><td>Every 2 weeks</td><td>Weekly</td><td>Daily</td></tr>
+          <tr><td>Brand &amp; competitor mentions</td><td>Weekly</td><td>Daily</td><td>Daily</td></tr>
+          <tr><td>Team members</td><td>2</td><td>Unlimited</td><td>Unlimited</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="incl">
+      <li>Daily AI answer tracking on ChatGPT, Gemini and Claude</li>
+      <li>Share of voice against named competitors</li>
+      <li>The pages ChatGPT cites, and whether yours is one</li>
+      <li>Reddit threads where buyers ask for the category</li>
+      <li>AI-drafted replies, approved before anything is posted</li>
+      <li>Weekly report by email</li>
+    </ul>
+  </div>
+
+  <div class="pad" style="margin-top:9mm">
+    <h2>Partner terms</h2>
+    <div class="partner">
+      <div>
+        <h3>30% of every payment, for a year</h3>
+        <p>Partners earn 30% of every payment a referred customer makes in their first 12 months. Introductions by email count the same as referral links.</p>
+        <div class="earn">
+          <div>Lite customer<b>$59.70 / mo</b></div>
+          <div>Pro customer<b>$89.70 / mo</b></div>
+          <div>Max customer<b>$134.70 / mo</b></div>
+        </div>
+      </div>
+      <div class="big"><b>30%</b><span>RECURRING · 12 MONTHS</span></div>
+    </div>
+  </div>
+
+  <div class="pad" style="margin-top:9mm">
+    <div class="who">
+      <div>
+        <h2>Who it&rsquo;s for</h2>
+        <p>B2B SaaS companies, seed stage to mid-market, whose buyers compare tools before buying: CRM, project management, help desk, email and marketing automation, SEO, HR and recruiting, accounting, website builders and similar categories.</p>
+      </div>
+      <div>
+        <h2>Who buys it</h2>
+        <p>The head of marketing or growth, or the founder. They usually ask two questions first: &ldquo;are we named?&rdquo; and &ldquo;who is named instead?&rdquo;. The free check answers both before any sales call.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pad" style="margin-top:9mm">
+    <div class="contact">
+      <div>
+        <div class="name">Ilyas, founder</div>
+        <p><a href="mailto:ilyas@aeorank.tech">ilyas@aeorank.tech</a> · <a href="https://www.aeorank.tech">aeorank.tech</a></p>
+      </div>
+      <a class="cta" href="https://www.aeorank.tech/free-ai-visibility-checker">Run a free check →</a>
+    </div>
+  </div>
+
+  <div class="foot"><span>AEOrank · aeorank.tech · Prices in USD, October 2026</span><span>2 / 2</span></div>
+</section>
+</body>
+</html>

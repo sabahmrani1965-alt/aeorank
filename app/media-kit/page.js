@@ -51,6 +51,11 @@ export default function MediaKit() {
             Gemini and Claude, finds the sources those answers are built from, and helps the brand get into them, starting with
             Reddit.
           </p>
+          <p style={{ marginTop: 18 }}>
+            <a href="/aeorank-media-kit.pdf" className="btn btn-primary" download>
+              Download the PDF (2 pages)
+            </a>
+          </p>
         </div>
       </section>
 
