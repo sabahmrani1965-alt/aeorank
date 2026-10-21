@@ -57,7 +57,7 @@ function Figure({ value, label }) {
 
 const ENGINE_NOTES = {
   Claude: "Claude (claude-haiku-4-5) through Anthropic's API, answering from model knowledge without web search.",
-  ChatGPT: "ChatGPT through OpenAI's API (gpt-5.3-chat-latest, the model behind the ChatGPT app), with web search off, so it answers from model knowledge. Before 21 October 2026, through Cloro's monitoring API.",
+  ChatGPT: "ChatGPT through OpenAI's API (gpt-5.4-mini), with web search off, so it answers from model knowledge. Before 21 October 2026, through Cloro's monitoring API.",
   Gemini: "Gemini through Cloro's monitoring API, which returns the consumer Gemini answer.",
 };
 
