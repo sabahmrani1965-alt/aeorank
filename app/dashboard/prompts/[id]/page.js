@@ -2,6 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import PromptTrendChart from "@/components/PromptTrendChart";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { domainOf, loadPromptSources } from "@/lib/promptSources";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +29,7 @@ export default async function PromptDetailPage({ params }) {
 
   const { data: prompt } = await supabase
     .from("prompts")
-    .select("id, text, type, location, active, created_at")
+    .select("id, text, type, location, active, created_at, company_profile_id")
     .eq("id", params.id)
     .eq("user_id", user.id)
     .maybeSingle();
@@ -41,6 +43,33 @@ export default async function PromptDetailPage({ params }) {
     .order("created_at", { ascending: true });
 
   const history = checksData || [];
+
+  // Pages ChatGPT (web search) cited for this prompt, and whether the
+  // brand's own site is among them. Read with the admin client: the prompt
+  // was already matched to this user above.
+  const admin = createAdminClient();
+  const sourceLog = admin ? await loadPromptSources(admin, prompt.id) : [];
+  const { data: profile } = prompt.company_profile_id
+    ? await supabase.from("company_profiles").select("website, company_name").eq("id", prompt.company_profile_id).maybeSingle()
+    : { data: null };
+  const ownDomain = profile?.website ? domainOf(/^https?:/i.test(profile.website) ? profile.website : `https://${profile.website}`) : "";
+  const isOwn = (d) => ownDomain && (d === ownDomain || d.endsWith(`.${ownDomain}`));
+  const byDomain = new Map();
+  for (const e of sourceLog) {
+    for (const s of e.sources || []) {
+      const d = domainOf(s.url);
+      if (!d) continue;
+      const row = byDomain.get(d) || { domain: d, count: 0, last: e.at, pages: new Map() };
+      row.count += 1;
+      if (e.at > row.last) row.last = e.at;
+      row.pages.set(s.url, s.title || s.url);
+      byDomain.set(d, row);
+    }
+  }
+  const citedDomains = [...byDomain.values()].sort((a, b) => b.count - a.count).slice(0, 15);
+  const citedChecks = sourceLog.length;
+  const ownCited = [...byDomain.values()].find((r) => isOwn(r.domain));
+  const latestSources = sourceLog.length ? sourceLog[sourceLog.length - 1] : null;
   const total = history.length;
 
   const positioned = history.filter((c) => c.position != null);
@@ -153,6 +182,67 @@ export default async function PromptDetailPage({ params }) {
           </div>
         </div>
       )}
+
+      <div style={{ marginTop: 32 }}>
+        <h3 style={{ marginBottom: 6 }}>Sources ChatGPT cited</h3>
+        <p style={{ color: "var(--text-dim)", fontSize: 14, margin: "0 0 14px" }}>
+          The pages ChatGPT (with web search) linked to when answering this prompt. Getting your brand onto these pages is
+          the most direct way into the answer.
+        </p>
+        {citedChecks === 0 ? (
+          <div className="card" style={{ textAlign: "center", color: "var(--text-dim)" }}>
+            No sources yet. They appear after the next check with ChatGPT web search.
+          </div>
+        ) : (
+          <div className="card" style={{ padding: 20 }}>
+            <p style={{ margin: "0 0 14px", fontSize: 14.5, color: "var(--text)" }}>
+              {ownDomain
+                ? ownCited
+                  ? `${ownDomain} was cited in ${ownCited.count} of ${citedChecks} ${citedChecks === 1 ? "check" : "checks"}.`
+                  : `${ownDomain} has not been cited yet in ${citedChecks} ${citedChecks === 1 ? "check" : "checks"}.`
+                : `${citedChecks} ${citedChecks === 1 ? "check" : "checks"} with sources so far.`}
+            </p>
+            <div style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                <thead>
+                  <tr style={{ borderBottom: "1px solid var(--border, rgba(255,255,255,.1))" }}>
+                    <th style={{ textAlign: "left", padding: "8px 10px", color: "var(--text-dim)", fontSize: 13 }}>Website</th>
+                    <th style={{ textAlign: "right", padding: "8px 10px", color: "var(--text-dim)", fontSize: 13 }}>Cited in</th>
+                    <th style={{ textAlign: "right", padding: "8px 10px", color: "var(--text-dim)", fontSize: 13 }}>Last cited</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {citedDomains.map((r) => (
+                    <tr key={r.domain} style={{ borderBottom: "1px solid var(--border, rgba(255,255,255,.06))" }}>
+                      <td style={{ padding: "8px 10px", fontWeight: isOwn(r.domain) ? 700 : 500 }}>
+                        {r.domain}
+                        {isOwn(r.domain) ? " (you)" : ""}
+                        <div style={{ fontSize: 12.5, color: "var(--text-muted)", marginTop: 2 }}>
+                          {[...r.pages.entries()].slice(0, 2).map(([url, title]) => (
+                            <div key={url} style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 520 }}>
+                              <a href={url} target="_blank" rel="noopener noreferrer nofollow">{title}</a>
+                            </div>
+                          ))}
+                        </div>
+                      </td>
+                      <td style={{ padding: "8px 10px", textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
+                        {r.count}/{citedChecks}
+                      </td>
+                      <td style={{ padding: "8px 10px", textAlign: "right", color: "var(--text-dim)", fontSize: 13 }}>{timeAgo(r.last)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {latestSources ? (
+              <p style={{ margin: "12px 0 0", fontSize: 12.5, color: "var(--text-muted)" }}>
+                Latest check {timeAgo(latestSources.at)}: {latestSources.sources.length} {latestSources.sources.length === 1 ? "source" : "sources"}
+                {latestSources.mentioned ? ", and the answer named you." : ", and the answer did not name you."}
+              </p>
+            ) : null}
+          </div>
+        )}
+      </div>
 
       <div style={{ marginTop: 32 }}>
         <h3 style={{ marginBottom: 14 }}>Recent checks</h3>
