@@ -53,7 +53,7 @@ export default function MediaKit() {
           </p>
           <p style={{ marginTop: 18 }}>
             <a href="/aeorank-media-kit.pdf" className="btn btn-primary" download>
-              Download the PDF (2 pages)
+              Download the PDF (4 pages)
             </a>
           </p>
         </div>
@@ -110,7 +110,37 @@ export default function MediaKit() {
 
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container-narrow">
-          <h2 style={{ fontSize: 26, textAlign: "left", marginBottom: 6 }}>Plans</h2>
+          <h2 style={{ fontSize: 26, textAlign: "left", marginBottom: 6 }}>Done for you</h2>
+          <p style={{ color: "var(--text-dim)", lineHeight: 1.75, margin: "0 0 14px" }}>
+            We choose the threads, write the posts and comments, publish them, and report on Reddit reach and AI answers
+            each month. Run with our sister site SaasOffers.tech (10,000+ monthly visitors); our last client&rsquo;s Reddit
+            content reached 859K+ views. Everything is approved by you before it is published.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12 }}>
+            {[
+              { name: "Starter", price: "$1,000", items: ["3 Reddit posts", "10 strategic comments", "1 blog post on saasoffers.tech/blog", "1 newsletter mention", "AEOrank AI-answer tracking and a monthly report"] },
+              { name: "Growth", price: "$1,800", items: ["5 Reddit posts", "20 strategic comments", "3 blog posts on saasoffers.tech/blog", "1 newsletter mention", "Featured deal listing on saasoffers.tech", "AEOrank AI-answer tracking and a monthly report"] },
+            ].map((p) => (
+              <div key={p.name} className="card" style={{ padding: 22 }}>
+                <div style={{ color: "var(--text-muted)", fontSize: 13, fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase" }}>{p.name}</div>
+                <div style={{ fontSize: 30, fontWeight: 800, color: "var(--text)", margin: "4px 0 10px" }}>
+                  {p.price}
+                  <span style={{ fontSize: 14, color: "var(--text-muted)", fontWeight: 500 }}> /month</span>
+                </div>
+                <ul style={{ margin: 0, paddingLeft: 20, color: "var(--text-dim)", lineHeight: 1.8 }}>
+                  {p.items.map((i) => (
+                    <li key={i}>{i}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section" style={{ paddingTop: 0 }}>
+        <div className="container-narrow">
+          <h2 style={{ fontSize: 26, textAlign: "left", marginBottom: 6 }}>Self-serve plans</h2>
           <p style={{ color: "var(--text-dim)", margin: "0 0 14px" }}>Monthly, cancel any time, 7-day free trial on every plan.</p>
           <div style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 15.5 }}>

@@ -85,10 +85,31 @@
   .contact p { margin-top: .8mm; }
   .contact a { color: var(--navy); font-weight: 600; text-decoration: none; }
   .cta { background: var(--amber); color: var(--navy); font-weight: 800; font-size: 11.5px; padding: 3mm 4.5mm; border-radius: 999px; white-space: nowrap; text-decoration: none; }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+  .card { border: 1px solid var(--line); border-radius: 10px; padding: 4.6mm 5mm; background: #fff; }
+  .flow { display: grid; gap: 1.8mm; }
+  .flow .it { display: grid; grid-template-columns: 9mm 1fr; gap: 3mm; align-items: start; }
+  .flow .k { width: 22px; height: 22px; border-radius: 6px; background: var(--navy); color: var(--amber); font-weight: 800; font-size: 11.5px; display: grid; place-items: center; }
+  .flow h3 { font-size: 12.8px; }
+  .flow p { font-size: 10.6px; margin-top: .4mm; line-height: 1.5; }
+  .thread { border: 1px solid var(--line); border-radius: 10px; background: #fff; overflow: hidden; }
+  .thread .hd { background: #fff4e5; padding: 3.4mm 5mm; border-bottom: 1px solid var(--line); }
+  .thread .sub { font-size: 10px; color: var(--muted); font-weight: 600; letter-spacing: .02em; }
+  .thread .tt { font-size: 13px; font-weight: 700; color: var(--ink); margin-top: .8mm; }
+  .thread .bd { padding: 3.6mm 5mm 4mm; }
+  .no { list-style: none; }
+  .no li { padding-left: 5mm; position: relative; margin-bottom: 1.6mm; font-size: 11px; }
+  .no li::before { content: "✕"; position: absolute; left: 0; color: #c4432a; font-weight: 800; }
+  .yes li::before { content: "✓"; color: var(--amber-dark); }
+  .kicker { margin-top: 4mm; background: var(--navy); color: #fff; border-radius: 10px; padding: 4.4mm 5.5mm; font-size: 12px; line-height: 1.55; }
+  .kicker b { color: var(--amber); }
+  .pending { border: 2px dashed var(--amber); border-radius: 12px; padding: 7mm; text-align: center; color: var(--amber-dark); font-weight: 700; font-size: 13px; background: #fff8ec; }
+  .feat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3.4mm; }
+  .feat .card h3 { font-size: 12.3px; } .feat .card p { font-size: 10.6px; margin-top: 1mm; }
 </style>
 </head>
 <body>
-
 <!-- ============ PAGE 1 ============ -->
 <section class="page">
   <div class="band">
@@ -102,11 +123,11 @@
   </div>
 
   <div class="pad" style="margin-top:9mm">
-    <h2>How it works</h2>
+    <h2>What we do</h2>
     <div class="steps">
-      <div class="step"><div class="n">1</div><h3>Measure</h3><p>We ask ChatGPT, Gemini and Claude the questions a brand&rsquo;s buyers ask, every day: is the brand named, in what position, who is named instead, and which pages ChatGPT cites as sources.</p></div>
-      <div class="step"><div class="n">2</div><h3>Find the gaps</h3><p>AI assistants lean on Reddit threads and review pages. AEOrank finds the threads where buyers ask for tools in the category, and which competitors those threads name.</p></div>
-      <div class="step"><div class="n">3</div><h3>Act</h3><p>AEOrank drafts helpful, non-promotional replies. The brand approves each one, then publishes it or has our posting network publish it, and the tracker shows whether the answers change.</p></div>
+      <div class="step"><div class="n">1</div><h3>Track AI answers</h3><p>Every day we ask ChatGPT, Gemini and Claude the questions a brand&rsquo;s buyers ask, and record whether the brand is named, its position, who is named instead and which pages ChatGPT cites.</p></div>
+      <div class="step"><div class="n">2</div><h3>Find the sources</h3><p>AI answers are built from what the web says, and Reddit is one of the sources they lean on most. We find the threads where buyers ask for tools in the brand&rsquo;s category.</p></div>
+      <div class="step"><div class="n">3</div><h3>Get the brand into them</h3><p>We write genuinely useful replies for those threads, the brand approves them, and they are published. Then we measure whether the AI answers move.</p></div>
     </div>
   </div>
 
@@ -135,20 +156,97 @@
     </div>
   </div>
 
-  <div class="foot"><span>AEOrank · aeorank.tech</span><span>1 / 2</span></div>
+  <div class="foot"><span>AEOrank · aeorank.tech</span><span>1 / 4</span></div>
 </section>
 
 <!-- ============ PAGE 2 ============ -->
 <section class="page">
-  <div class="top">
-    <div class="logo">
-      <svg viewBox="0 0 60 60" style="width:28px;height:28px"><rect width="60" height="60" rx="14" fill="#F2A83B"/><rect x="12" y="13" width="5" height="34" rx="2" fill="#06112A"/><rect x="43" y="13" width="5" height="34" rx="2" fill="#06112A"/><line x1="30" y1="44" x2="30" y2="22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round"/><polyline points="23,22 30,14 37,22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-      <div class="word" style="font-size:21px"><b>AEO</b><span>rank</span></div>
+  <div class="top"><div class="logo"><svg viewBox="0 0 60 60" style="width:28px;height:28px"><rect width="60" height="60" rx="14" fill="#F2A83B"/><rect x="12" y="13" width="5" height="34" rx="2" fill="#06112A"/><rect x="43" y="13" width="5" height="34" rx="2" fill="#06112A"/><line x1="30" y1="44" x2="30" y2="22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round"/><polyline points="23,22 30,14 37,22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><div class="word" style="font-size:21px"><b>AEO</b><span>rank</span></div></div></div>
+  <div class="pad" style="margin-top:6mm">
+    <h2>How we use Reddit</h2>
+    <p style="font-size:12.6px;color:var(--ink);max-width:165mm">When AI assistants recommend software, they repeat what real users say in public, and Reddit threads where people ask &ldquo;what should I use?&rdquo; are among the sources they draw on most. A brand that is absent from those threads tends to be absent from the answer.</p>
+  </div>
+
+  <div class="pad" style="margin-top:4.5mm">
+    <div class="two">
+      <div class="thread">
+        <div class="hd"><div class="sub">r/CRM · 345 comments · 103 upvotes</div><div class="tt">&ldquo;Best and inexpensive CRM for small business&rdquo;</div></div>
+        <div class="bd">
+          <div class="q" style="font-size:10.5px;color:var(--muted);margin-bottom:2mm">Times each CRM is named in the post and its top comments</div>
+          <div class="row"><span class="name">HubSpot</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="pct">19</span></div>
+          <div class="row"><span class="name">Zoho</span><span class="track"><span class="fill" style="width:47%"></span></span><span class="pct">9</span></div>
+          <div class="row"><span class="name">Pipedrive</span><span class="track"><span class="fill" style="width:42%"></span></span><span class="pct">8</span></div>
+          <div class="sep"></div>
+          <div class="row zero"><span class="name">Attio</span><span class="track"></span><span class="pct">0</span></div>
+          <div class="row zero"><span class="name">Copper</span><span class="track"></span><span class="pct">0</span></div>
+          <div class="row zero"><span class="name">Capsule CRM</span><span class="track"></span><span class="pct">0</span></div>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:12px;color:var(--ink);font-weight:600">The same brands that lead this thread lead the AI answers on page 1. The ones missing here are missing there.</p>
+        <p style="margin-top:3mm">That is the lever. A brand can&rsquo;t edit ChatGPT, but it can earn a place in the conversations ChatGPT learns from, by being genuinely useful in them.</p>
+        <p style="margin-top:3mm;font-size:10px;color:var(--muted)">Thread from AEOrank&rsquo;s tracked Reddit set for CRM software, October 2026.</p>
+      </div>
     </div>
   </div>
 
-  <div class="pad" style="margin-top:8mm">
-    <h2>Plans</h2>
+  <div class="pad" style="margin-top:5mm">
+    <h2>Our process</h2>
+    <div class="flow">
+      <div class="it"><div class="k">1</div><div><h3>Find the threads that matter</h3><p>We search Reddit for the questions buyers ask in the brand&rsquo;s category and keep the busiest, most-read threads, including older ones that still rank and still feed AI answers.</p></div></div>
+      <div class="it"><div class="k">2</div><div><h3>Read before writing</h3><p>We read the whole thread: what was asked, which tools people recommend and why, and what the subreddit&rsquo;s rules allow.</p></div></div>
+      <div class="it"><div class="k">3</div><div><h3>Write a reply worth upvoting on its own</h3><p>Each reply answers the question first, compares honestly, and mentions the brand only where it genuinely fits. No sales copy, no link dropping.</p></div></div>
+      <div class="it"><div class="k">4</div><div><h3>The brand approves every word</h3><p>Nothing is posted without the brand&rsquo;s approval. They can edit, reject or post it themselves.</p></div></div>
+      <div class="it"><div class="k">5</div><div><h3>Published by real Reddit users</h3><p>Approved replies are published from the brand&rsquo;s own account or by established Reddit users in our network, following each subreddit&rsquo;s rules.</p></div></div>
+      <div class="it"><div class="k">6</div><div><h3>Measure the effect</h3><p>We track each reply on Reddit and the AI answers for the brand&rsquo;s prompts, so the brand sees whether it is being named more often.</p></div></div>
+    </div>
+  </div>
+
+  <div class="pad" style="margin-top:4.5mm">
+    <div class="two">
+      <div class="card" style="padding:3.6mm 5mm"><h3 style="margin-bottom:2mm">What we do</h3><ul class="no yes"><li>Helpful answers to real questions</li><li>Honest comparisons, including competitors</li><li>Every reply approved by the brand</li><li>Each subreddit&rsquo;s rules followed</li></ul></div>
+      <div class="card" style="padding:3.6mm 5mm"><h3 style="margin-bottom:2mm">What we never do</h3><ul class="no"><li>Bought votes or fake engagement</li><li>Fake reviews or impersonation</li><li>Bots or mass-posted spam</li><li>Links dropped where they don&rsquo;t help</li></ul></div>
+    </div>
+  </div>
+  <div class="foot"><span>AEOrank · aeorank.tech</span><span>2 / 4</span></div>
+</section>
+<!-- ============ PAGE 3 ============ -->
+<section class="page">
+  <div class="top"><div class="logo"><svg viewBox="0 0 60 60" style="width:28px;height:28px"><rect width="60" height="60" rx="14" fill="#F2A83B"/><rect x="12" y="13" width="5" height="34" rx="2" fill="#06112A"/><rect x="43" y="13" width="5" height="34" rx="2" fill="#06112A"/><line x1="30" y1="44" x2="30" y2="22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round"/><polyline points="23,22 30,14 37,22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><div class="word" style="font-size:21px"><b>AEO</b><span>rank</span></div></div></div>
+  <div class="pad" style="margin-top:7mm">
+    <h2>Done for you</h2>
+    <!-- DFY:START -->
+    <p style="font-size:11.6px;margin-bottom:3.4mm;max-width:170mm">We run it end to end: we choose the threads, write the posts and comments, publish them, and report on Reddit reach and AI answers each month. Run with our sister site <b style="color:var(--ink)">SaasOffers.tech</b>, a SaaS deals platform with <b style="color:var(--ink)">10,000+ monthly visitors</b>. Our last client&rsquo;s Reddit content reached <b style="color:var(--ink)">859K+ views</b>.</p>
+    <div class="two">
+      <div class="card">
+        <div style="font-size:10.5px;letter-spacing:.12em;color:var(--muted);font-weight:700">STARTER</div>
+        <div style="font-family:Fraunces,Georgia,serif;font-size:27px;font-weight:700;color:var(--navy);margin:1mm 0 2.6mm">$1,000<small style="font-family:Inter,sans-serif;font-size:10.5px;color:var(--muted);font-weight:500"> /month</small></div>
+        <ul class="no yes">
+          <li><b style="color:var(--ink)">3 Reddit posts</b> in the subreddits your buyers read</li>
+          <li><b style="color:var(--ink)">10 strategic comments</b> in active, high-traffic threads</li>
+          <li><b style="color:var(--ink)">1 blog post</b> on saasoffers.tech/blog</li>
+          <li><b style="color:var(--ink)">1 newsletter mention</b> to the SaasOffers founder audience</li>
+          <li>AEOrank AI-answer tracking and a monthly report</li>
+        </ul>
+      </div>
+      <div class="card" style="border:2px solid var(--amber)">
+        <div style="font-size:10.5px;letter-spacing:.12em;color:var(--amber-dark);font-weight:700">GROWTH</div>
+        <div style="font-family:Fraunces,Georgia,serif;font-size:27px;font-weight:700;color:var(--navy);margin:1mm 0 2.6mm">$1,800<small style="font-family:Inter,sans-serif;font-size:10.5px;color:var(--muted);font-weight:500"> /month</small></div>
+        <ul class="no yes">
+          <li><b style="color:var(--ink)">5 Reddit posts</b> in the subreddits your buyers read</li>
+          <li><b style="color:var(--ink)">20 strategic comments</b> in active, high-traffic threads</li>
+          <li><b style="color:var(--ink)">3 blog posts</b> on saasoffers.tech/blog</li>
+          <li><b style="color:var(--ink)">1 newsletter mention</b> to the SaasOffers founder audience</li>
+          <li><b style="color:var(--ink)">Featured deal listing</b>, permanent, on saasoffers.tech</li>
+          <li>AEOrank AI-answer tracking and a monthly report</li>
+        </ul>
+      </div>
+    </div>
+    <p style="font-size:10.2px;color:var(--muted);margin-top:2.6mm">Posts are built around the real questions the audience asks, approved by you before publishing, and follow each subreddit&rsquo;s rules.</p>
+    <!-- DFY:END -->
+  </div>
+  <div class="pad" style="margin-top:7mm">
+    <h2>Self-serve platform</h2>
     <div class="plans">
       <table>
         <thead><tr>
@@ -178,7 +276,13 @@
     </ul>
   </div>
 
-  <div class="pad" style="margin-top:9mm">
+  
+  <div class="foot"><span>AEOrank · aeorank.tech · Prices in USD, October 2026</span><span>3 / 4</span></div>
+</section>
+<!-- ============ PAGE 4 ============ -->
+<section class="page">
+  <div class="top"><div class="logo"><svg viewBox="0 0 60 60" style="width:28px;height:28px"><rect width="60" height="60" rx="14" fill="#F2A83B"/><rect x="12" y="13" width="5" height="34" rx="2" fill="#06112A"/><rect x="43" y="13" width="5" height="34" rx="2" fill="#06112A"/><line x1="30" y1="44" x2="30" y2="22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round"/><polyline points="23,22 30,14 37,22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><div class="word" style="font-size:21px"><b>AEO</b><span>rank</span></div></div></div>
+  <div class="pad" style="margin-top:8mm">
     <h2>Partner terms</h2>
     <div class="partner">
       <div>
@@ -194,11 +298,12 @@
     </div>
   </div>
 
+  
   <div class="pad" style="margin-top:9mm">
     <div class="who">
       <div>
         <h2>Who it&rsquo;s for</h2>
-        <p>B2B SaaS companies, seed stage to mid-market, whose buyers compare tools before buying: CRM, project management, help desk, email and marketing automation, SEO, HR and recruiting, accounting, website builders and similar categories.</p>
+        <p>B2B SaaS companies, seed stage to mid-market, whose buyers compare tools before buying: CRM, project management, help desk, email and marketing automation, SEO, HR and recruiting, accounting and finance, website builders and similar categories.</p>
       </div>
       <div>
         <h2>Who buys it</h2>
@@ -206,7 +311,14 @@
       </div>
     </div>
   </div>
-
+  <div class="pad" style="margin-top:9mm">
+    <h2>How to start</h2>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><h3>Free check</h3><p>Run the free AI visibility check at aeorank.tech: in two minutes it shows whether ChatGPT, Gemini and Claude name the brand, and who they name instead.</p></div>
+      <div class="step"><div class="n">2</div><h3>15-minute call</h3><p>We walk through the result, the Reddit threads that shape the category, and which option fits: self-serve or done for you.</p></div>
+      <div class="step"><div class="n">3</div><h3>First month</h3><p>Self-serve plans start with a 7-day free trial. Done-for-you work starts with thread selection and first drafts in week one.</p></div>
+    </div>
+  </div>
   <div class="pad" style="margin-top:9mm">
     <div class="contact">
       <div>
@@ -217,7 +329,9 @@
     </div>
   </div>
 
-  <div class="foot"><span>AEOrank · aeorank.tech · Prices in USD, October 2026</span><span>2 / 2</span></div>
+  
+  
+  <div class="foot"><span>AEOrank · aeorank.tech · Prices in USD, October 2026</span><span>4 / 4</span></div>
 </section>
 </body>
 </html>
