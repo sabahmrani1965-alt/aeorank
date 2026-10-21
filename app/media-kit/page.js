@@ -51,6 +51,9 @@ export default function MediaKit() {
             Gemini and Claude, finds the sources those answers are built from, and helps the brand get into them, starting with
             Reddit.
           </p>
+          <p style={{ marginTop: 14, color: "var(--text-muted)", fontSize: 14, letterSpacing: ".06em", textTransform: "uppercase", fontWeight: 600 }}>
+            Recent clients: <span style={{ color: "var(--text)", textTransform: "none", letterSpacing: 0, fontWeight: 800 }}>Sovos · TINCheck</span>
+          </p>
           <p style={{ marginTop: 18 }}>
             <a href="/aeorank-media-kit.pdf" className="btn btn-primary" download>
               Download the PDF (4 pages)
@@ -113,8 +116,8 @@ export default function MediaKit() {
           <h2 style={{ fontSize: 26, textAlign: "left", marginBottom: 6 }}>Done for you</h2>
           <p style={{ color: "var(--text-dim)", lineHeight: 1.75, margin: "0 0 14px" }}>
             We choose the threads, write the posts and comments, publish them, and report on Reddit reach and AI answers
-            each month. Run with our sister site SaasOffers.tech (10,000+ monthly visitors); our last client&rsquo;s Reddit
-            content reached 859K+ views. Everything is approved by you before it is published.
+            each month. Run with our sister site SaasOffers.tech (10,000+ monthly visitors). Recent clients include Sovos
+            and TINCheck; our last client&rsquo;s Reddit content reached 859K+ views. Everything is approved by you before it is published.
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12 }}>
             {[
