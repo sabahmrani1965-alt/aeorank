@@ -218,6 +218,18 @@ function renderFollowup(item, summary) {
   return { subject: `Re: ${item.subject || subjectOf(item, name)}`, text, html };
 }
 
+// Contact lookups sometimes return a person's address at another employer
+// (2026-10-21: the "Recruitee" contact was at freshfoodz.de, "Bonsai" at
+// zoom.us). A contact that carries the brand's domain is only emailed at that
+// domain, a subdomain of it, or one of its listed alt_domains (a parent company,
+// e.g. LiveAgent at qualityunit.com). Contacts added before the field existed
+// have no domain and pass.
+function onBrandDomain(it) {
+  if (!it.domain) return true;
+  const d = String(it.to).split("@")[1]?.toLowerCase() || "";
+  return [it.domain, ...(it.alt_domains || [])].some((x) => d === x || d.endsWith(`.${x}`));
+}
+
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // Resend allows 2 requests a second. The first run (2026-10-19) sent all 20 at
@@ -350,6 +362,10 @@ export async function GET(req) {
       const st = engineStats(it);
       if (st.kind === "all") {
         it.status = "skipped_named";
+        continue;
+      }
+      if (!onBrandDomain(it)) {
+        it.status = "skipped_domain";
         continue;
       }
       try {
