@@ -57,7 +57,7 @@ function Figure({ value, label }) {
 
 const ENGINE_NOTES = {
   Claude: "Claude (claude-haiku-4-5) through Anthropic's API, answering from model knowledge without web search.",
-  ChatGPT: "ChatGPT through Cloro's monitoring API, with web search off, so it answers from model knowledge.",
+  ChatGPT: "ChatGPT through OpenAI's API (gpt-5.3-chat-latest, the model behind the ChatGPT app), with web search off, so it answers from model knowledge. Before 21 October 2026, through Cloro's monitoring API.",
   Gemini: "Gemini through Cloro's monitoring API, which returns the consumer Gemini answer.",
 };
 
@@ -231,7 +231,7 @@ export default async function CategoryData({ params }) {
                   </li>
                 ))}
                 {engineNames.map((e) => (ENGINE_NOTES[e] ? <li key={e}>{ENGINE_NOTES[e]}</li> : null))}
-                <li>Claude answers all three questions daily. ChatGPT and Gemini answer the first question for as many categories as their rate limit allows each day.</li>
+                <li>Claude and ChatGPT answer all three questions daily (ChatGPT answered only the first one before 21 October 2026). Gemini answers the first question for as many categories as its rate limit allows each day.</li>
                 <li>A language model lists the brands named in each answer, and only names that literally appear in the answer are kept.</li>
                 <li>These are our own fixed questions. No customer data is used on this page.</li>
               </ul>
