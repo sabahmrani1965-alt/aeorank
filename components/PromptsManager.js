@@ -1,5 +1,6 @@
 "use client";
 
+import { competitorsOnly } from "@/lib/brandFilter";
 import { useState } from "react";
 import Link from "next/link";
 
@@ -30,7 +31,7 @@ function positionColor(position) {
   return { bg: "var(--state-danger-bg)", fg: "var(--state-danger-fg)" };
 }
 
-function PromptRow({ prompt, initialResults, onUpdated, onDeleted }) {
+function PromptRow({ prompt, initialResults, onUpdated, onDeleted, brand }) {
   const [checking, setChecking] = useState(false);
   const [checkError, setCheckError] = useState("");
   const [expanded, setExpanded] = useState(false);
@@ -170,10 +171,10 @@ function PromptRow({ prompt, initialResults, onUpdated, onDeleted }) {
         </div>
       )}
 
-      {prompt.last_brands?.length > 0 && (
+      {competitorsOnly(prompt.last_brands, brand).length > 0 && (
         <div className="pr-brands">
           <span className="pr-brands-label">Named instead:</span>
-          {prompt.last_brands.slice(0, 8).map((b) => (
+          {competitorsOnly(prompt.last_brands, brand).slice(0, 8).map((b) => (
             <span key={b} className="pr-brand">
               {b}
             </span>
@@ -243,7 +244,7 @@ function PromptRow({ prompt, initialResults, onUpdated, onDeleted }) {
   );
 }
 
-export default function PromptsManager({ initialPrompts, initialEngineResults }) {
+export default function PromptsManager({ initialPrompts, initialEngineResults, brand }) {
   const [prompts, setPrompts] = useState(initialPrompts || []);
   const [showAddForm, setShowAddForm] = useState(false);
   const [text, setText] = useState("");
@@ -415,7 +416,7 @@ export default function PromptsManager({ initialPrompts, initialEngineResults })
       ) : (
         <div className="pr-list">
           {prompts.map((p) => (
-            <PromptRow key={p.id} prompt={p} initialResults={initialEngineResults?.[p.id]} onUpdated={handleUpdated} onDeleted={handleDeleted} />
+            <PromptRow key={p.id} prompt={p} initialResults={initialEngineResults?.[p.id]} onUpdated={handleUpdated} onDeleted={handleDeleted} brand={brand} />
           ))}
         </div>
       )}

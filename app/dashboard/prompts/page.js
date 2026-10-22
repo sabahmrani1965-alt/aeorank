@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { hasActiveSubscription } from "@/lib/subscription";
 import { getActiveCompanyProfile } from "@/lib/brands";
+import { competitorsOnly } from "@/lib/brandFilter";
 import PromptsManager from "@/components/PromptsManager";
 import VisibilityTrendChart from "@/components/VisibilityTrendChart";
 import RedeemCodeForm from "@/components/RedeemCodeForm";
@@ -66,9 +67,8 @@ function computeStats(checks, brand) {
   // reliable than exact-matching it inside the extracted brands array.
   const brandCounts = new Map();
   for (const c of checks) {
-    for (const b of c.brands || []) {
+    for (const b of competitorsOnly(c.brands, brand)) {
       const key = b.toLowerCase();
-      if (key === brand.toLowerCase()) continue;
       if (!brandCounts.has(key)) brandCounts.set(key, { name: b, count: 0 });
       brandCounts.get(key).count += 1;
     }
@@ -284,7 +284,7 @@ export default async function PromptsPage() {
         </>
       )}
 
-      <PromptsManager initialPrompts={prompts || []} initialEngineResults={engineResults} />
+      <PromptsManager initialPrompts={prompts || []} initialEngineResults={engineResults} brand={brand} />
     </section>
   );
 }

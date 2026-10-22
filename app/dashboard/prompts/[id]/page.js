@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import PromptTrendChart from "@/components/PromptTrendChart";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { domainOf, loadPromptSources } from "@/lib/promptSources";
+import { competitorsOnly } from "@/lib/brandFilter";
 
 export const dynamic = "force-dynamic";
 
@@ -100,7 +101,7 @@ export default async function PromptDetailPage({ params }) {
 
   const brandStats = new Map();
   for (const c of history) {
-    for (const b of c.brands || []) {
+    for (const b of competitorsOnly(c.brands, profile?.company_name)) {
       const key = b.toLowerCase();
       if (!brandStats.has(key)) brandStats.set(key, { name: b, appearances: 0 });
       brandStats.get(key).appearances += 1;
@@ -306,9 +307,9 @@ export default async function PromptDetailPage({ params }) {
                         <p style={{ fontSize: 14, color: "var(--text-dim)", lineHeight: 1.5, margin: 0, whiteSpace: "pre-wrap" }}>
                           {c.answer && c.answer.length > 220 ? `${c.answer.slice(0, 220)}…` : c.answer}
                         </p>
-                        {c.brands?.length > 0 && (
+                        {competitorsOnly(c.brands, profile?.company_name).length > 0 && (
                           <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8 }}>
-                            {c.brands.map((b) => (
+                            {competitorsOnly(c.brands, profile?.company_name).map((b) => (
                               <span key={b} style={{ fontSize: 12, background: "var(--bg-3)", padding: "3px 9px", borderRadius: 999, color: "var(--text-dim)" }}>
                                 {b}
                               </span>
