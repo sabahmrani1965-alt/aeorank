@@ -56,7 +56,7 @@ export default function MediaKit() {
           </p>
           <p style={{ marginTop: 18 }}>
             <a href="/aeorank-media-kit.pdf" className="btn btn-primary" download>
-              Download the PDF (4 pages)
+              Download the PDF (6 pages)
             </a>
           </p>
         </div>

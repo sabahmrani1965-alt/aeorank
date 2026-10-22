@@ -115,6 +115,17 @@
   .feats h3 { font-size: 12.4px; display: flex; align-items: center; gap: 2.2mm; }
   .feats h3::before { content: ""; width: 7px; height: 7px; border-radius: 2px; background: var(--amber); flex: none; }
   .feats p { font-size: 10.8px; margin-top: 1mm; line-height: 1.5; }
+  .shot { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: #fff; box-shadow: 0 6px 18px rgba(6,17,42,.08); }
+  .shot img { display: block; width: 100%; }
+  .tour { display: grid; gap: 7mm; }
+  .tour .line { display: grid; grid-template-columns: 1fr 2.4fr; gap: 6mm; align-items: center; }
+  .tour .line.rev { grid-template-columns: 2.4fr 1fr; }
+  .cap .tag { display: inline-block; font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: var(--amber-dark); margin-bottom: 1.4mm; }
+  .cap h3 { font-size: 14.5px; font-family: Fraunces, Georgia, serif; font-weight: 700; color: var(--navy); line-height: 1.2; }
+  .cap p { font-size: 11.2px; margin-top: 1.6mm; }
+  .duo { display: grid; grid-template-columns: 1.15fr 1fr; gap: 6mm; align-items: start; }
+  .mini { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3.4mm; }
+  .mini .card { padding: 3.4mm 4mm; } .mini h3 { font-size: 12px; } .mini p { font-size: 10.4px; margin-top: .8mm; line-height: 1.45; }
 </style>
 </head>
 <body>
@@ -154,10 +165,58 @@
     </div>
   </div>
 
-  <div class="foot"><span>AEOrank · aeorank.tech</span><span>1 / 4</span></div>
+  <div class="foot"><span>AEOrank · aeorank.tech</span><span>1 / 6</span></div>
 </section>
 
-<!-- ============ PAGE 2 ============ -->
+<section class="page">
+  <div class="top"><div class="logo"><svg viewBox="0 0 60 60" style="width:28px;height:28px"><rect width="60" height="60" rx="14" fill="#F2A83B"/><rect x="12" y="13" width="5" height="34" rx="2" fill="#06112A"/><rect x="43" y="13" width="5" height="34" rx="2" fill="#06112A"/><line x1="30" y1="44" x2="30" y2="22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round"/><polyline points="23,22 30,14 37,22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><div class="word" style="font-size:21px"><b>AEO</b><span>rank</span></div></div></div>
+  <div class="pad" style="margin-top:6mm">
+    <h2>In the product · AI visibility</h2>
+    <p style="font-size:12.4px;color:var(--ink);max-width:170mm;margin-bottom:5mm">Real screens from an AEOrank account tracking its own brand.</p>
+    <div class="cap" style="margin-bottom:2.6mm"><span class="tag">AI answer tracking</span><h3>Every buyer question, every engine, every day</h3><p>Each tracked question shows which engines name you, your position, and who they name instead.</p></div>
+    <div class="shot"><img src="img/promptcard.png" alt="A tracked prompt: named by ChatGPT and Gemini at #3, not by Claude"></div>
+  </div>
+  <div class="pad" style="margin-top:7mm">
+    <div class="tour">
+      <div class="line">
+        <div class="cap"><span class="tag">Share of voice</span><h3>Where you rank against competitors</h3><p>Your share of all AI answers next to every competitor named, with your own brand highlighted.</p></div>
+        <div class="shot"><img src="img/sov.png" alt="Share of voice ranking"></div>
+      </div>
+      <div class="line rev">
+        <div class="shot"><img src="img/sources.png" alt="Pages ChatGPT cited"></div>
+        <div class="cap"><span class="tag">Cited sources</span><h3>The pages the AI reads</h3><p>The websites ChatGPT links to when it answers, and whether yours is one of them. Get onto these pages and you get into the answer.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>AEOrank · aeorank.tech</span><span>2 / 6</span></div>
+</section>
+
+<section class="page">
+  <div class="top"><div class="logo"><svg viewBox="0 0 60 60" style="width:28px;height:28px"><rect width="60" height="60" rx="14" fill="#F2A83B"/><rect x="12" y="13" width="5" height="34" rx="2" fill="#06112A"/><rect x="43" y="13" width="5" height="34" rx="2" fill="#06112A"/><line x1="30" y1="44" x2="30" y2="22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round"/><polyline points="23,22 30,14 37,22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><div class="word" style="font-size:21px"><b>AEO</b><span>rank</span></div></div></div>
+  <div class="pad" style="margin-top:6mm">
+    <h2>In the product · Reddit</h2>
+    <p style="font-size:12.4px;color:var(--ink);max-width:170mm;margin-bottom:5mm">From a thread worth answering to a reply ready to publish, in one screen.</p>
+    <div class="duo">
+      <div>
+        <div class="cap" style="margin-bottom:2.6mm"><span class="tag">Reddit opportunities</span><h3>Threads where your buyers are asking</h3><p>Scored for fit and intent, filtered by subreddit, refreshed automatically.</p></div>
+        <div class="shot"><img src="img/opportunities.png" alt="Reddit opportunities scored by intent"></div>
+      </div>
+      <div>
+        <div class="cap" style="margin-bottom:2.6mm"><span class="tag">AI-drafted replies</span><h3>A helpful reply, written for you</h3><p>Edit it, rewrite it with AI, then post it, or let our network publish it.</p></div>
+        <div class="shot"><img src="img/draft.png" alt="An AI-drafted Reddit comment ready to post"></div>
+      </div>
+    </div>
+  </div>
+  <div class="pad" style="margin-top:7mm">
+    <div class="mini">
+      <div class="card"><h3>Publishing &amp; tracking</h3><p>Every published reply is tracked: its live link, upvotes and replies.</p></div>
+      <div class="card"><h3>Brand &amp; competitor mentions</h3><p>Every Reddit conversation that names you or a competitor, as it happens.</p></div>
+      <div class="card"><h3>Reports</h3><p>A weekly email and on-demand AI visibility reports, for you or any website.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>AEOrank · aeorank.tech</span><span>3 / 6</span></div>
+</section>
+
 <section class="page">
   <div class="top"><div class="logo"><svg viewBox="0 0 60 60" style="width:28px;height:28px"><rect width="60" height="60" rx="14" fill="#F2A83B"/><rect x="12" y="13" width="5" height="34" rx="2" fill="#06112A"/><rect x="43" y="13" width="5" height="34" rx="2" fill="#06112A"/><line x1="30" y1="44" x2="30" y2="22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round"/><polyline points="23,22 30,14 37,22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><div class="word" style="font-size:21px"><b>AEO</b><span>rank</span></div></div></div>
   <div class="pad" style="margin-top:6mm">
@@ -206,9 +265,9 @@
       <div class="card" style="padding:3.6mm 5mm"><h3 style="margin-bottom:2mm">What we never do</h3><ul class="no"><li>Bought votes or fake engagement</li><li>Fake reviews or impersonation</li><li>Bots or mass-posted spam</li><li>Links dropped where they don&rsquo;t help</li></ul></div>
     </div>
   </div>
-  <div class="foot"><span>AEOrank · aeorank.tech</span><span>2 / 4</span></div>
+  <div class="foot"><span>AEOrank · aeorank.tech</span><span>4 / 6</span></div>
 </section>
-<!-- ============ PAGE 3 ============ -->
+
 <section class="page">
   <div class="top"><div class="logo"><svg viewBox="0 0 60 60" style="width:28px;height:28px"><rect width="60" height="60" rx="14" fill="#F2A83B"/><rect x="12" y="13" width="5" height="34" rx="2" fill="#06112A"/><rect x="43" y="13" width="5" height="34" rx="2" fill="#06112A"/><line x1="30" y1="44" x2="30" y2="22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round"/><polyline points="23,22 30,14 37,22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><div class="word" style="font-size:21px"><b>AEO</b><span>rank</span></div></div></div>
   <div class="pad" style="margin-top:7mm">
@@ -275,9 +334,9 @@
   </div>
 
   
-  <div class="foot"><span>AEOrank · aeorank.tech · Prices in USD, October 2026</span><span>3 / 4</span></div>
+  <div class="foot"><span>AEOrank · aeorank.tech · Prices in USD, October 2026</span><span>5 / 6</span></div>
 </section>
-<!-- ============ PAGE 4 ============ -->
+
 <section class="page">
   <div class="top"><div class="logo"><svg viewBox="0 0 60 60" style="width:28px;height:28px"><rect width="60" height="60" rx="14" fill="#F2A83B"/><rect x="12" y="13" width="5" height="34" rx="2" fill="#06112A"/><rect x="43" y="13" width="5" height="34" rx="2" fill="#06112A"/><line x1="30" y1="44" x2="30" y2="22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round"/><polyline points="23,22 30,14 37,22" stroke="#06112A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><div class="word" style="font-size:21px"><b>AEO</b><span>rank</span></div></div></div>
   <div class="pad" style="margin-top:8mm">
@@ -329,7 +388,7 @@
 
   
   
-  <div class="foot"><span>AEOrank · aeorank.tech · Prices in USD, October 2026</span><span>4 / 4</span></div>
+  <div class="foot"><span>AEOrank · aeorank.tech · Prices in USD, October 2026</span><span>6 / 6</span></div>
 </section>
 </body>
 </html>
