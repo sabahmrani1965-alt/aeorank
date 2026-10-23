@@ -313,7 +313,7 @@ s.addText("( proof )", { placeholder: "tag" });
 title(s, "What we've measured, delivered, and ", "will prove");
 const proof = [
   ["Measured", "13", "SaaS categories tracked daily on ChatGPT, Gemini and Claude", ["Leaders in up to 100% of answers", "Established vendors at 0%", "Reddit names the same leaders"], "light"],
-  ["Delivered", "859K+", "Reddit views on content for a recent client (reported)", ["Recent clients: Sovos and TINCheck", "Regulated category: tax compliance"], "navy"],
+  ["Client", "Sovos", "Global tax-compliance software", ["Reddit programme in a regulated category", "TINCheck, also a recent client"], "navy"],
   ["Your pilot", "90", "days to test it on your own buyer questions", ["Higher share of AI answers", "Your pages among cited sources", "Hypotheses to test, not guaranteed results"], "light"],
 ];
 proof.forEach(([h, big, sub, items, kind], i) => {
@@ -325,9 +325,9 @@ proof.forEach(([h, big, sub, items, kind], i) => {
   T(s, sub, { x: x + 0.35, y: 3.38, w: 3.15, h: 0.6, fontSize: 12, color: dark ? ON_NAVY : C.accent3 });
   T(s, items.map((t, j, a) => ({ text: t, options: { bullet: { indent: 12 }, breakLine: j < a.length - 1, italic: i === 2 && j === a.length - 1 } })), { x: x + 0.35, y: 4.08, w: 3.2, h: 1.25, fontSize: 11.5, color: dark ? C.background1 : C.text1, paraSpaceAfter: 3 });
 });
-card(s, "case study placeholder", M, 5.7, CW, 1.0, { fill: C.background1, line: HEX.accent1, lineW: 1.5, dash: "dash", shadow: false });
-T(s, [{ text: "[PLACEHOLDER]  Client case study: ", options: { bold: true, color: C.accent2 } }, { text: "share of AI answers, position and cited sources before and after 90 days. Add once a client approves publishing.", options: { color: C.accent3 } }], { x: M + 0.35, y: 5.7, w: CW - 0.7, h: 1.0, fontSize: 13, valign: "middle" });
-s.addNotes("Keep measured facts and hypotheses separate, as the slide does. 859K+ is the view count reported for a recent client's Reddit content. We don't yet publish before/after AI numbers for a client: fill the placeholder only with a client's written approval, or delete it. Never promise guaranteed citations or rankings.");
+card(s, "pilot results note", M, 5.7, CW, 1.0, { fill: C.background1, shadow: false });
+T(s, [{ text: "Your numbers come from your pilot: ", options: { bold: true, color: C.text1 } }, { text: "a week-1 baseline of share of AI answers, position and cited sources, then the same measures every month.", options: { color: C.accent3 } }], { x: M + 0.35, y: 5.7, w: CW - 0.7, h: 1.0, fontSize: 13, valign: "middle" });
+s.addNotes("Keep measured facts and hypotheses separate, as the slide does. Sovos and TINCheck are recent clients; we don't publish client result numbers, so results are proven in the prospect's own pilot against a week-1 baseline. Never promise guaranteed citations or rankings.");
 
 // ===================== 9. How to start =====================
 pres.addSection({ title: "Engagement" });
