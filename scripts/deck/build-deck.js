@@ -1,8 +1,12 @@
 // AEOrank enterprise pitch deck (10 slides, 16:9, editable PowerPoint).
-// Run: NODE_PATH=<dir with pptxgenjs> node scripts/deck/build-deck.js <out.pptx>
-// Every figure comes from AEOrank's own data or the owner's statements (see
-// speaker notes); the case study slot is a marked placeholder until a client
-// approves publishing numbers.
+// Run: NODE_PATH=<dir with pptxgenjs> APPLY_THEME=<pptx skill>/scripts/apply_theme.js \
+//      node scripts/deck/build-deck.js <out.pptx>
+// Styled after aeorank.tech's light marketing theme: Inter headings with amber
+// keywords, handwritten Caveat section tags, warm off-white bands and the
+// navy product cards. Inter and Caveat must be installed where the deck is
+// opened (or send the PDF export). Every figure comes from AEOrank's own data
+// or the owner's statements (see speaker notes); the case study slot is a
+// marked placeholder until a client approves publishing numbers.
 const path = require("path");
 const pptxgen = require("pptxgenjs");
 
@@ -11,15 +15,17 @@ const IMG = (n) => path.join(__dirname, "img", n);
 
 const THEME = {
   name: "AEOrank",
-  headFontFace: "Cambria",
-  bodyFontFace: "Calibri",
+  headFontFace: "Inter ExtraBold",
+  bodyFontFace: "Inter",
   colors: {
-    dk1: "14161B", lt1: "FFFFFF", dk2: "06112A", lt2: "F3F5F9",
-    accent1: "F2A83B", accent2: "0F1F45", accent3: "C4432A", accent4: "2F8F5B", accent5: "6B7280", accent6: "E3E7EE",
-    hlink: "0F1F45", folHlink: "6B7280",
+    dk1: "14161B", lt1: "FFFFFF", dk2: "0E1C3D", lt2: "FAF9F6",
+    accent1: "F2A83B", accent2: "E0861A", accent3: "4D5361", accent4: "767C8C", accent5: "E6E4DD", accent6: "1B2B55",
+    hlink: "E0861A", folHlink: "767C8C",
   },
 };
 const HEX = THEME.colors;
+const ON_NAVY = "C9D2E3", NAVY_MUTED = "8E9AB3", MINT = "6EE7B7";
+const HEAD = "Inter ExtraBold", BODY = "Inter", HAND = "Caveat";
 
 const pres = new pptxgen();
 pres.layout = "LAYOUT_WIDE"; // 13.333 x 7.5
@@ -29,293 +35,353 @@ pres.company = "AEOrank";
 pres.title = "AEOrank enterprise briefing";
 const C = pres.SchemeColor;
 
-const W = 13.333, M = 0.65;
+const W = 13.333, M = 0.75, CW = W - 2 * M;
+const LOGO_R = 240 / 1139;
 
 // ---------- layouts ----------
+const tagPh = (y) => ({ placeholder: { options: { name: "tag", type: "body", x: M, y, w: 9, h: 0.45, fontFace: HAND, fontSize: 22, color: C.accent3, margin: 0, valign: "middle" }, text: "" } });
+const titlePh = (y, size, color, w = CW, h = 1.1) => ({ placeholder: { options: { name: "title", type: "title", x: M, y, w, h, fontFace: HEAD, fontSize: size, color, valign: "top", align: "left", margin: 0, lineSpacingMultiple: 0.95 }, text: "" } });
+const footer = [
+  { image: { x: M, y: 6.98, w: 1.15, h: 1.15 * LOGO_R, path: IMG("logo-dark-text.png") } },
+  { text: { text: "Enterprise briefing", options: { x: M + 1.35, y: 6.95, w: 4, h: 0.3, fontFace: BODY, fontSize: 10, color: C.accent4, margin: 0, valign: "middle" } } },
+];
+const slideNum = { x: W - M - 0.6, y: 6.95, w: 0.6, h: 0.3, fontFace: BODY, fontSize: 10, color: C.accent4, align: "right" };
+
 pres.defineSlideMaster({
   title: "AEO_COVER",
-  background: { color: HEX.dk2 },
-  objects: [
-    { placeholder: { options: { name: "kicker", type: "body", x: M, y: 0.75, w: 7.2, h: 0.35, fontFace: "Calibri", fontSize: 12, bold: true, color: C.accent1, charSpacing: 3, margin: 0 }, text: "" } },
-    { placeholder: { options: { name: "title", type: "title", x: M, y: 1.45, w: 7.3, h: 2.55, fontFace: "Cambria", fontSize: 40, bold: true, color: C.background1, valign: "top", align: "left", margin: 0 }, text: "" } },
-    { placeholder: { options: { name: "body", type: "body", x: M, y: 4.25, w: 6.9, h: 1.3, fontFace: "Calibri", fontSize: 16, color: "C9D2E3", valign: "top", margin: 0 }, text: "" } },
-  ],
-});
-pres.defineSlideMaster({
-  title: "AEO_CONTENT",
   background: { color: HEX.lt1 },
   objects: [
-    { placeholder: { options: { name: "kicker", type: "body", x: M, y: 0.5, w: 9, h: 0.3, fontFace: "Calibri", fontSize: 12, bold: true, color: C.accent1, charSpacing: 3, margin: 0 }, text: "" } },
-    { placeholder: { options: { name: "title", type: "title", x: M, y: 0.85, w: W - 2 * M, h: 1.05, fontFace: "Cambria", fontSize: 28, bold: true, color: C.text2, valign: "top", align: "left", margin: 0 }, text: "" } },
-    { text: { text: "AEOrank · Enterprise briefing · Confidential", options: { x: M, y: 7.0, w: 6, h: 0.28, fontFace: "Calibri", fontSize: 10, color: C.accent5, margin: 0 } } },
+    { placeholder: { options: { name: "tag", type: "body", x: M, y: 2.05, w: 6.6, h: 0.45, fontFace: HAND, fontSize: 22, color: C.accent3, margin: 0, valign: "middle" }, text: "" } },
+    titlePh(2.55, 52, C.text1, 6.6, 1.9),
+    { placeholder: { options: { name: "body", type: "body", x: M, y: 4.45, w: 6.5, h: 1.2, fontFace: BODY, fontSize: 15.5, color: C.accent3, valign: "top", margin: 0, lineSpacingMultiple: 1.15 }, text: "" } },
   ],
-  slideNumber: { x: W - M - 0.6, y: 7.0, w: 0.6, h: 0.28, fontFace: "Calibri", fontSize: 10, color: C.accent5, align: "right" },
 });
+pres.defineSlideMaster({ title: "AEO_LIGHT", background: { color: HEX.lt1 }, objects: [tagPh(0.5), titlePh(0.95, 32, C.text1), ...footer], slideNumber: slideNum });
+pres.defineSlideMaster({ title: "AEO_WARM", background: { color: HEX.lt2 }, objects: [tagPh(0.5), titlePh(0.95, 32, C.text1), ...footer], slideNumber: slideNum });
 pres.defineSlideMaster({
-  title: "AEO_CLOSE",
+  title: "AEO_DARK",
   background: { color: HEX.dk2 },
   objects: [
-    { placeholder: { options: { name: "kicker", type: "body", x: M, y: 0.75, w: 9, h: 0.35, fontFace: "Calibri", fontSize: 12, bold: true, color: C.accent1, charSpacing: 3, margin: 0 }, text: "" } },
-    { placeholder: { options: { name: "title", type: "title", x: M, y: 1.3, w: 11.5, h: 1.3, fontFace: "Cambria", fontSize: 40, bold: true, color: C.background1, valign: "top", align: "left", margin: 0 }, text: "" } },
+    { placeholder: { options: { name: "tag", type: "body", x: M, y: 1.25, w: 9, h: 0.45, fontFace: HAND, fontSize: 24, color: C.accent1, margin: 0, valign: "middle" }, text: "" } },
+    titlePh(1.75, 44, C.background1, CW, 1.0),
+    { image: { x: M, y: 0.5, w: 1.6, h: 1.6 * LOGO_R, path: IMG("logo-white-text.png") } },
   ],
 });
 
 // ---------- helpers ----------
-const T = (s, text, o) => s.addText(text, { isTextBox: true, margin: 0, fontFace: "Calibri", color: C.text1, valign: "top", ...o });
-const card = (s, name, x, y, w, h, fill = C.background2, line = null) =>
-  s.addShape(pres.shapes.ROUNDED_RECTANGLE, { objectName: name, x, y, w, h, rectRadius: 0.12, fill: { color: fill }, line: line ? { color: line, width: 1 } : { type: "none" } });
-const chip = (s, name, x, y, fill = C.accent1) => s.addShape(pres.shapes.ROUNDED_RECTANGLE, { objectName: name, x, y, w: 0.14, h: 0.14, rectRadius: 0.03, fill: { color: fill }, line: { type: "none" } });
-const num = (s, name, n, x, y, fill = C.text2, color = C.accent1) => {
-  s.addShape(pres.shapes.ROUNDED_RECTANGLE, { objectName: name, x, y, w: 0.42, h: 0.42, rectRadius: 0.08, fill: { color: fill }, line: { type: "none" } });
-  T(s, String(n), { x, y, w: 0.42, h: 0.42, align: "center", valign: "middle", fontSize: 15, bold: true, color });
+const T = (s, text, o) => s.addText(text, { isTextBox: true, margin: 0, fontFace: BODY, color: C.text1, valign: "top", ...o });
+const softShadow = () => ({ type: "outer", color: "14161B", opacity: 0.07, blur: 12, offset: 3, angle: 90 });
+// White card with the site's soft border; navy card = the product panels.
+const card = (s, name, x, y, w, h, o = {}) =>
+  s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
+    objectName: name, x, y, w, h, rectRadius: o.r ?? 0.16,
+    fill: { color: o.fill ?? C.background1 },
+    line: o.line === null ? { type: "none" } : { color: o.line ?? HEX.accent5, width: o.lineW ?? 1, dashType: o.dash },
+    shadow: o.shadow === false ? undefined : softShadow(),
+  });
+const navy = (s, name, x, y, w, h) => card(s, name, x, y, w, h, { fill: C.text2, line: null });
+const chip = (s, name, x, y, fill = C.accent1, size = 0.13) =>
+  s.addShape(pres.shapes.ROUNDED_RECTANGLE, { objectName: name, x, y, w: size, h: size, rectRadius: 0.03, fill: { color: fill }, line: { type: "none" } });
+// Amber rounded square with a number, like the site's feature icons.
+const badge = (s, name, n, x, y, o = {}) => {
+  s.addShape(pres.shapes.ROUNDED_RECTANGLE, { objectName: name, x, y, w: 0.46, h: 0.46, rectRadius: 0.1, fill: { color: o.fill ?? "FDF0DC" }, line: { type: "none" } });
+  T(s, String(n), { x, y, w: 0.46, h: 0.46, align: "center", valign: "middle", fontFace: HEAD, fontSize: 15, color: o.color ?? C.accent2 });
 };
+const pill = (s, name, text, x, y, w, o = {}) => {
+  s.addShape(pres.shapes.ROUNDED_RECTANGLE, { objectName: name, x, y, w, h: o.h ?? 0.34, rectRadius: (o.h ?? 0.34) / 2, fill: { color: o.fill ?? "FFF6E8" }, line: o.line === null ? { type: "none" } : { color: o.line ?? "F7D9A8", width: 1 } });
+  T(s, text, { x, y, w, h: o.h ?? 0.34, align: "center", valign: "middle", fontSize: o.size ?? 11, bold: o.bold ?? false, color: o.color ?? C.accent2 });
+};
+const label = (s, text, x, y, w, color = NAVY_MUTED) => T(s, text.toUpperCase(), { x, y, w, h: 0.28, fontSize: 10, bold: true, color, charSpacing: 1.5, valign: "middle" });
 const shot = (s, name, file, x, y, w, ratio) => {
   const h = w * ratio;
-  s.addShape(pres.shapes.ROUNDED_RECTANGLE, { objectName: name + " frame", x: x - 0.06, y: y - 0.06, w: w + 0.12, h: h + 0.12, rectRadius: 0.08, fill: { color: C.background1 }, line: { color: HEX.accent6, width: 1 }, shadow: { type: "outer", color: "0F1F45", opacity: 0.12, blur: 8, offset: 2, angle: 90 } });
+  card(s, name + " frame", x - 0.08, y - 0.08, w + 0.16, h + 0.16, { r: 0.12 });
   s.addImage({ path: file, x, y, w, h, objectName: name });
   return h;
 };
-const chartBase = () => ({
-  barDir: "bar", catAxisOrientation: "maxMin", valAxisHidden: true, valAxisMaxVal: 110, valAxisMinVal: 0,
-  valGridLine: { style: "none" }, catGridLine: { style: "none" },
-  catAxisLabelColor: HEX.dk1, catAxisLabelFontSize: 12, catAxisLabelFontFace: "+mn-lt", catAxisLineShow: false,
-  showValue: true, dataLabelPosition: "outEnd", dataLabelFontSize: 12, dataLabelFontFace: "+mn-lt", dataLabelColor: HEX.dk1,
-  showLegend: false, barGapWidthPct: 55, showTitle: true, titleFontSize: 12, titleFontFace: "+mn-lt", titleColor: "6B7280",
-});
+const button = (s, name, text, x, y, w) => {
+  s.addShape(pres.shapes.ROUNDED_RECTANGLE, { objectName: name, x, y, w, h: 0.6, rectRadius: 0.12, fill: { color: C.accent1 }, line: { type: "none" }, shadow: { type: "outer", color: "E0861A", opacity: 0.3, blur: 14, offset: 4, angle: 90 } });
+  T(s, text, { x, y, w, h: 0.6, align: "center", valign: "middle", fontSize: 15, bold: true, color: C.text1 });
+};
+const title = (s, plain, hi, after = "") =>
+  s.addText([{ text: plain }, { text: hi, options: { color: C.accent2 } }, ...(after ? [{ text: after }] : [])], { placeholder: "title" });
+const bars = (s, name, labels, values, o) =>
+  s.addChart(pres.charts.BAR, [{ name, labels, values }], {
+    objectName: name, x: o.x, y: o.y, w: o.w, h: o.h,
+    barDir: "bar", catAxisOrientation: "maxMin", valAxisHidden: true, valAxisMinVal: 0, valAxisMaxVal: o.max,
+    valGridLine: { style: "none" }, catGridLine: { style: "none" }, catAxisLineShow: false,
+    catAxisLabelColor: o.labelColor, catAxisLabelFontSize: o.font ?? 12, catAxisLabelFontFace: "+mn-lt",
+    showValue: true, dataLabelPosition: "outEnd", dataLabelFontSize: o.font ?? 12, dataLabelFontFace: "+mn-lt", dataLabelColor: o.valueColor, dataLabelFontBold: true,
+    dataLabelFormatCode: o.format, chartColors: [o.color], barGapWidthPct: 70, showLegend: false,
+    ...(o.bg ? { plotArea: { fill: { color: o.bg } }, chartArea: { fill: { color: o.bg } } } : {}),
+  });
 
 // ===================== 1. Cover =====================
 pres.addSection({ title: "Opening" });
 let s = pres.addSlide({ masterName: "AEO_COVER", sectionTitle: "Opening" });
-s.addText("AEORANK · ENTERPRISE BRIEFING", { placeholder: "kicker" });
-s.addText("Your buyers ask AI which vendor to choose. Make sure you're in the answer", { placeholder: "title" });
-s.addText("Reddit-powered Answer Engine Optimization for enterprise software. We measure how ChatGPT, Gemini and Claude present your brand, and earn you a place in the sources they draw on.", { placeholder: "body" });
-T(s, [{ text: "RECENT CLIENTS   ", options: { color: "8E9AB3", fontSize: 11, bold: true, charSpacing: 2 } }, { text: "Sovos  ·  TINCheck", options: { color: C.background1, fontSize: 15, bold: true } }], { x: M, y: 6.25, w: 6, h: 0.4, valign: "middle" });
-// thesis visual: an AI answer that may or may not include you
-card(s, "AI answer card", 8.35, 1.25, 4.35, 5.25, C.accent2);
-T(s, "A BUYER ASKS CHATGPT", { x: 8.7, y: 1.55, w: 3.7, h: 0.3, fontSize: 10.5, bold: true, color: "8E9AB3", charSpacing: 2 });
-card(s, "question bubble", 8.7, 1.95, 3.65, 0.85, C.background1);
-T(s, "“Which CRM should a 50-person sales team choose?”", { x: 8.88, y: 2.03, w: 3.3, h: 0.7, fontSize: 13.5, color: C.text2, italic: true, valign: "middle" });
-T(s, "THE ANSWER NAMES", { x: 8.7, y: 3.1, w: 3.7, h: 0.3, fontSize: 10.5, bold: true, color: "8E9AB3", charSpacing: 2 });
-["Vendor A", "Vendor B", "Vendor C"].forEach((v, i) => {
-  const y = 3.5 + i * 0.58;
-  card(s, "answer row " + (i + 1), 8.7, y, 3.65, 0.46, "1B2D57");
-  T(s, [{ text: `${i + 1}   `, options: { color: C.accent1, bold: true } }, { text: v, options: { color: C.background1 } }], { x: 8.88, y, w: 3.3, h: 0.46, fontSize: 13, valign: "middle" });
+// the site's soft amber glow behind the hero card
+s.addShape(pres.shapes.OVAL, { objectName: "glow", x: 6.4, y: 0.6, w: 6.6, h: 6.4, fill: { color: C.accent1, transparency: 92 }, line: { type: "none" } });
+s.addImage({ path: IMG("logo-dark-text.png"), x: M, y: 0.55, w: 1.9, h: 1.9 * LOGO_R, objectName: "logo" });
+pill(s, "briefing pill", "Enterprise briefing  ·  ChatGPT · Gemini · Claude", M, 1.45, 4.0);
+s.addText("( AEOrank: Answer Engine Optimization )", { placeholder: "tag" });
+title(s, "Be the brand AI ", "recommends");
+s.addText("Your buyers ask ChatGPT, Gemini and Claude which software to choose. We get your brand into those answers, through the Reddit conversations they learn from.", { placeholder: "body" });
+button(s, "cta", "Book a 30-minute call  →", M, 5.9, 3.0);
+T(s, [{ text: "Recent clients   ", options: { color: C.accent4, fontSize: 12 } }, { text: "Sovos  ·  TINCheck", options: { color: C.text1, fontSize: 14, bold: true } }], { x: 3.95, y: 5.9, w: 3.6, h: 0.6, valign: "middle" });
+// hero card: an AI answer your brand may be missing from
+navy(s, "AI answer card", 7.75, 1.35, 4.83, 4.95);
+label(s, "A buyer asks ChatGPT", 8.15, 1.7, 4);
+card(s, "question", 8.15, 2.08, 4.03, 0.78, { fill: C.accent6, line: null, shadow: false, r: 0.12 });
+T(s, "“Which CRM should a 50-person sales team choose?”", { x: 8.35, y: 2.08, w: 3.7, h: 0.78, fontSize: 14, italic: true, color: C.background1, valign: "middle" });
+label(s, "The answer names", 8.15, 3.1, 4);
+[["Vendor A", 1], ["Vendor B", 0.78], ["Vendor C", 0.6]].forEach(([v, f], i) => {
+  const y = 3.5 + i * 0.5;
+  T(s, [{ text: `${i + 1}   `, options: { color: C.accent1, bold: true } }, { text: v, options: { color: C.background1 } }], { x: 8.15, y, w: 1.6, h: 0.36, fontSize: 13, valign: "middle" });
+  s.addShape(pres.shapes.ROUNDED_RECTANGLE, { objectName: "track " + i, x: 9.8, y: y + 0.13, w: 2.38, h: 0.1, rectRadius: 0.05, fill: { color: C.accent6 }, line: { type: "none" } });
+  s.addShape(pres.shapes.ROUNDED_RECTANGLE, { objectName: "bar " + i, x: 9.8, y: y + 0.13, w: 2.38 * f, h: 0.1, rectRadius: 0.05, fill: { color: C.accent1 }, line: { type: "none" } });
 });
-s.addShape(pres.shapes.ROUNDED_RECTANGLE, { objectName: "your brand row", x: 8.7, y: 5.27, w: 3.65, h: 0.46, rectRadius: 0.08, fill: { color: C.accent2 }, line: { color: C.accent1, width: 1.25, dashType: "dash" } });
-T(s, [{ text: "?   ", options: { color: C.accent1, bold: true } }, { text: "Your brand", options: { color: C.accent1, bold: true } }], { x: 8.88, y: 5.27, w: 3.3, h: 0.46, fontSize: 13, valign: "middle" });
-T(s, "Illustrative", { x: 8.7, y: 5.95, w: 3.65, h: 0.3, fontSize: 10, color: "8E9AB3", italic: true });
-s.addNotes("Open with the buyer's reality: shortlists now start in an AI assistant. The card on the right is illustrative; the next slides use our measured data. Positioning: AEOrank is a growth partner for how AI presents your brand, with Reddit as the main lever. Recent clients: Sovos and TINCheck.");
+s.addShape(pres.shapes.ROUNDED_RECTANGLE, { objectName: "your brand row", x: 8.15, y: 5.1, w: 4.03, h: 0.5, rectRadius: 0.1, fill: { color: C.text2 }, line: { color: C.accent1, width: 1.25, dashType: "dash" } });
+T(s, [{ text: "?   ", options: { bold: true } }, { text: "Your brand", options: { bold: true } }], { x: 8.35, y: 5.1, w: 3.7, h: 0.5, fontSize: 13, color: C.accent1, valign: "middle" });
+T(s, "Illustrative answer", { x: 8.15, y: 5.78, w: 4, h: 0.3, fontSize: 10, color: NAVY_MUTED, italic: true });
+s.addNotes("Open with the buyer's reality: software shortlists now start in an AI assistant, and each answer names only a handful of vendors. The card is illustrative; the next slides use measured data. Positioning: AEOrank gets your brand into those answers, with Reddit as the main lever. Recent clients: Sovos and TINCheck.");
 
 // ===================== 2. The shift =====================
 pres.addSection({ title: "Problem" });
-s = pres.addSlide({ masterName: "AEO_CONTENT", sectionTitle: "Problem" });
-s.addText("THE SHIFT", { placeholder: "kicker" });
-s.addText("Software shortlists are now being written inside AI answers", { placeholder: "title" });
-s.addChart(pres.charts.BAR, [{ name: "Share of AI answers", labels: ["Pipedrive", "HubSpot", "Zoho CRM", "Salesforce", "Monday.com", "Attio", "Copper", "Capsule CRM"], values: [100, 97, 56, 38, 27, 0, 0, 0] }],
-  { ...chartBase(), x: M, y: 2.05, w: 7.4, h: 4.25, title: "Share of AI answers naming each CRM (%)", chartColors: [HEX.accent2], dataLabelFormatCode: '0"%"', objectName: "CRM share chart" });
-T(s, "AEOrank daily data, CRM software, 15–21 Oct 2026: 34 answers from ChatGPT, Claude and Gemini to three fixed buyer questions.", { x: M, y: 6.38, w: 7.4, h: 0.45, fontSize: 10.5, color: C.accent5 });
-card(s, "stat 100", 8.55, 2.15, 4.13, 1.85, C.background2);
-T(s, "100%", { x: 8.85, y: 2.3, w: 3.6, h: 0.85, fontFace: "Cambria", fontSize: 44, bold: true, color: C.text2 });
-T(s, "Pipedrive was named in every one of the 34 answers, on all three engines.", { x: 8.85, y: 3.15, w: 3.6, h: 0.75, fontSize: 14, color: C.text1 });
-card(s, "stat 0", 8.55, 4.2, 4.13, 1.85, C.background2);
-T(s, "0%", { x: 8.85, y: 4.35, w: 3.6, h: 0.85, fontFace: "Cambria", fontSize: 44, bold: true, color: C.accent3 });
-T(s, "Attio, Copper and Capsule CRM, established vendors, were named in none.", { x: 8.85, y: 5.2, w: 3.6, h: 0.75, fontSize: 14, color: C.text1 });
-T(s, "Absence is binary: if the answer doesn't name you, you are not on the shortlist.", { x: 8.55, y: 6.2, w: 4.13, h: 0.6, fontSize: 13, bold: true, color: C.text2 });
-s.addNotes("Measured, not estimated: our public daily data for CRM software (aeorank.tech/ai-recommendations). Same pattern across the 13 SaaS categories we track: a few vendors take most mentions and established products can be absent. The point for the prospect: their category almost certainly has the same split, and today nobody on their team is measuring it.");
+s = pres.addSlide({ masterName: "AEO_WARM", sectionTitle: "Problem" });
+s.addText("( the shift )", { placeholder: "tag" });
+title(s, "The software shortlist is now written by ", "AI");
+navy(s, "share panel", M, 2.0, 7.3, 4.6);
+label(s, "Share of AI answers naming each CRM", M + 0.4, 2.25, 6);
+bars(s, "CRM share chart", ["Pipedrive", "HubSpot", "Zoho CRM", "Salesforce", "Monday.com", "Attio", "Copper", "Capsule CRM"], [100, 97, 56, 38, 27, 0, 0, 0],
+  { x: M + 0.25, y: 2.55, w: 6.8, h: 3.55, max: 118, color: HEX.accent1, labelColor: ON_NAVY, valueColor: "FFFFFF", format: '0"%"', bg: HEX.dk2 });
+T(s, "AEOrank daily data · 34 answers from ChatGPT, Gemini and Claude · 15–21 Oct 2026", { x: M + 0.4, y: 6.15, w: 6.6, h: 0.3, fontSize: 10, color: NAVY_MUTED });
+card(s, "stat 100", 8.4, 2.0, 4.18, 1.95);
+T(s, "100%", { x: 8.75, y: 2.2, w: 3.6, h: 0.8, fontFace: HEAD, fontSize: 46, color: C.accent2 });
+T(s, "Pipedrive was named in every answer, on all three engines.", { x: 8.75, y: 3.05, w: 3.55, h: 0.7, fontSize: 13.5, color: C.accent3 });
+card(s, "stat 0", 8.4, 4.15, 4.18, 1.95);
+T(s, "0%", { x: 8.75, y: 4.35, w: 3.6, h: 0.8, fontFace: HEAD, fontSize: 46, color: C.text1 });
+T(s, "Attio, Copper and Capsule CRM, all established vendors, were named in none.", { x: 8.75, y: 5.2, w: 3.55, h: 0.7, fontSize: 13.5, color: C.accent3 });
+T(s, "Not in the answer = not on the shortlist.", { x: 8.4, y: 6.25, w: 4.18, h: 0.35, fontSize: 14, bold: true, color: C.text1 });
+s.addNotes("Measured, not estimated: our public daily tracking of CRM software. The same split shows up across the 13 SaaS categories we track: a few vendors take most mentions, and established products can be absent entirely. Their category almost certainly has the same pattern, and today nobody on their team is measuring it.");
 
 // ===================== 3. Blind spot =====================
-s = pres.addSlide({ masterName: "AEO_CONTENT", sectionTitle: "Problem" });
-s.addText("THE BLIND SPOT", { placeholder: "kicker" });
-s.addText("Your dashboards show rankings and traffic, not whether AI recommends you", { placeholder: "title" });
-card(s, "seo column", M, 2.15, 5.45, 4.2, C.background2);
-T(s, "What your search reporting tracks", { x: M + 0.35, y: 2.4, w: 4.8, h: 0.4, fontSize: 17, bold: true, color: C.text2 });
+s = pres.addSlide({ masterName: "AEO_LIGHT", sectionTitle: "Problem" });
+s.addText("( the blind spot )", { placeholder: "tag" });
+title(s, "Your reports track search, not the ", "AI answer");
+card(s, "seo column", M, 2.05, 5.3, 4.1);
+label(s, "What your reports show", M + 0.4, 2.35, 4.5, C.accent4);
 ["Keyword rankings", "Organic traffic", "Backlinks and authority", "Share of search"].forEach((t, i) => {
-  chip(s, "seo chip " + i, M + 0.37, 3.12 + i * 0.68 + 0.02, C.accent5);
-  T(s, t, { x: M + 0.7, y: 3.05 + i * 0.68, w: 4.5, h: 0.4, fontSize: 15, color: C.text1 });
+  chip(s, "seo chip " + i, M + 0.42, 2.98 + i * 0.7, "C9CCD3");
+  T(s, t, { x: M + 0.75, y: 2.87 + i * 0.7, w: 4.3, h: 0.36, fontSize: 16, color: C.accent3, valign: "middle" });
 });
-s.addShape(pres.shapes.RIGHT_ARROW, { objectName: "arrow", x: 6.3, y: 3.95, w: 0.7, h: 0.55, fill: { color: C.accent1 }, line: { type: "none" } });
-card(s, "ai column", 7.2, 2.15, 5.48, 4.2, C.text2);
-T(s, "What decides an AI shortlist", { x: 7.55, y: 2.4, w: 4.8, h: 0.4, fontSize: 17, bold: true, color: C.background1 });
+s.addShape(pres.shapes.RIGHT_ARROW, { objectName: "arrow", x: 6.22, y: 3.85, w: 0.62, h: 0.5, fill: { color: C.accent1 }, line: { type: "none" } });
+navy(s, "ai column", 7.08, 2.05, 5.5, 4.1);
+label(s, "What decides the shortlist", 7.48, 2.35, 4.5);
 ["Is your brand named at all?", "In what position?", "Who is named instead?", "Which pages does the answer cite?", "How does it differ by engine?"].forEach((t, i) => {
-  chip(s, "ai chip " + i, 7.57, 3.12 + i * 0.6 + 0.02);
-  T(s, t, { x: 7.9, y: 3.05 + i * 0.6, w: 4.6, h: 0.4, fontSize: 15, color: C.background1 });
+  chip(s, "ai chip " + i, 7.5, 2.98 + i * 0.6);
+  T(s, t, { x: 7.83, y: 2.87 + i * 0.6, w: 4.5, h: 0.36, fontSize: 16, color: C.background1, valign: "middle" });
 });
-T(s, "What isn't measured can't be managed. AEOrank adds the AI layer to your reporting, question by question and engine by engine.", { x: M, y: 6.48, w: 12, h: 0.42, fontSize: 14, color: C.text2, bold: true });
+T(s, [{ text: "AEOrank adds the missing layer: ", options: { bold: true, color: C.text1 } }, { text: "the AI answer, question by question and engine by engine.", options: { color: C.accent3 } }], { x: M, y: 6.32, w: CW, h: 0.4, fontSize: 15 });
 s.addNotes("Most enterprise teams have mature SEO and brand reporting, but none of it answers the five questions on the right. That gap is why AI visibility goes unmanaged even in well-run marketing teams.");
 
 // ===================== 4. Why Reddit =====================
 pres.addSection({ title: "Approach" });
-s = pres.addSlide({ masterName: "AEO_CONTENT", sectionTitle: "Approach" });
-s.addText("WHY REDDIT", { placeholder: "kicker" });
-s.addText("AI answers echo buyer conversations, and buyers compare vendors on Reddit", { placeholder: "title" });
-s.addChart(pres.charts.BAR, [{ name: "Mentions", labels: ["HubSpot", "Zoho", "Pipedrive", "Attio", "Copper", "Capsule CRM"], values: [19, 9, 8, 0, 0, 0] }],
-  { ...chartBase(), valAxisMaxVal: 22, x: M, y: 2.15, w: 5.6, h: 3.5, title: "Times each CRM is named in r/CRM's busiest thread", chartColors: [HEX.accent2], objectName: "thread chart" });
-T(s, "r/CRM, “Best and inexpensive CRM for small business” (345 comments): post and top comments. The leaders here are the leaders in the AI answers; the absent vendors are absent there too.", { x: M, y: 5.75, w: 5.6, h: 0.95, fontSize: 11, color: C.accent5 });
-const h4 = shot(s, "cited sources screenshot", IMG("sources-reddit.png"), 6.75, 2.2, 5.9, 545 / 1500);
-T(s, "ChatGPT (web search) answering “Which CRM do small business owners actually recommend?”: G2, Capterra and a Reddit thread.", { x: 6.75, y: 2.2 + h4 + 0.15, w: 5.9, h: 0.5, fontSize: 11, color: C.accent5 });
-const y4 = 2.2 + h4 + 0.8;
-chip(s, "reddit chip 1", 6.77, y4 + 0.07);
-T(s, [{ text: "Live citations: ", options: { bold: true, color: C.text2 } }, { text: "review sites and vendor pages most often; Reddit threads when buyers ask what people actually recommend." }], { x: 7.05, y: y4, w: 5.6, h: 0.6, fontSize: 13 });
-chip(s, "reddit chip 2", 6.77, y4 + 0.77);
-T(s, [{ text: "Model knowledge: ", options: { bold: true, color: C.text2 } }, { text: "Reddit licenses its data to Google and OpenAI (2024 agreements), so its discussions shape answers even without a link." }], { x: 7.05, y: y4 + 0.7, w: 5.6, h: 0.6, fontSize: 13 });
-s.addNotes("Be precise here, it builds trust. In our own test of 8 buyer questions on ChatGPT with web search, live citations were mostly vendor and review sites; Reddit was cited when the question asked what people actually recommend. Reddit's second channel is training data: its 2024 licensing agreements with Google and OpenAI. Review sites (G2, Capterra) are part of the source map we work on too.");
-
-// ===================== 5. Approach =====================
-s = pres.addSlide({ masterName: "AEO_CONTENT", sectionTitle: "Approach" });
-s.addText("OUR APPROACH", { placeholder: "kicker" });
-s.addText("We work on the sources AI learns from, not just your website", { placeholder: "title" });
-const loop = [
-  ["Measure", "Your buyer questions, asked daily on ChatGPT, Gemini and Claude"],
-  ["Map", "The pages and Reddit threads each answer relies on"],
-  ["Earn presence", "Helpful, approved content in the threads and sources that matter"],
-  ["Re-measure", "Share of answers, position and citations, every month"],
+s = pres.addSlide({ masterName: "AEO_WARM", sectionTitle: "Approach" });
+s.addText("( why reddit )", { placeholder: "tag" });
+title(s, "AI answers mirror what buyers ", "say on Reddit");
+const crms = ["HubSpot", "Zoho", "Pipedrive", "Attio", "Copper", "Capsule CRM"];
+card(s, "reddit panel", M, 2.0, 5.75, 3.55);
+label(s, "On Reddit", M + 0.4, 2.25, 3, C.accent2);
+T(s, "Mentions in r/CRM's busiest thread (345 comments)", { x: M + 0.4, y: 2.53, w: 5, h: 0.3, fontSize: 11.5, color: C.accent4 });
+bars(s, "reddit chart", crms, [19, 9, 8, 0, 0, 0], { x: M + 0.25, y: 2.85, w: 5.3, h: 2.55, max: 23, color: HEX.dk2, labelColor: HEX.dk1, valueColor: HEX.dk1, font: 11.5 });
+navy(s, "ai panel", 6.83, 2.0, 5.75, 3.55);
+label(s, "In AI answers", 7.23, 2.25, 3, C.accent1);
+T(s, "Share of answers naming each CRM", { x: 7.23, y: 2.53, w: 5, h: 0.3, fontSize: 11.5, color: NAVY_MUTED });
+bars(s, "ai chart", crms, [97, 56, 100, 0, 0, 0], { x: 7.08, y: 2.85, w: 5.3, h: 2.55, max: 120, color: HEX.accent1, labelColor: ON_NAVY, valueColor: "FFFFFF", format: '0"%"', font: 11.5, bg: HEX.dk2 });
+const facts = [
+  ["Same leaders, same absentees.", "The vendors buyers discuss are the vendors AI names."],
+  ["Reddit feeds the models.", "Its 2024 data agreements with Google and OpenAI put these threads into what AI learns."],
+  ["And the live answers.", "ChatGPT cites Reddit next to G2 and Capterra when buyers ask what people recommend."],
 ];
-const lw = 2.72, lg = 0.42;
+facts.forEach(([h, d], i) => {
+  const x = M + i * 3.98;
+  chip(s, "fact chip " + i, x, 5.87);
+  T(s, [{ text: h + " ", options: { bold: true, color: C.text1 } }, { text: d, options: { color: C.accent3 } }], { x: x + 0.27, y: 5.77, w: 3.55, h: 0.95, fontSize: 12 });
+});
+s.addNotes("Be precise, it builds trust. Left: CRM mentions in the post and top comments of r/CRM's busiest thread. Right: our measured AI share for the same CRMs. Reddit reaches AI two ways: training data (its 2024 licensing agreements with Google and OpenAI) and live citations. In our test of 8 buyer questions on ChatGPT with web search, live citations were mostly vendor and review sites; Reddit was cited when the question asked what people actually recommend. Review sites are part of the source map we work on too.");
+
+// ===================== 5. What we do =====================
+s = pres.addSlide({ masterName: "AEO_LIGHT", sectionTitle: "Approach" });
+s.addText("( what we do )", { placeholder: "tag" });
+title(s, "We put your brand ", "in the conversation");
+const loop = [
+  ["Measure", "Your buyer questions, asked daily on ChatGPT, Gemini and Claude. Named or not, at what position, and who instead."],
+  ["Find", "The Reddit threads and pages each answer draws on, ranked by buyer intent."],
+  ["Contribute", "Story-led posts and honest replies in those threads, approved by your team."],
+  ["Prove", "Re-measure every month. What moved the answers gets more weight."],
+];
+const lw = 2.78, lg = 0.23;
 loop.forEach(([h, d], i) => {
   const x = M + i * (lw + lg);
-  card(s, "loop " + h, x, 2.2, lw, 2.25, i === 2 ? C.text2 : C.background2);
-  num(s, "loop num " + i, i + 1, x + 0.25, 2.45, i === 2 ? C.accent1 : C.text2, i === 2 ? C.text2 : C.accent1);
-  T(s, h, { x: x + 0.25, y: 3.0, w: lw - 0.5, h: 0.4, fontSize: 17, bold: true, color: i === 2 ? C.background1 : C.text2 });
-  T(s, d, { x: x + 0.25, y: 3.45, w: lw - 0.45, h: 0.9, fontSize: 13, color: i === 2 ? "DCE3F0" : C.text1 });
-  if (i < 3) s.addShape(pres.shapes.RIGHT_ARROW, { objectName: "loop arrow " + i, x: x + lw + 0.07, y: 3.15, w: 0.28, h: 0.32, fill: { color: C.accent1 }, line: { type: "none" } });
+  card(s, "step " + h, x, 2.0, lw, 2.75);
+  badge(s, "step badge " + i, i + 1, x + 0.3, 2.3);
+  T(s, h, { x: x + 0.3, y: 2.95, w: lw - 0.5, h: 0.4, fontFace: HEAD, fontSize: 18, color: C.text1 });
+  T(s, d, { x: x + 0.3, y: 3.4, w: lw - 0.55, h: 1.25, fontSize: 12.5, color: C.accent3, lineSpacingMultiple: 1.1 });
 });
-T(s, "↻  The loop repeats monthly: what moved the answers gets more weight, what didn't is replaced.", { x: M, y: 4.6, w: 12, h: 0.35, fontSize: 13, color: C.accent5, italic: true });
 const cmp = [
-  ["SEO agencies", "Optimise your own website for search rankings.", false],
-  ["PR agencies", "Place your brand in media coverage.", false],
-  ["AEOrank", "Works the community and review sources AI answers draw on, and measures the effect on the answers.", true],
+  ["SEO agencies", "Your own website"],
+  ["PR agencies", "Media coverage"],
+  ["AEOrank", "The conversations AI learns from"],
 ];
-cmp.forEach(([h, d, hi], i) => {
-  const x = M + i * 4.1;
-  card(s, "compare " + h, x, 5.2, 3.85, 1.55, hi ? C.accent1 : C.background1, hi ? null : HEX.accent6);
-  T(s, h, { x: x + 0.25, y: 5.38, w: 3.4, h: 0.38, fontSize: 15, bold: true, color: C.text2 });
-  T(s, d, { x: x + 0.25, y: 5.78, w: 3.4, h: 0.85, fontSize: 13, color: C.text1 });
+label(s, "Where each one works", M, 5.08, 5, C.accent4);
+cmp.forEach(([h, d], i) => {
+  const x = M + i * 4.03, hi = i === 2;
+  if (hi) navy(s, "compare " + h, x, 5.45, 3.77, 1.15);
+  else card(s, "compare " + h, x, 5.45, 3.77, 1.15, { fill: C.background2, shadow: false });
+  T(s, h, { x: x + 0.3, y: 5.6, w: 3.3, h: 0.35, fontSize: 14, bold: true, color: hi ? C.accent1 : C.text1 });
+  T(s, d, { x: x + 0.3, y: 5.97, w: 3.3, h: 0.45, fontSize: 14, color: hi ? C.background1 : C.accent3 });
 });
-s.addNotes("Differentiation: we don't compete with their SEO or PR agencies, we cover the layer neither of them measures or works on. The loop is the operating model: measurement drives where we act, and the next month's measurement shows whether it worked.");
+s.addNotes("The operating loop: measurement decides where we act, and the next month's measurement shows whether it worked. We don't replace their SEO or PR agencies; we cover the layer neither of them measures or works on.");
 
-// ===================== 6. Execution & governance =====================
+// ===================== 6. How it's done =====================
 pres.addSection({ title: "Delivery" });
-s = pres.addSlide({ masterName: "AEO_CONTENT", sectionTitle: "Delivery" });
-s.addText("EXECUTION & GOVERNANCE", { placeholder: "kicker" });
-s.addText("A governed Reddit programme your legal team can sign off", { placeholder: "title" });
-const steps = [
-  ["Select", "Threads where your buyers ask, ranked by fit and traffic"],
-  ["Research", "Read the full thread and the subreddit's rules"],
-  ["Draft", "Story-led posts built on real buyer situations; replies that answer first"],
-  ["Approve", "Your team edits and signs off every word"],
-  ["Publish & track", "Your accounts or established community members; reach and AI effect tracked"],
+s = pres.addSlide({ masterName: "AEO_WARM", sectionTitle: "Delivery" });
+s.addText("( how it's done )", { placeholder: "tag" });
+title(s, "Story-led posts, ", "approved by you");
+navy(s, "thread panel", M, 2.0, 6.0, 4.65);
+label(s, "A thread your buyers read", M + 0.4, 2.25, 5);
+card(s, "thread card", M + 0.35, 2.62, 5.3, 1.0, { fill: C.accent6, line: null, shadow: false, r: 0.12 });
+T(s, [{ text: "r/CRM", options: { color: C.accent1, bold: true } }, { text: "  ·  345 comments", options: { color: NAVY_MUTED } }], { x: M + 0.6, y: 2.72, w: 4.8, h: 0.3, fontSize: 11 });
+T(s, "Best and inexpensive CRM for small business", { x: M + 0.6, y: 3.04, w: 4.9, h: 0.45, fontSize: 15, bold: true, color: C.background1 });
+label(s, "Draft reply · illustrative", M + 0.4, 3.85, 5);
+card(s, "draft card", M + 0.35, 4.2, 5.3, 2.2, { fill: C.background1, line: null, shadow: false, r: 0.12 });
+T(s, [
+  { text: "Disclosure: I work at Your brand.", options: { bold: true, color: C.text1, breakLine: true } },
+  { text: "A situation we see a lot: a 10-person team outgrows spreadsheets, but every CRM demo assumes a full sales ops team. If that's you, look at how long setup takes and what reporting costs extra. HubSpot's free tier is a good start; we fit better once you need …", options: { color: C.accent3 } },
+], { x: M + 0.6, y: 4.35, w: 4.85, h: 1.95, fontSize: 12, lineSpacingMultiple: 1.1, paraSpaceAfter: 4 });
+const gov = [
+  ["Select", "threads where your buyers ask"],
+  ["Research", "the full thread and subreddit rules"],
+  ["Draft", "story-led, answer first, disclosed"],
+  ["Approve", "your team signs off every word"],
+  ["Publish & track", "reach and effect on AI answers"],
 ];
-const sw = 2.24, sg = 0.18;
-steps.forEach(([h, d], i) => {
-  const x = M + i * (sw + sg);
-  card(s, "step " + h, x, 2.15, sw, 2.35, i === 3 ? C.text2 : C.background2);
-  num(s, "step num " + i, i + 1, x + 0.22, 2.38, i === 3 ? C.accent1 : C.text2, i === 3 ? C.text2 : C.accent1);
-  T(s, h, { x: x + 0.22, y: 2.93, w: sw - 0.4, h: 0.38, fontSize: 16, bold: true, color: i === 3 ? C.background1 : C.text2 });
-  T(s, d, { x: x + 0.22, y: 3.35, w: sw - 0.38, h: 1.1, fontSize: 12.5, color: i === 3 ? "DCE3F0" : C.text1 });
+gov.forEach(([h, d], i) => {
+  const y = 2.0 + i * 0.56, hi = i === 3;
+  card(s, "gov " + h, 7.0, y, 5.58, 0.46, { fill: hi ? C.accent1 : C.background1, line: hi ? null : undefined, shadow: false, r: 0.1 });
+  T(s, [{ text: `${i + 1}  ${h}`, options: { bold: true, color: C.text1 } }, { text: "   " + d, options: { color: hi ? C.text1 : C.accent3 } }], { x: 7.25, y, w: 5.2, h: 0.46, fontSize: 12.5, valign: "middle" });
 });
-card(s, "always card", M, 4.8, 5.95, 1.95, C.background1, HEX.accent6);
-T(s, "Always", { x: M + 0.3, y: 4.98, w: 5, h: 0.38, fontSize: 16, bold: true, color: C.accent4 });
-T(s, ["Helpful answers to real questions", "Honest comparisons, including competitors", "Each subreddit's rules followed", "Nothing published without your approval"].map((t, i, a) => ({ text: t, options: { bullet: { indent: 16 }, breakLine: i < a.length - 1 } })), { x: M + 0.3, y: 5.4, w: 5.5, h: 1.3, fontSize: 13, paraSpaceAfter: 3 });
-card(s, "never card", 6.73, 4.8, 5.95, 1.95, C.background1, HEX.accent6);
-T(s, "Never", { x: 7.03, y: 4.98, w: 5, h: 0.38, fontSize: 16, bold: true, color: C.accent3 });
-T(s, ["Bought votes or fake engagement", "Fake reviews or impersonation", "Bots or mass-posted content", "Links dropped where they don't help"].map((t, i, a) => ({ text: t, options: { bullet: { indent: 16 }, breakLine: i < a.length - 1 } })), { x: 7.03, y: 5.4, w: 5.5, h: 1.3, fontSize: 13, paraSpaceAfter: 3 });
-s.addNotes("This is the slide legal and brand teams care about. Step 4 is the control point: nothing goes live without sign-off. Story-led means posts are built around real situations buyers face, so they read as conversation, not advertising. Publishing can run through the client's own accounts or established community members, always within each subreddit's rules.");
+const rules = [
+  ["Always", C.accent2, ["Real answers to real questions", "Honest comparisons", "Subreddit rules followed"]],
+  ["Never", C.text1, ["Bought votes", "Fake reviews or bots", "Hidden affiliation"]],
+];
+rules.forEach(([h, col, items], i) => {
+  const x = 7.0 + i * 2.87;
+  card(s, "rules " + h, x, 4.9, 2.71, 1.75);
+  T(s, h, { x: x + 0.25, y: 5.05, w: 2.3, h: 0.32, fontFace: HEAD, fontSize: 14, color: col });
+  T(s, items.map((t, j, a) => ({ text: t, options: { bullet: { indent: 12 }, breakLine: j < a.length - 1 } })), { x: x + 0.25, y: 5.42, w: 2.35, h: 1.15, fontSize: 11.5, color: C.accent3, paraSpaceAfter: 3 });
+});
+s.addNotes("The slide legal and brand teams care about. The thread is real (r/CRM); the draft is an illustration of the style: it opens with a real buyer situation, answers the question, names alternatives honestly and discloses the affiliation. Step 4 is the control point: nothing goes live without sign-off. Publishing runs through the client's own accounts or established community members, within each subreddit's rules.");
 
-// ===================== 7. Measurement =====================
-s = pres.addSlide({ masterName: "AEO_CONTENT", sectionTitle: "Delivery" });
-s.addText("MEASUREMENT & REPORTING", { placeholder: "kicker" });
-s.addText("Each month you see whether AI names you more often, per engine", { placeholder: "title" });
+// ===================== 7. What you see =====================
+s = pres.addSlide({ masterName: "AEO_LIGHT", sectionTitle: "Delivery" });
+s.addText("( what you see )", { placeholder: "tag" });
+title(s, "Proof every month, ", "engine by engine");
 const kpis = [
   ["Share of AI answers", "% of answers naming you, per engine"],
-  ["Average position", "Where you appear when you are named"],
-  ["Share of voice", "You against each named competitor"],
-  ["Cited sources", "Pages the AI links to, and whether yours is one"],
+  ["Average position", "Where you appear when named"],
+  ["Share of voice", "You against each competitor"],
+  ["Cited sources", "Pages AI links to, and whether yours is one"],
   ["Reddit footprint", "Placements, reach and replies"],
 ];
 kpis.forEach(([h, d], i) => {
-  const y = 2.15 + i * 0.84;
-  card(s, "kpi " + h, M, y, 5.2, 0.72, C.background2);
-  chip(s, "kpi chip " + i, M + 0.25, y + 0.29);
-  T(s, h, { x: M + 0.55, y: y + 0.08, w: 4.5, h: 0.3, fontSize: 14.5, bold: true, color: C.text2 });
-  T(s, d, { x: M + 0.55, y: y + 0.38, w: 4.5, h: 0.3, fontSize: 12.5, color: C.text1 });
+  const y = 2.0 + i * 0.8;
+  badge(s, "kpi badge " + i, i + 1, M, y + 0.08);
+  T(s, h, { x: M + 0.65, y: y + 0.02, w: 4.6, h: 0.32, fontSize: 15, bold: true, color: C.text1 });
+  T(s, d, { x: M + 0.65, y: y + 0.34, w: 4.6, h: 0.3, fontSize: 12.5, color: C.accent3 });
 });
-T(s, "Weekly email · monthly readout · quarterly leadership review", { x: M, y: 6.4, w: 5.2, h: 0.35, fontSize: 12.5, bold: true, color: C.text2 });
-const hA = shot(s, "prompt card screenshot", IMG("promptcard.png"), 6.55, 2.2, 6.0, 361 / 1500);
-const hB = shot(s, "share of voice screenshot", IMG("sov.png"), 6.55, 2.2 + hA + 0.28, 6.0, 683 / 1500);
-T(s, "Example account: a well-known CRM brand, name replaced with “Your brand”.", { x: 6.55, y: 2.2 + hA + 0.28 + hB + 0.1, w: 6.0, h: 0.3, fontSize: 10.5, color: C.accent5, italic: true });
-s.addNotes("Real AEOrank screens. Each tracked question shows which engines name the brand and at what position; share of voice compares the brand with every competitor named. Example data is a real, well-known CRM brand tracked from public AI answers, anonymised. These KPIs become the pilot's success measures.");
+pill(s, "cadence", "Weekly email  ·  Monthly readout  ·  Quarterly leadership review", M, 6.12, 5.1, { size: 11, bold: true });
+const sx = 6.75, swd = 5.8;
+const hA = shot(s, "prompt card screenshot", IMG("promptcard.png"), sx, 2.08, swd, 361 / 1500);
+const hB = shot(s, "share of voice screenshot", IMG("sov.png"), sx, 2.08 + hA + 0.3, swd, 683 / 1500);
+T(s, "Real AEOrank screens · a well-known CRM brand, renamed “Your brand”", { x: sx, y: 2.08 + hA + 0.3 + hB + 0.14, w: swd, h: 0.28, fontSize: 10, color: C.accent4, italic: true });
+s.addNotes("Real AEOrank screens. Each tracked question shows which engines name the brand and at what position; share of voice compares the brand with every competitor named. The example is a well-known CRM brand tracked from public AI answers, anonymised. These KPIs become the pilot's success measures.");
 
-// ===================== 8. Evidence =====================
+// ===================== 8. Proof =====================
 pres.addSection({ title: "Proof" });
-s = pres.addSlide({ masterName: "AEO_CONTENT", sectionTitle: "Proof" });
-s.addText("EVIDENCE", { placeholder: "kicker" });
-s.addText("What we have measured, and what your pilot will prove", { placeholder: "title" });
-const cols = [
-  ["Measured in our data", C.text2, ["13 SaaS categories tracked daily on ChatGPT, Claude and Gemini", "CRM leaders named in up to 100% of answers; established vendors at 0%", "Busiest Reddit threads name the same leaders as the AI answers"]],
-  ["Delivered for clients", C.accent1, ["Recent clients: Sovos and TINCheck, in tax compliance", "859K+ Reddit views on content produced for a recent client (reported figure)"]],
-  ["To prove in your pilot", C.accent5, ["A higher share of AI answers on your priority questions", "Your pages and threads among the cited sources", "A repeatable programme your team can scale", "Hypotheses to test, not guaranteed outcomes"]],
+s = pres.addSlide({ masterName: "AEO_WARM", sectionTitle: "Proof" });
+s.addText("( proof )", { placeholder: "tag" });
+title(s, "What we've measured, delivered, and ", "will prove");
+const proof = [
+  ["Measured", "13", "SaaS categories tracked daily on ChatGPT, Gemini and Claude", ["Leaders in up to 100% of answers", "Established vendors at 0%", "Reddit names the same leaders"], "light"],
+  ["Delivered", "859K+", "Reddit views on content for a recent client (reported)", ["Recent clients: Sovos and TINCheck", "Regulated category: tax compliance"], "navy"],
+  ["Your pilot", "90", "days to test it on your own buyer questions", ["Higher share of AI answers", "Your pages among cited sources", "Hypotheses to test, not guaranteed results"], "light"],
 ];
-cols.forEach(([h, col, items], i) => {
-  const x = M + i * 4.1;
-  card(s, "evidence " + h, x, 2.15, 3.85, 3.1, C.background2);
-  s.addShape(pres.shapes.ROUNDED_RECTANGLE, { objectName: "evidence tag " + i, x: x + 0.28, y: 2.4, w: 0.3, h: 0.3, rectRadius: 0.06, fill: { color: col }, line: { type: "none" } });
-  T(s, h, { x: x + 0.72, y: 2.37, w: 3.0, h: 0.38, fontSize: 15.5, bold: true, color: C.text2 });
-  T(s, items.map((t, j, a) => ({ text: t, options: { bullet: { indent: 16 }, breakLine: j < a.length - 1, italic: i === 2 && j === a.length - 1, color: i === 2 && j === a.length - 1 ? C.accent5 : C.text1 } })), { x: x + 0.28, y: 2.95, w: 3.35, h: 2.2, fontSize: 13, paraSpaceAfter: 5 });
+proof.forEach(([h, big, sub, items, kind], i) => {
+  const x = M + i * 4.03, dark = kind === "navy";
+  if (dark) navy(s, "proof " + h, x, 2.0, 3.77, 3.45);
+  else card(s, "proof " + h, x, 2.0, 3.77, 3.45);
+  label(s, h, x + 0.35, 2.25, 3, dark ? C.accent1 : C.accent2);
+  T(s, big, { x: x + 0.35, y: 2.55, w: 3.2, h: 0.8, fontFace: HEAD, fontSize: 44, color: dark ? C.background1 : C.text1 });
+  T(s, sub, { x: x + 0.35, y: 3.38, w: 3.15, h: 0.6, fontSize: 12, color: dark ? ON_NAVY : C.accent3 });
+  T(s, items.map((t, j, a) => ({ text: t, options: { bullet: { indent: 12 }, breakLine: j < a.length - 1, italic: i === 2 && j === a.length - 1 } })), { x: x + 0.35, y: 4.08, w: 3.2, h: 1.25, fontSize: 11.5, color: dark ? C.background1 : C.text1, paraSpaceAfter: 3 });
 });
-s.addShape(pres.shapes.ROUNDED_RECTANGLE, { objectName: "case study placeholder", x: M, y: 5.5, w: 12.03, h: 1.25, rectRadius: 0.12, fill: { color: C.background1 }, line: { color: C.accent1, width: 1.5, dashType: "dash" } });
-T(s, [{ text: "[PLACEHOLDER] Client case study: ", options: { bold: true, color: C.accent1 } }, { text: "before / after share of AI answers, position and cited sources over 90 days. Add once a client approves publishing their numbers.", options: { color: C.text1 } }], { x: M + 0.35, y: 5.5, w: 11.4, h: 1.25, fontSize: 14, valign: "middle" });
-s.addNotes("Keep measured facts and hypotheses separate, as on the slide. The 859K+ figure is the views reported for a recent client's Reddit content. We do not yet publish before/after AI numbers for a client: the placeholder should be filled only with a client's written approval. Never promise guaranteed citations or rankings.");
+card(s, "case study placeholder", M, 5.7, CW, 1.0, { fill: C.background1, line: HEX.accent1, lineW: 1.5, dash: "dash", shadow: false });
+T(s, [{ text: "[PLACEHOLDER]  Client case study: ", options: { bold: true, color: C.accent2 } }, { text: "share of AI answers, position and cited sources before and after 90 days. Add once a client approves publishing.", options: { color: C.accent3 } }], { x: M + 0.35, y: 5.7, w: CW - 0.7, h: 1.0, fontSize: 13, valign: "middle" });
+s.addNotes("Keep measured facts and hypotheses separate, as the slide does. 859K+ is the view count reported for a recent client's Reddit content. We don't yet publish before/after AI numbers for a client: fill the placeholder only with a client's written approval, or delete it. Never promise guaranteed citations or rankings.");
 
-// ===================== 9. Engagement model =====================
+// ===================== 9. How to start =====================
 pres.addSection({ title: "Engagement" });
-s = pres.addSlide({ masterName: "AEO_CONTENT", sectionTitle: "Engagement" });
-s.addText("ENGAGEMENT MODEL", { placeholder: "kicker" });
-s.addText("Start with a 90-day pilot, then scale what moves the numbers", { placeholder: "title" });
+s = pres.addSlide({ masterName: "AEO_LIGHT", sectionTitle: "Engagement" });
+s.addText("( how to start )", { placeholder: "tag" });
+title(s, "Start with a 90-day pilot, then ", "scale");
 const phases = [
   ["Weeks 1–2", "Baseline", "Questions, competitors and markets agreed; daily tracking live"],
-  ["Weeks 3–6", "Source map", "Pages and threads behind the answers; first approved placements"],
-  ["Weeks 7–12", "Programme", "Placements running; monthly readouts with your team"],
-  ["Day 90", "Decision", "Results against the agreed KPIs; scale, adjust or stop"],
+  ["Weeks 3–6", "Source map", "Threads and pages behind the answers; first approved posts"],
+  ["Weeks 7–12", "Programme", "Posts running; monthly readouts with your team"],
+  ["Day 90", "Decision", "Results against the agreed KPIs: scale, adjust or stop"],
 ];
-s.addShape(pres.shapes.LINE, { objectName: "timeline", x: M + 0.2, y: 2.47, w: 11.6, h: 0, line: { color: HEX.accent6, width: 2 } });
+s.addShape(pres.shapes.LINE, { objectName: "timeline", x: M + 0.15, y: 2.2, w: CW - 0.3, h: 0, line: { color: HEX.accent5, width: 2 } });
 phases.forEach(([when, h, d], i) => {
-  const x = M + i * 3.05;
-  s.addShape(pres.shapes.OVAL, { objectName: "timeline dot " + i, x: x + 0.1, y: 2.32, w: 0.3, h: 0.3, fill: { color: i === 3 ? C.accent1 : C.text2 }, line: { color: C.background1, width: 2 } });
-  T(s, when, { x, y: 2.75, w: 2.85, h: 0.3, fontSize: 12, bold: true, color: C.accent1, charSpacing: 1 });
-  T(s, h, { x, y: 3.05, w: 2.85, h: 0.38, fontSize: 16, bold: true, color: C.text2 });
-  T(s, d, { x, y: 3.45, w: 2.75, h: 0.8, fontSize: 12.5, color: C.text1 });
+  const x = M + i * 3.0;
+  s.addShape(pres.shapes.OVAL, { objectName: "dot " + i, x, y: 2.05, w: 0.3, h: 0.3, fill: { color: i === 3 ? C.accent1 : C.text2 }, line: { color: C.background1, width: 2 } });
+  T(s, when, { x, y: 2.5, w: 2.8, h: 0.28, fontSize: 11.5, bold: true, color: C.accent2 });
+  T(s, h, { x, y: 2.8, w: 2.8, h: 0.38, fontFace: HEAD, fontSize: 17, color: C.text1 });
+  T(s, d, { x, y: 3.22, w: 2.7, h: 0.75, fontSize: 12, color: C.accent3 });
 });
 const offers = [
-  ["AI Visibility Pilot · 90 days", ["Your priority buyer questions on 3 engines", "Benchmark against chosen competitors", "Source map and prioritised action plan", "Monthly readouts, final report at day 90"], true],
-  ["Enterprise programme · ongoing", ["Every product, brand and market", "Reddit programme run with your team", "Dedicated strategist, monthly working session", "Leadership reporting on AI visibility"], false],
+  ["Step 1 · 90 days", "AI Visibility Pilot", ["Priority buyer questions on 3 engines", "Benchmark against chosen competitors", "Source map and Reddit programme", "Monthly readouts, final report at day 90"], true],
+  ["Step 2 · Ongoing", "Enterprise programme", ["Every product, brand and market", "Dedicated strategist, monthly session", "Unlimited team access to the platform", "Leadership reporting on AI visibility"], false],
 ];
-offers.forEach(([h, items, hi], i) => {
-  const x = M + i * 6.1;
-  card(s, "offer " + i, x, 4.5, 5.93, 2.28, hi ? C.text2 : C.background2);
-  T(s, h, { x: x + 0.3, y: 4.68, w: 5.3, h: 0.38, fontSize: 16, bold: true, color: hi ? C.background1 : C.text2 });
-  T(s, items.map((t, j, a) => ({ text: t, options: { bullet: { indent: 16 }, breakLine: j < a.length - 1 } })), { x: x + 0.3, y: 5.1, w: 3.9, h: 1.55, fontSize: 12.5, color: hi ? "DCE3F0" : C.text1, paraSpaceAfter: 2 });
-  T(s, "Pricing on request", { x: x + 4.15, y: 6.25, w: 1.6, h: 0.4, fontSize: 12, bold: true, color: hi ? C.accent1 : C.text2, align: "right" });
+offers.forEach(([step, h, items, hi], i) => {
+  const x = M + i * 5.97;
+  if (hi) navy(s, "offer " + i, x, 4.2, 5.86, 2.5);
+  else card(s, "offer " + i, x, 4.2, 5.86, 2.5);
+  label(s, step, x + 0.35, 4.4, 3, hi ? C.accent1 : C.accent2);
+  T(s, h, { x: x + 0.35, y: 4.7, w: 4, h: 0.42, fontFace: HEAD, fontSize: 19, color: hi ? C.background1 : C.text1 });
+  T(s, items.map((t, j, a) => ({ text: t, options: { bullet: { indent: 12 }, breakLine: j < a.length - 1 } })), { x: x + 0.35, y: 5.22, w: 3.9, h: 1.35, fontSize: 12, color: hi ? ON_NAVY : C.accent3, paraSpaceAfter: 2 });
+  pill(s, "price " + i, "Pricing on request", x + 4.0, 6.12, 1.6, hi ? { fill: C.accent1, line: null, color: C.text1, bold: true } : { bold: true });
 });
-s.addNotes("The pilot lowers risk for an enterprise buyer: fixed 90 days, agreed KPIs from slide 7, and an explicit decision point. Pricing is quoted per scope (number of questions, brands, markets and placements).");
+s.addNotes("The pilot de-risks the decision: a fixed 90 days, KPIs agreed up front (slide 7) and an explicit decision point. Pricing is quoted per scope: number of questions, brands, markets and posts.");
 
 // ===================== 10. Close =====================
 pres.addSection({ title: "Next steps" });
-s = pres.addSlide({ masterName: "AEO_CLOSE", sectionTitle: "Next steps" });
-s.addText("NEXT STEP", { placeholder: "kicker" });
-s.addText("Let's see where AI stands on your brand", { placeholder: "title" });
+s = pres.addSlide({ masterName: "AEO_DARK", sectionTitle: "Next steps" });
+s.addText("( next step )", { placeholder: "tag" });
+title(s, "Let's see what AI ", "says about you");
 const next = [
-  ["30-minute intro call", "Your category, competitors and buyer questions. We bring a first look at how AI answers present your brand."],
-  ["Pilot scope", "We agree questions, competitors, markets and success measures, and send a written proposal."],
+  ["30-minute call", "Your category, competitors and buyer questions. We bring a first look at your brand in AI answers."],
+  ["Pilot scope", "Questions, competitors, markets and success measures, in a written proposal."],
   ["Kickoff", "Daily tracking live in week one; first readout within 30 days."],
 ];
 next.forEach(([h, d], i) => {
-  const x = M + i * 4.1;
-  card(s, "next " + i, x, 3.0, 3.85, 2.3, C.accent2);
-  num(s, "next num " + i, i + 1, x + 0.3, 3.28, C.accent1, C.text2);
-  T(s, h, { x: x + 0.3, y: 3.85, w: 3.3, h: 0.4, fontSize: 17, bold: true, color: C.background1 });
-  T(s, d, { x: x + 0.3, y: 4.3, w: 3.3, h: 0.95, fontSize: 13, color: "DCE3F0" });
+  const x = M + i * 4.03;
+  card(s, "next " + i, x, 3.2, 3.77, 2.05, { fill: C.accent6, line: null, shadow: false });
+  badge(s, "next badge " + i, i + 1, x + 0.35, 3.45, { fill: C.accent1, color: C.text1 });
+  T(s, h, { x: x + 0.35, y: 4.05, w: 3.2, h: 0.38, fontFace: HEAD, fontSize: 17, color: C.background1 });
+  T(s, d, { x: x + 0.35, y: 4.47, w: 3.15, h: 0.75, fontSize: 12, color: ON_NAVY });
 });
-T(s, [{ text: "Ilyas, founder   ", options: { bold: true, color: C.background1 } }, { text: "ilyas@aeorank.tech  ·  aeorank.tech/media-kit", options: { color: C.accent1 } }], { x: M, y: 6.0, w: 10, h: 0.45, fontSize: 16, valign: "middle" });
+button(s, "cta", "Book a 30-minute call  →", M, 5.85, 3.0);
+T(s, [{ text: "Ilyas, founder   ", options: { bold: true, color: C.background1 } }, { text: "ilyas@aeorank.tech  ·  aeorank.tech", options: { color: C.accent1 } }], { x: 4.05, y: 5.85, w: 8, h: 0.6, fontSize: 15, valign: "middle" });
 s.addNotes("Close on one concrete ask: the 30-minute call. Offer to run their brand through AEOrank beforehand so the call opens with their own data.");
 
 (async () => {
