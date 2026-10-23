@@ -8,7 +8,7 @@ import { DATA_CATEGORIES } from "@/lib/categoryData";
 // kept out of search; the link is shared directly.
 export const metadata = {
   title: "Media kit | AEOrank",
-  description: "What AEOrank does, how it works, plans and partner terms, on one page.",
+  description: "What AEOrank does, how it uses Reddit, the done-for-you packs and plans.",
   robots: { index: false, follow: true },
 };
 
@@ -186,16 +186,6 @@ export default function MediaKit() {
         </div>
       </section>
 
-      <section className="section" style={{ paddingTop: 0 }}>
-        <div className="container-narrow">
-          <h2 style={{ fontSize: 26, textAlign: "left", marginBottom: 6 }}>Partner terms</h2>
-          <p style={{ color: "var(--text-dim)", lineHeight: 1.75, margin: 0 }}>
-            Partners earn <strong style={{ color: "var(--text)" }}>30% of every payment</strong> a referred customer makes in
-            their first 12 months: $59.70 a month for a Lite customer, $134.70 for Max. Introductions by email work as well
-            as referral links. Details on the <Link href="/affiliates">partner page</Link>.
-          </p>
-        </div>
-      </section>
 
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container-narrow">
