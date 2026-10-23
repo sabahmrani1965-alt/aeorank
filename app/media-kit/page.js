@@ -105,7 +105,7 @@ export default function MediaKit() {
         <div className="container-narrow">
           <h2 style={{ fontSize: 26, textAlign: "left", marginBottom: 6 }}>Who it&rsquo;s for</h2>
           <p style={{ color: "var(--text-dim)", lineHeight: 1.75, margin: 0 }}>
-            B2B SaaS companies, from seed stage to mid-market, whose buyers compare tools before buying: CRM, project
+            B2B software companies, from growing SaaS to enterprise, whose buyers compare tools before buying: CRM, project
             management, help desk, email and marketing automation, SEO, HR and recruiting, accounting, website builders and
             similar categories. The buyer is usually the head of marketing, growth or the founder.
           </p>
@@ -138,6 +138,13 @@ export default function MediaKit() {
                 </ul>
               </div>
             ))}
+          </div>
+          <div className="card" style={{ padding: 22, marginTop: 12 }}>
+            <div style={{ color: "var(--text-muted)", fontSize: 13, fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase" }}>Enterprise</div>
+            <p style={{ margin: "6px 0 0", color: "var(--text-dim)", lineHeight: 1.7 }}>
+              Custom scope for larger companies: several products, brands and markets, a dedicated strategist, and monthly
+              reporting for your marketing team. <strong style={{ color: "var(--text)" }}>Pricing on request.</strong>
+            </p>
           </div>
         </div>
       </section>
