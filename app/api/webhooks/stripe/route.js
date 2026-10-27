@@ -235,6 +235,12 @@ export async function POST(req) {
   try {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
+      // This Stripe account is shared with other businesses (Safar Club tags
+      // its sessions app=safarclub). Never provision an AEOrank account for them.
+      if (session.metadata?.app && session.metadata.app !== "aeorank") {
+        console.log(`[stripe webhook] ignoring checkout for app=${session.metadata.app}`);
+        return NextResponse.json({ received: true, ignored: session.metadata.app });
+      }
       console.log(
         `[stripe webhook] checkout completed plan=${session.metadata?.plan || "-"} amount=${session.amount_total} mode=${session.mode}`
       );
