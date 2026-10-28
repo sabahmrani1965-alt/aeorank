@@ -5,6 +5,26 @@ const SITE_URL = "https://www.aeorank.tech";
 
 export const TOOLS = [
   {
+    slug: "subreddit-finder",
+    name: "Subreddit Finder",
+    blurb: "Type a topic and find the subreddits where it is discussed most, with how active each one is.",
+  },
+  {
+    slug: "best-time-to-post-on-reddit",
+    name: "Best Time to Post on Reddit",
+    blurb: "See when a subreddit's top posts were published, by day and hour, in your time zone.",
+  },
+  {
+    slug: "reddit-brand-mention-checker",
+    name: "Reddit Brand Mention Checker",
+    blurb: "See which Reddit posts named your brand in the past month, and where.",
+  },
+  {
+    slug: "subreddit-rules-checker",
+    name: "Subreddit Rules Checker",
+    blurb: "Read a subreddit's rules with self-promotion, link and karma rules flagged.",
+  },
+  {
     slug: "reddit-markdown-formatter",
     name: "Reddit Markdown Formatter",
     blurb: "Write Reddit markdown and see exactly how it will render, then copy it.",
@@ -34,9 +54,9 @@ export function toolMetadata(slug, title, description) {
 /**
  * Shared shell for the free tools: the tool itself first, then the guide
  * text and FAQ that make the page worth landing on. Every tool runs in the
- * browser; nothing typed is sent anywhere.
+ * browser, except the ones marked `server`, which look up live Reddit data.
  */
-export default function ToolPage({ slug, title, intro, children, guide = [], faq = [] }) {
+export default function ToolPage({ slug, title, intro, children, guide = [], faq = [], server = false }) {
   const url = `${SITE_URL}/tools/${slug}`;
   const appLd = {
     "@context": "https://schema.org",
@@ -80,7 +100,11 @@ export default function ToolPage({ slug, title, intro, children, guide = [], faq
           <h1 style={{ textAlign: "center" }}>{title}</h1>
           <p className="section-sub">{intro}</p>
           {children}
-          <p className="tool-privacy">Runs in your browser. Nothing you type is sent to AEOrank or anyone else.</p>
+          <p className="tool-privacy">
+            {server
+              ? "Free, no sign-up. Results come from public Reddit data; we keep only an anonymous daily count of lookups."
+              : "Runs in your browser. Nothing you type is sent to AEOrank or anyone else."}
+          </p>
         </div>
       </section>
 

@@ -6,7 +6,7 @@ const URL = "https://www.aeorank.tech/tools";
 
 export const metadata = {
   title: "Free Reddit Tools | AEOrank",
-  description: "Free Reddit tools: a markdown formatter with live preview, a post title checker and a self-promotion checker. No sign-up, nothing stored.",
+  description: "Free Reddit tools: subreddit finder, best time to post, brand mention checker, subreddit rules checker, markdown formatter, title and self-promotion checkers. No sign-up.",
   alternates: { canonical: URL },
   openGraph: { title: "Free Reddit Tools", type: "website", url: URL, images: ["/opengraph-image"] },
 };
@@ -21,7 +21,7 @@ export default function ToolsHub() {
             Free <span className="accent">Reddit tools</span>
           </h1>
           <p className="section-sub">
-            Small tools for writing on Reddit. No sign-up, and everything runs in your browser.
+            Tools for finding the right subreddits, posting at the right time and writing posts that stay up. Free, no sign-up.
           </p>
           <div className="tool-grid">
             {TOOLS.map((t) => (

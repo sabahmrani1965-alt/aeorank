@@ -2775,6 +2775,43 @@ button { font-family: inherit; }
 .md-spoiler { background: #222; color: #222; border-radius: 3px; padding: 0 3px; }
 .md-spoiler:hover { color: #fff; }
 @media (max-width: 760px) { .tool-two-col { grid-template-columns: 1fr; } }
+.rt-form-row { display: flex; gap: 10px; }
+.rt-form-row .input { flex: 1; min-width: 0; }
+.rt-status { margin: 16px 0 0; color: var(--text-dim); font-size: 14.5px; text-align: left; }
+.rt-error { color: var(--state-danger-fg); }
+.rt-summary { margin: 18px 0 12px; color: var(--text-dim); font-size: 14.5px; text-align: left; }
+.rt-list, .rt-rules { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; text-align: left; }
+.rt-item { border: 1px solid var(--card-border); border-radius: 12px; padding: 14px 16px; }
+.rt-item-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.rt-item-title { font-weight: 700; font-size: 16px; color: var(--text); }
+.rt-item-title:hover { color: var(--accent); }
+.rt-item-desc { margin: 6px 0 0; font-size: 13.5px; color: var(--text-dim); }
+.rt-item-meta { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 8px; font-size: 12.5px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.rt-item-example { display: block; margin-top: 8px; font-size: 13px; color: var(--text-dim); overflow-wrap: anywhere; }
+.rt-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.rt-chip { font-size: 12.5px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--accent-dim); color: var(--text); white-space: nowrap; }
+.rt-chip-warn { background: var(--state-danger-bg); color: var(--state-danger-fg); }
+.rt-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 18px 0 6px; text-align: left; }
+.rt-stats > div { border: 1px solid var(--card-border); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+.rt-stats strong { font-size: 17px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.rt-stat-label { font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--text-muted); }
+.rt-heat-wrap { overflow-x: auto; margin: 16px 0 8px; }
+.rt-heat { border-collapse: separate; border-spacing: 3px; width: 100%; min-width: 460px; font-size: 12px; font-variant-numeric: tabular-nums; }
+.rt-heat th { font-weight: 600; color: var(--text-muted); padding: 2px 4px; text-align: center; }
+.rt-heat td { text-align: center; height: 30px; border-radius: 6px; color: var(--text); background: color-mix(in srgb, var(--accent) calc(var(--heat) * 85%), var(--bg-3, rgba(127,127,127,.08))); }
+.rt-h3 { font-size: 16px; margin: 22px 0 8px; text-align: left; }
+.rt-mini { list-style: none; margin: 0; padding: 0; text-align: left; }
+.rt-mini li { display: flex; flex-direction: column; gap: 2px; padding: 9px 0; border-top: 1px solid var(--card-border); }
+.rt-mini a { color: var(--text); font-weight: 600; overflow-wrap: anywhere; }
+.rt-mini a:hover { color: var(--accent); }
+.rt-mini span { font-size: 12.5px; color: var(--text-muted); }
+.rt-rules li { border: 1px solid var(--card-border); border-radius: 12px; padding: 12px 14px; }
+.rt-rules p { margin: 0; font-size: 14px; color: var(--text-dim); line-height: 1.6; }
+.rt-rule-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.rt-rule-tags span { font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 6px; background: var(--accent-dim); color: var(--text); }
+.rt-cta { margin-top: 18px; padding: 14px 16px; border-radius: 12px; background: var(--accent-dim); display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap; text-align: left; }
+.rt-cta p { margin: 0; font-size: 14px; flex: 1 1 260px; }
+@media (max-width: 520px) { .rt-form-row { flex-direction: column; } }
 
 /* Card section titles on About / Privacy / Terms: real h2s (the pages went
    h1 -> h3) styled at the size the h3s had. */
