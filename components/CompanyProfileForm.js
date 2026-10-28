@@ -3,14 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { LOCATIONS } from "@/lib/locations";
 
-const LOCATIONS = [
-  "United States - English",
-  "United Kingdom - English",
-  "Canada - English",
-  "Australia - English",
-  "Other",
-];
 
 const selectStyle = {
   background: "var(--bg-3)",
@@ -296,7 +290,7 @@ export default function CompanyProfileForm({ initialProfile, mode = "edit", prof
             style={{ flex: 1 }}
             value={competitorInput}
             onChange={(e) => setCompetitorInput(e.target.value)}
-            placeholder="Add a competitor (e.g. Linear)"
+            placeholder="Name or website (e.g. Linear or linear.app)"
             onKeyDown={(e) => {
               if (e.key === "Enter") addCompetitor(e);
             }}

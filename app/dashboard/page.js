@@ -2,6 +2,8 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getActiveCompanyProfile } from "@/lib/brands";
 import TrendChart from "@/components/VisibilityTrendChart";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { loadPreview } from "@/lib/onboardingPreview";
 
 export const dynamic = "force-dynamic";
 
@@ -467,6 +469,20 @@ export default async function DashboardOverviewPage() {
 
   const s = profile && hasPlan ? summarize(await loadData(supabase, user.id, profile.id)) : null;
 
+  // Before a plan: the brand's own first scan (onboarding preview) instead
+  // of example numbers, whenever that scan found something.
+  let firstScan = null;
+  if (profile && !hasPlan) {
+    const [data, admin] = [await loadData(supabase, user.id, profile.id), createAdminClient()];
+    const preview = admin ? await loadPreview(admin, profile.id) : null;
+    const real = summarize(data);
+    if (preview?.ai && !real.vis) {
+      real.vis = { rate: preview.ai.score, delta: null };
+      real.engines = Object.entries(preview.ai.byEngine || {}).map(([e, v]) => ({ e, rate: pct(v.mentions, v.answers), n: v.answers }));
+    }
+    if (real.opp.total || real.vis) firstScan = real;
+  }
+
   return (
     <section className="dashboard-page">
       <div className="dx-head">
@@ -500,14 +516,24 @@ export default async function DashboardOverviewPage() {
           <div className="dx-setup">
             <div>
               <h2>Start your 7-day trial</h2>
-              <p>{profile.company_name || "Your brand"} is set up. Choose a plan to start finding opportunities, tracking mentions and checking your AI visibility every day.</p>
+              <p>
+                {firstScan
+                  ? `These are ${profile.company_name || "your brand"}'s real results from your first scan. Start a trial to open every thread, get comments drafted, and check your AI visibility every day.`
+                  : `${profile.company_name || "Your brand"} is set up. Choose a plan to start finding opportunities, tracking mentions and checking your AI visibility every day.`}
+              </p>
             </div>
             <Link href="/dashboard/billing" className="btn btn-primary">
               Choose a plan →
             </Link>
           </div>
-          <p className="dx-example-label">Example data: your own numbers appear here once your trial starts.</p>
-          <Overview s={EXAMPLE} example />
+          {firstScan ? (
+            <Overview s={firstScan} />
+          ) : (
+            <>
+              <p className="dx-example-label">Example data: your own numbers appear here once your trial starts.</p>
+              <Overview s={EXAMPLE} example />
+            </>
+          )}
         </>
       ) : (
         <Overview s={s} />

@@ -4,11 +4,13 @@ import { useMemo, useState } from "react";
 import OpportunityListItem from "./OpportunityListItem";
 import OpportunityDetailPane from "./OpportunityDetailPane";
 
-// company_profiles.competitors stores competitor URLs, not clean brand
-// names — reduce a URL to its bare domain label so it can be matched
+// company_profiles.competitors holds competitor URLs or plain names; a URL
+// is reduced to its bare domain label so it can be matched
 // against plain-text post titles/snippets (nobody writes full URLs in a
 // casual Reddit post title).
 function domainLabel(url) {
+  const s = String(url || "").trim();
+  if (!/[./]/.test(s)) return s.replace(/\s+/g, "");
   try {
     const u = new URL(/^https?:\/\//i.test(url) ? url : `https://${url}`);
     return u.hostname.replace(/^www\./, "").split(".")[0] || "";
@@ -30,6 +32,7 @@ function findCompetitorMention(text, competitors) {
 const TABS = [
   { key: "all", label: "All", test: () => true },
   { key: "high", label: "High intent", test: (o) => o.buying_intent === "high" },
+  { key: "cited", label: "Cited by AI", test: (o) => Boolean(o.cited_by?.length) },
   { key: "saved", label: "Saved", test: (o) => o.saved },
 ];
 
@@ -76,7 +79,7 @@ export default function OpportunityList({ opportunities, competitors, brandWebsi
     <div className="op-split">
       <div className="op-list-col">
         <div className="op-tabs" role="tablist">
-          {TABS.map((t) => (
+          {TABS.filter((t) => t.key !== "cited" || items.some(t.test)).map((t) => (
             <button
               key={t.key}
               type="button"

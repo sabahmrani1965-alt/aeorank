@@ -600,6 +600,25 @@ button { font-family: inherit; }
 .section { padding: 100px 0; position: relative; }
 .section-alt { background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%); }
 .final-cta { text-align: center; }
+.ob-preview { border: 1px solid var(--card-border); border-radius: 18px; background: var(--card); padding: 26px; margin-bottom: 40px; }
+.ob-preview h3 { font-size: 22px; margin: 4px 0 18px; }
+.ob-preview-loading { display: flex; gap: 16px; align-items: flex-start; }
+.ob-preview-loading p { margin: 4px 0 0; color: var(--text-dim); font-size: 14px; }
+.ob-spinner { flex-shrink: 0; width: 22px; height: 22px; margin-top: 2px; border-radius: 50%; border: 3px solid var(--accent-dim); border-top-color: var(--accent); animation: ob-spin 0.9s linear infinite; }
+@keyframes ob-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .ob-spinner { animation-duration: 3s; } }
+.ob-preview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.ob-preview-card { border: 1px solid var(--card-border); border-radius: 14px; padding: 18px 20px; background: var(--bg); }
+.ob-preview-label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); }
+.ob-preview-big { font-size: 40px; font-weight: 800; color: var(--accent); line-height: 1.1; margin: 6px 0 4px; font-variant-numeric: tabular-nums; }
+.ob-preview-note { font-size: 13.5px; color: var(--text-dim); margin: 0 0 10px; }
+.ob-engines { list-style: none; margin: 0 0 12px; padding: 0; }
+.ob-engines li { display: flex; justify-content: space-between; font-size: 13.5px; padding: 5px 0; border-top: 1px solid var(--card-border); font-variant-numeric: tabular-nums; }
+.ob-threads { list-style: none; margin: 0; padding: 0; }
+.ob-threads li { display: flex; flex-direction: column; gap: 2px; padding: 9px 0; border-top: 1px solid var(--card-border); }
+.ob-thread-title { font-size: 14px; font-weight: 600; color: var(--text); }
+.ob-thread-meta { font-size: 12.5px; color: var(--text-muted); }
+.ob-preview-cta { margin: 18px 0 0; font-size: 14.5px; font-weight: 600; color: var(--text); }
 .final-cta-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 28px; }
 /* A section's lead heading is an h1 on pages where it IS the page title
    (posts, service and industry pages) and an h2 elsewhere, so both tags
@@ -2870,6 +2889,17 @@ a.dx-list-title:hover { color: var(--accent); }
 .op-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .op-item-meta { display: flex; gap: 5px; font-size: 14.5px; color: var(--text-muted); }
 .op-item-saved { margin-left: auto; color: var(--accent); }
+.op-cited-badge { font-size: 12.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--text); color: var(--bg); white-space: nowrap; }
+.op-cited { border: 1px solid var(--card-border); border-radius: 16px; background: var(--card); padding: 20px 22px; margin-bottom: 22px; }
+.op-cited-head h2 { font-size: 17px; margin: 0 0 4px; }
+.op-cited-head p { font-size: 13.5px; color: var(--text-dim); margin: 0 0 14px; max-width: 70ch; }
+.op-cited-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.op-cited-list li { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; border-top: 1px solid var(--card-border); }
+.op-cited-main { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.op-cited-title { font-weight: 600; color: var(--text); overflow-wrap: anywhere; }
+.op-cited-title:hover { color: var(--accent); }
+.op-cited-meta { font-size: 12.5px; color: var(--text-muted); }
+@media (max-width: 640px) { .op-cited-list li { flex-direction: column; align-items: flex-start; } }
 .op-item-title { font-size: 18px; font-weight: 650; line-height: 1.38; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .op-item-snippet { font-size: 15px; color: var(--text-dim); line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
 .op-item-foot { display: flex; align-items: center; gap: 8px; margin-top: 2px; }

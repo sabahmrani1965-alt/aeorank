@@ -24,6 +24,7 @@ export default function OpportunityListItem({ opportunity: o, isSelected, onSele
       <span className="op-item-foot">
         <span className={`op-score ${tier.cls}`}>{o.relevance_score ?? "–"}</span>
         {intent ? <span className={`op-intent ${intent.cls}`}>{intent.label}</span> : null}
+        {o.cited_by?.length ? <span className="op-cited-badge">Cited by {o.cited_by.join(", ")}</span> : null}
         {o.comments > 0 ? (
           <span className="op-item-comments" aria-label={`${o.comments} comments`}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">

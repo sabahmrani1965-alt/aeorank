@@ -6,16 +6,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PricingTiers from "@/components/PricingTiers";
 import RedeemCodeForm from "@/components/RedeemCodeForm";
+import OnboardingPreview from "@/components/OnboardingPreview";
 import { createClient } from "@/lib/supabase/client";
 import { listBrands } from "@/lib/brands";
+import { LOCATIONS } from "@/lib/locations";
 
-const LOCATIONS = [
-  "United States - English",
-  "United Kingdom - English",
-  "Canada - English",
-  "Australia - English",
-  "Other",
-];
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -386,7 +381,7 @@ export default function OnboardingPage() {
               <h2>Enter your competitors</h2>
               <p className="section-sub">
                 We'll track how you compare to these brands in AI answers.
-                Optional: leave blank to skip any.
+                Type a name or a website. Optional: leave blank to skip any.
               </p>
 
               <form onSubmit={goToStep4}>
@@ -395,7 +390,7 @@ export default function OnboardingPage() {
                     <span>Competitor {["One", "Two", "Three"][i]}</span>
                     <input
                       type="text"
-                      placeholder="https://competitor.com"
+                      placeholder={["e.g. HubSpot or hubspot.com", "Name or website", "Name or website"][i]}
                       value={c}
                       onChange={(e) => {
                         const next = [...competitors];
@@ -425,6 +420,8 @@ export default function OnboardingPage() {
           {step === 4 && (
             <>
               <span className="section-tag">( step 4 )</span>
+              <OnboardingPreview brand={companyName} />
+
               <h2>
                 Choose your <span className="accent">plan</span>
               </h2>

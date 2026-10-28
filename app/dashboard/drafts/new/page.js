@@ -73,6 +73,17 @@ function NewDraftForm() {
   }, []);
 
   const ready = needsTargetUrl(type) ? Boolean(normalizeRedditUrl(targetUrl)) : Boolean(subreddit.trim());
+
+  // Arriving from an opportunity (?url=…) means the thread is already
+  // chosen: draft the comment straight away (generating is free, credits
+  // are only charged on submit) so there is something to review on arrival.
+  const [autoDrafted, setAutoDrafted] = useState(false);
+  useEffect(() => {
+    if (autoDrafted || !searchParams.get("url") || !ready || body) return;
+    setAutoDrafted(true);
+    generate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoDrafted, ready]);
   const totalCost = type === "upvote" ? upvoteCreditCost(qty) : costs[type];
 
   async function generate() {
@@ -167,8 +178,8 @@ function NewDraftForm() {
         <span className="section-tag">( create post )</span>
         <h2>Create a Reddit post</h2>
         <p className="section-sub">
-          Create and submit a new Reddit task here, choose the type of post,
-          write your comment to get it published.
+          Review the draft, edit anything you like, then submit it. We publish it from our own
+          Reddit accounts as a natural post or comment.
         </p>
 
         <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
@@ -327,7 +338,7 @@ function NewDraftForm() {
               ← Cancel
             </button>
             <button type="submit" className="btn btn-primary" disabled={saving}>
-              {saving ? "Creating…" : `Create Task (−${totalCost} credits) →`}
+              {saving ? "Submitting…" : `Approve & submit (−${totalCost} credits) →`}
             </button>
           </div>
         </form>

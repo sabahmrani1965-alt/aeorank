@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { getActiveCompanyProfile } from "@/lib/brands";
 import TrackTasksTable from "@/components/TrackTasksTable";
 import ExportTasksCsvButton from "@/components/ExportTasksCsvButton";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { loadCitedRedditThreads, redditThreadId } from "@/lib/promptSources";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +27,17 @@ export default async function DashboardDraftsPage() {
         .order("created_at", { ascending: false })
     : { data: [] };
 
+  // Whether the thread each task went into is among the sources the AI
+  // engines cite for this brand's tracked prompts: the payoff of the work.
+  const { data: prompts } = profile
+    ? await supabase.from("prompts").select("id, text").eq("user_id", user.id).eq("company_profile_id", profile.id)
+    : { data: [] };
+  const cited = new Map((await loadCitedRedditThreads(createAdminClient(), prompts || [])).map((t) => [t.id, t]));
+  const tasks = (drafts || []).map((d) => {
+    const t = cited.get(redditThreadId(d.target_url)) || cited.get(redditThreadId(d.permalink));
+    return t ? { ...d, cited: { models: t.models, lastAt: t.lastAt } } : d;
+  });
+
   return (
     <section className="section">
       <div className="container">
@@ -43,7 +56,7 @@ export default async function DashboardDraftsPage() {
             No tasks yet. Generate a report, or click "+ New task" above to write one.
           </div>
         ) : (
-          <TrackTasksTable tasks={drafts} />
+          <TrackTasksTable tasks={tasks} />
         )}
       </div>
     </section>

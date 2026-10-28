@@ -139,6 +139,7 @@ function TaskRow({ task }) {
           {!expanded && <span className="tt-snippet">{task.body}</span>}
         </div>
         <div className="tt-row-side">
+          {task.cited && <span className="op-cited-badge">Cited by AI</span>}
           <StatusBadge published={published} removed={liveRemoved} />
           {published && (
             <a
@@ -192,6 +193,21 @@ function TaskRow({ task }) {
                 <div className="tt-meta-value is-muted">Not added yet</div>
               )}
             </div>
+            {task.type !== "upvote" && (
+              <div>
+                <div className="tt-meta-label">In AI answers</div>
+                {task.cited ? (
+                  <div className="tt-meta-value">
+                    Cited by {task.cited.models.join(", ")}
+                    <div style={{ fontSize: 11.5, color: "var(--text-muted)", marginTop: 2 }}>
+                      Last seen {formatDate(task.cited.lastAt)}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="tt-meta-value is-muted">Not cited yet</div>
+                )}
+              </div>
+            )}
             {published && (
               <div>
                 <div className="tt-meta-label">Live stats</div>
