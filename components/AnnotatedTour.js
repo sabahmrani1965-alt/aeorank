@@ -1,3 +1,5 @@
+import LineIcon from "@/components/LineIcon";
+
 // Single annotated "product tour" mockup: one dashboard screenshot with
 // floating callouts pointing at real, shipped features (names match
 // FeatureGrid.js: AI Visibility Score, Reddit Opportunities, Mention
@@ -19,7 +21,7 @@ const INTENT_COLOR = {
 function Callout({ className, icon, title, children }) {
   return (
     <div className={`tour-callout ${className}`}>
-      <div className="tour-callout-icon">{icon}</div>
+      <div className="tour-callout-icon"><LineIcon name={icon} size={18} /></div>
       <h4>{title}</h4>
       <p>{children}</p>
     </div>
@@ -40,33 +42,33 @@ export default function AnnotatedTour() {
         </p>
 
         <div className="tour-wrap tour-wrap-5">
-          <Callout className="tour-callout-visibility" icon="🎯" title="AI Visibility Score">
+          <Callout className="tour-callout-visibility" icon="target" title="AI Visibility Score">
             Track how ChatGPT, Claude, Gemini, and Perplexity talk about your brand over time.
           </Callout>
-          <Callout className="tour-callout-opportunities" icon="🔎" title="Reddit Opportunities">
+          <Callout className="tour-callout-opportunities" icon="search" title="Reddit Opportunities">
             High-intent threads where your buyers are already asking, ranked by relevance.
           </Callout>
-          <Callout className="tour-callout-prompts" icon="🧠" title="Prompt Tracking">
+          <Callout className="tour-callout-prompts" icon="prompt" title="Prompt Tracking">
             Track the exact buyer questions that should mention your brand, and see if AI answers with it.
           </Callout>
-          <Callout className="tour-callout-mentions" icon="💬" title="Mention Tracking">
+          <Callout className="tour-callout-mentions" icon="message" title="Mention Tracking">
             Get notified the moment someone mentions your brand on Reddit.
           </Callout>
-          <Callout className="tour-callout-writing" icon="✍️" title="AI Writing Assistant">
-            AI writes the reply. Nothing posts until you review and approve it.
+          <Callout className="tour-callout-writing" icon="pen" title="AI Writing Assistant">
+            AI drafts the reply. You approve it, and we post it from our own Reddit accounts.
           </Callout>
 
           <div className="tour-mock">
             <div className="tour-app-sidebar">
               <div className="tour-app-logo"><span className="accent">AEO</span>rank</div>
               <div className="tour-app-navgroup-label">Discover</div>
-              <div className="tour-app-navitem is-active">🔎 Opportunities</div>
-              <div className="tour-app-navitem">💬 Mentions</div>
+              <div className="tour-app-navitem is-active"><LineIcon name="search" size={14} /> Opportunities</div>
+              <div className="tour-app-navitem"><LineIcon name="message" size={14} /> Mentions</div>
               <div className="tour-app-navgroup-label">Create</div>
-              <div className="tour-app-navitem">📋 Track Task</div>
+              <div className="tour-app-navitem"><LineIcon name="clipboard" size={14} /> Track Task</div>
               <div className="tour-app-navgroup-label">Analyze</div>
-              <div className="tour-app-navitem">📊 Reports</div>
-              <div className="tour-app-navitem">🧠 Prompts</div>
+              <div className="tour-app-navitem"><LineIcon name="chart" size={14} /> Reports</div>
+              <div className="tour-app-navitem"><LineIcon name="prompt" size={14} /> Prompts</div>
             </div>
 
             <div className="tour-app-main">

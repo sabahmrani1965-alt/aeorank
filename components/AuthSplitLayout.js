@@ -91,8 +91,8 @@ export default function AuthSplitLayout({ children }) {
             <div className="auth-stat-label">Reachable members</div>
           </div>
           <div>
-            <div className="auth-stat-value">3</div>
-            <div className="auth-stat-label">Major LLMs analysed</div>
+            <div className="auth-stat-value">4</div>
+            <div className="auth-stat-label">AI engines tracked</div>
           </div>
         </div>
       </div>

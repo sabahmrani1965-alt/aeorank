@@ -41,10 +41,6 @@ function SignupFormPlaceholder() {
         <span>Password</span>
         <input type="password" name="password" placeholder="At least 8 characters" disabled />
       </label>
-      <label className="auth-field">
-        <span>Confirm password</span>
-        <input type="password" name="confirm" placeholder="••••••••" disabled />
-      </label>
       <button type="submit" className="btn btn-primary" disabled style={{ width: "100%" }}>
         Sign up →
       </button>
@@ -55,7 +51,6 @@ function SignupFormPlaceholder() {
 function SignupFormInner({ redirectTo = "/onboarding", intent = "aeorank" }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const searchParams = useSearchParams();
@@ -76,10 +71,6 @@ function SignupFormInner({ redirectTo = "/onboarding", intent = "aeorank" }) {
 
     if (password.length < 8) {
       setError("Password must be at least 8 characters.");
-      return;
-    }
-    if (password !== confirm) {
-      setError("Passwords don't match.");
       return;
     }
 
@@ -159,21 +150,10 @@ function SignupFormInner({ redirectTo = "/onboarding", intent = "aeorank" }) {
           required
         />
       </label>
-      <label className="auth-field">
-        <span>Confirm password</span>
-        <input
-          type="password"
-          placeholder="••••••••"
-          value={confirm}
-          onChange={(e) => setConfirm(e.target.value)}
-          disabled={loading}
-          required
-        />
-      </label>
       <button
         type="submit"
         className="btn btn-primary"
-        disabled={loading || !email || !password || !confirm}
+        disabled={loading || !email || !password}
         style={{ width: "100%" }}
       >
         {loading ? "Creating account…" : "Sign up →"}

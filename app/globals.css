@@ -599,6 +599,8 @@ button { font-family: inherit; }
 /* ----------------- Section ----------------- */
 .section { padding: 100px 0; position: relative; }
 .section-alt { background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%); }
+.final-cta { text-align: center; }
+.final-cta-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 28px; }
 /* A section's lead heading is an h1 on pages where it IS the page title
    (posts, service and industry pages) and an h2 elsewhere, so both tags
    take the same treatment. */
@@ -1267,7 +1269,7 @@ button { font-family: inherit; }
   justify-content: center;
   border-radius: 12px;
   background: var(--accent-dim);
-  font-size: 20px;
+  color: var(--accent);
   margin-bottom: 16px;
 }
 .feature-card h3 {
@@ -1382,6 +1384,7 @@ button { font-family: inherit; }
   padding: 7px 8px;
   border-radius: 7px;
 }
+.tour-app-navitem svg { flex-shrink: 0; }
 .tour-app-navitem.is-active {
   background: rgba(242, 168, 59, 0.14);
   color: #f2a83b;
@@ -1478,7 +1481,7 @@ button { font-family: inherit; }
   align-items: center;
   justify-content: center;
   background: rgba(242, 168, 59, 0.12);
-  font-size: 16px;
+  color: #d97f0b;
   margin-bottom: 10px;
 }
 .tour-callout h4 { font-size: 14px; font-weight: 700; color: #14161b; margin: 0 0 6px; }

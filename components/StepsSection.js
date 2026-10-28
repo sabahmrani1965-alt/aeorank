@@ -136,8 +136,8 @@ export default function StepsSection({
             <ul className="step">
               <li>Find high-traffic threads in subreddits relevant to your category</li>
               <li>Write helpful, value-adding content tailored to each community</li>
-              <li>You review, edit, and publish it yourself from your own account</li>
-              <li>Nothing is posted automatically: every piece goes live only when you post it</li>
+              <li>You review and approve every post and comment before it goes live</li>
+              <li>We publish it from our own established Reddit accounts, as natural posts and comments, not ads</li>
             </ul>
           </div>
 

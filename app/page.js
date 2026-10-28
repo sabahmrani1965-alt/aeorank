@@ -79,7 +79,7 @@ const faqJsonLd = {
       name: "Is this allowed under Reddit's rules?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "We follow each subreddit's posting guidelines and disclose affiliations where required.",
+        text: "Posts and comments go out from our own established Reddit accounts, written as natural, helpful contributions rather than ads. You approve each one first, and we follow each subreddit's posting guidelines and disclose affiliations where required.",
       },
     },
   ],
@@ -143,8 +143,8 @@ export default function Home() {
               <div className="stat-label">Reachable members</div>
             </div>
             <div className="stat">
-              <div className="stat-value">3</div>
-              <div className="stat-label">Major LLMs analysed</div>
+              <div className="stat-value">4</div>
+              <div className="stat-label">AI engines tracked</div>
             </div>
             <div className="stat">
               <div className="stat-value">&lt;5s</div>
@@ -277,10 +277,35 @@ export default function Home() {
             <details>
               <summary>Is this allowed under Reddit's rules?</summary>
               <div className="faq-body">
-                We follow each subreddit's posting guidelines and disclose
-                affiliations where required.
+                Posts and comments go out from our own established Reddit
+                accounts, written as natural, helpful contributions rather
+                than ads. You approve each one first, and we follow each
+                subreddit's posting guidelines and disclose affiliations
+                where required.
               </div>
             </details>
+          </div>
+        </div>
+      </section>
+
+      {/* Closing CTA */}
+      <section className="section final-cta">
+        <div className="container">
+          <span className="section-tag">( your turn )</span>
+          <h2>
+            Find out what AI says about <span className="accent">your brand</span>
+          </h2>
+          <p className="section-sub">
+            Start with a free check of ChatGPT, Claude, Gemini and Perplexity,
+            or go straight to the full dashboard with a 7-day free trial.
+          </p>
+          <div className="final-cta-actions">
+            <Link href="/signup" className="btn btn-primary btn-large">
+              Get Started →
+            </Link>
+            <Link href="/free-ai-visibility-checker" className="btn btn-ghost btn-large">
+              Run a free check
+            </Link>
           </div>
         </div>
       </section>
